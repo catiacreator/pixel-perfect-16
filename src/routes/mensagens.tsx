@@ -2,6 +2,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import Mensagens from "@/page-views/Mensagens";
 
 export const Route = createFileRoute("/mensagens")({
-  head: () => ({ meta: [{ title: "Mensagens — Paraíso Digital" }] }),
+  head: () => ({ meta: [{ title: "Mensagens — Leveza no Digital" }] }),
   component: Mensagens,
 });
