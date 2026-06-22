@@ -9,8 +9,6 @@ import {
   Briefcase,
   CheckCircle2,
   Lock,
-  PlayCircle,
-  BookOpen,
   Sparkles,
 } from "lucide-react";
 
@@ -49,26 +47,6 @@ const PILARES = [
   },
 ];
 
-const COMO_FUNCIONA = [
-  {
-    n: "1",
-    icon: BookOpen,
-    titulo: "Escolha um pilar",
-    desc: "Comece pelo Pilar 1. Cada pilar tem aulas curtas e práticas.",
-  },
-  {
-    n: "2",
-    icon: PlayCircle,
-    titulo: "Siga a trilha",
-    desc: "Aulas, exercícios e modelos prontos. Vai no seu ritmo.",
-  },
-  {
-    n: "3",
-    icon: Sparkles,
-    titulo: "Aplique com IA",
-    desc: "Use o Assistente para criar conteúdo na hora, com clareza.",
-  },
-];
 
 export default function Home() {
   return (
@@ -122,44 +100,6 @@ export default function Home() {
               a ordem.
             </p>
           </aside>
-        </div>
-      </section>
-
-      {/* COMO FUNCIONA */}
-      <section className="border-b border-border bg-cream-warm/20">
-        <div className="max-w-[1200px] mx-auto px-5 md:px-10 py-14 md:py-16">
-          <div className="text-center mb-10">
-            <p className="text-xs tracking-[0.25em] uppercase text-terracotta mb-2">
-              Como funciona
-            </p>
-            <h2 className="font-serif text-3xl md:text-4xl text-ink">
-              Três passos. Sem complicação.
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {COMO_FUNCIONA.map((step) => {
-              const Icon = step.icon;
-              return (
-                <div
-                  key={step.n}
-                  className="bg-cream border border-border rounded-xl p-6"
-                >
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-10 h-10 rounded-full bg-ink text-cream flex items-center justify-center font-serif text-lg shrink-0">
-                      {step.n}
-                    </div>
-                    <Icon size={20} strokeWidth={1.75} className="text-terracotta" />
-                  </div>
-                  <h3 className="font-serif text-xl text-ink mb-2">
-                    {step.titulo}
-                  </h3>
-                  <p className="text-sm text-ink/70 leading-relaxed">
-                    {step.desc}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
         </div>
       </section>
 
