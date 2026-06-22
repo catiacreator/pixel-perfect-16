@@ -98,24 +98,6 @@ export default function Home() {
             </Link>
           </div>
 
-          {/* Stats strip */}
-          <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-px bg-white/5 rounded-2xl overflow-hidden border border-white/5">
-            {[
-              { k: "04", v: "Pilares" },
-              { k: "32+", v: "Aulas" },
-              { k: "12", v: "Modelos prontos" },
-              { k: "∞", v: "Assistente IA" },
-            ].map((s) => (
-              <div key={s.v} className="bg-coal-2 px-6 py-7">
-                <div className="text-3xl md:text-4xl font-medium text-white tracking-tight">
-                  {s.k}
-                </div>
-                <div className="text-[11px] tracking-[0.2em] uppercase text-white/40 mt-2">
-                  {s.v}
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
