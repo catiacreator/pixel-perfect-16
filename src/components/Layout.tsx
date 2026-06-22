@@ -1,4 +1,5 @@
-import { Link, useLocation } from "@/lib/router-compat";
+import { Link } from "@/lib/router-compat";
+import { useLocation } from "@tanstack/react-router";
 import { FileText, Mail, Map, Sparkles, Database, Award, Users, Search } from "lucide-react";
 
 const NAV = [
