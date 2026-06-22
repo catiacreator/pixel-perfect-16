@@ -1,7 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import Home from "@/page-views/Home";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/metodo")({
-  head: () => ({ meta: [{ title: "Trilha Rápida — Paraíso Digital" }] }),
-  component: Home,
+  component: () => <Outlet />,
 });
