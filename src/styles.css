@@ -5,16 +5,20 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-cream: #FAF4E9;
-  --color-ink: #2B2118;
-  --color-muted: #8C8170;
-  --color-terracotta: #C2693E;
-  --color-terracotta-dark: #A8552F;
-  --color-gold: #BD8A4A;
-  --color-border: #E7DCC2;
-  --color-success: #5B7359;
-  --font-serif: "Lora", Georgia, serif;
-  --font-sans: "Work Sans", system-ui, sans-serif;
+  --color-cream: #F3EFE6;
+  --color-cream-warm: #E7DDC6;
+  --color-ink: #2E2B28;
+  --color-muted: #8A7E6E;
+  --color-terracotta: #A67C52;
+  --color-terracotta-dark: #8B6440;
+  --color-gold: #CBB08A;
+  --color-sage: #6D7A73;
+  --color-navy: #3F4A5A;
+  --color-border: #E2D8C4;
+  --color-success: #6D7A73;
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Montserrat", system-ui, sans-serif;
+  --font-script: "Caveat", "Dancing Script", cursive;
 }
 
 /*
@@ -147,14 +151,17 @@
 
 /* Restore custom brand palette tokens (override shadcn @theme inline above) */
 @theme {
-  --color-cream: #FAF4E9;
-  --color-ink: #2B2118;
-  --color-muted: #8C8170;
-  --color-terracotta: #C2693E;
-  --color-terracotta-dark: #A8552F;
-  --color-gold: #BD8A4A;
-  --color-border: #E7DCC2;
-  --color-success: #5B7359;
+  --color-cream: #F3EFE6;
+  --color-cream-warm: #E7DDC6;
+  --color-ink: #2E2B28;
+  --color-muted: #8A7E6E;
+  --color-terracotta: #A67C52;
+  --color-terracotta-dark: #8B6440;
+  --color-gold: #CBB08A;
+  --color-sage: #6D7A73;
+  --color-navy: #3F4A5A;
+  --color-border: #E2D8C4;
+  --color-success: #6D7A73;
 }
 
 @layer base {
