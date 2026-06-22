@@ -9,8 +9,6 @@ import {
   Briefcase,
   CheckCircle2,
   Lock,
-  PlayCircle,
-  BookOpen,
   Sparkles,
 } from "lucide-react";
 
