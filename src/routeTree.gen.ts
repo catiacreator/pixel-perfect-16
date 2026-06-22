@@ -14,6 +14,7 @@ import { Route as MetodoRouteImport } from './routes/metodo'
 import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as DocMestreRouteImport } from './routes/doc-mestre'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MetodoIndexRouteImport } from './routes/metodo.index'
 import { Route as MetodoPilar2RouteImport } from './routes/metodo.pilar-2'
 import { Route as MetodoPilar1RouteImport } from './routes/metodo.pilar-1'
 import { Route as MetodoConsultoriaIaRouteImport } from './routes/metodo.consultoria-ia'
@@ -62,6 +63,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const MetodoIndexRoute = MetodoIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MetodoRoute,
 } as any)
 const MetodoPilar2Route = MetodoPilar2RouteImport.update({
   id: '/pilar-2',
@@ -201,6 +207,7 @@ export interface FileRoutesByFullPath {
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
   '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
+  '/metodo/': typeof MetodoIndexRoute
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
   '/metodo/pilar-1/aprenda-ia': typeof MetodoPilar1AprendaIaRouteWithChildren
   '/metodo/pilar-1/conclusao': typeof MetodoPilar1ConclusaoRoute
@@ -226,11 +233,11 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/doc-mestre': typeof DocMestreRoute
   '/mensagens': typeof MensagensRoute
-  '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
   '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
+  '/metodo': typeof MetodoIndexRoute
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
   '/metodo/pilar-1/aprenda-ia': typeof MetodoPilar1AprendaIaRouteWithChildren
   '/metodo/pilar-1/conclusao': typeof MetodoPilar1ConclusaoRoute
@@ -262,6 +269,7 @@ export interface FileRoutesById {
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
   '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
+  '/metodo/': typeof MetodoIndexRoute
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
   '/metodo/pilar-1/aprenda-ia': typeof MetodoPilar1AprendaIaRouteWithChildren
   '/metodo/pilar-1/conclusao': typeof MetodoPilar1ConclusaoRoute
@@ -294,6 +302,7 @@ export interface FileRouteTypes {
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
+    | '/metodo/'
     | '/metodo/consultoria-ia/como-usar'
     | '/metodo/pilar-1/aprenda-ia'
     | '/metodo/pilar-1/conclusao'
@@ -319,11 +328,11 @@ export interface FileRouteTypes {
     | '/'
     | '/doc-mestre'
     | '/mensagens'
-    | '/metodo'
     | '/meus-projetos'
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
+    | '/metodo'
     | '/metodo/consultoria-ia/como-usar'
     | '/metodo/pilar-1/aprenda-ia'
     | '/metodo/pilar-1/conclusao'
@@ -354,6 +363,7 @@ export interface FileRouteTypes {
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
+    | '/metodo/'
     | '/metodo/consultoria-ia/como-usar'
     | '/metodo/pilar-1/aprenda-ia'
     | '/metodo/pilar-1/conclusao'
@@ -420,6 +430,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/metodo/': {
+      id: '/metodo/'
+      path: '/'
+      fullPath: '/metodo/'
+      preLoaderRoute: typeof MetodoIndexRouteImport
+      parentRoute: typeof MetodoRoute
     }
     '/metodo/pilar-2': {
       id: '/metodo/pilar-2'
@@ -723,12 +740,14 @@ interface MetodoRouteChildren {
   MetodoConsultoriaIaRoute: typeof MetodoConsultoriaIaRouteWithChildren
   MetodoPilar1Route: typeof MetodoPilar1RouteWithChildren
   MetodoPilar2Route: typeof MetodoPilar2RouteWithChildren
+  MetodoIndexRoute: typeof MetodoIndexRoute
 }
 
 const MetodoRouteChildren: MetodoRouteChildren = {
   MetodoConsultoriaIaRoute: MetodoConsultoriaIaRouteWithChildren,
   MetodoPilar1Route: MetodoPilar1RouteWithChildren,
   MetodoPilar2Route: MetodoPilar2RouteWithChildren,
+  MetodoIndexRoute: MetodoIndexRoute,
 }
 
 const MetodoRouteWithChildren =
