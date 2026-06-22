@@ -47,26 +47,6 @@ const PILARES = [
   },
 ];
 
-const COMO_FUNCIONA = [
-  {
-    n: "1",
-    icon: BookOpen,
-    titulo: "Escolha um pilar",
-    desc: "Comece pelo Pilar 1. Cada pilar tem aulas curtas e práticas.",
-  },
-  {
-    n: "2",
-    icon: PlayCircle,
-    titulo: "Siga a trilha",
-    desc: "Aulas, exercícios e modelos prontos. Vai no seu ritmo.",
-  },
-  {
-    n: "3",
-    icon: Sparkles,
-    titulo: "Aplique com IA",
-    desc: "Use o Assistente para criar conteúdo na hora, com clareza.",
-  },
-];
 
 export default function Home() {
   return (
