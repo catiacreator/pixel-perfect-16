@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import { Hourglass, Crown, Lightbulb, TrendingUp, Briefcase, ArrowRight, Compass } from "lucide-react";
 

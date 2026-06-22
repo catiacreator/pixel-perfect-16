@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "@/lib/router-compat";
 import type { ReactNode } from "react";
 import { ArrowRight, Check, Lock } from "lucide-react";
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Layout from "../components/Layout";
 import { FileUp, ClipboardPaste, Plus, X, Sparkles, ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link } from "@/lib/router-compat";
 
 function Field({ label, placeholder, textarea }: { label: string; placeholder?: string; textarea?: boolean }) {
   return (

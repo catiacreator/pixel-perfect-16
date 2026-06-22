@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Layout from "../components/Layout";
-import { Link } from "react-router-dom";
+import { Link } from "@/lib/router-compat";
 import { FileText, Download, Plus, Calendar, Trophy, Flag } from "lucide-react";
 
 const DOCS = [
