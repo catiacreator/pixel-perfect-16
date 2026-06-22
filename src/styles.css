@@ -4,6 +4,19 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --color-cream: #FAF4E9;
+  --color-ink: #2B2118;
+  --color-muted: #8C8170;
+  --color-terracotta: #C2693E;
+  --color-terracotta-dark: #A8552F;
+  --color-gold: #BD8A4A;
+  --color-border: #E7DCC2;
+  --color-success: #5B7359;
+  --font-serif: "Lora", Georgia, serif;
+  --font-sans: "Work Sans", system-ui, sans-serif;
+}
+
 /*
  * Design system definition.
  *
