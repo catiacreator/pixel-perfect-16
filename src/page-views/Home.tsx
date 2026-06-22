@@ -101,6 +101,40 @@ export default function Home() {
         </div>
       </section>
 
+      {/* COMECE POR AQUI — Pilar 1 em destaque */}
+      <section className="relative">
+        <div className="max-w-[1400px] mx-auto px-5 md:px-10 pb-8 md:pb-12">
+          <Link
+            to="/metodo/pilar-1"
+            className="group relative block overflow-hidden rounded-3xl bg-forest border border-gold/30 p-8 md:p-10 transition-all hover:shadow-2xl hover:shadow-forest/20 hover:-translate-y-0.5"
+          >
+            <div className="pointer-events-none absolute -top-24 -right-24 w-[420px] h-[420px] rounded-full bg-[radial-gradient(circle_at_center,var(--color-gold)_0%,transparent_60%)] opacity-20 blur-3xl group-hover:opacity-30 transition-opacity" />
+            <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] items-center gap-8">
+              <div className="min-w-0">
+                <p className="text-[11px] tracking-[0.3em] uppercase text-gold mb-4">
+                  Por onde começar
+                </p>
+                <h3 className="font-serif text-2xl md:text-4xl text-cream tracking-tight leading-tight mb-3">
+                  Comece por aqui —{" "}
+                  <span className="italic font-normal text-gold">Pilar 1: Recuperar o seu tempo</span>
+                </h3>
+                <p className="text-sm md:text-base text-cream/60 max-w-lg leading-relaxed">
+                  Porque uma especialista exausta não cria futuro, só apaga incêndios.
+                </p>
+              </div>
+              <span className="inline-flex items-center gap-2.5 bg-gold text-forest px-6 py-3 rounded-full text-sm font-semibold group-hover:bg-cream transition-colors shrink-0">
+                Entrar
+                <ArrowUpRight
+                  size={16}
+                  strokeWidth={2.5}
+                  className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
+              </span>
+            </div>
+          </Link>
+        </div>
+      </section>
+
       {/* PILARES */}
       <section className="relative">
         <div className="max-w-[1400px] mx-auto px-5 md:px-10 py-20 md:py-28">
