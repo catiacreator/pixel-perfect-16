@@ -187,8 +187,8 @@
 
   html, body, #root {
     margin: 0;
-    background-color: var(--color-coal);
-    color: #F2EFEC;
+    background-color: var(--color-cream);
+    color: var(--color-ink);
     font-family: var(--font-display);
     -webkit-font-smoothing: antialiased;
   }
