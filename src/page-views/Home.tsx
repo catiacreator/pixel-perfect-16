@@ -66,7 +66,7 @@ export default function Home() {
             </span>
           </div>
 
-          <h1 className="font-display font-medium text-5xl md:text-7xl lg:text-[112px] leading-[0.95] tracking-[-0.03em] text-ink max-w-[1100px]">
+          <h1 className="font-display font-medium text-4xl md:text-5xl lg:text-6xl leading-[1.05] tracking-[-0.02em] text-ink max-w-[900px]">
             Crie no digital
             <br />
             com{" "}
