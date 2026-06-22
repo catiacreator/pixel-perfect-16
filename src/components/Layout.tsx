@@ -2,6 +2,7 @@ import { Link } from "@/lib/router-compat";
 import { useLocation } from "@tanstack/react-router";
 import { FileText, Mail, Map, Sparkles, Database, Award, Users, Search } from "lucide-react";
 
+
 const NAV = [
   { to: "/", label: "Trilha Rápida", icon: Map },
   { to: "/metodo/consultoria-ia", label: "Robô da Mentoria", icon: Sparkles },
