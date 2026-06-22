@@ -12,7 +12,7 @@ const PILARES = [
 export default function Home() {
   return (
     <Layout>
-      <div className="px-5 md:px-10 py-10 max-w-3xl mx-auto">
+      <div className="px-5 md:px-8 py-8 max-w-2xl mx-auto">
         <div className="flex items-center gap-2 mb-2 text-terracotta">
           <Compass size={18} />
         </div>
