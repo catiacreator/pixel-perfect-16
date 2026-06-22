@@ -22,8 +22,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="w-full px-5 md:px-8 py-3 flex items-center justify-between gap-6">
           {/* Logo */}
           <Link to="/" className="flex-shrink-0 bg-cream rounded-md px-3 py-2 flex flex-col items-center leading-none">
-            <span className="text-[7px] tracking-[0.3em] text-ink/70">MENTORIA</span>
-            <span className="font-serif font-semibold text-ink text-[13px] mt-0.5">PARAÍSO</span>
+            <span className="font-serif font-semibold text-ink text-[15px]">LEVEZA</span>
+            <span className="text-[7px] tracking-[0.3em] text-ink/70">NO</span>
             <span className="font-serif font-semibold text-ink text-[13px] -mt-0.5">DIGITAL</span>
           </Link>
 
@@ -70,7 +70,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <main className="flex-1 w-full">{children}</main>
 
       <footer className="w-full px-5 md:px-10 py-6 text-center text-xs text-muted">
-        © Paraíso Digital · Seu ambiente de evolução
+        © Leveza no Digital · Transforme conhecimento em liberdade
       </footer>
     </div>
   );

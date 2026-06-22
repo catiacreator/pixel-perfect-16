@@ -19,9 +19,9 @@ export default function Home() {
             <Compass size={18} strokeWidth={1.5} />
           </div>
           <div>
-            <h1 className="font-serif text-3xl md:text-[42px] leading-tight text-ink">Trilha Rápida Paraíso Digital</h1>
+            <h1 className="font-serif text-3xl md:text-[42px] leading-tight text-ink">Leveza no Digital</h1>
             <p className="text-sm text-sage mt-2 max-w-2xl">
-              O caminho mais rápido para transformar seu conhecimento em liberdade, autoridade e lucro com Inteligência
+              A trilha rápida para transformar seu conhecimento em liberdade, autoridade e lucro com Inteligência
               Artificial.
             </p>
           </div>
