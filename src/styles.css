@@ -166,6 +166,18 @@
   --color-forest-soft: #1A2D24;
   --color-border: #E2D8C4;
   --color-success: #6D7A73;
+
+  /* Modern dark palette (Arounda-inspired) */
+  --color-coal: #0E0C0D;
+  --color-coal-2: #161316;
+  --color-cocoa: #2A1D1A;
+  --color-cocoa-2: #453027;
+  --color-ember: #FF6D29;
+  --color-ember-soft: #FF8A4D;
+  --color-ash: #BABABA;
+  --color-mist: rgba(255, 255, 255, 0.08);
+
+  --font-display: "Inter Tight", "Neue Montreal", system-ui, sans-serif;
 }
 
 @layer base {
@@ -175,8 +187,10 @@
 
   html, body, #root {
     margin: 0;
-    background-color: var(--color-cream);
-    color: var(--color-ink);
-    font-family: var(--font-sans);
+    background-color: var(--color-coal);
+    color: #F2EFEC;
+    font-family: var(--font-display);
+    -webkit-font-smoothing: antialiased;
   }
 }
+
