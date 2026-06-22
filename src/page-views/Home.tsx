@@ -1,181 +1,249 @@
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
-import { ArrowUpRight, Hourglass, Crown, Lightbulb, TrendingUp, Briefcase } from "lucide-react";
+import {
+  ArrowRight,
+  Hourglass,
+  Crown,
+  Lightbulb,
+  TrendingUp,
+  Briefcase,
+  CheckCircle2,
+  Lock,
+  PlayCircle,
+  BookOpen,
+  Sparkles,
+} from "lucide-react";
 
 const PILARES = [
   {
-    n: "01",
+    n: "1",
     icon: Hourglass,
     titulo: "Recuperar seu tempo",
-    sub: "porque uma especialista exausta não cria futuro, só apaga incêndio.",
+    sub: "Organize sua rotina para criar com calma, não em pânico.",
     to: "/metodo/pilar-1",
-    ativo: true,
+    status: "disponivel" as const,
   },
   {
-    n: "02",
+    n: "2",
     icon: Crown,
     titulo: "Criar autoridade",
-    sub: "porque você estudou demais para continuar invisível.",
+    sub: "Mostre o que você sabe para as pessoas certas.",
     to: "/metodo/pilar-2",
-    ativo: true,
+    status: "disponivel" as const,
   },
   {
-    n: "03",
+    n: "3",
     icon: Lightbulb,
-    titulo: "Soluções digitais com seu conhecimento",
-    sub: "para transformar o que você sabe em ativos que vendem.",
+    titulo: "Soluções com seu conhecimento",
+    sub: "Transforme o que sabe em produtos digitais.",
     to: "#",
-    ativo: false,
+    status: "embreve" as const,
   },
   {
-    n: "04",
+    n: "4",
     icon: TrendingUp,
-    titulo: "Aprender a vender no digital",
-    sub: "porque ninguém te ensinou isso na faculdade.",
+    titulo: "Aprender a vender",
+    sub: "Venda no digital com método, sem forçar.",
     to: "#",
-    ativo: false,
+    status: "embreve" as const,
+  },
+];
+
+const COMO_FUNCIONA = [
+  {
+    n: "1",
+    icon: BookOpen,
+    titulo: "Escolha um pilar",
+    desc: "Comece pelo Pilar 1. Cada pilar tem aulas curtas e práticas.",
+  },
+  {
+    n: "2",
+    icon: PlayCircle,
+    titulo: "Siga a trilha",
+    desc: "Aulas, exercícios e modelos prontos. Vai no seu ritmo.",
+  },
+  {
+    n: "3",
+    icon: Sparkles,
+    titulo: "Aplique com IA",
+    desc: "Use o Assistente para criar conteúdo na hora, com clareza.",
   },
 ];
 
 export default function Home() {
   return (
     <Layout>
-      {/* HERO — editorial split */}
-      <section className="border-b border-border/70">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
-          {/* Left label */}
-          <aside className="lg:col-span-3 flex lg:flex-col justify-between gap-6">
-            <div>
-              <p className="text-[10px] tracking-[0.4em] uppercase text-terracotta mb-3">
-                Identidade Visual
-              </p>
-              <p className="text-[11px] tracking-[0.25em] uppercase text-muted">
-                Método · 01
-              </p>
-            </div>
-            <div className="hidden lg:block">
-              <div className="h-px w-16 bg-ink mb-4" />
-              <p className="text-xs text-muted leading-relaxed max-w-[200px]">
-                Ajudo iniciantes a criarem conteúdos com inteligência artificial, de forma simples e estratégica.
-              </p>
-            </div>
-          </aside>
-
-          {/* Main headline */}
-          <div className="lg:col-span-9">
-            <h1 className="font-serif text-[44px] md:text-[88px] leading-[0.95] text-ink tracking-tight">
-              Visual<br />
-              que ensina.
+      {/* HERO */}
+      <section className="border-b border-border">
+        <div className="max-w-[1200px] mx-auto px-5 md:px-10 py-12 md:py-20 grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 items-end">
+          <div className="min-w-0">
+            <p className="inline-flex items-center gap-2 text-xs tracking-wider uppercase text-terracotta bg-cream-warm/60 px-3 py-1.5 rounded-full mb-5">
+              <Sparkles size={12} /> Bem-vinda à sua trilha
+            </p>
+            <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl leading-[1.05] text-ink">
+              Crie no digital<br />
+              <span className="text-terracotta">com leveza</span> e método.
             </h1>
-            <p className="font-script text-3xl md:text-5xl text-ink/80 mt-4">
-              conteúdo que transforma.
+            <p className="text-base md:text-lg text-ink/70 mt-6 max-w-2xl leading-relaxed">
+              Uma trilha simples para transformar o que você sabe em conteúdo,
+              autoridade e liberdade — usando Inteligência Artificial.
             </p>
-            <div className="h-px w-40 bg-ink mt-8 mb-8" />
 
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="bg-cream-warm text-ink text-[11px] tracking-[0.25em] uppercase px-4 py-2">
-                método
-              </span>
-              <span className="text-muted">·</span>
-              <span className="bg-cream-warm text-ink text-[11px] tracking-[0.25em] uppercase px-4 py-2">
-                clareza
-              </span>
-              <span className="text-muted">·</span>
-              <span className="bg-cream-warm text-ink text-[11px] tracking-[0.25em] uppercase px-4 py-2">
-                resultado
-              </span>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link
+                to="/metodo/pilar-1"
+                className="inline-flex items-center gap-2 bg-ink text-cream px-6 py-3.5 rounded-md text-sm font-medium hover:bg-forest transition-colors"
+              >
+                Começar pelo Pilar 1 <ArrowRight size={16} />
+              </Link>
+              <Link
+                to="/metodo/consultoria-ia"
+                className="inline-flex items-center gap-2 border border-ink/20 text-ink px-6 py-3.5 rounded-md text-sm font-medium hover:bg-cream-warm/50 transition-colors"
+              >
+                Falar com o Assistente
+              </Link>
             </div>
           </div>
+
+          {/* Progress card */}
+          <aside className="bg-cream-warm/40 border border-border rounded-xl p-6 w-full lg:w-[300px] shrink-0">
+            <p className="text-xs tracking-wider uppercase text-muted mb-3">
+              Seu progresso
+            </p>
+            <div className="flex items-baseline gap-2 mb-4">
+              <span className="font-serif text-4xl text-ink">0</span>
+              <span className="text-sm text-muted">/ 4 pilares</span>
+            </div>
+            <div className="h-1.5 bg-cream rounded-full overflow-hidden mb-4">
+              <div className="h-full w-0 bg-terracotta" />
+            </div>
+            <p className="text-sm text-ink/70">
+              Comece pelo <strong className="text-ink">Pilar 1</strong> e siga
+              a ordem.
+            </p>
+          </aside>
         </div>
       </section>
 
-      {/* FEATURED — Comece por aqui */}
-      <section className="bg-forest text-cream">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-16 md:py-20 grid grid-cols-1 lg:grid-cols-12 gap-10">
-          <div className="lg:col-span-3">
-            <p className="text-[10px] tracking-[0.4em] uppercase text-gold">
-              Por onde começar
+      {/* COMO FUNCIONA */}
+      <section className="border-b border-border bg-cream-warm/20">
+        <div className="max-w-[1200px] mx-auto px-5 md:px-10 py-14 md:py-16">
+          <div className="text-center mb-10">
+            <p className="text-xs tracking-[0.25em] uppercase text-terracotta mb-2">
+              Como funciona
             </p>
-          </div>
-          <div className="lg:col-span-6">
-            <h2 className="font-serif text-4xl md:text-5xl leading-[1.05] text-cream">
-              Pilar 1 — <em className="not-italic text-gold">Recuperar</em> seu tempo.
+            <h2 className="font-serif text-3xl md:text-4xl text-ink">
+              Três passos. Sem complicação.
             </h2>
-            <p className="text-cream/65 mt-5 max-w-lg">
-              Porque uma especialista exausta não cria futuro, só apaga incêndio. Comece pela base do método.
-            </p>
           </div>
-          <div className="lg:col-span-3 flex lg:items-end lg:justify-end">
-            <Link
-              to="/metodo/pilar-1"
-              className="group inline-flex items-center gap-3 border border-cream/30 hover:border-gold hover:text-gold px-5 py-3.5 text-[11px] tracking-[0.3em] uppercase transition-colors"
-            >
-              Entrar no pilar
-              <ArrowUpRight
-                size={16}
-                strokeWidth={1.5}
-                className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-              />
-            </Link>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {COMO_FUNCIONA.map((step) => {
+              const Icon = step.icon;
+              return (
+                <div
+                  key={step.n}
+                  className="bg-cream border border-border rounded-xl p-6"
+                >
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-full bg-ink text-cream flex items-center justify-center font-serif text-lg shrink-0">
+                      {step.n}
+                    </div>
+                    <Icon size={20} strokeWidth={1.75} className="text-terracotta" />
+                  </div>
+                  <h3 className="font-serif text-xl text-ink mb-2">
+                    {step.titulo}
+                  </h3>
+                  <p className="text-sm text-ink/70 leading-relaxed">
+                    {step.desc}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* PILARES — editorial index */}
+      {/* PILARES */}
       <section>
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-16 md:py-24">
-          <div className="flex items-end justify-between mb-12 border-b border-border pb-6">
-            <div>
-              <p className="text-[10px] tracking-[0.4em] uppercase text-terracotta mb-2">
-                Índice
+        <div className="max-w-[1200px] mx-auto px-5 md:px-10 py-14 md:py-20">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4 mb-8 pb-5 border-b border-border">
+            <div className="min-w-0">
+              <p className="text-xs tracking-[0.25em] uppercase text-terracotta mb-2">
+                Os 4 pilares
               </p>
-              <h2 className="font-serif text-3xl md:text-4xl text-ink">Os quatro pilares.</h2>
+              <h2 className="font-serif text-3xl md:text-4xl text-ink">
+                Sua trilha completa
+              </h2>
             </div>
-            <p className="hidden md:block text-[11px] tracking-[0.25em] uppercase text-muted">
-              04 capítulos
+            <p className="text-sm text-muted shrink-0">
+              2 disponíveis · 2 em breve
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {PILARES.map((p) => {
               const Icon = p.icon;
-              const Wrapper: any = p.ativo ? Link : "div";
-              const wrapperProps = p.ativo ? { to: p.to } : {};
+              const disponivel = p.status === "disponivel";
+              const Wrapper: any = disponivel ? Link : "div";
+              const props = disponivel ? { to: p.to } : {};
               return (
                 <Wrapper
                   key={p.n}
-                  {...wrapperProps}
-                  className={`group block bg-cream p-8 md:p-10 transition-colors ${
-                    p.ativo ? "hover:bg-cream-warm/40 cursor-pointer" : "opacity-60"
+                  {...props}
+                  className={`group block bg-cream border rounded-xl p-6 md:p-7 transition-all ${
+                    disponivel
+                      ? "border-border hover:border-terracotta hover:shadow-[0_8px_24px_-12px_rgba(166,124,82,0.3)] cursor-pointer"
+                      : "border-border/60 opacity-70"
                   }`}
                 >
-                  <div className="flex items-start justify-between mb-8">
-                    <span className="font-serif text-6xl text-terracotta leading-none">
+                  <div className="flex items-start gap-5">
+                    <div
+                      className={`w-14 h-14 rounded-xl flex items-center justify-center shrink-0 font-serif text-2xl ${
+                        disponivel
+                          ? "bg-terracotta text-cream"
+                          : "bg-cream-warm/60 text-muted border border-border"
+                      }`}
+                    >
                       {p.n}
-                    </span>
-                    <div className="w-11 h-11 rounded-full border border-border flex items-center justify-center text-ink/70">
-                      <Icon size={18} strokeWidth={1.5} />
                     </div>
-                  </div>
-                  <h3 className="font-serif text-2xl md:text-[28px] leading-tight text-ink mb-3">
-                    {p.titulo}
-                  </h3>
-                  <p className="text-sm text-muted italic leading-relaxed mb-6 max-w-md">
-                    {p.sub}
-                  </p>
-                  <div className="flex items-center gap-2 text-[11px] tracking-[0.3em] uppercase">
-                    {p.ativo ? (
-                      <>
-                        <span className="text-ink">Ler capítulo</span>
-                        <ArrowUpRight
-                          size={14}
-                          strokeWidth={1.5}
-                          className="text-ink transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                        />
-                      </>
-                    ) : (
-                      <span className="text-muted">Em breve</span>
-                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <p className="text-xs tracking-wider uppercase text-muted">
+                          Pilar {p.n}
+                        </p>
+                        {disponivel ? (
+                          <span className="inline-flex items-center gap-1 text-[10px] tracking-wider uppercase text-sage bg-sage/10 px-2 py-0.5 rounded-full">
+                            <CheckCircle2 size={10} /> Disponível
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 text-[10px] tracking-wider uppercase text-muted bg-cream-warm/60 px-2 py-0.5 rounded-full">
+                            <Lock size={10} /> Em breve
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="font-serif text-xl md:text-2xl text-ink mb-2 leading-tight">
+                        {p.titulo}
+                      </h3>
+                      <p className="text-sm text-ink/70 leading-relaxed mb-4">
+                        {p.sub}
+                      </p>
+                      {disponivel && (
+                        <span className="inline-flex items-center gap-1.5 text-sm font-medium text-terracotta">
+                          Entrar no pilar
+                          <ArrowRight
+                            size={14}
+                            className="transition-transform group-hover:translate-x-1"
+                          />
+                        </span>
+                      )}
+                    </div>
+                    <Icon
+                      size={20}
+                      strokeWidth={1.5}
+                      className={`shrink-0 hidden sm:block ${
+                        disponivel ? "text-ink/40" : "text-muted/40"
+                      }`}
+                    />
                   </div>
                 </Wrapper>
               );
@@ -185,37 +253,28 @@ export default function Home() {
       </section>
 
       {/* CAMINHO PARALELO */}
-      <section className="border-t border-border/70 bg-cream-warm/30">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-16 md:py-20 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-3">
-            <p className="text-[10px] tracking-[0.4em] uppercase text-terracotta mb-2">
+      <section className="border-t border-border bg-forest text-cream">
+        <div className="max-w-[1200px] mx-auto px-5 md:px-10 py-14 md:py-16 grid grid-cols-1 md:grid-cols-[auto_1fr_auto] items-center gap-6">
+          <div className="w-14 h-14 rounded-xl bg-gold/20 border border-gold/30 text-gold flex items-center justify-center shrink-0">
+            <Briefcase size={22} strokeWidth={1.5} />
+          </div>
+          <div className="min-w-0">
+            <p className="text-xs tracking-[0.25em] uppercase text-gold mb-2">
               Caminho especial
             </p>
-            <div className="w-12 h-12 rounded-full border border-ink/20 flex items-center justify-center text-ink">
-              <Briefcase size={18} strokeWidth={1.5} />
-            </div>
-          </div>
-          <div className="lg:col-span-6">
-            <h3 className="font-serif text-3xl md:text-4xl text-ink leading-tight">
-              Consultoria de Inteligência Artificial.
+            <h3 className="font-serif text-2xl md:text-3xl text-cream mb-1">
+              Consultoria de IA
             </h3>
-            <p className="font-script text-2xl text-ink/70 mt-2">
-              para quem quer transformar IA em serviço premium.
+            <p className="text-sm text-cream/70">
+              Para quem quer transformar Inteligência Artificial em serviço premium.
             </p>
           </div>
-          <div className="lg:col-span-3 flex lg:justify-end">
-            <Link
-              to="/metodo/consultoria-ia"
-              className="group inline-flex items-center gap-3 bg-ink text-cream px-5 py-3.5 text-[11px] tracking-[0.3em] uppercase hover:bg-forest transition-colors"
-            >
-              Entrar
-              <ArrowUpRight
-                size={16}
-                strokeWidth={1.5}
-                className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-              />
-            </Link>
-          </div>
+          <Link
+            to="/metodo/consultoria-ia"
+            className="inline-flex items-center gap-2 bg-gold text-ink px-5 py-3 rounded-md text-sm font-medium hover:bg-gold/90 transition-colors shrink-0"
+          >
+            Conhecer <ArrowRight size={14} />
+          </Link>
         </div>
       </section>
     </Layout>
