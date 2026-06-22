@@ -76,27 +76,10 @@ export default function Home() {
             <span className="text-ink/40">e método.</span>
           </h1>
 
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-[1fr_auto_auto] items-end gap-6">
-            <p className="text-base md:text-lg text-ink/60 max-w-xl leading-relaxed">
-              Uma trilha simples para transformar o que sabe em conteúdo,
-              autoridade e liberdade — com recurso a Inteligência Artificial.
-            </p>
-            <Link
-              to="/metodo/pilar-1"
-              className="group inline-flex items-center gap-2.5 bg-terracotta text-cream pl-6 pr-2 py-2 rounded-full text-sm font-semibold hover:bg-terracotta-dark transition-all hover:gap-3.5"
-            >
-              Começar pelo Pilar 1
-              <span className="w-9 h-9 rounded-full bg-cream text-terracotta flex items-center justify-center">
-                <ArrowUpRight size={16} strokeWidth={2.5} />
-              </span>
-            </Link>
-            <Link
-              to="/metodo/consultoria-ia"
-              className="inline-flex items-center gap-2 text-sm text-ink/70 hover:text-ink border-b border-ink/20 hover:border-ink pb-1 transition-all"
-            >
-              Falar com o Assistente
-            </Link>
-          </div>
+          <p className="mt-12 text-base md:text-lg text-ink/60 max-w-xl leading-relaxed">
+            Uma trilha simples para transformar o que sabe em conteúdo,
+            autoridade e liberdade — com recurso a Inteligência Artificial.
+          </p>
 
         </div>
       </section>
