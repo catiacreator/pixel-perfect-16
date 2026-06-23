@@ -62,7 +62,7 @@ export default function ToolHub() {
             {tool.inicial}
           </div>
           <div className="flex-1 min-w-0">
-            <h1 className="font-serif text-3xl md:text-4xl text-ink mb-1">{tool.nome}</h1>
+            <h1 className="font-tool text-3xl md:text-4xl text-ink mb-1 tracking-tight uppercase">{tool.nome}</h1>
             <p className="text-sm text-muted">{tool.descricao}</p>
           </div>
         </div>

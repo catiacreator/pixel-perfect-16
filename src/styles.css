@@ -1,6 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+@import "@fontsource/archivo-black";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -184,6 +185,7 @@
 
   --font-display: "Inter Tight", "Inter", system-ui, sans-serif;
   --font-editorial: "Instrument Serif", Georgia, serif;
+  --font-tool: "Archivo Black", "Inter Tight", system-ui, sans-serif;
 }
 
 
