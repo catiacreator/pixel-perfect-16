@@ -1,6 +1,6 @@
 import { Link } from "@/lib/router-compat";
 import { useLocation, useRouter } from "@tanstack/react-router";
-import { FileText, Mail, Map, Bot, Database, Award, Users, Search, Menu, X, ArrowUpRight, ArrowLeft } from "lucide-react";
+import { FileText, Mail, Map, Bot, Database, Award, Users, Search, Menu, X, ArrowUpRight, ArrowLeft, Trophy } from "lucide-react";
 import { useState } from "react";
 
 const NAV = [
