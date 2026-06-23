@@ -152,9 +152,14 @@ function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2; onNavigate?: () => v
                     }`}
                   >
                     <Icon size={15} strokeWidth={1.75} className="text-ink/55 shrink-0" />
-                    <span className="truncate">
+                    <span className="truncate flex-1">
                       {item.num}. {item.label}
                     </span>
+                    {item.badge && (
+                      <span className="ml-1 text-[9px] tracking-[0.18em] uppercase px-1.5 py-0.5 rounded-full bg-terracotta/15 text-terracotta">
+                        {item.badge}
+                      </span>
+                    )}
                   </Link>
                   {hasChildren && (
                     <button
