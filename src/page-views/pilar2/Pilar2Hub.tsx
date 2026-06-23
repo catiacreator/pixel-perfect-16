@@ -1,60 +1,82 @@
+import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
+import type { ReactElement } from "react";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import PillarHeader from "../../components/PillarHeader";
 import EtapaCard from "../../components/EtapaCard";
-import { Crown, Search, Compass, Palette, Heart, Video, Trophy } from "lucide-react";
+import { Crown, Search, Compass, Palette, Heart, Video, Trophy, BookOpen, Play } from "lucide-react";
+import { getPilarBySlug } from "@/lib/pilares.functions";
+
+const ICONS: Record<string, ReactElement> = {
+  "pesquisa-mercado": <Search size={18} />,
+  metodo: <Compass size={18} />,
+  identidade: <Palette size={18} />,
+  "redes-sociais": <Heart size={18} />,
+  videos: <Video size={18} />,
+  conclusao: <Trophy size={18} />,
+};
+
+const LABEL: Record<string, string> = {
+  "pesquisa-mercado": "Público",
+  metodo: "Estratégia",
+  identidade: "Descoberta",
+  "redes-sociais": "Conteúdo",
+  videos: "Produção",
+  conclusao: "Fechar",
+};
+
+const SUBLINKS: Record<string, { label: string; to: string }[]> = {
+  identidade: [
+    { label: "Tom de Voz", to: "/metodo/pilar-2/tom-de-voz" },
+    { label: "Identidade Visual", to: "/metodo/pilar-2/identidade-visual" },
+    { label: "Consultoria de Imagem", to: "/metodo/pilar-2/consultoria-imagem" },
+  ],
+  "redes-sociais": [{ label: "Instagram", to: "/metodo/pilar-2/redes-sociais/instagram" }],
+  conclusao: [
+    { label: "Revisar Documento Mestre", to: "/doc-mestre" },
+    { label: "Checklist Pilar 2", to: "/metodo/pilar-2/conclusao" },
+  ],
+};
 
 export default function Pilar2Hub() {
+  const fetchPilar = useServerFn(getPilarBySlug);
+  const { data, isLoading } = useQuery({
+    queryKey: ["pilar", "pilar-2"],
+    queryFn: () => fetchPilar({ data: { slug: "pilar-2" } }),
+  });
+
   return (
     <Layout>
-      <PilarBreadcrumb pilar={2} pilarLabel="Criar Autoridade" backTo="/metodo" backLabel="Voltar para Trilha" />
+      <PilarBreadcrumb pilar={2} pilarLabel={data?.titulo ?? "Pilar 2"} backTo="/metodo" backLabel="Voltar para Trilha" />
       <PillarHeader
         numeral="2"
         icon={<Crown size={18} />}
         pilarLabel="Pilar 2"
-        titulo="Pilar 2 — Criar Autoridade"
-        subtitulo="porque você estudou demais pra ficar invisível"
+        titulo={data?.titulo ?? "Pilar 2"}
+        subtitulo={data?.descricao ?? ""}
       />
       <div className="px-5 md:px-10 pt-10 md:pt-14 pb-16 max-w-[1100px] mx-auto">
-        <p className="text-[11px] tracking-[0.28em] uppercase text-ink/45 font-medium mb-5">
-          As etapas do Pilar 2
-        </p>
+        <p className="text-[11px] tracking-[0.28em] uppercase text-ink/45 font-medium mb-5">As etapas do Pilar 2</p>
         <div className="space-y-4">
-          <EtapaCard icon={<Search size={18} />} label="Etapa 1 · Público" titulo="Pesquisa de Mercado · Pesquisa de Dores do Público" descricao="Descubra o que seu público realmente quer e onde dói." to="/metodo/pilar-2/pesquisa-mercado" />
-          <EtapaCard icon={<Compass size={18} />} label="Etapa 2 · Estratégia" titulo="Definindo Seu Método" descricao="Defina os passos do que você ensina. Esse rascunho alimenta tudo que vem depois." to="/metodo/pilar-2/metodo" concluido />
-          <EtapaCard
-            icon={<Palette size={18} />}
-            label="Etapa 3 · Descoberta"
-            titulo="Identidade de marca"
-            descricao="Descubra como você quer ser vista."
-            to="/metodo/pilar-2/identidade"
-            concluido
-            subLinks={[
-              { label: "Tom de Voz", to: "/metodo/pilar-2/tom-de-voz" },
-              { label: "Identidade Visual", to: "/metodo/pilar-2/identidade-visual" },
-              { label: "Consultoria de Imagem", to: "/metodo/pilar-2/consultoria-imagem" },
-            ]}
-          />
-          <EtapaCard
-            icon={<Heart size={18} />}
-            label="Etapa 4 · Conteúdo"
-            titulo="Redes Sociais"
-            descricao="O que você fala e como aparece."
-            to="/metodo/pilar-2/redes-sociais"
-            subLinks={[{ label: "Instagram", to: "/metodo/pilar-2/redes-sociais/instagram" }]}
-          />
-          <EtapaCard icon={<Video size={18} />} label="Etapa 5 · Produção" titulo="Vídeos profissionais sem gravar 50 vezes" descricao="Conteúdo em vídeo usando Inteligência Artificial." to="/metodo/pilar-2/videos" />
-          <EtapaCard
-            icon={<Trophy size={18} />}
-            label="Etapa 6 · Fechar"
-            titulo="Revise sua autoridade"
-            descricao="Veja como sua identidade e presença ficaram."
-            to="/metodo/pilar-2/conclusao"
-            subLinks={[
-              { label: "Revisar Documento Mestre", to: "/doc-mestre" },
-              { label: "Checklist Pilar 2", to: "/metodo/pilar-2/conclusao" },
-            ]}
-          />
+          {isLoading && <p className="text-sm text-ink/50">Carregando etapas…</p>}
+          {data?.etapas.map((e, idx) => (
+            <div key={e.id} className="relative">
+              <EtapaCard
+                icon={ICONS[e.slug] ?? <BookOpen size={18} />}
+                label={`Etapa ${idx + 1} · ${LABEL[e.slug] ?? ""}`.trim()}
+                titulo={e.titulo}
+                descricao={e.descricao ?? ""}
+                to={`/metodo/pilar-2/${e.slug}`}
+                subLinks={SUBLINKS[e.slug]}
+              />
+              {e.video_url && (
+                <span className="absolute top-4 right-4 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-terracotta bg-cream-warm border border-[var(--color-border)] rounded-full px-2 py-1">
+                  <Play size={10} /> Vídeo
+                </span>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </Layout>
