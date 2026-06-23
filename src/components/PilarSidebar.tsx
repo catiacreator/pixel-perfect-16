@@ -9,6 +9,7 @@ import {
   Search,
   Compass,
   Sparkles,
+  Sparkle,
   Mic,
   Palette,
   Shirt,
@@ -17,10 +18,23 @@ import {
   Trophy,
   Clock,
   BookOpen,
-  CheckCircle2,
+  Book,
+  Heart,
+  CircleDot,
+  Zap,
   FileText,
   type LucideIcon,
 } from "lucide-react";
+
+const TOOL_ICONS: Record<string, LucideIcon> = {
+  ChatGPT: CircleDot,
+  Claude: Sparkle,
+  Gemini: Sparkles,
+  Grok: Zap,
+  NotebookLM: Book,
+  Lovable: Heart,
+  Tella: Video,
+};
 
 type SubItem = { label: string; to: string };
 type Item = {
@@ -190,13 +204,13 @@ function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2; onNavigate?: () => v
                                 : "text-ink/60 hover:text-ink"
                             }`}
                           >
-                            {c.label === "Tom de Voz" ? (
-                              <Mic size={12} className="text-ink/45" />
-                            ) : c.label === "Identidade Visual" ? (
-                              <Palette size={12} className="text-ink/45" />
-                            ) : (
-                              <Shirt size={12} className="text-ink/45" />
-                            )}
+                            {(() => {
+                              const ToolIcon = TOOL_ICONS[c.label];
+                              if (ToolIcon) return <ToolIcon size={13} className="text-ink/55" />;
+                              if (c.label === "Tom de Voz") return <Mic size={12} className="text-ink/45" />;
+                              if (c.label === "Identidade Visual") return <Palette size={12} className="text-ink/45" />;
+                              return <Shirt size={12} className="text-ink/45" />;
+                            })()}
                             {c.label}
                             {cActive && (
                               <span className="ml-auto w-1.5 h-1.5 rounded-full bg-terracotta" />
