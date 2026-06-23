@@ -113,22 +113,6 @@ export default function EsbocoMetodo() {
                   <p className="text-xs tracking-[0.1em] uppercase text-terracotta">
                     Ponto A · Dor {i + 1}
                   </p>
-                  <div className="flex gap-1">
-                    <button
-                      onClick={() => moverPar(i, -1)}
-                      className="p-1 rounded-full border border-border text-muted disabled:opacity-30"
-                      disabled={i === 0}
-                    >
-                      <ArrowUp size={12} />
-                    </button>
-                    <button
-                      onClick={() => moverPar(i, 1)}
-                      className="p-1 rounded-full border border-border text-muted disabled:opacity-30"
-                      disabled={i === state.pares.length - 1}
-                    >
-                      <ArrowDown size={12} />
-                    </button>
-                  </div>
                 </div>
                 <textarea
                   value={p.dor}
