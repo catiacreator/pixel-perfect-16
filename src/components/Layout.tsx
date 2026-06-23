@@ -18,6 +18,27 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    async function load() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!active) return;
+      setSignedIn(!!user);
+      if (user) {
+        const { data } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
+        if (active) setIsAdmin(!!data);
+      } else {
+        setIsAdmin(false);
+      }
+    }
+    load();
+    const { data: sub } = supabase.auth.onAuthStateChange(() => load());
+    return () => { active = false; sub.subscription.unsubscribe(); };
+  }, []);
+
   const showBack = location.pathname !== "/";
   const handleBack = () => {
     if (typeof window !== "undefined" && window.history.length > 1) {
@@ -28,6 +49,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   };
   const isActive = (to: string) =>
     to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    router.navigate({ to: "/auth" });
+  }
 
   return (
     <div className="min-h-screen w-full flex flex-col bg-cream text-ink font-display">
