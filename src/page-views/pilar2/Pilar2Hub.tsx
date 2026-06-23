@@ -15,7 +15,7 @@ export default function Pilar2Hub() {
         titulo="Pilar 2 — Criar Autoridade"
         subtitulo="porque você estudou demais pra ficar invisível"
       />
-      <div className="px-5 md:px-10 pb-16 max-w-[1100px] mx-auto">
+      <div className="px-5 md:px-10 pt-10 md:pt-14 pb-16 max-w-[1100px] mx-auto">
         <p className="text-[11px] tracking-[0.28em] uppercase text-ink/45 font-medium mb-5">
           As etapas do Pilar 2
         </p>
