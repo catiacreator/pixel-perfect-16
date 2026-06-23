@@ -1,5 +1,20 @@
 import type { ReactNode } from "react";
 
+const ROMAN: Record<string, string> = {
+  "1": "I",
+  "01": "I",
+  "2": "II",
+  "02": "II",
+  "3": "III",
+  "03": "III",
+  "4": "IV",
+  "04": "IV",
+};
+
+function toRoman(n: string) {
+  return ROMAN[n] ?? n;
+}
+
 export default function PillarHeader({
   numeral,
   icon,
@@ -15,57 +30,77 @@ export default function PillarHeader({
   tituloHighlight?: string;
   subtitulo?: string;
 }) {
-  return (
-    <div className="px-5 md:px-10 pt-8 md:pt-14 pb-10 md:pb-14 max-w-[1100px] mx-auto">
-      {/* Meta top line */}
-      <div className="flex items-center gap-3 mb-10 md:mb-14">
-        <span className="text-[11px] tracking-[0.25em] uppercase text-terracotta font-medium">
-          / {pilarLabel}
-        </span>
-        <span className="h-px flex-1 bg-[var(--color-border)]" />
-        <span className="hidden md:inline-flex items-center gap-2 text-[11px] tracking-[0.2em] uppercase text-ink/40">
-          Edição 2026
-        </span>
-      </div>
+  const roman = toRoman(numeral);
+  const parts = titulo.split(/ — | – /);
+  const titleLead = parts.length > 1 ? `${parts[0]} —` : null;
+  const titleRest = parts.length > 1 ? parts.slice(1).join(" — ") : titulo;
 
-      {/* Title row */}
-      <div className="grid grid-cols-[auto_1fr] gap-5 md:gap-8 items-start">
-        <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-cream-warm border border-[var(--color-border)] flex items-center justify-center text-terracotta mt-2">
-          {icon}
+  return (
+    <header className="px-5 md:px-10 pt-10 md:pt-16 pb-8 md:pb-12 max-w-[1100px] mx-auto">
+      <div className="grid grid-cols-[4rem_1fr] md:grid-cols-[7rem_1fr] gap-5 md:gap-10 items-start">
+        {/* Roman numeral */}
+        <div
+          className="font-display text-[3.5rem] md:text-[6rem] leading-[0.85] text-terracotta/80 tabular-nums select-none -mt-2"
+          aria-hidden
+        >
+          {roman}
         </div>
 
+        {/* Title block */}
         <div className="min-w-0">
-          <h1 className="font-display text-3xl md:text-5xl lg:text-6xl leading-[1.02] tracking-[-0.025em] text-ink">
-            {(() => {
-              const parts = titulo.split(/ — | – /);
-              if (parts.length > 1) {
-                return (
-                  <>
-                    <span className="text-ink/30">{parts[0]} —</span>{" "}
-                    {parts.slice(1).join(" — ")}
-                  </>
-                );
-              }
-              return titulo;
-            })()}
+          <p className="text-[11px] tracking-[0.28em] uppercase text-terracotta font-medium mb-3 md:mb-4">
+            {pilarLabel}
+          </p>
+
+          <h1 className="font-display uppercase text-[2rem] md:text-[3.5rem] lg:text-[4rem] leading-[0.95] tracking-[-0.015em]">
+            {titleLead && (
+              <>
+                <span className="text-ink/35">{titleLead}</span>{" "}
+              </>
+            )}
+            <span className="text-terracotta">{titleRest}</span>
             {tituloHighlight && (
               <>
                 {" "}
-                <span className="italic font-normal text-terracotta" style={{ fontFamily: "var(--font-editorial)" }}>
+                <span
+                  className="italic font-normal text-terracotta normal-case"
+                  style={{ fontFamily: "var(--font-editorial)" }}
+                >
                   {tituloHighlight}
                 </span>
                 <span className="text-gold">.</span>
               </>
             )}
           </h1>
-          {subtitulo && (
-            <p className="mt-4 text-ink/55 text-base md:text-lg max-w-xl leading-relaxed">
-              {subtitulo}
-            </p>
+
+          {(subtitulo || icon) && (
+            <div className="mt-6 md:mt-8 flex items-center gap-4">
+              {icon && (
+                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-cream-warm border border-[var(--color-border)] flex items-center justify-center text-terracotta shrink-0">
+                  {icon}
+                </div>
+              )}
+              {subtitulo && (
+                <p
+                  className="text-ink/55 text-sm md:text-base italic leading-relaxed"
+                  style={{ fontFamily: "var(--font-editorial)" }}
+                >
+                  {subtitulo}
+                </p>
+              )}
+            </div>
           )}
+
+          {/* Ornament divider */}
+          <div className="mt-8 md:mt-10 flex items-center gap-3 max-w-md">
+            <span className="h-px flex-1 bg-gradient-to-r from-transparent via-terracotta/40 to-transparent" />
+            <span className="text-terracotta/70 text-xs rotate-45 inline-block">
+              ◆
+            </span>
+            <span className="h-px flex-1 bg-gradient-to-r from-transparent via-terracotta/40 to-transparent" />
+          </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 }
-
