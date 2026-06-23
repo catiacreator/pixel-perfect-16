@@ -1,66 +1,142 @@
-Seguindo o fluxo do Pilar 1, a **Etapa 2 — Hub das IAs + Aulas** é o próximo passo natural depois do Documento Mestre.
 
-## O que está feito
-- Etapa 1 — `/doc-mestre` completo (autosave, import, refinar com IA, CTA → `/metodo/pilar-1/aprenda-ia`)
-- Existem rotas vazias: `metodo.pilar-1.aprenda-ia.tsx`, `metodo.pilar-1.aprenda-ia.$tool.tsx`, `metodo.pilar-1.aprenda-ia.$tool.$lessonSlug.tsx`, `metodo.pilar-1.aprenda-ia.claude.instalar-skills.tsx`
+# Pilar 2 — Criar Autoridade · Plano de Implementação
 
-## O que vou construir
+Escopo: reescrever as 6 etapas do Pilar 2 do zero, alinhadas à documentação enviada. Os arquivos já existem como stubs (50–150 linhas cada) e serão substituídos por implementações completas.
 
-### 1. Modelo de dados das aulas (`src/data/aulas.ts`)
-Estrutura única que alimenta o hub, cada hub-por-IA e cada página de aula:
+## Aviso sobre conteúdo truncado
+
+Sua mensagem cortou no meio do **Prompt Consultoria 1 — Estudo Visual de Roupas** (no "Look 1"). Como você pediu para começar com o que já tenho, vou marcar como `// TODO: completar prompt` os seguintes blocos e deixar placeholders claros na UI:
+
+- Prompt Consultoria 1 — final do bloco "3 LOOKS BASE PRONTOS PRA GRAVAR" em diante
+- Prompt Consultoria 2 — Cabelo (não enviado)
+- Etapa 4 — Redes Sociais (estrutura, prompts, formulários não enviados)
+- Etapa 5 — Vídeos (não enviada)
+- Etapa 6 — Conclusão / Checklist (não enviada)
+
+Você cola depois e eu completo sem refazer o resto.
+
+## Etapa 1 — Pesquisa de Mercado (`/metodo/pilar-2/pesquisa-mercado`)
+
+- 2 passos com vídeo placeholder (`VideoPlaceholder`) + botão "Marcar como concluído" usando `use-aula-progress`.
+- Passo 1: botão externo "Abrir NotebookLM" → `https://notebooklm.google.com/`.
+- Passo 2: caixinha com 5 inputs numerados ("As 5 maiores dores do seu público").
+- Persistência via campo `dores_publico_top5` no Doc Mestre (server fn `salvar-dores-publico`).
+- Link "Próxima aula → Definindo Seu Método".
+
+## Etapa 2 — Definindo Seu Método (`/metodo/pilar-2/metodo`)
+
+- Reaproveita o componente atual `EsbocoMetodo.tsx` como base.
+- PASSO 1: botão "Criar meu método com Inteligência Artificial" abre `ConversaModal` apontando para edge function `construir-metodo` (já existente em `mekzmmliixsxgtnbfgiy`).
+- Payload do POST conforme documentação (mensagens + dados Doc Mestre + arrays de dores/desejos).
+- Estado de chat persistido em localStorage por sessão; botão "Recomeçar".
+- PASSO 2: tabs `Ponto A → Vitória` (5 cards editáveis com select de Intensidade Alta/Moderada/Baixa + setas de reordenar) e `Meu Método` (nome + promessa).
+- Botões "Salvar esboço" (server fn `salvar-esboco-metodo`) e "Revisar Doc Mestre".
+
+## Etapa 3 — Identidade de Marca (4 sub-rotas)
+
+### 3.1 Arquétipos (`/metodo/pilar-2/identidade`)
+
+3 seções (Seu arquétipo / Cliente / Encontro) cada uma com:
+- Descrição
+- Botões "Copiar prompt N" (preenche placeholders com dados do Doc Mestre via `fill-prompt`) e "Ver prompt" (modal scroll)
+- Formulários com persistência (selects de 12 arquétipos + textareas)
+
+Prompts 1, 2 e 3 (verbatim, ~10KB texto) vão para `src/data/prompts/pilar2-arquetipos.ts`.
+
+### 3.2 Tom de Voz (`/metodo/pilar-2/tom-de-voz`)
+
+- Botões prompt 4 + textarea de cola + 4 campos auto-preenchidos (regex parser nos rótulos `Campo: tom_de_voz` etc).
+- Botão "Baixar PDF — Tom de Voz" (gerador simples com `jspdf` se já instalado; senão `window.print()` em rota dedicada).
+
+### 3.3 Identidade Visual (`/metodo/pilar-2/identidade-visual`)
+
+- Instruções com botão "Abrir Pinterest" + botão "Copiar prompt 5".
+- Parser do KIT FINAL (10 seções numeradas com emojis) para preencher os campos automaticamente quando o usuário cola.
+- Campos: vibe, paleta (5 cores), 3 tipografias com link Google Fonts, estilo de imagem, elementos, antipadrões, 3 prompts de imagem.
+
+### 3.4 Consultoria de Imagem (`/metodo/pilar-2/consultoria-imagem`)
+
+- 2 cards (Roupas / Cabelo), cada um com "Copiar prompt" + "Ver prompt".
+- Prompt 1 cheio; Prompt 2 com placeholder TODO.
+
+Prompts 4 e 5 + Consultoria → `src/data/prompts/pilar2-tom-visual.ts`.
+
+## Etapa 4 — Redes Sociais (`/metodo/pilar-2/redes-sociais`)
+
+Manter estrutura atual (Instagram + formatos). Adicionar TODO no topo:
+"Conteúdo pendente — aguardando documentação detalhada".
+
+## Etapa 5 — Vídeos (`/metodo/pilar-2/videos`)
+
+Mesmo TODO. Estrutura atual preservada.
+
+## Etapa 6 — Conclusão (`/metodo/pilar-2/conclusao`)
+
+Mesmo TODO. Checklist atual preservado até nova doc.
+
+## Modelo de dados — Doc Mestre
+
+Migration adicionando colunas ao `doc_mestre` (tabela existente):
+
+```sql
+ALTER TABLE public.doc_mestre ADD COLUMN IF NOT EXISTS
+  dores_publico_top5 jsonb,
+  metodo_esboco jsonb,                 -- { pontos: [{dor, intensidade, vitoria}], nome, promessa }
+  arquetipo_dominante text,
+  arquetipo_secundario text,
+  arquetipo_palavras_usar text,
+  arquetipo_palavras_evitar text,
+  arquetipo_resultado_completo text,
+  arquetipo_cliente_dominante text,
+  arquetipo_cliente_secundario text,
+  arquetipo_cliente_dor_principal text,
+  arquetipo_cliente_prova_social text,
+  arquetipo_cliente_resultado_completo text,
+  arquetipo_ajustes_comunicacao text,
+  tom_de_voz text,
+  crenca_central text,
+  opinioes_polemicas text,
+  cases text,
+  identidade_visual jsonb;             -- vibe, paleta, tipografias, estilo, elementos, antipadrões, prompts
 ```
-tools: [
-  { slug: "chatgpt", nome, descricao, totalAulas, modulos: [...] },
-  { slug: "claude", ... },
-  { slug: "gemini", ... },
-  { slug: "notebooklm", ... },
-  { slug: "grok", ... },
-  { slug: "lovable", ... },
-  { slug: "tella", ... },
-]
-```
-Cada aula tem: `id` (ex. "1-1"), `titulo`, `modulo`, `videoUrl?`, `topicos[]`, `links[]`, `promptPersonalizado?` (template com placeholders `[NOME]`, `[PROFISSÃO]`, etc.).
 
-Conteúdo: copio fielmente o texto fornecido (ChatGPT 1.1–4.1, Claude 1.1–2.1, Gemini 1.1–1.2, NotebookLM 1.1–1.3, Grok 1.1–1.2, Lovable 1.1–1.5, Tella 1.1). A spec corta a meio da última frase do Lovable 1.4 e Lovable 1.5/Tella 1.1 não vieram — uso placeholders curtos marcados visualmente até receberes o texto.
+Server functions novas em `src/lib/pilar2.functions.ts`:
+- `salvarDoresPublico`, `salvarEsbocoMetodo`, `salvarArquetipos`, `salvarTomDeVoz`, `salvarIdentidadeVisual`
+- Cada uma com `requireSupabaseAuth`, upsert por `user_id`
 
-### 2. Progresso por aula (localStorage)
-Chave `leveza.aulas-concluidas.v1` = `{ "chatgpt/1-1": true, … }`. Hook `useAulaProgress` para ler/escrever. Toggle "Marcar como concluída" em cada aula, barra de % calculada por IA e total.
+## Arquivos a criar/editar
 
-### 3. Hub geral `/metodo/pilar-1/aprenda-ia`
-- Mantém o mesmo design system (cream/terracotta/gold/forest/ink, Lora + Work Sans)
-- Cabeçalho com título e descrição
-- Grid de 7 cards (uma IA por card) com thumbnail/inicial, nome, barra de progresso "X% · Y/Z aulas"
-- CTA inferior **"Próximo passo: Detetive do Tempo →"** para `/metodo/pilar-1/detetive-do-tempo`
+**Novos:**
+- `src/data/prompts/pilar2-arquetipos.ts` (3 prompts verbatim)
+- `src/data/prompts/pilar2-tom-visual.ts` (prompts 4, 5, consultoria 1)
+- `src/lib/pilar2.functions.ts`
+- `src/lib/pilar2-parsers.ts` (parsers para tom de voz e identidade visual)
+- `src/components/PromptBlock.tsx` (componente "Copiar prompt" + "Ver prompt" reutilizável)
+- `supabase/migrations/<ts>_pilar2_doc_mestre.sql`
 
-### 4. Hub por IA `/metodo/pilar-1/aprenda-ia/$tool`
-- Cabeçalho com nome + descrição da IA + progresso geral
-- Lista de aulas agrupada por módulo, com check ao lado das concluídas
-- Link de aula → `/metodo/pilar-1/aprenda-ia/$tool/$lessonSlug`
-- Para Claude, link extra "Instalar Skills" → `/metodo/pilar-1/aprenda-ia/claude/instalar-skills` (já existe; mantenho)
+**Reescritos:**
+- `src/page-views/pilar2/PesquisaMercado.tsx`
+- `src/page-views/pilar2/EsbocoMetodo.tsx`
+- `src/page-views/pilar2/Identidade.tsx`
+- `src/page-views/pilar2/TomDeVoz.tsx`
+- `src/page-views/pilar2/IdentidadeVisual.tsx`
+- `src/page-views/pilar2/ConsultoriaImagem.tsx`
 
-### 5. Página de aula `/metodo/pilar-1/aprenda-ia/$tool/$lessonSlug`
-Layout único reutilizado por todas as 25+ aulas:
-- Breadcrumb "Aprenda IA › ChatGPT › Aula 1.1"
-- Título + módulo
-- Slot de vídeo (16:9 com placeholder estilo Doc Mestre quando `videoUrl` não existe)
-- Tópicos de referência (lista com bullets)
-- Links externos como botões (ex. "Acessar o Grok", "Instalar Go Full Page")
-- Bloco **Prompt personalizado** quando a aula o tem:
-  - Lê o Documento Mestre do localStorage e substitui `[NOME]`, `[PROFISSÃO]`, `[O QUE FAZ]`, `[COMO RESOLVE]`, `[PÚBLICO]`, `[5 DORES]`, `[5 DESEJOS]`, `[PRODUTOS]`, `[TICKET MÉDIO]`, `[TOM DE VOZ]`, `[NOME DO MÉTODO]`, `[PROMESSA]`, `[PILARES]`, `[HORAS/DIA]`, `[DIAS/SEMANA]` (campos em falta ficam como "(não preenchido)" + aviso "Completa o Documento Mestre para personalizar este prompt")
-  - Botão "Copiar prompt" + label contextual ("Cole dentro do seu Projeto no ChatGPT", etc.)
-- Botão "Marcar como concluída" (toggle)
-- Navegação anterior / próxima (linear dentro da IA; última aula da IA → primeira aula da IA seguinte conforme spec)
+**Intocados nesta rodada:** Pilar2Hub, RedesSociais*, Videos, ConclusaoPilar2, PaginaProfissional (recebem TODO banner).
 
-### 6. Página "Instalar Skills" (Claude)
-A rota já existe vazia; preencho com o texto fornecido (intro + 3 passos). Lista de skills com botões "Baixar .md" fica como placeholder até me dares os ficheiros reais.
+## Ordem de execução
+
+1. Migration + server fns + tipos
+2. Componente `PromptBlock` + arquivos de prompts (verbatim)
+3. Etapa 1 → Etapa 2 → Etapa 3 (4 sub-rotas)
+4. Banner TODO nas etapas 4/5/6
 
 ## Detalhes técnicos
-- **Stack**: TanStack Start file routes, `Link` do `router-compat`, `lucide-react`, Tailwind v4 com tokens existentes
-- **Sem nova migração / sem backend**: progresso vive em `localStorage`, igual ao Doc Mestre
-- **SSR-safe**: leitura de `localStorage` só dentro de `useEffect`
-- **Conteúdo das aulas**: ficheiro `aulas.ts` simples — fácil de editar depois
 
-## O que NÃO vou fazer neste passo
-- Páginas das Etapas 3, 4, 5 (Detetive do Tempo, Relatório, Conclusão) — ficam para depois
-- Upload/gestão real de Skills .md (sem ficheiros ainda)
-- Lovable 1.5 e Tella 1.1 (texto em falta — placeholders visíveis)
+- Persistência: `requireSupabaseAuth` + upsert no `doc_mestre`; client invoca via `useServerFn`.
+- Edge function `construir-metodo`: chamada client-side direta (já hospedada em projeto separado), com `fetch` POST e streaming de mensagens (ConversaModal já implementa).
+- "Copiar prompt": `navigator.clipboard.writeText(fillPrompt(template, docMestre))` + toast.
+- Selects de arquétipos: array constante com os 12 nomes (INOCENTE, EXPLORADORA, …).
+- PDFs: rotas separadas `/pdf/pilar-2/tom-de-voz` e `/pdf/pilar-2/identidade-visual` com layout print-friendly e `window.print()` automático.
+
+Confirme para eu começar.

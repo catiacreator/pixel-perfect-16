@@ -4,6 +4,7 @@ import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import ProgressBar from "../../components/ProgressBar";
 import VideoPlaceholder from "../../components/VideoPlaceholder";
+import TodoBanner from "../../components/TodoBanner";
 import { ChevronDown, PlayCircle, ArrowLeft } from "lucide-react";
 
 const MODULOS = [
@@ -45,6 +46,7 @@ export default function Videos() {
   return (
     <Layout>
       <PilarBreadcrumb pilar={2} pilarLabel="Criar Autoridade" backTo="/metodo/pilar-2" backLabel="Voltar para o Pilar 2" />
+      <TodoBanner texto="Etapa 5 — Vídeos: conteúdo pendente. Aguardando documentação detalhada (estrutura definitiva das aulas, prompts e fluxo)." />
       <div className="px-5 md:px-10 py-10 max-w-2xl mx-auto">
         <h1 className="font-serif text-3xl text-ink mb-2">Vídeos profissionais sem gravar 50 vezes</h1>
         <p className="text-muted mb-6">
