@@ -200,17 +200,18 @@ export default function Conquistas() {
         </div>
 
         {/* Como ganhar pontos */}
-        <div className="bg-cream-warm rounded-2xl border border-[var(--color-border)] p-6 mb-8">
+        <div className="bg-white rounded-2xl border border-[var(--color-border)] p-6 mb-8">
           <h2 className="font-serif text-lg text-ink mb-4">Como ganhar pontos</h2>
           <div className="grid md:grid-cols-2 gap-x-10 gap-y-3 text-sm">
-            <PointRow icon={BookOpen} label="Concluir uma aula" pts="+10 pts" />
-            <PointRow icon={Landmark} label="Concluir um pilar" pts="+100 pts" />
-            <PointRow icon={CalendarIcon} label="Acessar o sistema (1x por dia)" pts="+5 pts" />
-            <PointRow icon={Flame} label="Streak de 7 dias seguidos" pts="+5 pts bônus" />
-            <PointRow icon={ClipboardList} label="Responder uma pesquisa" pts="+50 pts" />
-            <PointRow icon={Database} label="Usar a base de mentorado" pts="+5 pts/dia" />
+            <PointRow emoji="🎒" label="Concluir uma aula" pts="+10 pts" />
+            <PointRow emoji="🏛️" label="Concluir um pilar" pts="+100 pts" />
+            <PointRow emoji="📅" label="Acessar o sistema (1x por dia)" pts="+5 pts" />
+            <PointRow emoji="🔥" label="Streak de 7 dias seguidos" pts="+5 pts bônus" />
+            <PointRow emoji="📝" label="Responder uma pesquisa" pts="+50 pts" />
+            <PointRow emoji="🍯" label="Usar a base de mentorado" pts="+5 pts/dia" />
           </div>
         </div>
+
 
         {/* Histórico + Top 20 */}
         <div className="grid md:grid-cols-2 gap-6">
@@ -276,20 +277,21 @@ export default function Conquistas() {
 }
 
 function PointRow({
-  icon: Icon,
+  emoji,
   label,
   pts,
 }: {
-  icon: typeof Star;
+  emoji: string;
   label: string;
   pts: string;
 }) {
   return (
     <div className="flex items-center gap-2.5">
-      <Icon size={16} className="text-ink/55" strokeWidth={1.75} />
+      <span className="text-base leading-none">{emoji}</span>
       <span className="text-ink/75">{label}</span>
       <span className="text-ink/40">—</span>
       <span className="font-semibold text-ink">{pts}</span>
     </div>
   );
 }
+
