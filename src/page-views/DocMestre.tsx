@@ -485,6 +485,29 @@ export default function DocMestre() {
             value={doc.tempoAtuacao}
             onChange={(v) => set("tempoAtuacao", v)}
           />
+          <Field
+            label="Localização (cidade / estado)"
+            value={doc.localizacao}
+            onChange={(v) => set("localizacao", v)}
+          />
+        </section>
+
+        {/* SECÇÃO ROTINA */}
+        <section className="rounded-2xl border border-border bg-white p-5 mb-5 print:border-0 print:p-0 print:mb-8">
+          <h2 className="font-serif text-xl text-ink mb-4">Tua rotina e receita</h2>
+          <p className="text-xs text-muted mb-4">Usado pelo Detetive do Tempo e pelos prompts personalizados.</p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <Field label="Horas por dia" value={doc.horasDia} onChange={(v) => set("horasDia", v)} placeholder="ex: 8" />
+            <Field label="Dias por semana" value={doc.diasSemana} onChange={(v) => set("diasSemana", v)} placeholder="ex: 5" />
+            <Field label="Faturamento mensal (R$)" value={doc.faturamentoMensal} onChange={(v) => set("faturamentoMensal", v)} placeholder="ex: 15000" />
+          </div>
+          <Field
+            label="Tom de comunicação"
+            value={doc.tomDeVoz}
+            onChange={(v) => set("tomDeVoz", v)}
+            textarea
+            placeholder="Como falas com o teu público — formal, próximo, técnico, divertido…"
+          />
         </section>
 
         {/* SECÇÃO 2 */}
