@@ -5,23 +5,26 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-cream: #F3EFE6;
-  --color-cream-warm: #E7DDC6;
-  --color-ink: #2E2B28;
-  --color-muted: #8A7E6E;
-  --color-terracotta: #A67C52;
-  --color-terracotta-dark: #8B6440;
-  --color-gold: #CBB08A;
+  --color-cream: #F8F5F1;
+  --color-cream-warm: #FAF8F6;
+  --color-ink: #2D2A26;
+  --color-muted: #8C857E;
+  --color-terracotta: #9C533D;
+  --color-terracotta-dark: #7E3F2D;
+  --color-gold: #C4A484;
   --color-sage: #6D7A73;
   --color-navy: #3F4A5A;
-  --color-forest: #0F2018;
-  --color-forest-soft: #1A2D24;
-  --color-border: #E2D8C4;
+  --color-forest: #14110F;
+  --color-forest-soft: #221E1A;
+  --color-border: #EAE4DD;
+  --color-border-soft: #F1EEE9;
   --color-success: #6D7A73;
-  --font-serif: "Playfair Display", Georgia, serif;
-  --font-sans: "Montserrat", system-ui, sans-serif;
+  --font-serif: "Instrument Serif", Georgia, serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
   --font-script: "Caveat", "Dancing Script", cursive;
 }
+
 
 /*
  * Design system definition.
@@ -153,18 +156,20 @@
 
 /* Restore custom brand palette tokens (override shadcn @theme inline above) */
 @theme {
-  --color-cream: #F3EFE6;
-  --color-cream-warm: #E7DDC6;
-  --color-ink: #2E2B28;
-  --color-muted: #8A7E6E;
-  --color-terracotta: #A67C52;
-  --color-terracotta-dark: #8B6440;
-  --color-gold: #CBB08A;
+  --color-cream: #F8F5F1;
+  --color-cream-warm: #FAF8F6;
+  --color-ink: #2D2A26;
+  --color-ink-soft: #6B645E;
+  --color-muted: #8C857E;
+  --color-terracotta: #9C533D;
+  --color-terracotta-dark: #7E3F2D;
+  --color-gold: #C4A484;
   --color-sage: #6D7A73;
   --color-navy: #3F4A5A;
-  --color-forest: #0F2018;
-  --color-forest-soft: #1A2D24;
-  --color-border: #E2D8C4;
+  --color-forest: #14110F;
+  --color-forest-soft: #221E1A;
+  --color-border: #EAE4DD;
+  --color-border-soft: #F1EEE9;
   --color-success: #6D7A73;
 
   /* Modern dark palette (Arounda-inspired) */
@@ -177,8 +182,11 @@
   --color-ash: #BABABA;
   --color-mist: rgba(255, 255, 255, 0.08);
 
-  --font-display: "Inter Tight", "Neue Montreal", system-ui, sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif;
+  --font-editorial: "Instrument Serif", Georgia, serif;
 }
+
+
 
 @layer base {
   * {
@@ -189,10 +197,12 @@
     margin: 0;
     background-color: var(--color-cream);
     color: var(--color-ink);
-    font-family: var(--font-display);
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 }
+
 
 @keyframes marquee {
   from { transform: translateX(0); }
