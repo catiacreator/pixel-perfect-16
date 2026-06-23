@@ -54,25 +54,8 @@ function tierFor(points: number) {
 
 type TopRow = { nome: string; tier: string; pontos: number; avatar?: string };
 
-const TOP_BASE: TopRow[] = [
-  { nome: "Ana Tex", tier: "Pro", pontos: 610 },
-  { nome: "Académie Elisa Marsaud", tier: "Pro", pontos: 530 },
-  { nome: "Marcela Bantle", tier: "Em Ação", pontos: 415 },
-  { nome: "Timane Pavelkonski", tier: "Em Ação", pontos: 400 },
-  { nome: "Suellen Ramos", tier: "Em Ação", pontos: 385 },
-  { nome: "Silvana Milet", tier: "Em Ação", pontos: 380 },
-  { nome: "Sabrina Camboim Furjan", tier: "Em Ação", pontos: 365 },
-  { nome: "Dayanny Macedo Barral", tier: "Em Ação", pontos: 365 },
-  { nome: "Luiza Vasconcellos", tier: "Em Ação", pontos: 340 },
-  { nome: "Patricia Mello", tier: "Em Ação", pontos: 320 },
-  { nome: "Rafaela Souza", tier: "Em Ação", pontos: 300 },
-  { nome: "Joana Ribeiro", tier: "Em Ação", pontos: 285 },
-  { nome: "Beatriz Lopes", tier: "Em Ação", pontos: 260 },
-  { nome: "Clara Mendes", tier: "Em Ação", pontos: 245 },
-  { nome: "Helena Duarte", tier: "Em Ação", pontos: 230 },
-  { nome: "Mariana Costa", tier: "Em Ação", pontos: 215 },
-  { nome: "Renata Alves", tier: "Em Ação", pontos: 200 },
-  { nome: "Carolina Pires", tier: "Em Ação", pontos: 185 },
+const TOP_BASE: TopRow[] = [];
+
   { nome: "Fernanda Reis", tier: "Em Ação", pontos: 170 },
 ];
 
