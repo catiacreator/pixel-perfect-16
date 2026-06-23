@@ -51,6 +51,12 @@ export const TOOLS: Tool[] = [
           { slug: "4-1", numero: "4.1", titulo: "Criando Slides com ChatGPT e Canva", resumo: "Gerar imagens de slides com personagem consistente, corrigir erros, importar para o Canva e exportar em PPT." },
         ],
       },
+      {
+        titulo: "Automatize com IA",
+        aulas: [
+          { slug: "5-1", numero: "5.1", titulo: "Automatize com IA · 10 tarefas", resumo: "10 automações práticas com prompts prontos: e-mails, redes sociais, reuniões, resumos, apresentações, projetos, pesquisa, aprender, documentos e decisões." },
+        ],
+      },
     ],
   },
   {
