@@ -1,6 +1,6 @@
 import { Link } from "@/lib/router-compat";
-import { useLocation } from "@tanstack/react-router";
-import { FileText, Mail, Map, Bot, Database, Award, Users, Search, Menu, X, ArrowUpRight } from "lucide-react";
+import { useLocation, useRouter } from "@tanstack/react-router";
+import { FileText, Mail, Map, Bot, Database, Award, Users, Search, Menu, X, ArrowUpRight, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 
 const NAV = [
@@ -14,7 +14,16 @@ const NAV = [
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
+  const showBack = location.pathname !== "/";
+  const handleBack = () => {
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      router.history.back();
+    } else {
+      router.navigate({ to: "/" });
+    }
+  };
   const isActive = (to: string) =>
     to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
 
@@ -101,6 +110,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </nav>
         )}
       </header>
+
+      {showBack && (
+        <div className="w-full border-b border-[var(--color-border)]/60 bg-cream/60">
+          <div className="max-w-[1400px] mx-auto px-5 md:px-10 py-3">
+            <button
+              type="button"
+              onClick={handleBack}
+              className="inline-flex items-center gap-1.5 text-[13px] text-ink/60 hover:text-ink transition-colors group"
+            >
+              <ArrowLeft size={14} strokeWidth={2} className="transition-transform group-hover:-translate-x-0.5" />
+              Voltar atrás
+            </button>
+          </div>
+        </div>
+      )}
 
       <main className="flex-1 w-full">{children}</main>
 
