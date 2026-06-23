@@ -5,7 +5,7 @@ import { useState } from "react";
 
 const NAV = [
   { to: "/", label: "Início", icon: Map },
-  { to: "/metodo/consultoria-ia", label: "Assistente IA", icon: Bot },
+  { to: "/assistente", label: "Assistente IA", icon: Bot },
   { to: "/minha-base", label: "Minha base", icon: Database },
   { to: "/skills", label: "Skills", icon: Award },
   { to: "/profissionais", label: "Profissionais", icon: Users },
