@@ -6,6 +6,7 @@ import { Link, useParams } from "@/lib/router-compat";
 import { getTool, TOOLS, type Aula } from "@/data/aulas";
 import { useAulaProgress } from "@/lib/use-aula-progress";
 import { fillPrompt } from "@/lib/fill-prompt";
+import { getAulaOverride } from "./aulas/registry";
 import {
   ArrowLeft,
   ArrowRight,
@@ -137,6 +138,9 @@ export default function AulaPage() {
   const done = isDone(tool.slug, aula.id);
   const mod = parseModulo(aula.modulo);
   const [, aulaNum] = aula.id.split("-");
+  const override = getAulaOverride(tool.slug, aula.id);
+  const CustomContent = override?.default;
+  const effectiveVideoUrl = override?.videoUrl || aula.videoUrl;
 
   return (
     <Layout>
@@ -202,9 +206,9 @@ export default function AulaPage() {
           <span className="absolute top-4 left-4 z-10 text-xs font-semibold tracking-tight text-ink/45 bg-cream-warm/80 px-2.5 py-1 rounded-md backdrop-blur">
             {aula.id.replace("-", ".")}.00
           </span>
-          {aula.videoUrl ? (
+          {effectiveVideoUrl ? (
             <iframe
-              src={aula.videoUrl}
+              src={effectiveVideoUrl}
               className="w-full h-full"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -218,6 +222,13 @@ export default function AulaPage() {
             </div>
           )}
         </div>
+
+        {/* Conteúdo customizado por aula (src/page-views/pilar1/aulas/<tool>/<id>.tsx) */}
+        {CustomContent && (
+          <div className="rounded-2xl border border-border bg-white p-5 md:p-6 mb-6">
+            <CustomContent />
+          </div>
+        )}
 
         {/* Tópicos */}
         {aula.topicos && aula.topicos.length > 0 && (
