@@ -99,7 +99,7 @@ export default function Home() {
           </div>
 
           {/* Título editorial */}
-          <h1 className="font-editorial font-normal text-[34px] md:text-[54px] lg:text-[68px] leading-[1] tracking-[-0.02em] text-cream max-w-5xl">
+          <h1 className="font-editorial font-normal text-[28px] md:text-[42px] lg:text-[52px] leading-[1] tracking-[-0.02em] text-cream max-w-5xl">
             Crie no digital
             <br />
             com{" "}
@@ -110,7 +110,8 @@ export default function Home() {
           </h1>
 
           {/* Sub + CTAs */}
-          <div className="mt-7 md:mt-10 grid grid-cols-1 md:grid-cols-[1.2fr_auto] items-end gap-6">
+          <div className="mt-5 md:mt-6 grid grid-cols-1 md:grid-cols-[1.2fr_auto] items-end gap-4">
+
 
             <p className="font-editorial text-lg md:text-2xl text-cream/80 max-w-xl leading-snug">
               Uma trilha simples para transformar o que sabe em conteúdo,
