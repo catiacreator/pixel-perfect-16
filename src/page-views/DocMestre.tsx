@@ -264,6 +264,7 @@ DOCUMENTO MESTRE ATUAL:
 NOME: ${d.nome || "(vazio)"}
 PROFISSÃO: ${d.profissao || "(vazio)"}
 TEMPO DE ATUAÇÃO: ${d.tempoAtuacao || "(vazio)"}
+LOCALIZAÇÃO: ${d.localizacao || "(vazio)"}
 O QUE EU FAÇO: ${d.oQueFaz || "(vazio)"}
 COMO RESOLVO: ${d.comoResolve || "(vazio)"}
 PÚBLICO: ${d.publico || "(vazio)"}
@@ -277,6 +278,10 @@ ${lines(d.desejos)}
 PRODUTOS/SERVIÇOS ATUAIS:
 ${produtos}
 
+ROTINA: ${d.horasDia || "(vazio)"} horas/dia · ${d.diasSemana || "(vazio)"} dias/semana
+FATURAMENTO MENSAL: ${d.faturamentoMensal || "(vazio)"}
+TOM DE COMUNICAÇÃO: ${d.tomDeVoz || "(vazio)"}
+
 ---
 
 Retorne exatamente neste formato — mantenha os rótulos em MAIÚSCULAS seguidos de ":" para eu conseguir importar de volta:
@@ -284,12 +289,14 @@ Retorne exatamente neste formato — mantenha os rótulos em MAIÚSCULAS seguido
 NOME:
 PROFISSÃO:
 TEMPO DE ATUAÇÃO:
+LOCALIZAÇÃO:
 O QUE EU FAÇO:
 COMO RESOLVO:
 PÚBLICO:
 DORES DO PÚBLICO: (uma por linha, numeradas de 1 a 5)
 DESEJOS DO PÚBLICO: (um por linha, numerados de 1 a 5)
-PRODUTOS/SERVIÇOS: (um por linha)`;
+PRODUTOS/SERVIÇOS: (um por linha)
+TOM DE COMUNICAÇÃO:`;
 }
 
 // ------------------------------------------------------------------
