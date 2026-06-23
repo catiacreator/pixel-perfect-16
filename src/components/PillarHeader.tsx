@@ -107,6 +107,7 @@ export default function PillarHeader({
           </div>
         </div>
       </div>
+      </div>
     </header>
   );
 }
