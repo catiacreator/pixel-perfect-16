@@ -182,8 +182,11 @@ export default function RelatorioDoTempo() {
                 É exatamente o que as IAs do Pilar 1 vão te ajudar a fazer.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
+                <Link to="/metodo/pilar-1/detetive-do-tempo/plano" className="inline-flex items-center gap-1.5 text-sm font-semibold text-cream bg-terracotta rounded-full px-4 py-1.5">
+                  Gerar plano de automatização <ArrowRight size={13} />
+                </Link>
                 <Link to="/metodo/pilar-1/aprenda-ia" className="inline-flex items-center gap-1.5 text-sm font-semibold text-terracotta border border-terracotta rounded-full px-4 py-1.5">
-                  Aprender a automatizar <ArrowRight size={13} />
+                  Aprender as IAs <ArrowRight size={13} />
                 </Link>
                 <Link to="/metodo/pilar-1/conclusao" className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink border border-ink rounded-full px-4 py-1.5">
                   Concluir Pilar 1 <ArrowRight size={13} />
