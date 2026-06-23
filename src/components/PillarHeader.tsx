@@ -29,19 +29,25 @@ export default function PillarHeader({
       </div>
 
       {/* Title row */}
-      <div className="grid grid-cols-[4rem_1fr] md:grid-cols-[5rem_1fr] gap-6 md:gap-10 items-start">
-        <div className="flex flex-col items-start gap-3">
-          <span className="font-display text-5xl md:text-7xl text-ink/20 tracking-tight leading-none tabular-nums">
-            {numeral}
-          </span>
-          <div className="w-10 h-10 rounded-xl bg-cream-warm border border-[var(--color-border)] flex items-center justify-center text-terracotta">
-            {icon}
-          </div>
+      <div className="grid grid-cols-[auto_1fr] gap-5 md:gap-8 items-start">
+        <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-cream-warm border border-[var(--color-border)] flex items-center justify-center text-terracotta mt-2">
+          {icon}
         </div>
 
-        <div className="min-w-0 pt-2">
+        <div className="min-w-0">
           <h1 className="font-display text-3xl md:text-5xl lg:text-6xl leading-[1.02] tracking-[-0.025em] text-ink">
-            {titulo}
+            {(() => {
+              const parts = titulo.split(/ — | – /);
+              if (parts.length > 1) {
+                return (
+                  <>
+                    <span className="text-ink/30">{parts[0]} —</span>{" "}
+                    {parts.slice(1).join(" — ")}
+                  </>
+                );
+              }
+              return titulo;
+            })()}
             {tituloHighlight && (
               <>
                 {" "}
@@ -62,3 +68,4 @@ export default function PillarHeader({
     </div>
   );
 }
+
