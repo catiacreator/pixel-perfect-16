@@ -130,44 +130,6 @@ export default function Home() {
 
 
 
-      {/* COMECE POR AQUI */}
-      <section className="relative">
-        <div className="max-w-[1400px] mx-auto px-5 md:px-10 pt-16 md:pt-24">
-          <Link
-            to="/metodo/pilar-1"
-            className="group relative block overflow-hidden rounded-[28px] bg-forest text-cream p-8 md:p-14 transition-all hover:-translate-y-0.5"
-          >
-            <div className="pointer-events-none absolute -top-32 -right-24 w-[520px] h-[520px] rounded-full bg-[radial-gradient(circle_at_center,var(--color-gold)_0%,transparent_60%)] opacity-25 blur-3xl group-hover:opacity-40 transition-opacity" />
-            <div className="pointer-events-none absolute inset-0 opacity-[0.04] bg-[radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] [background-size:18px_18px]" />
-
-            <div className="relative grid grid-cols-1 md:grid-cols-[auto_1fr_auto] items-center gap-10">
-              <div className="font-display text-[88px] md:text-[140px] leading-none text-gold/40 tracking-tighter select-none">
-                01
-              </div>
-              <div className="min-w-0">
-                <p className="text-[11px] tracking-[0.3em] uppercase text-gold mb-4">
-                  Por onde começar
-                </p>
-                <h3 className="font-display text-3xl md:text-5xl tracking-tight leading-[1.05] mb-4">
-                  Recuperar o seu{" "}
-                  <span className="italic font-normal text-gold">tempo</span>
-                </h3>
-                <p className="text-sm md:text-base text-cream/60 max-w-lg leading-relaxed">
-                  Porque uma especialista exausta não cria futuro, só apaga incêndios.
-                </p>
-              </div>
-              <span className="inline-flex items-center gap-2.5 bg-gold text-forest px-6 py-3 rounded-full text-sm font-semibold group-hover:bg-cream transition-colors shrink-0">
-                Entrar no Pilar 1
-                <ArrowUpRight
-                  size={16}
-                  strokeWidth={2.5}
-                  className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                />
-              </span>
-            </div>
-          </Link>
-        </div>
-      </section>
 
       {/* PILARES — lista editorial */}
       <section className="relative">
