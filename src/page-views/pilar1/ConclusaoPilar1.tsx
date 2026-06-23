@@ -72,9 +72,9 @@ export default function ConclusaoPilar1() {
             <Trophy size={20} />
           </div>
           <div className="flex-1">
-            <p className="font-serif text-lg text-ink">{done.size} de {ITENS.length} concluídos</p>
+            <p className="text-lg font-semibold tracking-tight text-ink">{done.size} de {ITENS.length} concluídos</p>
           </div>
-          <p className="font-serif text-2xl text-ink">{pct}%</p>
+          <p className="text-2xl font-bold tracking-tight text-ink">{pct}%</p>
         </div>
 
         <div className="space-y-2.5">
