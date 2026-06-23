@@ -216,11 +216,6 @@ function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2; onNavigate?: () => v
                               <span className="ml-auto w-1.5 h-1.5 rounded-full bg-terracotta" />
                             )}
                           </Link>
-                            {c.label}
-                            {cActive && (
-                              <span className="ml-auto w-1.5 h-1.5 rounded-full bg-terracotta" />
-                            )}
-                          </Link>
                         </li>
                       );
                     })}
