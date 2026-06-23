@@ -22,19 +22,19 @@ export default function PilarBreadcrumb({
           <ArrowLeft size={13} strokeWidth={2} /> {backLabel}
         </Link>
 
-        <div className="flex items-center gap-3 text-[11px] tracking-[0.2em] uppercase">
-          <span className="text-ink/40 hidden sm:inline">
-            / Pilar {pilar} · {pilarLabel}
+        <div className="flex items-center gap-3 text-[11px] tracking-[0.25em] uppercase">
+          <span className="text-ink/45 font-medium hidden sm:inline">
+            Ir para pilar
           </span>
-          <div className="inline-flex gap-1.5">
+          <div className="inline-flex items-center gap-1 bg-cream-warm border border-[var(--color-border)] rounded-full p-1">
             {[1, 2, 3, 4].map((n) => {
               const active = pilar === n;
               const enabled = n === 1 || n === 2;
               const base =
-                "w-7 h-7 rounded-full flex items-center justify-center text-[12px] tracking-normal transition-colors";
+                "w-7 h-7 rounded-full flex items-center justify-center text-[12px] tracking-normal font-medium transition-colors";
               if (active) {
                 return (
-                  <span key={n} className={`${base} bg-ink text-cream`}>
+                  <span key={n} className={`${base} bg-terracotta text-cream shadow-sm`}>
                     {n}
                   </span>
                 );
@@ -44,17 +44,14 @@ export default function PilarBreadcrumb({
                   <Link
                     key={n}
                     to={`/metodo/pilar-${n}`}
-                    className={`${base} border border-[var(--color-border)] text-ink/70 hover:border-ink/40 hover:text-ink`}
+                    className={`${base} text-ink/60 hover:bg-cream hover:text-ink`}
                   >
                     {n}
                   </Link>
                 );
               }
               return (
-                <span
-                  key={n}
-                  className={`${base} border border-[var(--color-border)] text-ink/25`}
-                >
+                <span key={n} className={`${base} text-ink/25`}>
                   {n}
                 </span>
               );
