@@ -62,26 +62,34 @@ const MARQUEE = [
 export default function Home() {
   return (
     <Layout>
-      {/* HERO */}
-      <section className="relative overflow-hidden">
+      {/* HERO — banda terracotta editorial */}
+      <section className="relative overflow-hidden bg-terracotta text-cream">
         <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[1100px] h-[1100px] rounded-full bg-[radial-gradient(circle_at_center,var(--color-gold)_0%,transparent_55%)] opacity-30 blur-3xl" />
-          <div className="absolute top-60 -left-40 w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle_at_center,var(--color-cream-warm)_0%,transparent_60%)] opacity-70 blur-3xl" />
+          <div className="absolute -top-40 -right-40 w-[700px] h-[700px] rounded-full bg-[radial-gradient(circle_at_center,var(--color-terracotta-dark)_0%,transparent_60%)] opacity-70 blur-2xl" />
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle_at_center,var(--color-gold)_0%,transparent_65%)] opacity-25 blur-3xl" />
+          <div
+            className="absolute inset-0 opacity-[0.06]"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 1px 1px, var(--color-cream) 1px, transparent 0)",
+              backgroundSize: "22px 22px",
+            }}
+          />
         </div>
 
-        <div className="relative max-w-[1400px] mx-auto px-5 md:px-10 pt-16 md:pt-24 pb-16 md:pb-24">
+        <div className="relative max-w-[1400px] mx-auto px-5 md:px-10 pt-16 md:pt-24 pb-20 md:pb-28">
           {/* Linha topo */}
           <div className="grid grid-cols-[auto_1fr_auto] items-center gap-6 mb-14 md:mb-20">
             <div className="flex items-center gap-2.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-terracotta animate-pulse" />
-              <span className="text-[11px] tracking-[0.3em] uppercase text-ink/50">
+              <span className="w-1.5 h-1.5 rounded-full bg-cream animate-pulse" />
+              <span className="text-[11px] tracking-[0.3em] uppercase text-cream/70">
                 Trilha · Edição 2026
               </span>
             </div>
-            <div className="hidden md:block h-px bg-[var(--color-border)]" />
+            <div className="hidden md:block h-px bg-cream/20" />
             <Link
               to="/metodo"
-              className="hidden md:inline-flex items-center gap-1.5 text-[12px] tracking-wide text-ink/60 hover:text-ink transition-colors"
+              className="hidden md:inline-flex items-center gap-1.5 text-[12px] tracking-wide text-cream/75 hover:text-cream transition-colors"
             >
               Ver o método completo
               <ArrowUpRight size={13} strokeWidth={2} />
@@ -89,35 +97,35 @@ export default function Home() {
           </div>
 
           {/* Título editorial */}
-          <h1 className="font-display font-medium text-[32px] md:text-[56px] lg:text-[72px] leading-[0.95] tracking-[-0.03em] text-ink">
+          <h1 className="font-editorial font-normal text-[40px] md:text-[68px] lg:text-[88px] leading-[0.98] tracking-[-0.02em] text-cream max-w-5xl">
             Crie no digital
             <br />
             com{" "}
-            <span className="italic font-normal text-terracotta">leveza</span>
+            <span className="italic text-cream/95">leveza</span>
             <span className="text-gold">.</span>
             <br />
-            <span className="text-ink/30">E com método.</span>
+            <span className="text-cream/40">E com método.</span>
           </h1>
 
           {/* Sub + CTAs */}
           <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-[1.2fr_auto] items-end gap-8">
-            <p className="text-base md:text-lg text-ink/60 max-w-xl leading-relaxed">
+            <p className="font-editorial text-lg md:text-2xl text-cream/80 max-w-xl leading-snug">
               Uma trilha simples para transformar o que sabe em conteúdo,
               autoridade e liberdade — com recurso a Inteligência Artificial.
             </p>
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 to="/metodo/pilar-1"
-                className="group inline-flex items-center gap-2 bg-ink text-cream pl-5 pr-2 py-2 rounded-full text-sm font-medium hover:bg-forest transition-all"
+                className="group inline-flex items-center gap-2 bg-cream text-ink pl-5 pr-2 py-2 rounded-full text-sm font-medium hover:bg-cream-warm transition-all shadow-[0_8px_24px_-10px_rgba(0,0,0,0.35)]"
               >
                 Começar agora
-                <span className="w-8 h-8 rounded-full bg-cream text-ink flex items-center justify-center">
+                <span className="w-8 h-8 rounded-full bg-ink text-cream flex items-center justify-center">
                   <ArrowUpRight size={14} strokeWidth={2.5} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </span>
               </Link>
               <Link
                 to="/assistente"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-sm font-medium text-ink border border-[var(--color-border)] hover:border-ink/40 transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-sm font-medium text-cream border border-cream/30 hover:border-cream/70 hover:bg-cream/5 transition-colors"
               >
                 <Sparkles size={14} />
                 Falar com o assistente
@@ -125,6 +133,9 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* recorte cream para transição */}
+        <div className="h-10 md:h-16 bg-cream rounded-t-[40px] md:rounded-t-[60px] -mb-px" />
       </section>
 
 
