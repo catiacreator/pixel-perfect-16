@@ -1,7 +1,8 @@
 import { Link } from "@/lib/router-compat";
 import { useLocation, useRouter } from "@tanstack/react-router";
-import { FileText, Mail, Map, Bot, Database, Award, Users, Search, Menu, X, ArrowUpRight, ArrowLeft, Trophy } from "lucide-react";
-import { useState } from "react";
+import { FileText, Mail, Map, Bot, Database, Award, Users, Search, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const NAV = [
   { to: "/", label: "Início", icon: Map },
@@ -17,6 +18,27 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    async function load() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!active) return;
+      setSignedIn(!!user);
+      if (user) {
+        const { data } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
+        if (active) setIsAdmin(!!data);
+      } else {
+        setIsAdmin(false);
+      }
+    }
+    load();
+    const { data: sub } = supabase.auth.onAuthStateChange(() => load());
+    return () => { active = false; sub.subscription.unsubscribe(); };
+  }, []);
+
   const showBack = location.pathname !== "/";
   const handleBack = () => {
     if (typeof window !== "undefined" && window.history.length > 1) {
@@ -27,6 +49,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   };
   const isActive = (to: string) =>
     to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    router.navigate({ to: "/auth" });
+  }
 
   return (
     <div className="min-h-screen w-full flex flex-col bg-cream text-ink font-display">
@@ -71,6 +98,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <FileText size={13} strokeWidth={2.25} /> Documento
               <ArrowUpRight size={13} strokeWidth={2.25} />
             </Link>
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="hidden md:inline-flex items-center gap-1.5 text-[13px] px-3 py-2 border border-[var(--color-border)] rounded-full text-ink/80 hover:bg-ink/5"
+                aria-label="Admin"
+              >
+                <Shield size={13} strokeWidth={2.25} /> Admin
+              </Link>
+            )}
             <Link
               to="/mensagens"
               className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center text-ink/70 hover:bg-ink/5 hover:text-ink transition-colors"
@@ -78,6 +114,22 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             >
               <Mail size={15} strokeWidth={1.75} />
             </Link>
+            {signedIn ? (
+              <button
+                onClick={handleLogout}
+                className="hidden md:inline-flex w-10 h-10 rounded-full border border-[var(--color-border)] items-center justify-center text-ink/60 hover:bg-ink/5 hover:text-ink"
+                aria-label="Sair"
+              >
+                <LogOut size={15} strokeWidth={1.75} />
+              </button>
+            ) : (
+              <Link
+                to="/auth"
+                className="hidden md:inline-flex text-[13px] px-4 py-2 border border-[var(--color-border)] rounded-full hover:bg-ink/5"
+              >
+                Entrar
+              </Link>
+            )}
             <button
               onClick={() => setOpen((v) => !v)}
               className="lg:hidden w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center text-ink"

@@ -15,16 +15,20 @@ import { Route as MetodoRouteImport } from './routes/metodo'
 import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as DocMestreRouteImport } from './routes/doc-mestre'
 import { Route as ConquistasRouteImport } from './routes/conquistas'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AssistenteRouteImport } from './routes/assistente'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MetodoIndexRouteImport } from './routes/metodo.index'
 import { Route as MetodoPilar2RouteImport } from './routes/metodo.pilar-2'
 import { Route as MetodoPilar1RouteImport } from './routes/metodo.pilar-1'
 import { Route as MetodoConsultoriaIaRouteImport } from './routes/metodo.consultoria-ia'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as MetodoPilar2IndexRouteImport } from './routes/metodo.pilar-2.index'
 import { Route as MetodoPilar1IndexRouteImport } from './routes/metodo.pilar-1.index'
 import { Route as MetodoConsultoriaIaIndexRouteImport } from './routes/metodo.consultoria-ia.index'
+import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as MetodoPilar2VideosRouteImport } from './routes/metodo.pilar-2.videos'
 import { Route as MetodoPilar2TomDeVozRouteImport } from './routes/metodo.pilar-2.tom-de-voz'
 import { Route as MetodoPilar2RedesSociaisRouteImport } from './routes/metodo.pilar-2.redes-sociais'
@@ -39,6 +43,9 @@ import { Route as MetodoPilar1DetetiveDoTempoRouteImport } from './routes/metodo
 import { Route as MetodoPilar1ConclusaoRouteImport } from './routes/metodo.pilar-1.conclusao'
 import { Route as MetodoPilar1AprendaIaRouteImport } from './routes/metodo.pilar-1.aprenda-ia'
 import { Route as MetodoConsultoriaIaComoUsarRouteImport } from './routes/metodo.consultoria-ia.como-usar'
+import { Route as AuthenticatedAdminRankingRouteImport } from './routes/_authenticated/admin/ranking'
+import { Route as AuthenticatedAdminMentoradasRouteImport } from './routes/_authenticated/admin/mentoradas'
+import { Route as AuthenticatedAdminConteudoRouteImport } from './routes/_authenticated/admin/conteudo'
 import { Route as MetodoPilar2RedesSociaisIndexRouteImport } from './routes/metodo.pilar-2.redes-sociais.index'
 import { Route as MetodoPilar1DetetiveDoTempoIndexRouteImport } from './routes/metodo.pilar-1.detetive-do-tempo.index'
 import { Route as MetodoPilar1AprendaIaIndexRouteImport } from './routes/metodo.pilar-1.aprenda-ia.index'
@@ -46,6 +53,7 @@ import { Route as MetodoPilar2RedesSociaisInstagramRouteImport } from './routes/
 import { Route as MetodoPilar1DetetiveDoTempoRelatorioRouteImport } from './routes/metodo.pilar-1.detetive-do-tempo.relatorio'
 import { Route as MetodoPilar1DetetiveDoTempoPlanoRouteImport } from './routes/metodo.pilar-1.detetive-do-tempo.plano'
 import { Route as MetodoPilar1AprendaIaToolRouteImport } from './routes/metodo.pilar-1.aprenda-ia.$tool'
+import { Route as AuthenticatedAdminMentoradasIdRouteImport } from './routes/_authenticated/admin/mentoradas.$id'
 import { Route as MetodoPilar2RedesSociaisInstagramIndexRouteImport } from './routes/metodo.pilar-2.redes-sociais.instagram.index'
 import { Route as MetodoPilar2RedesSociaisInstagramFormatoRouteImport } from './routes/metodo.pilar-2.redes-sociais.instagram.$formato'
 import { Route as MetodoPilar1AprendaIaClaudeInstalarSkillsRouteImport } from './routes/metodo.pilar-1.aprenda-ia.claude.instalar-skills'
@@ -81,9 +89,18 @@ const ConquistasRoute = ConquistasRouteImport.update({
   path: '/conquistas',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AssistenteRoute = AssistenteRouteImport.update({
   id: '/assistente',
   path: '/assistente',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -116,6 +133,11 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const MetodoPilar2IndexRoute = MetodoPilar2IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -132,6 +154,11 @@ const MetodoConsultoriaIaIndexRoute =
     path: '/',
     getParentRoute: () => MetodoConsultoriaIaRoute,
   } as any)
+const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
 const MetodoPilar2VideosRoute = MetodoPilar2VideosRouteImport.update({
   id: '/videos',
   path: '/videos',
@@ -209,6 +236,24 @@ const MetodoConsultoriaIaComoUsarRoute =
     path: '/como-usar',
     getParentRoute: () => MetodoConsultoriaIaRoute,
   } as any)
+const AuthenticatedAdminRankingRoute =
+  AuthenticatedAdminRankingRouteImport.update({
+    id: '/ranking',
+    path: '/ranking',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminMentoradasRoute =
+  AuthenticatedAdminMentoradasRouteImport.update({
+    id: '/mentoradas',
+    path: '/mentoradas',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminConteudoRoute =
+  AuthenticatedAdminConteudoRouteImport.update({
+    id: '/conteudo',
+    path: '/conteudo',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const MetodoPilar2RedesSociaisIndexRoute =
   MetodoPilar2RedesSociaisIndexRouteImport.update({
     id: '/',
@@ -251,6 +296,12 @@ const MetodoPilar1AprendaIaToolRoute =
     path: '/$tool',
     getParentRoute: () => MetodoPilar1AprendaIaRoute,
   } as any)
+const AuthenticatedAdminMentoradasIdRoute =
+  AuthenticatedAdminMentoradasIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedAdminMentoradasRoute,
+  } as any)
 const MetodoPilar2RedesSociaisInstagramIndexRoute =
   MetodoPilar2RedesSociaisInstagramIndexRouteImport.update({
     id: '/',
@@ -279,17 +330,22 @@ const MetodoPilar1AprendaIaToolLessonSlugRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assistente': typeof AssistenteRoute
+  '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/doc-mestre': typeof DocMestreRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
+  '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
   '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
   '/metodo/': typeof MetodoIndexRoute
+  '/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
+  '/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
+  '/admin/ranking': typeof AuthenticatedAdminRankingRoute
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
   '/metodo/pilar-1/aprenda-ia': typeof MetodoPilar1AprendaIaRouteWithChildren
   '/metodo/pilar-1/conclusao': typeof MetodoPilar1ConclusaoRoute
@@ -304,9 +360,11 @@ export interface FileRoutesByFullPath {
   '/metodo/pilar-2/redes-sociais': typeof MetodoPilar2RedesSociaisRouteWithChildren
   '/metodo/pilar-2/tom-de-voz': typeof MetodoPilar2TomDeVozRoute
   '/metodo/pilar-2/videos': typeof MetodoPilar2VideosRoute
+  '/admin/': typeof AuthenticatedAdminIndexRoute
   '/metodo/consultoria-ia/': typeof MetodoConsultoriaIaIndexRoute
   '/metodo/pilar-1/': typeof MetodoPilar1IndexRoute
   '/metodo/pilar-2/': typeof MetodoPilar2IndexRoute
+  '/admin/mentoradas/$id': typeof AuthenticatedAdminMentoradasIdRoute
   '/metodo/pilar-1/aprenda-ia/$tool': typeof MetodoPilar1AprendaIaToolRouteWithChildren
   '/metodo/pilar-1/detetive-do-tempo/plano': typeof MetodoPilar1DetetiveDoTempoPlanoRoute
   '/metodo/pilar-1/detetive-do-tempo/relatorio': typeof MetodoPilar1DetetiveDoTempoRelatorioRoute
@@ -322,6 +380,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assistente': typeof AssistenteRoute
+  '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/doc-mestre': typeof DocMestreRoute
   '/mensagens': typeof MensagensRoute
@@ -329,6 +388,9 @@ export interface FileRoutesByTo {
   '/minha-base': typeof MinhaBaseRoute
   '/api/chat': typeof ApiChatRoute
   '/metodo': typeof MetodoIndexRoute
+  '/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
+  '/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
+  '/admin/ranking': typeof AuthenticatedAdminRankingRoute
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
   '/metodo/pilar-1/conclusao': typeof MetodoPilar1ConclusaoRoute
   '/metodo/pilar-2/conclusao': typeof MetodoPilar2ConclusaoRoute
@@ -340,9 +402,11 @@ export interface FileRoutesByTo {
   '/metodo/pilar-2/pesquisa-mercado': typeof MetodoPilar2PesquisaMercadoRoute
   '/metodo/pilar-2/tom-de-voz': typeof MetodoPilar2TomDeVozRoute
   '/metodo/pilar-2/videos': typeof MetodoPilar2VideosRoute
+  '/admin': typeof AuthenticatedAdminIndexRoute
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaIndexRoute
   '/metodo/pilar-1': typeof MetodoPilar1IndexRoute
   '/metodo/pilar-2': typeof MetodoPilar2IndexRoute
+  '/admin/mentoradas/$id': typeof AuthenticatedAdminMentoradasIdRoute
   '/metodo/pilar-1/aprenda-ia/$tool': typeof MetodoPilar1AprendaIaToolRouteWithChildren
   '/metodo/pilar-1/detetive-do-tempo/plano': typeof MetodoPilar1DetetiveDoTempoPlanoRoute
   '/metodo/pilar-1/detetive-do-tempo/relatorio': typeof MetodoPilar1DetetiveDoTempoRelatorioRoute
@@ -357,18 +421,24 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/assistente': typeof AssistenteRoute
+  '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/doc-mestre': typeof DocMestreRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
   '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
   '/metodo/': typeof MetodoIndexRoute
+  '/_authenticated/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
+  '/_authenticated/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
+  '/_authenticated/admin/ranking': typeof AuthenticatedAdminRankingRoute
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
   '/metodo/pilar-1/aprenda-ia': typeof MetodoPilar1AprendaIaRouteWithChildren
   '/metodo/pilar-1/conclusao': typeof MetodoPilar1ConclusaoRoute
@@ -383,9 +453,11 @@ export interface FileRoutesById {
   '/metodo/pilar-2/redes-sociais': typeof MetodoPilar2RedesSociaisRouteWithChildren
   '/metodo/pilar-2/tom-de-voz': typeof MetodoPilar2TomDeVozRoute
   '/metodo/pilar-2/videos': typeof MetodoPilar2VideosRoute
+  '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/metodo/consultoria-ia/': typeof MetodoConsultoriaIaIndexRoute
   '/metodo/pilar-1/': typeof MetodoPilar1IndexRoute
   '/metodo/pilar-2/': typeof MetodoPilar2IndexRoute
+  '/_authenticated/admin/mentoradas/$id': typeof AuthenticatedAdminMentoradasIdRoute
   '/metodo/pilar-1/aprenda-ia/$tool': typeof MetodoPilar1AprendaIaToolRouteWithChildren
   '/metodo/pilar-1/detetive-do-tempo/plano': typeof MetodoPilar1DetetiveDoTempoPlanoRoute
   '/metodo/pilar-1/detetive-do-tempo/relatorio': typeof MetodoPilar1DetetiveDoTempoRelatorioRoute
@@ -403,17 +475,22 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/assistente'
+    | '/auth'
     | '/conquistas'
     | '/doc-mestre'
     | '/mensagens'
     | '/metodo'
     | '/meus-projetos'
     | '/minha-base'
+    | '/admin'
     | '/api/chat'
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
     | '/metodo/'
+    | '/admin/conteudo'
+    | '/admin/mentoradas'
+    | '/admin/ranking'
     | '/metodo/consultoria-ia/como-usar'
     | '/metodo/pilar-1/aprenda-ia'
     | '/metodo/pilar-1/conclusao'
@@ -428,9 +505,11 @@ export interface FileRouteTypes {
     | '/metodo/pilar-2/redes-sociais'
     | '/metodo/pilar-2/tom-de-voz'
     | '/metodo/pilar-2/videos'
+    | '/admin/'
     | '/metodo/consultoria-ia/'
     | '/metodo/pilar-1/'
     | '/metodo/pilar-2/'
+    | '/admin/mentoradas/$id'
     | '/metodo/pilar-1/aprenda-ia/$tool'
     | '/metodo/pilar-1/detetive-do-tempo/plano'
     | '/metodo/pilar-1/detetive-do-tempo/relatorio'
@@ -446,6 +525,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/assistente'
+    | '/auth'
     | '/conquistas'
     | '/doc-mestre'
     | '/mensagens'
@@ -453,6 +533,9 @@ export interface FileRouteTypes {
     | '/minha-base'
     | '/api/chat'
     | '/metodo'
+    | '/admin/conteudo'
+    | '/admin/mentoradas'
+    | '/admin/ranking'
     | '/metodo/consultoria-ia/como-usar'
     | '/metodo/pilar-1/conclusao'
     | '/metodo/pilar-2/conclusao'
@@ -464,9 +547,11 @@ export interface FileRouteTypes {
     | '/metodo/pilar-2/pesquisa-mercado'
     | '/metodo/pilar-2/tom-de-voz'
     | '/metodo/pilar-2/videos'
+    | '/admin'
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
+    | '/admin/mentoradas/$id'
     | '/metodo/pilar-1/aprenda-ia/$tool'
     | '/metodo/pilar-1/detetive-do-tempo/plano'
     | '/metodo/pilar-1/detetive-do-tempo/relatorio'
@@ -480,18 +565,24 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/assistente'
+    | '/auth'
     | '/conquistas'
     | '/doc-mestre'
     | '/mensagens'
     | '/metodo'
     | '/meus-projetos'
     | '/minha-base'
+    | '/_authenticated/admin'
     | '/api/chat'
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
     | '/metodo/'
+    | '/_authenticated/admin/conteudo'
+    | '/_authenticated/admin/mentoradas'
+    | '/_authenticated/admin/ranking'
     | '/metodo/consultoria-ia/como-usar'
     | '/metodo/pilar-1/aprenda-ia'
     | '/metodo/pilar-1/conclusao'
@@ -506,9 +597,11 @@ export interface FileRouteTypes {
     | '/metodo/pilar-2/redes-sociais'
     | '/metodo/pilar-2/tom-de-voz'
     | '/metodo/pilar-2/videos'
+    | '/_authenticated/admin/'
     | '/metodo/consultoria-ia/'
     | '/metodo/pilar-1/'
     | '/metodo/pilar-2/'
+    | '/_authenticated/admin/mentoradas/$id'
     | '/metodo/pilar-1/aprenda-ia/$tool'
     | '/metodo/pilar-1/detetive-do-tempo/plano'
     | '/metodo/pilar-1/detetive-do-tempo/relatorio'
@@ -524,7 +617,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AssistenteRoute: typeof AssistenteRoute
+  AuthRoute: typeof AuthRoute
   ConquistasRoute: typeof ConquistasRoute
   DocMestreRoute: typeof DocMestreRoute
   MensagensRoute: typeof MensagensRoute
@@ -578,11 +673,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConquistasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/assistente': {
       id: '/assistente'
       path: '/assistente'
       fullPath: '/assistente'
       preLoaderRoute: typeof AssistenteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -627,6 +736,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/metodo/pilar-2/': {
       id: '/metodo/pilar-2/'
       path: '/'
@@ -647,6 +763,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/metodo/consultoria-ia/'
       preLoaderRoute: typeof MetodoConsultoriaIaIndexRouteImport
       parentRoute: typeof MetodoConsultoriaIaRoute
+    }
+    '/_authenticated/admin/': {
+      id: '/_authenticated/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/metodo/pilar-2/videos': {
       id: '/metodo/pilar-2/videos'
@@ -746,6 +869,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MetodoConsultoriaIaComoUsarRouteImport
       parentRoute: typeof MetodoConsultoriaIaRoute
     }
+    '/_authenticated/admin/ranking': {
+      id: '/_authenticated/admin/ranking'
+      path: '/ranking'
+      fullPath: '/admin/ranking'
+      preLoaderRoute: typeof AuthenticatedAdminRankingRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/mentoradas': {
+      id: '/_authenticated/admin/mentoradas'
+      path: '/mentoradas'
+      fullPath: '/admin/mentoradas'
+      preLoaderRoute: typeof AuthenticatedAdminMentoradasRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/conteudo': {
+      id: '/_authenticated/admin/conteudo'
+      path: '/conteudo'
+      fullPath: '/admin/conteudo'
+      preLoaderRoute: typeof AuthenticatedAdminConteudoRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/metodo/pilar-2/redes-sociais/': {
       id: '/metodo/pilar-2/redes-sociais/'
       path: '/'
@@ -795,6 +939,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MetodoPilar1AprendaIaToolRouteImport
       parentRoute: typeof MetodoPilar1AprendaIaRoute
     }
+    '/_authenticated/admin/mentoradas/$id': {
+      id: '/_authenticated/admin/mentoradas/$id'
+      path: '/$id'
+      fullPath: '/admin/mentoradas/$id'
+      preLoaderRoute: typeof AuthenticatedAdminMentoradasIdRouteImport
+      parentRoute: typeof AuthenticatedAdminMentoradasRoute
+    }
     '/metodo/pilar-2/redes-sociais/instagram/': {
       id: '/metodo/pilar-2/redes-sociais/instagram/'
       path: '/'
@@ -825,6 +976,52 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedAdminMentoradasRouteChildren {
+  AuthenticatedAdminMentoradasIdRoute: typeof AuthenticatedAdminMentoradasIdRoute
+}
+
+const AuthenticatedAdminMentoradasRouteChildren: AuthenticatedAdminMentoradasRouteChildren =
+  {
+    AuthenticatedAdminMentoradasIdRoute: AuthenticatedAdminMentoradasIdRoute,
+  }
+
+const AuthenticatedAdminMentoradasRouteWithChildren =
+  AuthenticatedAdminMentoradasRoute._addFileChildren(
+    AuthenticatedAdminMentoradasRouteChildren,
+  )
+
+interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminConteudoRoute: typeof AuthenticatedAdminConteudoRoute
+  AuthenticatedAdminMentoradasRoute: typeof AuthenticatedAdminMentoradasRouteWithChildren
+  AuthenticatedAdminRankingRoute: typeof AuthenticatedAdminRankingRoute
+  AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
+}
+
+const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
+  {
+    AuthenticatedAdminConteudoRoute: AuthenticatedAdminConteudoRoute,
+    AuthenticatedAdminMentoradasRoute:
+      AuthenticatedAdminMentoradasRouteWithChildren,
+    AuthenticatedAdminRankingRoute: AuthenticatedAdminRankingRoute,
+    AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
+  }
+
+const AuthenticatedAdminRouteRouteWithChildren =
+  AuthenticatedAdminRouteRoute._addFileChildren(
+    AuthenticatedAdminRouteRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
 
 interface MetodoConsultoriaIaRouteChildren {
   MetodoConsultoriaIaComoUsarRoute: typeof MetodoConsultoriaIaComoUsarRoute
@@ -998,7 +1195,9 @@ const MetodoRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AssistenteRoute: AssistenteRoute,
+  AuthRoute: AuthRoute,
   ConquistasRoute: ConquistasRoute,
   DocMestreRoute: DocMestreRoute,
   MensagensRoute: MensagensRoute,

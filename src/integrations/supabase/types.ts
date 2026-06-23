@@ -38,15 +38,247 @@ export type Database = {
         }
         Relationships: []
       }
+      conquistas: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          emoji: string | null
+          id: string
+          nome: string
+          ordem: number
+          pontos: number
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          emoji?: string | null
+          id?: string
+          nome: string
+          ordem?: number
+          pontos?: number
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          emoji?: string | null
+          id?: string
+          nome?: string
+          ordem?: number
+          pontos?: number
+          slug?: string
+        }
+        Relationships: []
+      }
+      etapas: {
+        Row: {
+          conteudo: Json
+          created_at: string
+          descricao: string | null
+          id: string
+          ordem: number
+          pilar_id: string
+          slug: string
+          titulo: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          conteudo?: Json
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          ordem?: number
+          pilar_id: string
+          slug: string
+          titulo: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          conteudo?: Json
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          ordem?: number
+          pilar_id?: string
+          slug?: string
+          titulo?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "etapas_pilar_id_fkey"
+            columns: ["pilar_id"]
+            isOneToOne: false
+            referencedRelation: "pilares"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mentorada_conquistas: {
+        Row: {
+          conquista_id: string
+          desbloqueada_em: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          conquista_id: string
+          desbloqueada_em?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          conquista_id?: string
+          desbloqueada_em?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mentorada_conquistas_conquista_id_fkey"
+            columns: ["conquista_id"]
+            isOneToOne: false
+            referencedRelation: "conquistas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pilares: {
+        Row: {
+          created_at: string
+          descricao: string | null
+          id: string
+          ordem: number
+          slug: string
+          titulo: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          ordem?: number
+          slug: string
+          titulo: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          ordem?: number
+          slug?: string
+          titulo?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      pontos_log: {
+        Row: {
+          created_at: string
+          criado_por: string | null
+          delta: number
+          id: string
+          motivo: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          criado_por?: string | null
+          delta: number
+          id?: string
+          motivo: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          criado_por?: string | null
+          delta?: number
+          id?: string
+          motivo?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          id: string
+          nome: string | null
+          pontos: number
+          sequencia: number
+          tier: string
+          ultima_atividade: string | null
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          id: string
+          nome?: string | null
+          pontos?: number
+          sequencia?: number
+          tier?: string
+          ultima_atividade?: string | null
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          nome?: string | null
+          pontos?: number
+          sequencia?: number
+          tier?: string
+          ultima_atividade?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -173,6 +405,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
