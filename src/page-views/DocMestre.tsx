@@ -92,6 +92,7 @@ function mergeExtracted(prev: DocState, extracted: Partial<DocState>): DocState 
     nome: extracted.nome || prev.nome,
     profissao: extracted.profissao || prev.profissao,
     tempoAtuacao: extracted.tempoAtuacao || prev.tempoAtuacao,
+    localizacao: extracted.localizacao || prev.localizacao,
     oQueFaz: extracted.oQueFaz || prev.oQueFaz,
     comoResolve: extracted.comoResolve || prev.comoResolve,
     publico: extracted.publico || prev.publico,
@@ -105,6 +106,10 @@ function mergeExtracted(prev: DocState, extracted: Partial<DocState>): DocState 
         : prev.desejos,
     produtos:
       extracted.produtos && extracted.produtos.length ? extracted.produtos : prev.produtos,
+    horasDia: extracted.horasDia || prev.horasDia,
+    diasSemana: extracted.diasSemana || prev.diasSemana,
+    faturamentoMensal: extracted.faturamentoMensal || prev.faturamentoMensal,
+    tomDeVoz: extracted.tomDeVoz || prev.tomDeVoz,
   };
 }
 
