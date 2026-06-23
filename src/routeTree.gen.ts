@@ -15,13 +15,16 @@ import { Route as MetodoRouteImport } from './routes/metodo'
 import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as DocMestreRouteImport } from './routes/doc-mestre'
 import { Route as ConquistasRouteImport } from './routes/conquistas'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AssistenteRouteImport } from './routes/assistente'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MetodoIndexRouteImport } from './routes/metodo.index'
 import { Route as MetodoPilar2RouteImport } from './routes/metodo.pilar-2'
 import { Route as MetodoPilar1RouteImport } from './routes/metodo.pilar-1'
 import { Route as MetodoConsultoriaIaRouteImport } from './routes/metodo.consultoria-ia'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as MetodoPilar2IndexRouteImport } from './routes/metodo.pilar-2.index'
 import { Route as MetodoPilar1IndexRouteImport } from './routes/metodo.pilar-1.index'
 import { Route as MetodoConsultoriaIaIndexRouteImport } from './routes/metodo.consultoria-ia.index'
@@ -81,9 +84,18 @@ const ConquistasRoute = ConquistasRouteImport.update({
   path: '/conquistas',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AssistenteRoute = AssistenteRouteImport.update({
   id: '/assistente',
   path: '/assistente',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -115,6 +127,11 @@ const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const MetodoPilar2IndexRoute = MetodoPilar2IndexRouteImport.update({
   id: '/',
@@ -279,12 +296,14 @@ const MetodoPilar1AprendaIaToolLessonSlugRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assistente': typeof AssistenteRoute
+  '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/doc-mestre': typeof DocMestreRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
+  '/admin': typeof AuthenticatedAdminRouteRoute
   '/api/chat': typeof ApiChatRoute
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
@@ -322,11 +341,13 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assistente': typeof AssistenteRoute
+  '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/doc-mestre': typeof DocMestreRoute
   '/mensagens': typeof MensagensRoute
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
+  '/admin': typeof AuthenticatedAdminRouteRoute
   '/api/chat': typeof ApiChatRoute
   '/metodo': typeof MetodoIndexRoute
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
@@ -357,13 +378,16 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/assistente': typeof AssistenteRoute
+  '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/doc-mestre': typeof DocMestreRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRouteRoute
   '/api/chat': typeof ApiChatRoute
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
@@ -403,12 +427,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/assistente'
+    | '/auth'
     | '/conquistas'
     | '/doc-mestre'
     | '/mensagens'
     | '/metodo'
     | '/meus-projetos'
     | '/minha-base'
+    | '/admin'
     | '/api/chat'
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
@@ -446,11 +472,13 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/assistente'
+    | '/auth'
     | '/conquistas'
     | '/doc-mestre'
     | '/mensagens'
     | '/meus-projetos'
     | '/minha-base'
+    | '/admin'
     | '/api/chat'
     | '/metodo'
     | '/metodo/consultoria-ia/como-usar'
@@ -480,13 +508,16 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
     | '/assistente'
+    | '/auth'
     | '/conquistas'
     | '/doc-mestre'
     | '/mensagens'
     | '/metodo'
     | '/meus-projetos'
     | '/minha-base'
+    | '/_authenticated/admin'
     | '/api/chat'
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
@@ -524,7 +555,9 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AssistenteRoute: typeof AssistenteRoute
+  AuthRoute: typeof AuthRoute
   ConquistasRoute: typeof ConquistasRoute
   DocMestreRoute: typeof DocMestreRoute
   MensagensRoute: typeof MensagensRoute
@@ -578,11 +611,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConquistasRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/assistente': {
       id: '/assistente'
       path: '/assistente'
       fullPath: '/assistente'
       preLoaderRoute: typeof AssistenteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -626,6 +673,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/chat'
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/metodo/pilar-2/': {
       id: '/metodo/pilar-2/'
@@ -826,6 +880,17 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 interface MetodoConsultoriaIaRouteChildren {
   MetodoConsultoriaIaComoUsarRoute: typeof MetodoConsultoriaIaComoUsarRoute
   MetodoConsultoriaIaIndexRoute: typeof MetodoConsultoriaIaIndexRoute
@@ -998,7 +1063,9 @@ const MetodoRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AssistenteRoute: AssistenteRoute,
+  AuthRoute: AuthRoute,
   ConquistasRoute: ConquistasRoute,
   DocMestreRoute: DocMestreRoute,
   MensagensRoute: MensagensRoute,

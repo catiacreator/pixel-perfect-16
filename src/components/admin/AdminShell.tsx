@@ -6,12 +6,13 @@ import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { checkIsAdmin } from "@/lib/admin.functions";
 
-const ITEMS = [
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
+const ITEMS: NavItem[] = [
   { to: "/admin", label: "Visão geral", icon: LayoutDashboard, exact: true },
   { to: "/admin/mentoradas", label: "Mentoradas", icon: Users },
   { to: "/admin/ranking", label: "Ranking", icon: Trophy },
   { to: "/admin/conteudo", label: "Conteúdo", icon: FileText },
-] as const;
+];
 
 export function AdminShell() {
   const navigate = useNavigate();
