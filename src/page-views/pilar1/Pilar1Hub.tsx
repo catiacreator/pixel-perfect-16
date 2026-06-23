@@ -39,7 +39,7 @@ export default function Pilar1Hub() {
             </p>
             <h3 className="font-display text-xl md:text-2xl tracking-tight text-cream leading-snug mb-1.5">
               Vamos começar pelo seu{" "}
-              <span className="italic font-normal text-gold" style={{ fontFamily: "var(--font-editorial)" }}>
+              <span className="italic font-normal text-cream" style={{ fontFamily: "var(--font-editorial)" }}>
                 Documento Mestre
               </span>
             </h3>
