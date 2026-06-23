@@ -13,11 +13,13 @@ import { Route as MeusProjetosRouteImport } from './routes/meus-projetos'
 import { Route as MetodoRouteImport } from './routes/metodo'
 import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as DocMestreRouteImport } from './routes/doc-mestre'
+import { Route as AssistenteRouteImport } from './routes/assistente'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MetodoIndexRouteImport } from './routes/metodo.index'
 import { Route as MetodoPilar2RouteImport } from './routes/metodo.pilar-2'
 import { Route as MetodoPilar1RouteImport } from './routes/metodo.pilar-1'
 import { Route as MetodoConsultoriaIaRouteImport } from './routes/metodo.consultoria-ia'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as MetodoPilar2VideosRouteImport } from './routes/metodo.pilar-2.videos'
 import { Route as MetodoPilar2TomDeVozRouteImport } from './routes/metodo.pilar-2.tom-de-voz'
 import { Route as MetodoPilar2RedesSociaisRouteImport } from './routes/metodo.pilar-2.redes-sociais'
@@ -59,6 +61,11 @@ const DocMestreRoute = DocMestreRouteImport.update({
   path: '/doc-mestre',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AssistenteRoute = AssistenteRouteImport.update({
+  id: '/assistente',
+  path: '/assistente',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -83,6 +90,11 @@ const MetodoConsultoriaIaRoute = MetodoConsultoriaIaRouteImport.update({
   id: '/consultoria-ia',
   path: '/consultoria-ia',
   getParentRoute: () => MetodoRoute,
+} as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const MetodoPilar2VideosRoute = MetodoPilar2VideosRouteImport.update({
   id: '/videos',
@@ -200,10 +212,12 @@ const MetodoPilar1AprendaIaToolLessonSlugRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/assistente': typeof AssistenteRoute
   '/doc-mestre': typeof DocMestreRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
+  '/api/chat': typeof ApiChatRoute
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
   '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
@@ -231,9 +245,11 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/assistente': typeof AssistenteRoute
   '/doc-mestre': typeof DocMestreRoute
   '/mensagens': typeof MensagensRoute
   '/meus-projetos': typeof MeusProjetosRoute
+  '/api/chat': typeof ApiChatRoute
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
   '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
@@ -262,10 +278,12 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/assistente': typeof AssistenteRoute
   '/doc-mestre': typeof DocMestreRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
+  '/api/chat': typeof ApiChatRoute
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
   '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
@@ -295,10 +313,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/assistente'
     | '/doc-mestre'
     | '/mensagens'
     | '/metodo'
     | '/meus-projetos'
+    | '/api/chat'
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
@@ -326,9 +346,11 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/assistente'
     | '/doc-mestre'
     | '/mensagens'
     | '/meus-projetos'
+    | '/api/chat'
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
@@ -356,10 +378,12 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/assistente'
     | '/doc-mestre'
     | '/mensagens'
     | '/metodo'
     | '/meus-projetos'
+    | '/api/chat'
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
@@ -388,10 +412,12 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AssistenteRoute: typeof AssistenteRoute
   DocMestreRoute: typeof DocMestreRoute
   MensagensRoute: typeof MensagensRoute
   MetodoRoute: typeof MetodoRouteWithChildren
   MeusProjetosRoute: typeof MeusProjetosRoute
+  ApiChatRoute: typeof ApiChatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -422,6 +448,13 @@ declare module '@tanstack/react-router' {
       path: '/doc-mestre'
       fullPath: '/doc-mestre'
       preLoaderRoute: typeof DocMestreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assistente': {
+      id: '/assistente'
+      path: '/assistente'
+      fullPath: '/assistente'
+      preLoaderRoute: typeof AssistenteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -458,6 +491,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/metodo/consultoria-ia'
       preLoaderRoute: typeof MetodoConsultoriaIaRouteImport
       parentRoute: typeof MetodoRoute
+    }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/metodo/pilar-2/videos': {
       id: '/metodo/pilar-2/videos'
@@ -755,10 +795,12 @@ const MetodoRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AssistenteRoute: AssistenteRoute,
   DocMestreRoute: DocMestreRoute,
   MensagensRoute: MensagensRoute,
   MetodoRoute: MetodoRouteWithChildren,
   MeusProjetosRoute: MeusProjetosRoute,
+  ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
