@@ -29,7 +29,7 @@ export default function PillarHeader({
       </div>
 
       {/* Title row */}
-      <div className="grid grid-cols-[auto_1fr] gap-6 md:gap-10 items-start">
+      <div className="grid grid-cols-[4rem_1fr] md:grid-cols-[5rem_1fr] gap-6 md:gap-10 items-start">
         <div className="flex flex-col items-start gap-3">
           <span className="font-display text-5xl md:text-7xl text-ink/20 tracking-tight leading-none tabular-nums">
             {numeral}

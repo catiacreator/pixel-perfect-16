@@ -15,7 +15,7 @@ export default function Pilar2Hub() {
         titulo="Pilar 2 — Criar Autoridade"
         subtitulo="porque você estudou demais pra ficar invisível"
       />
-      <div className="px-5 md:px-10 pb-16 max-w-2xl space-y-4">
+      <div className="px-5 md:px-10 pb-16 max-w-[1100px] mx-auto space-y-0">
         <EtapaCard icon={<Search size={18} />} label="Etapa 1 · Público" titulo="Pesquisa de Mercado · Pesquisa de Dores do Público" descricao="Descubra o que seu público realmente quer e onde dói." to="/metodo/pilar-2/pesquisa-mercado" />
         <EtapaCard icon={<Compass size={18} />} label="Etapa 2 · Estratégia" titulo="Definindo Seu Método" descricao="Defina os passos do que você ensina. Esse rascunho alimenta tudo que vem depois." to="/metodo/pilar-2/metodo" concluido />
         <EtapaCard
