@@ -26,9 +26,9 @@ export default function EtapaCard({
   numero?: string;
 }) {
   return (
-    <div className="group relative grid grid-cols-[auto_1fr_auto] items-start gap-6 md:gap-10 py-8 md:py-10 border-t border-[var(--color-border)] first:border-t-0">
-      {/* Numeral grande */}
-      <div className="font-display text-4xl md:text-5xl text-ink/20 tabular-nums tracking-tight leading-none pt-1 w-12 md:w-16">
+    <div className="group relative grid grid-cols-[4rem_1fr_auto] md:grid-cols-[5rem_1fr_auto] items-start gap-6 md:gap-10 py-8 md:py-10 border-t border-[var(--color-border)] first:border-t-0">
+      {/* Ícone / numeral */}
+      <div className="font-display text-4xl md:text-5xl text-ink/20 tabular-nums tracking-tight leading-none pt-1">
         {numero || (
           <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-cream-warm border border-[var(--color-border)] text-terracotta">
             {icon}
