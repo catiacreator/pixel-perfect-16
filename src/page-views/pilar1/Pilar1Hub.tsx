@@ -1,6 +1,7 @@
 import { Link } from "@/lib/router-compat";
 import { useQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
+import type { ReactElement } from "react";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import PillarHeader from "../../components/PillarHeader";
@@ -8,7 +9,7 @@ import EtapaCard from "../../components/EtapaCard";
 import { Hourglass, GraduationCap, Search, Trophy, ArrowUpRight, BookOpen, Play } from "lucide-react";
 import { getPilarBySlug } from "@/lib/pilares.functions";
 
-const ICONS: Record<string, JSX.Element> = {
+const ICONS: Record<string, ReactElement> = {
   "aprenda-ia": <GraduationCap size={18} />,
   "detetive-do-tempo": <Search size={18} />,
   conclusao: <Trophy size={18} />,
@@ -47,7 +48,6 @@ export default function Pilar1Hub() {
       />
 
       <div className="max-w-[1100px] mx-auto px-5 md:px-10 pt-10 md:pt-14 pb-24">
-        {/* Hero fixo: Documento Mestre — entrada do pilar */}
         <Link
           to="/doc-mestre"
           className="group relative overflow-hidden bg-terracotta rounded-2xl border border-terracotta shadow-[0_14px_36px_-18px_rgba(180,90,40,0.55)] px-6 md:px-8 py-7 md:py-8 mb-8 grid grid-cols-[3.5rem_1fr_auto] md:grid-cols-[4rem_1fr_auto] gap-5 md:gap-8 items-center transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_22px_48px_-18px_rgba(180,90,40,0.65)] hover:bg-terracotta/95"
