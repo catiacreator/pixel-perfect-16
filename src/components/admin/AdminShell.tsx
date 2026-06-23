@@ -59,7 +59,7 @@ export function AdminShell() {
             return (
               <Link
                 key={it.to}
-                to={it.to}
+                to={it.to as "/admin"}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] transition-colors ${
                   active ? "bg-ink text-cream" : "text-ink/70 hover:bg-ink/5 hover:text-ink"
                 }`}
