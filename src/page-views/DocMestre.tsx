@@ -31,24 +31,34 @@ type DocState = {
   nome: string;
   profissao: string;
   tempoAtuacao: string;
+  localizacao: string;
   oQueFaz: string;
   comoResolve: string;
   publico: string;
   dores: string[];
   desejos: string[];
   produtos: Produto[];
+  horasDia: string;
+  diasSemana: string;
+  faturamentoMensal: string;
+  tomDeVoz: string;
 };
 
 const EMPTY: DocState = {
   nome: "",
   profissao: "",
   tempoAtuacao: "",
+  localizacao: "",
   oQueFaz: "",
   comoResolve: "",
   publico: "",
   dores: ["", "", "", "", ""],
   desejos: ["", "", "", "", ""],
   produtos: [],
+  horasDia: "",
+  diasSemana: "",
+  faturamentoMensal: "",
+  tomDeVoz: "",
 };
 
 const STORAGE_KEY = "leveza.doc-mestre.v1";
@@ -82,6 +92,7 @@ function mergeExtracted(prev: DocState, extracted: Partial<DocState>): DocState 
     nome: extracted.nome || prev.nome,
     profissao: extracted.profissao || prev.profissao,
     tempoAtuacao: extracted.tempoAtuacao || prev.tempoAtuacao,
+    localizacao: extracted.localizacao || prev.localizacao,
     oQueFaz: extracted.oQueFaz || prev.oQueFaz,
     comoResolve: extracted.comoResolve || prev.comoResolve,
     publico: extracted.publico || prev.publico,
@@ -95,6 +106,10 @@ function mergeExtracted(prev: DocState, extracted: Partial<DocState>): DocState 
         : prev.desejos,
     produtos:
       extracted.produtos && extracted.produtos.length ? extracted.produtos : prev.produtos,
+    horasDia: extracted.horasDia || prev.horasDia,
+    diasSemana: extracted.diasSemana || prev.diasSemana,
+    faturamentoMensal: extracted.faturamentoMensal || prev.faturamentoMensal,
+    tomDeVoz: extracted.tomDeVoz || prev.tomDeVoz,
   };
 }
 
@@ -249,6 +264,7 @@ DOCUMENTO MESTRE ATUAL:
 NOME: ${d.nome || "(vazio)"}
 PROFISSÃO: ${d.profissao || "(vazio)"}
 TEMPO DE ATUAÇÃO: ${d.tempoAtuacao || "(vazio)"}
+LOCALIZAÇÃO: ${d.localizacao || "(vazio)"}
 O QUE EU FAÇO: ${d.oQueFaz || "(vazio)"}
 COMO RESOLVO: ${d.comoResolve || "(vazio)"}
 PÚBLICO: ${d.publico || "(vazio)"}
@@ -262,6 +278,10 @@ ${lines(d.desejos)}
 PRODUTOS/SERVIÇOS ATUAIS:
 ${produtos}
 
+ROTINA: ${d.horasDia || "(vazio)"} horas/dia · ${d.diasSemana || "(vazio)"} dias/semana
+FATURAMENTO MENSAL: ${d.faturamentoMensal || "(vazio)"}
+TOM DE COMUNICAÇÃO: ${d.tomDeVoz || "(vazio)"}
+
 ---
 
 Retorne exatamente neste formato — mantenha os rótulos em MAIÚSCULAS seguidos de ":" para eu conseguir importar de volta:
@@ -269,12 +289,14 @@ Retorne exatamente neste formato — mantenha os rótulos em MAIÚSCULAS seguido
 NOME:
 PROFISSÃO:
 TEMPO DE ATUAÇÃO:
+LOCALIZAÇÃO:
 O QUE EU FAÇO:
 COMO RESOLVO:
 PÚBLICO:
 DORES DO PÚBLICO: (uma por linha, numeradas de 1 a 5)
 DESEJOS DO PÚBLICO: (um por linha, numerados de 1 a 5)
-PRODUTOS/SERVIÇOS: (um por linha)`;
+PRODUTOS/SERVIÇOS: (um por linha)
+TOM DE COMUNICAÇÃO:`;
 }
 
 // ------------------------------------------------------------------
@@ -462,6 +484,29 @@ export default function DocMestre() {
             label="Há quanto tempo atuas"
             value={doc.tempoAtuacao}
             onChange={(v) => set("tempoAtuacao", v)}
+          />
+          <Field
+            label="Localização (cidade / estado)"
+            value={doc.localizacao}
+            onChange={(v) => set("localizacao", v)}
+          />
+        </section>
+
+        {/* SECÇÃO ROTINA */}
+        <section className="rounded-2xl border border-border bg-white p-5 mb-5 print:border-0 print:p-0 print:mb-8">
+          <h2 className="font-serif text-xl text-ink mb-4">Tua rotina e receita</h2>
+          <p className="text-xs text-muted mb-4">Usado pelo Detetive do Tempo e pelos prompts personalizados.</p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+            <Field label="Horas por dia" value={doc.horasDia} onChange={(v) => set("horasDia", v)} placeholder="ex: 8" />
+            <Field label="Dias por semana" value={doc.diasSemana} onChange={(v) => set("diasSemana", v)} placeholder="ex: 5" />
+            <Field label="Faturamento mensal (R$)" value={doc.faturamentoMensal} onChange={(v) => set("faturamentoMensal", v)} placeholder="ex: 15000" />
+          </div>
+          <Field
+            label="Tom de comunicação"
+            value={doc.tomDeVoz}
+            onChange={(v) => set("tomDeVoz", v)}
+            textarea
+            placeholder="Como falas com o teu público — formal, próximo, técnico, divertido…"
           />
         </section>
 

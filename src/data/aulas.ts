@@ -219,6 +219,25 @@ export const TOOLS: Tool[] = [
         ],
       },
       {
+        id: "5-1",
+        modulo: "5 · Automatize com IA",
+        titulo: "Automatize com IA · 10 tarefas que tomam o teu tempo",
+        resumo:
+          "10 automações práticas para libertar a tua agenda — cada uma com um prompt pronto a personalizar com o teu Documento Mestre.",
+        topicos: [
+          "1. Escrever e-mails e mensagens — respostas, follow-ups, propostas",
+          "2. Criar conteúdo para redes sociais — legendas, carrosséis, Stories, Reels",
+          "3. Preparar reuniões — agenda, perguntas-chave, briefings",
+          "4. Fazer resumos — de áudios, vídeos, PDFs e reuniões",
+          "5. Criar apresentações — slides, roteiro e pitch",
+          "6. Planejar projetos — cronograma, etapas e responsáveis",
+          "7. Pesquisar e comparar — produtos, ferramentas, concorrentes",
+          "8. Aprender coisas novas — explicações simples no teu nível",
+          "9. Criar documentos e templates — contratos, fichas, checklists",
+          "10. Tomar decisões difíceis — prós/contras, cenários e impacto",
+        ],
+      },
+      {
         id: "4-1",
         modulo: "4 · Utilidades do ChatGPT",
         titulo: "Criando slides com ChatGPT e Canva",
