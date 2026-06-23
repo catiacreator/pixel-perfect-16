@@ -7,6 +7,7 @@ const DocMestreSchema = z.object({
   nome: z.string().optional().default(""),
   profissao: z.string().optional().default(""),
   tempoAtuacao: z.string().optional().default(""),
+  localizacao: z.string().optional().default(""),
   oQueFaz: z.string().optional().default(""),
   comoResolve: z.string().optional().default(""),
   publico: z.string().optional().default(""),
@@ -22,6 +23,10 @@ const DocMestreSchema = z.object({
     )
     .optional()
     .default([]),
+  horasDia: z.string().optional().default(""),
+  diasSemana: z.string().optional().default(""),
+  faturamentoMensal: z.string().optional().default(""),
+  tomDeVoz: z.string().optional().default(""),
 });
 
 const SYSTEM = `És um extractor estruturado. Lês um texto livre sobre um expert/mentor digital
