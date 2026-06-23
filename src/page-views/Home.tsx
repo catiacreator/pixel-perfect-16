@@ -139,7 +139,8 @@ export default function Home() {
         </div>
 
         {/* recorte cream para transição */}
-        <div className="h-10 md:h-16 bg-cream rounded-t-[40px] md:rounded-t-[60px] -mb-px" />
+        <div className="h-6 md:h-10 bg-cream rounded-t-[40px] md:rounded-t-[60px] -mb-px" />
+
       </section>
 
 
