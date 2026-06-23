@@ -186,28 +186,8 @@ function SortableList({
       <div className="space-y-2">
         {itens.map((it, i) => (
           <div key={i} className="flex items-start gap-1.5">
-            <div className="flex flex-col items-center pt-2">
+            <div className="flex flex-col items-center pt-2 w-5">
               <span className="text-[10px] font-semibold text-muted">{i + 1}</span>
-              <div className="flex flex-col">
-                <button
-                  type="button"
-                  onClick={() => move(i, -1)}
-                  className="text-muted hover:text-terracotta disabled:opacity-30"
-                  disabled={i === 0}
-                  aria-label="Mover para cima"
-                >
-                  <ArrowUp size={11} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => move(i, 1)}
-                  className="text-muted hover:text-terracotta disabled:opacity-30"
-                  disabled={i === itens.length - 1}
-                  aria-label="Mover para baixo"
-                >
-                  <ArrowDown size={11} />
-                </button>
-              </div>
             </div>
             <textarea
               value={it}
