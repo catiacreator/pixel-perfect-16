@@ -9,6 +9,7 @@ import {
   Search,
   Compass,
   Sparkles,
+  Sparkle,
   Mic,
   Palette,
   Shirt,
@@ -17,10 +18,23 @@ import {
   Trophy,
   Clock,
   BookOpen,
-  CheckCircle2,
+  Book,
+  Heart,
+  CircleDot,
+  Zap,
   FileText,
   type LucideIcon,
 } from "lucide-react";
+
+const TOOL_ICONS: Record<string, LucideIcon> = {
+  ChatGPT: CircleDot,
+  Claude: Sparkle,
+  Gemini: Sparkles,
+  Grok: Zap,
+  NotebookLM: Book,
+  Lovable: Heart,
+  Tella: Video,
+};
 
 type SubItem = { label: string; to: string };
 type Item = {
