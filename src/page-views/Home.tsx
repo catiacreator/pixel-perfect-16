@@ -89,7 +89,7 @@ export default function Home() {
           </div>
 
           {/* Título editorial */}
-          <h1 className="font-display font-medium text-[44px] md:text-[88px] lg:text-[120px] leading-[0.92] tracking-[-0.035em] text-ink">
+          <h1 className="font-display font-medium text-[32px] md:text-[56px] lg:text-[72px] leading-[0.95] tracking-[-0.03em] text-ink">
             Crie no digital
             <br />
             com{" "}
