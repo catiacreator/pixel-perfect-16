@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import Layout from "../../components/Layout";
+import PilarBreadcrumb from "../../components/PilarBreadcrumb";
+import PillarHeader from "../../components/PillarHeader";
 import { Link, useParams } from "@/lib/router-compat";
 import { getTool, TOOLS, type Aula } from "@/data/aulas";
 import { useAulaProgress } from "@/lib/use-aula-progress";
@@ -8,16 +10,16 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
-  ChevronDown,
   Circle,
   Copy,
   ExternalLink,
+  Hourglass,
   Play,
   Sparkles,
   AlertTriangle,
 } from "lucide-react";
 
-// Encontra próxima aula seguindo: aulas dentro da IA → primeira aula da próxima IA
+// Encontra próxima/anterior aula seguindo: aulas dentro da IA → primeira aula da próxima IA
 function neighbours(slug: string, aulaId: string) {
   const toolIdx = TOOLS.findIndex((t) => t.slug === slug);
   if (toolIdx === -1) return { prev: null, next: null };
@@ -43,6 +45,13 @@ function neighbours(slug: string, aulaId: string) {
   }
 
   return { prev, next };
+}
+
+// "1 · Começando com o ChatGPT" -> { numero: "1", nome: "Começando com o ChatGPT" }
+function parseModulo(modulo: string) {
+  const m = modulo.match(/^\s*(\d+)\s*[·\.\-:]\s*(.+)$/);
+  if (m) return { numero: m[1], nome: m[2].trim() };
+  return { numero: "", nome: modulo };
 }
 
 function PromptBlock({ template, label }: { template: string; label?: string }) {
@@ -112,7 +121,7 @@ export default function AulaPage() {
     return (
       <Layout>
         <div className="px-5 md:px-10 py-16 max-w-3xl mx-auto text-center">
-          <h1 className="font-serif text-3xl text-ink mb-3">Aula não encontrada</h1>
+          <h1 className="font-display text-3xl text-ink mb-3">Aula não encontrada</h1>
           <Link
             to="/metodo/pilar-1/aprenda-ia"
             className="inline-flex items-center gap-1 text-sm text-terracotta font-semibold"
@@ -126,47 +135,73 @@ export default function AulaPage() {
 
   const { prev, next } = neighbours(tool.slug, aula.id);
   const done = isDone(tool.slug, aula.id);
-
-  // Agrupa aulas por módulo, preservando ordem
-  const grupos = useMemo(() => {
-    const map = new Map<string, Aula[]>();
-    for (const a of tool.aulas) {
-      const arr = map.get(a.modulo) ?? [];
-      arr.push(a);
-      map.set(a.modulo, arr);
-    }
-    return Array.from(map.entries());
-  }, [tool]);
+  const mod = parseModulo(aula.modulo);
+  const [, aulaNum] = aula.id.split("-");
 
   return (
     <Layout>
-      <div className="px-5 md:px-10 py-10 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
-        <div className="min-w-0">
-        {/* Breadcrumb */}
-        <div className="text-xs text-muted mb-4 flex items-center gap-1 flex-wrap">
-          <Link to="/metodo/pilar-1/aprenda-ia" className="hover:text-terracotta">
-            Aprenda IA
-          </Link>
-          <span>›</span>
-          <Link
-            to={`/metodo/pilar-1/aprenda-ia/${tool.slug}`}
-            className="hover:text-terracotta"
+      <PilarBreadcrumb
+        pilar={1}
+        pilarLabel="Recuperar seu Tempo"
+        backTo="/metodo/pilar-1"
+        backLabel="Voltar para o Pilar 1"
+      />
+
+      <PillarHeader
+        numeral={mod.numero || "01"}
+        icon={<Hourglass size={18} />}
+        pilarLabel="Pilar 1"
+        titulo={aula.titulo}
+      />
+
+      <div className="max-w-[1100px] mx-auto px-5 md:px-10 pt-8 md:pt-10 pb-24">
+        <Link
+          to={`/metodo/pilar-1/aprenda-ia/${tool.slug}`}
+          className="inline-flex items-center gap-2 text-sm text-ink/65 hover:text-terracotta transition-colors mb-8"
+        >
+          <ArrowLeft size={14} /> Voltar para a trilha
+        </Link>
+
+        {/* Cabeçalho da aula */}
+        <div className="flex items-start justify-between gap-4 flex-wrap mb-6">
+          <div className="min-w-0">
+            <p className="text-[11px] tracking-[0.25em] uppercase text-terracotta font-semibold mb-2">
+              Aula {aula.id.replace("-", ".")} · Módulo {mod.numero || "—"}
+            </p>
+            <h2 className="font-display text-3xl md:text-5xl text-ink leading-[1.05] tracking-tight">
+              {aula.titulo}
+            </h2>
+            {mod.nome && (
+              <p className="text-sm text-ink/55 mt-2 italic" style={{ fontFamily: "var(--font-editorial)" }}>
+                {mod.nome}
+              </p>
+            )}
+          </div>
+
+          <button
+            onClick={() => toggle(tool.slug, aula.id)}
+            className={`shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold border transition-colors ${
+              done
+                ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                : "bg-white text-ink border-border hover:border-terracotta hover:text-terracotta"
+            }`}
           >
-            {tool.nome}
-          </Link>
-          <span>›</span>
-          <span className="text-ink">Aula {aula.id}</span>
+            {done ? <Check size={15} /> : <Circle size={15} />}
+            {done ? "Aula concluída" : "Marcar como concluída"}
+          </button>
         </div>
 
-        {/* Título */}
-        <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">{aula.modulo}</p>
-        <h1 className="font-serif text-3xl md:text-4xl text-ink mb-3 leading-tight">
-          {aula.titulo}
-        </h1>
-        {aula.resumo && <p className="text-muted mb-6">{aula.resumo}</p>}
+        {aula.resumo && (
+          <p className="text-ink/70 text-base md:text-lg leading-relaxed mb-6 max-w-3xl">
+            {aula.resumo}
+          </p>
+        )}
 
         {/* Vídeo */}
-        <div className="mb-6 rounded-2xl overflow-hidden border border-border bg-ink/90 aspect-video flex items-center justify-center text-cream">
+        <div className="relative mb-8 rounded-2xl overflow-hidden border border-border bg-gradient-to-br from-cream-warm/50 to-cream-warm/20 aspect-video flex items-center justify-center">
+          <span className="absolute top-4 left-4 z-10 text-xs font-semibold tracking-tight text-ink/45 bg-cream-warm/80 px-2.5 py-1 rounded-md backdrop-blur">
+            {aula.id.replace("-", ".")}.00
+          </span>
           {aula.videoUrl ? (
             <iframe
               src={aula.videoUrl}
@@ -175,29 +210,31 @@ export default function AulaPage() {
               allowFullScreen
             />
           ) : (
-            <div className="text-center">
-              <div className="w-14 h-14 rounded-full bg-cream/15 flex items-center justify-center mx-auto mb-2">
-                <Play size={20} className="ml-0.5" />
+            <div className="text-center text-ink/55">
+              <div className="w-14 h-14 rounded-full bg-cream border border-border flex items-center justify-center mx-auto mb-2">
+                <Play size={20} className="ml-0.5 text-terracotta" />
               </div>
-              <p className="text-sm opacity-80">Vídeo em breve</p>
+              <p className="text-sm">Vídeo em breve</p>
             </div>
           )}
         </div>
 
         {/* Tópicos */}
         {aula.topicos && aula.topicos.length > 0 && (
-          <div className="rounded-2xl border border-border bg-white p-5 mb-6">
-            <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-3 font-semibold">
-              Tópicos de referência
+          <div className="rounded-2xl border border-border bg-white p-5 md:p-6 mb-6">
+            <p className="text-xs tracking-[0.2em] uppercase text-terracotta mb-4 font-semibold">
+              {aula.titulo}
             </p>
-            <ul className="space-y-2">
+            <ol className="space-y-3 text-ink">
               {aula.topicos.map((t, i) => (
-                <li key={i} className="text-sm text-ink flex gap-2.5 items-start">
-                  <span className="text-terracotta mt-2 shrink-0">•</span>
-                  <span>{t}</span>
+                <li key={i} className="text-sm md:text-base flex gap-3 items-start">
+                  <span className="text-terracotta font-semibold shrink-0 tabular-nums">
+                    {i + 1}.
+                  </span>
+                  <span className="leading-relaxed">{t}</span>
                 </li>
               ))}
-            </ul>
+            </ol>
           </div>
         )}
 
@@ -240,30 +277,17 @@ export default function AulaPage() {
           />
         )}
 
-        {/* Concluir */}
-        <button
-          onClick={() => toggle(tool.slug, aula.id)}
-          className={`w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full text-sm font-semibold border transition-colors mb-8 ${
-            done
-              ? "bg-terracotta text-cream border-terracotta"
-              : "bg-white text-ink border-border hover:border-terracotta"
-          }`}
-        >
-          {done ? <Check size={15} /> : <Circle size={15} />}
-          {done ? "Aula concluída" : "Marcar como concluída"}
-        </button>
-
-        {/* Navegação */}
-        <div className="flex items-center justify-between gap-3">
+        {/* Navegação prev/next */}
+        <div className="flex items-center justify-between gap-3 mt-10">
           {prev ? (
             <Link
               to={`/metodo/pilar-1/aprenda-ia/${prev.tool}/${prev.aula.id}`}
-              className="flex-1 rounded-2xl border border-border bg-white p-3 hover:border-terracotta transition-colors"
+              className="flex-1 rounded-2xl border border-border bg-white p-4 hover:border-terracotta transition-colors"
             >
-              <span className="text-[10px] tracking-[0.15em] uppercase text-muted flex items-center gap-1">
-                <ArrowLeft size={11} /> Anterior
+              <span className="text-[10px] tracking-[0.2em] uppercase text-muted flex items-center gap-1">
+                <ArrowLeft size={11} /> Aula anterior
               </span>
-              <span className="block text-sm font-semibold text-ink truncate">
+              <span className="block text-sm font-semibold text-ink truncate mt-1">
                 {prev.aula.titulo}
               </span>
             </Link>
@@ -273,119 +297,18 @@ export default function AulaPage() {
           {next && (
             <Link
               to={`/metodo/pilar-1/aprenda-ia/${next.tool}/${next.aula.id}`}
-              className="flex-1 rounded-2xl border border-terracotta bg-white p-3 hover:bg-cream-warm/40 transition-colors text-right"
+              className="flex-1 rounded-2xl border border-terracotta bg-white p-4 hover:bg-cream-warm/40 transition-colors text-right"
             >
-              <span className="text-[10px] tracking-[0.15em] uppercase text-terracotta flex items-center gap-1 justify-end">
-                Próxima <ArrowRight size={11} />
+              <span className="text-[10px] tracking-[0.2em] uppercase text-terracotta flex items-center gap-1 justify-end">
+                Próxima aula <ArrowRight size={11} />
               </span>
-              <span className="block text-sm font-semibold text-ink truncate">
+              <span className="block text-sm font-semibold text-ink truncate mt-1">
                 {next.aula.titulo}
               </span>
             </Link>
           )}
         </div>
-        </div>
-
-        {/* Sidebar de módulos */}
-        <aside className="lg:sticky lg:top-6 lg:self-start space-y-3">
-          <p className="text-[11px] tracking-[0.2em] uppercase text-muted px-1">
-            Aulas de {tool.nome}
-          </p>
-          {grupos.map(([modulo, aulas], i) => (
-            <ModuloSidebar
-              key={modulo}
-              modulo={modulo}
-              aulas={aulas}
-              toolSlug={tool.slug}
-              currentId={aula.id}
-              isDone={isDone}
-              defaultOpen={aulas.some((a) => a.id === aula.id) || (i === 0 && !grupos.some(([, as]) => as.some((a) => a.id === aula.id)))}
-            />
-          ))}
-        </aside>
       </div>
     </Layout>
-  );
-}
-
-function ModuloSidebar({
-  modulo,
-  aulas,
-  toolSlug,
-  currentId,
-  isDone,
-  defaultOpen,
-}: {
-  modulo: string;
-  aulas: Aula[];
-  toolSlug: string;
-  currentId: string;
-  isDone: (slug: string, id: string) => boolean;
-  defaultOpen?: boolean;
-}) {
-  const [open, setOpen] = useState(!!defaultOpen);
-  const doneCount = aulas.filter((a) => isDone(toolSlug, a.id)).length;
-
-  return (
-    <div className="rounded-2xl border border-border bg-white overflow-hidden">
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center justify-between gap-3 p-3 text-left hover:bg-cream-warm/40 transition-colors"
-      >
-        <div className="min-w-0">
-          <p className="font-serif text-sm text-ink leading-tight truncate">
-            Módulo {modulo}
-          </p>
-          <p className="text-[10px] text-muted mt-0.5 font-semibold">
-            {doneCount}/{aulas.length} concluídas
-          </p>
-        </div>
-        <ChevronDown
-          size={16}
-          className={`text-ink/60 shrink-0 transition-transform ${open ? "rotate-180" : ""}`}
-        />
-      </button>
-      {open && (
-        <ul className="border-t border-border divide-y divide-border">
-          {aulas.map((a) => {
-            const done = isDone(toolSlug, a.id);
-            const active = a.id === currentId;
-            return (
-              <li key={a.id}>
-                <Link
-                  to={`/metodo/pilar-1/aprenda-ia/${toolSlug}/${a.id}`}
-                  className={`flex items-center gap-2.5 px-3 py-2.5 text-xs transition-colors ${
-                    active
-                      ? "bg-terracotta/10 text-ink"
-                      : "text-ink/80 hover:bg-cream-warm/40"
-                  }`}
-                >
-                  <span
-                    className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 border ${
-                      done
-                        ? "bg-terracotta/15 border-terracotta text-terracotta"
-                        : active
-                          ? "border-terracotta text-terracotta"
-                          : "border-border text-muted"
-                    }`}
-                  >
-                    {done ? <Check size={10} strokeWidth={3} /> : <Play size={9} />}
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className={`block text-[9px] tracking-[0.15em] uppercase font-semibold ${active ? "text-terracotta" : "text-muted"}`}>
-                      Aula {a.id}
-                    </span>
-                    <span className={`block truncate ${active ? "font-semibold" : ""}`}>
-                      {a.titulo}
-                    </span>
-                  </span>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      )}
-    </div>
   );
 }
