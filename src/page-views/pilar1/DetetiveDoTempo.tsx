@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import ConversaModal from "@/components/ConversaModal";
 import { Link } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
@@ -32,6 +33,7 @@ export default function DetetiveDoTempo() {
   const [state, setState] = useState<DetetiveState>(INITIAL_STATE);
   const [hydrated, setHydrated] = useState(false);
   const [savedAt, setSavedAt] = useState<string>("");
+  const [conversaOpen, setConversaOpen] = useState(false);
 
   useEffect(() => {
     setState(loadDetetive());
@@ -216,10 +218,19 @@ export default function DetetiveDoTempo() {
               </p>
             </div>
           </div>
-          <button className="inline-flex items-center gap-1.5 text-sm font-semibold text-terracotta border border-terracotta rounded-full px-4 py-1.5">
+          <button
+            onClick={() => setConversaOpen(true)}
+            className="inline-flex items-center gap-1.5 text-sm font-semibold text-terracotta border border-terracotta rounded-full px-4 py-1.5 hover:bg-terracotta hover:text-cream transition-colors"
+          >
             <Leaf size={13} /> Conversa comigo
           </button>
         </div>
+
+        <ConversaModal
+          open={conversaOpen}
+          onClose={() => setConversaOpen(false)}
+          onApply={(cats) => setState((s) => ({ ...s, categorias: cats }))}
+        />
 
         <div className="rounded-2xl border border-border bg-white shadow-sm p-5 text-center mb-6">
           <p className="font-serif text-base text-ink mb-3">Tarefas mapeadas? Veja o Relatório do Detetive do Tempo</p>
