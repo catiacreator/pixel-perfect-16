@@ -111,21 +111,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         )}
       </header>
 
-      {showBack && (
-        <div className="w-full border-b border-[var(--color-border)]/60 bg-cream/60">
-          <div className="max-w-[1400px] mx-auto px-5 md:px-10 py-3">
-            <button
-              type="button"
-              onClick={handleBack}
-              className="inline-flex items-center gap-1.5 text-[13px] text-ink/60 hover:text-ink transition-colors group"
-            >
-              <ArrowLeft size={14} strokeWidth={2} className="transition-transform group-hover:-translate-x-0.5" />
-              Voltar atrás
-            </button>
-          </div>
-        </div>
-      )}
-
       <main className="flex-1 w-full">{children}</main>
 
       <footer className="w-full border-t border-[var(--color-border)] mt-24">
