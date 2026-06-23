@@ -149,8 +149,9 @@ export default function Home() {
 
       {/* PILARES — lista editorial */}
       <section className="relative">
-        <div className="max-w-[1400px] mx-auto px-5 md:px-10 py-20 md:py-28">
-          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4 mb-14">
+        <div className="max-w-[1400px] mx-auto px-5 md:px-10 py-10 md:py-14">
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4 mb-8">
+
             <div className="min-w-0">
               <p className="text-[11px] tracking-[0.3em] uppercase text-terracotta mb-3">
                 / Os 4 pilares
