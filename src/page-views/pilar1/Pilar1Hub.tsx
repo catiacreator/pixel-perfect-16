@@ -20,8 +20,17 @@ export default function Pilar1Hub() {
 
       <div className="max-w-[1100px] mx-auto px-5 md:px-10 pt-10 md:pt-14 pb-24">
         {/* Passo 1 — destaque hero */}
-        <div className="relative overflow-hidden bg-terracotta rounded-2xl border border-terracotta shadow-[0_14px_36px_-18px_rgba(180,90,40,0.55)] px-6 md:px-8 py-7 md:py-8 mb-8 grid grid-cols-[3.5rem_1fr_auto] md:grid-cols-[4rem_1fr_auto] gap-5 md:gap-8 items-center">
-          <div className="font-display text-4xl md:text-5xl text-cream/30 tabular-nums tracking-tight leading-none">
+        <Link
+          to="/doc-mestre"
+          className="group relative overflow-hidden bg-terracotta rounded-2xl border border-terracotta shadow-[0_14px_36px_-18px_rgba(180,90,40,0.55)] px-6 md:px-8 py-7 md:py-8 mb-8 grid grid-cols-[3.5rem_1fr_auto] md:grid-cols-[4rem_1fr_auto] gap-5 md:gap-8 items-center transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_22px_48px_-18px_rgba(180,90,40,0.65)] hover:bg-terracotta/95"
+        >
+          {/* Shine sweep on hover */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 bg-gradient-to-r from-transparent via-cream/20 to-transparent skew-x-12 opacity-0 group-hover:opacity-100 group-hover:translate-x-[400%] transition-all duration-700 ease-out"
+          />
+
+          <div className="font-display text-4xl md:text-5xl text-cream/30 tabular-nums tracking-tight leading-none transition-transform duration-300 group-hover:scale-110 group-hover:text-cream/50">
             I
           </div>
           <div className="min-w-0">
@@ -38,14 +47,11 @@ export default function Pilar1Hub() {
               É a base de tudo. Em 5 minutos, defines o que vais criar — e a IA passa a falar a tua língua.
             </p>
           </div>
-          <Link
-            to="/doc-mestre"
-            className="group inline-flex items-center gap-2 bg-cream text-ink pl-5 pr-4 py-2.5 rounded-full text-sm font-medium hover:bg-cream-warm transition-all shadow-[0_2px_6px_-2px_rgba(40,30,20,0.3)]"
-          >
+          <span className="inline-flex items-center gap-2 bg-cream text-ink pl-5 pr-4 py-2.5 rounded-full text-sm font-medium shadow-[0_2px_6px_-2px_rgba(40,30,20,0.3)] transition-all duration-300 group-hover:bg-ink group-hover:text-cream group-hover:shadow-[0_6px_14px_-4px_rgba(40,30,20,0.5)]">
             Começar
-            <ArrowUpRight size={15} strokeWidth={2.25} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </Link>
-        </div>
+            <ArrowUpRight size={15} strokeWidth={2.25} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </span>
+        </Link>
 
         <p className="text-[11px] tracking-[0.28em] uppercase text-ink/45 font-medium mb-5">
           As etapas do Pilar 1
