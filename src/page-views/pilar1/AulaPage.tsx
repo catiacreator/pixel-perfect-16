@@ -8,6 +8,7 @@ import {
   ArrowLeft,
   ArrowRight,
   Check,
+  ChevronDown,
   Circle,
   Copy,
   ExternalLink,
@@ -126,9 +127,21 @@ export default function AulaPage() {
   const { prev, next } = neighbours(tool.slug, aula.id);
   const done = isDone(tool.slug, aula.id);
 
+  // Agrupa aulas por módulo, preservando ordem
+  const grupos = useMemo(() => {
+    const map = new Map<string, Aula[]>();
+    for (const a of tool.aulas) {
+      const arr = map.get(a.modulo) ?? [];
+      arr.push(a);
+      map.set(a.modulo, arr);
+    }
+    return Array.from(map.entries());
+  }, [tool]);
+
   return (
     <Layout>
-      <div className="px-5 md:px-10 py-10 max-w-3xl mx-auto">
+      <div className="px-5 md:px-10 py-10 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+        <div className="min-w-0">
         {/* Breadcrumb */}
         <div className="text-xs text-muted mb-4 flex items-center gap-1 flex-wrap">
           <Link to="/metodo/pilar-1/aprenda-ia" className="hover:text-terracotta">
@@ -271,7 +284,108 @@ export default function AulaPage() {
             </Link>
           )}
         </div>
+        </div>
+
+        {/* Sidebar de módulos */}
+        <aside className="lg:sticky lg:top-6 lg:self-start space-y-3">
+          <p className="text-[11px] tracking-[0.2em] uppercase text-muted px-1">
+            Aulas de {tool.nome}
+          </p>
+          {grupos.map(([modulo, aulas], i) => (
+            <ModuloSidebar
+              key={modulo}
+              modulo={modulo}
+              aulas={aulas}
+              toolSlug={tool.slug}
+              currentId={aula.id}
+              isDone={isDone}
+              defaultOpen={aulas.some((a) => a.id === aula.id) || (i === 0 && !grupos.some(([, as]) => as.some((a) => a.id === aula.id)))}
+            />
+          ))}
+        </aside>
       </div>
     </Layout>
+  );
+}
+
+function ModuloSidebar({
+  modulo,
+  aulas,
+  toolSlug,
+  currentId,
+  isDone,
+  defaultOpen,
+}: {
+  modulo: string;
+  aulas: Aula[];
+  toolSlug: string;
+  currentId: string;
+  isDone: (slug: string, id: string) => boolean;
+  defaultOpen?: boolean;
+}) {
+  const [open, setOpen] = useState(!!defaultOpen);
+  const doneCount = aulas.filter((a) => isDone(toolSlug, a.id)).length;
+
+  return (
+    <div className="rounded-2xl border border-border bg-white overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="w-full flex items-center justify-between gap-3 p-3 text-left hover:bg-cream-warm/40 transition-colors"
+      >
+        <div className="min-w-0">
+          <p className="font-serif text-sm text-ink leading-tight truncate">
+            Módulo {modulo}
+          </p>
+          <p className="text-[10px] text-muted mt-0.5 font-semibold">
+            {doneCount}/{aulas.length} concluídas
+          </p>
+        </div>
+        <ChevronDown
+          size={16}
+          className={`text-ink/60 shrink-0 transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && (
+        <ul className="border-t border-border divide-y divide-border">
+          {aulas.map((a) => {
+            const done = isDone(toolSlug, a.id);
+            const active = a.id === currentId;
+            return (
+              <li key={a.id}>
+                <Link
+                  to={`/metodo/pilar-1/aprenda-ia/${toolSlug}/${a.id}`}
+                  className={`flex items-center gap-2.5 px-3 py-2.5 text-xs transition-colors ${
+                    active
+                      ? "bg-terracotta/10 text-ink"
+                      : "text-ink/80 hover:bg-cream-warm/40"
+                  }`}
+                >
+                  <span
+                    className={`w-5 h-5 rounded-full flex items-center justify-center shrink-0 border ${
+                      done
+                        ? "bg-terracotta/15 border-terracotta text-terracotta"
+                        : active
+                          ? "border-terracotta text-terracotta"
+                          : "border-border text-muted"
+                    }`}
+                  >
+                    {done ? <Check size={10} strokeWidth={3} /> : <Play size={9} />}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className={`block text-[9px] tracking-[0.15em] uppercase font-semibold ${active ? "text-terracotta" : "text-muted"}`}>
+                      Aula {a.id}
+                    </span>
+                    <span className={`block truncate ${active ? "font-semibold" : ""}`}>
+                      {a.titulo}
+                    </span>
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
   );
 }
