@@ -41,7 +41,7 @@ export default function AprendaIAHub() {
                     {String(i + 1).padStart(2, "0")}
                   </span>
                 </div>
-                <h3 className="font-serif text-xl text-ink mb-1">{tool.nome}</h3>
+                <h3 className="font-tool text-xl text-ink mb-1 tracking-tight uppercase">{tool.nome}</h3>
                 <p className="text-sm text-muted mb-4 flex-1">{tool.descricao}</p>
 
                 <div className="flex items-center justify-between text-xs mb-2">
