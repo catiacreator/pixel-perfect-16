@@ -184,7 +184,7 @@
   --color-mist: rgba(255, 255, 255, 0.08);
 
   --font-display: "Inter Tight", "Inter", system-ui, sans-serif;
-  --font-editorial: "Instrument Serif", Georgia, serif;
+  --font-editorial: "Archivo Black", "Inter Tight", system-ui, sans-serif;
   --font-tool: "Archivo Black", "Inter Tight", system-ui, sans-serif;
 }
 
