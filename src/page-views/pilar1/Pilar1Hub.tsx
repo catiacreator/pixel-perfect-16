@@ -20,7 +20,7 @@ export default function Pilar1Hub() {
 
       <div className="max-w-[1100px] mx-auto px-5 md:px-10 pt-10 md:pt-14 pb-24">
         {/* Passo 1 — destaque hero */}
-        <div className="bg-cream rounded-2xl border border-terracotta/25 shadow-[0_8px_24px_-16px_rgba(180,90,40,0.25)] px-6 md:px-8 py-7 md:py-8 mb-8 grid grid-cols-[3.5rem_1fr_auto] md:grid-cols-[4rem_1fr_auto] gap-5 md:gap-8 items-center">
+        <div className="relative overflow-hidden bg-gradient-to-br from-terracotta/15 via-cream-warm to-gold/15 rounded-2xl border border-terracotta/30 shadow-[0_10px_30px_-18px_rgba(180,90,40,0.35)] px-6 md:px-8 py-7 md:py-8 mb-8 grid grid-cols-[3.5rem_1fr_auto] md:grid-cols-[4rem_1fr_auto] gap-5 md:gap-8 items-center">
           <div className="font-display text-4xl md:text-5xl text-terracotta/30 tabular-nums tracking-tight leading-none">
             I
           </div>
