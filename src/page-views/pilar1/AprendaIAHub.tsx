@@ -1,83 +1,114 @@
 import Layout from "../../components/Layout";
+import PilarBreadcrumb from "../../components/PilarBreadcrumb";
+import PillarHeader from "../../components/PillarHeader";
 import { Link } from "@/lib/router-compat";
 import { TOOLS } from "@/data/aulas";
 import { useAulaProgress } from "@/lib/use-aula-progress";
-import { ArrowRight, ArrowUpRight, Check } from "lucide-react";
+import { ArrowRight, Check, Hourglass, ImagePlus } from "lucide-react";
+
+// Mapeia foto por slug — substitui pelos URLs reais depois do upload.
+// Ex.: chatgpt: "/fotos/chatgpt.jpg"
+const TOOL_PHOTOS: Record<string, string> = {};
 
 export default function AprendaIAHub() {
   const { countDone } = useAulaProgress();
 
   return (
     <Layout>
-      <div className="px-5 md:px-10 py-10 max-w-5xl mx-auto">
-        <p className="text-xs tracking-[0.2em] uppercase text-terracotta mb-2">Etapa 2 · Pilar 1</p>
-        <h1 className="font-serif text-3xl md:text-5xl text-ink mb-3 leading-tight">
-          Domina as principais <span className="text-terracotta">IAs</span>
-        </h1>
-        <p className="text-muted mb-8 max-w-2xl">
-          Aulas curtas, prompts prontos e exemplos práticos. Cada IA tem o seu hub — escolhe por
-          onde queres começar e marca cada aula à medida que avanças.
+      <PilarBreadcrumb
+        pilar={1}
+        pilarLabel="Recuperar seu Tempo"
+        backTo="/metodo/pilar-1"
+        backLabel="Voltar para o Pilar 1"
+      />
+      <PillarHeader
+        numeral="01"
+        icon={<Hourglass size={18} />}
+        pilarLabel="Pilar 1"
+        titulo="Domine as Principais IAs para seu Negócio"
+      />
+
+      <div className="max-w-[1200px] mx-auto px-5 md:px-10 pt-10 pb-24">
+        <p className="text-ink/70 text-sm md:text-base mb-8 max-w-2xl">
+          Escolha a IA que você quer aprender. Cada card abre uma trilha com aulas, prompts e
+          exemplos práticos.
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-          {TOOLS.map((tool, i) => {
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-5">
+          {TOOLS.map((tool) => {
             const ids = tool.aulas.map((a) => a.id);
             const done = countDone(tool.slug, ids);
             const total = ids.length;
             const pct = total ? Math.round((done / total) * 100) : 0;
+            const photo = TOOL_PHOTOS[tool.slug];
+
             return (
               <Link
                 key={tool.slug}
                 to={`/metodo/pilar-1/aprenda-ia/${tool.slug}`}
-                className="group rounded-2xl border border-border bg-white p-5 hover:border-terracotta transition-colors flex flex-col"
+                className="group relative aspect-[3/4] rounded-2xl overflow-hidden border border-border bg-ink shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div
-                    className={`w-12 h-12 rounded-xl bg-gradient-to-br ${tool.cor} border border-border flex items-center justify-center font-serif text-xl text-ink`}
-                  >
-                    {tool.inicial}
-                  </div>
-                  <span className="text-[10px] tracking-[0.15em] uppercase text-muted">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
-                <h3 className="font-tool text-xl text-ink mb-1 tracking-tight uppercase">{tool.nome}</h3>
-                <p className="text-sm text-muted mb-4 flex-1">{tool.descricao}</p>
-
-                <div className="flex items-center justify-between text-xs mb-2">
-                  <span className="text-muted">
-                    {pct}% visto · {done}/{total} {total === 1 ? "aula" : "aulas"}
-                  </span>
-                  {pct === 100 && (
-                    <span className="inline-flex items-center gap-1 text-terracotta font-semibold">
-                      <Check size={12} /> Completo
-                    </span>
-                  )}
-                </div>
-                <div className="h-1.5 rounded-full bg-cream-warm/60 overflow-hidden">
-                  <div
-                    className="h-full bg-terracotta transition-all"
-                    style={{ width: `${pct}%` }}
+                {/* Imagem ou placeholder */}
+                {photo ? (
+                  <img
+                    src={photo}
+                    alt={tool.nome}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                </div>
+                ) : (
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-br ${tool.cor} flex items-center justify-center`}
+                    aria-hidden
+                  >
+                    <div className="text-center px-3">
+                      <ImagePlus size={28} className="mx-auto text-cream/40 mb-1.5" />
+                      <p className="text-[10px] tracking-[0.2em] uppercase text-cream/55 font-medium">
+                        Adiciona foto
+                      </p>
+                    </div>
+                  </div>
+                )}
 
-                <span className="mt-4 text-xs font-semibold text-terracotta inline-flex items-center gap-1 self-start group-hover:gap-2 transition-all">
-                  Abrir hub <ArrowUpRight size={12} />
-                </span>
+                {/* Sobreposição escura inferior */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+
+                {/* Conteúdo */}
+                <div className="relative h-full flex flex-col justify-end p-3.5 md:p-4 text-cream">
+                  <h3 className="font-tool text-lg md:text-xl uppercase tracking-tight leading-none drop-shadow-md">
+                    {tool.nome}
+                  </h3>
+
+                  <div className="mt-3 flex items-center justify-between text-[11px] font-medium">
+                    <span className="text-cream/85">
+                      {pct === 100 ? (
+                        <span className="inline-flex items-center gap-1 text-emerald-300">
+                          <Check size={11} /> 100% visto
+                        </span>
+                      ) : (
+                        <>{pct}% visto</>
+                      )}
+                    </span>
+                    <span className="text-cream/75 tabular-nums">
+                      {done}/{total}
+                    </span>
+                  </div>
+                  <div className="mt-1.5 h-1 rounded-full bg-cream/15 overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-terracotta to-gold transition-all duration-500"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                </div>
               </Link>
             );
           })}
         </div>
 
-        {/* CTA */}
-        <div className="mt-10 rounded-2xl border border-terracotta bg-gradient-to-br from-white to-cream-warm/60 p-6 text-center">
-          <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">Etapa seguinte</p>
-          <p className="text-xl md:text-2xl font-semibold tracking-tight text-ink mb-4">
-            Identifica os gargalos com o Detetive do Tempo
-          </p>
+        {/* CTA próximo passo */}
+        <div className="mt-10 flex justify-end">
           <Link
             to="/metodo/pilar-1/detetive-do-tempo"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-ink text-cream text-sm font-semibold hover:bg-terracotta transition-colors"
+            className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-terracotta to-gold text-cream text-sm font-semibold shadow-lg hover:shadow-xl transition-shadow"
           >
             Próximo passo: Detetive do Tempo <ArrowRight size={15} />
           </Link>
