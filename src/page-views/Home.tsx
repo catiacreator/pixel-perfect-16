@@ -98,7 +98,7 @@ export default function Home() {
           </div>
 
           {/* Título editorial */}
-          <h1 className="font-editorial font-normal text-[40px] md:text-[68px] lg:text-[88px] leading-[0.98] tracking-[-0.02em] text-cream max-w-5xl">
+          <h1 className="font-editorial font-normal text-[34px] md:text-[54px] lg:text-[68px] leading-[1] tracking-[-0.02em] text-cream max-w-5xl">
             Crie no digital
             <br />
             com{" "}
@@ -109,7 +109,8 @@ export default function Home() {
           </h1>
 
           {/* Sub + CTAs */}
-          <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-[1.2fr_auto] items-end gap-8">
+          <div className="mt-7 md:mt-10 grid grid-cols-1 md:grid-cols-[1.2fr_auto] items-end gap-6">
+
             <p className="font-editorial text-lg md:text-2xl text-cream/80 max-w-xl leading-snug">
               Uma trilha simples para transformar o que sabe em conteúdo,
               autoridade e liberdade — com recurso a Inteligência Artificial.
