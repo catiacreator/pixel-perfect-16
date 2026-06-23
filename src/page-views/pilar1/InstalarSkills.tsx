@@ -30,20 +30,29 @@ export default function InstalarSkills() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-10">
           {SKILLS_GERAIS.map((s) => {
             const done = instaladas.has(s.id);
+            const baseCls = `text-xs font-semibold rounded-full py-2 flex items-center justify-center gap-1.5 ${
+              done ? "border border-success text-success" : s.file ? "bg-ink text-cream" : "bg-ink/30 text-cream/80 cursor-not-allowed"
+            }`;
             return (
               <div key={s.id} className="rounded-xl border border-border bg-white p-4 flex flex-col gap-2">
                 <span className="text-2xl">{s.emoji}</span>
                 <p className="text-sm font-semibold text-ink">{s.nome}</p>
                 <p className="text-xs text-muted flex-1">{s.descricao}</p>
-                <button
-                  onClick={() => toggle(s.id)}
-                  className={`text-xs font-semibold rounded-full py-2 flex items-center justify-center gap-1.5 ${
-                    done ? "border border-success text-success" : "bg-ink text-cream"
-                  }`}
-                >
-                  {done ? <Check size={13} /> : <Download size={13} />}
-                  {done ? "Instalada" : "Baixar .md"}
-                </button>
+                {s.file ? (
+                  <a
+                    href={s.file}
+                    download
+                    onClick={() => toggle(s.id)}
+                    className={baseCls}
+                  >
+                    {done ? <Check size={13} /> : <Download size={13} />}
+                    {done ? "Instalada" : "Baixar .md"}
+                  </a>
+                ) : (
+                  <button disabled className={baseCls}>
+                    <Download size={13} /> Em breve
+                  </button>
+                )}
               </div>
             );
           })}
@@ -57,9 +66,19 @@ export default function InstalarSkills() {
               <span className="text-2xl">{s.emoji}</span>
               <p className="text-sm font-semibold text-ink">{s.nome}</p>
               <p className="text-xs text-muted">{s.descricao}</p>
-              <button className="text-xs font-semibold rounded-full px-3 py-1.5 border border-border w-full">
-                Ver skill e instalar
-              </button>
+              {s.file ? (
+                <a
+                  href={s.file}
+                  download
+                  className="text-xs font-semibold rounded-full px-3 py-1.5 bg-ink text-cream w-full flex items-center justify-center gap-1.5"
+                >
+                  <Download size={13} /> Baixar .md
+                </a>
+              ) : (
+                <button disabled className="text-xs font-semibold rounded-full px-3 py-1.5 border border-border w-full opacity-60 cursor-not-allowed">
+                  Em breve
+                </button>
+              )}
             </div>
           ))}
         </div>
