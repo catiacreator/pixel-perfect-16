@@ -1,5 +1,5 @@
 import { Link } from "@/lib/router-compat";
-import { ArrowLeft, Menu } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 export default function PilarBreadcrumb({
   pilar,
@@ -13,41 +13,47 @@ export default function PilarBreadcrumb({
   backLabel: string;
 }) {
   return (
-    <div className="w-full">
-      <div className="px-5 md:px-10 py-2.5 border-b border-border bg-cream flex items-center gap-3">
-        <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-full border border-border bg-white text-ink">
-          <Menu size={12} /> Pilar {pilar}
-        </span>
-        <span className="text-[11px] tracking-[0.18em] uppercase text-muted">{pilarLabel}</span>
-      </div>
-
-      <div className="px-5 md:px-10 py-4 max-w-2xl mx-auto flex items-center justify-between flex-wrap gap-3">
-        <Link to={backTo} className="flex items-center gap-1.5 text-sm text-ink hover:opacity-70">
-          <ArrowLeft size={14} /> {backLabel}
+    <div className="w-full border-b border-[var(--color-border)]">
+      <div className="max-w-[1100px] mx-auto px-5 md:px-10 py-4 flex items-center justify-between flex-wrap gap-3">
+        <Link
+          to={backTo}
+          className="inline-flex items-center gap-2 text-[11px] tracking-[0.2em] uppercase text-ink/55 hover:text-ink transition-colors"
+        >
+          <ArrowLeft size={13} strokeWidth={2} /> {backLabel}
         </Link>
-        <div className="flex items-center gap-2 text-xs">
-          <span className="text-muted tracking-[0.18em] uppercase">Ir para Pilar</span>
-          <div className="inline-flex gap-1 rounded-full border border-border bg-white p-0.5">
+
+        <div className="flex items-center gap-3 text-[11px] tracking-[0.2em] uppercase">
+          <span className="text-ink/40 hidden sm:inline">
+            / Pilar {pilar} · {pilarLabel}
+          </span>
+          <div className="inline-flex gap-1.5">
             {[1, 2, 3, 4].map((n) => {
               const active = pilar === n;
               const enabled = n === 1 || n === 2;
-              const cls = active
-                ? "bg-ink text-cream"
-                : enabled
-                ? "text-ink"
-                : "text-muted/60";
-              return enabled && !active ? (
-                <Link
-                  key={n}
-                  to={`/metodo/pilar-${n}`}
-                  className={`w-6 h-6 rounded-full flex items-center justify-center text-sm ${cls}`}
-                >
-                  {n}
-                </Link>
-              ) : (
+              const base =
+                "w-7 h-7 rounded-full flex items-center justify-center text-[12px] tracking-normal transition-colors";
+              if (active) {
+                return (
+                  <span key={n} className={`${base} bg-ink text-cream`}>
+                    {n}
+                  </span>
+                );
+              }
+              if (enabled) {
+                return (
+                  <Link
+                    key={n}
+                    to={`/metodo/pilar-${n}`}
+                    className={`${base} border border-[var(--color-border)] text-ink/70 hover:border-ink/40 hover:text-ink`}
+                  >
+                    {n}
+                  </Link>
+                );
+              }
+              return (
                 <span
                   key={n}
-                  className={`w-6 h-6 rounded-full flex items-center justify-center text-sm ${cls}`}
+                  className={`${base} border border-[var(--color-border)] text-ink/25`}
                 >
                   {n}
                 </span>
