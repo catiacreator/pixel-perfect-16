@@ -4,6 +4,7 @@ import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import ProgressBar from "../../components/ProgressBar";
 import VideoPlaceholder from "../../components/VideoPlaceholder";
+import TodoBanner from "../../components/TodoBanner";
 import { ChevronDown, PlayCircle, ArrowLeft } from "lucide-react";
 
 const MODULOS = [
