@@ -29,6 +29,7 @@ type Item = {
   to: string;
   icon: LucideIcon;
   enBreve?: boolean;
+  badge?: string;
   children?: SubItem[];
 };
 
