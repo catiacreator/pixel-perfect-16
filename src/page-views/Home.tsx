@@ -77,9 +77,10 @@ export default function Home() {
           />
         </div>
 
-        <div className="relative max-w-[1400px] mx-auto px-5 md:px-10 pt-16 md:pt-24 pb-20 md:pb-28">
+        <div className="relative max-w-[1400px] mx-auto px-5 md:px-10 pt-10 md:pt-14 pb-12 md:pb-16">
           {/* Linha topo */}
-          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-6 mb-14 md:mb-20">
+          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-6 mb-8 md:mb-12">
+
             <div className="flex items-center gap-2.5">
               <span className="w-1.5 h-1.5 rounded-full bg-cream animate-pulse" />
               <span className="text-[11px] tracking-[0.3em] uppercase text-cream/70">
@@ -97,7 +98,7 @@ export default function Home() {
           </div>
 
           {/* Título editorial */}
-          <h1 className="font-editorial font-normal text-[40px] md:text-[68px] lg:text-[88px] leading-[0.98] tracking-[-0.02em] text-cream max-w-5xl">
+          <h1 className="font-editorial font-normal text-[34px] md:text-[54px] lg:text-[68px] leading-[1] tracking-[-0.02em] text-cream max-w-5xl">
             Crie no digital
             <br />
             com{" "}
@@ -108,7 +109,8 @@ export default function Home() {
           </h1>
 
           {/* Sub + CTAs */}
-          <div className="mt-12 md:mt-16 grid grid-cols-1 md:grid-cols-[1.2fr_auto] items-end gap-8">
+          <div className="mt-7 md:mt-10 grid grid-cols-1 md:grid-cols-[1.2fr_auto] items-end gap-6">
+
             <p className="font-editorial text-lg md:text-2xl text-cream/80 max-w-xl leading-snug">
               Uma trilha simples para transformar o que sabe em conteúdo,
               autoridade e liberdade — com recurso a Inteligência Artificial.
