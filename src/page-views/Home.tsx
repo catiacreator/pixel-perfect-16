@@ -113,7 +113,7 @@ export default function Home() {
           <div className="mt-5 md:mt-6 grid grid-cols-1 md:grid-cols-[1.2fr_auto] items-end gap-4">
 
 
-            <p className="font-editorial text-lg md:text-2xl text-cream/80 max-w-xl leading-snug">
+            <p className="font-editorial text-base md:text-lg text-cream/80 max-w-xl leading-snug">
               Uma trilha simples para transformar o que sabe em conteúdo,
               autoridade e liberdade — com recurso a Inteligência Artificial.
             </p>
