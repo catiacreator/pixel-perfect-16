@@ -1,7 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import ConsultoriaIA from "@/page-views/consultoria/ConsultoriaIA";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/metodo/consultoria-ia")({
-  head: () => ({ meta: [{ title: "Consultoria IA — Leveza no Digital" }] }),
-  component: ConsultoriaIA,
+  component: () => <Outlet />,
 });

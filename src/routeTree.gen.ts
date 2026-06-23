@@ -20,6 +20,9 @@ import { Route as MetodoPilar2RouteImport } from './routes/metodo.pilar-2'
 import { Route as MetodoPilar1RouteImport } from './routes/metodo.pilar-1'
 import { Route as MetodoConsultoriaIaRouteImport } from './routes/metodo.consultoria-ia'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as MetodoPilar2IndexRouteImport } from './routes/metodo.pilar-2.index'
+import { Route as MetodoPilar1IndexRouteImport } from './routes/metodo.pilar-1.index'
+import { Route as MetodoConsultoriaIaIndexRouteImport } from './routes/metodo.consultoria-ia.index'
 import { Route as MetodoPilar2VideosRouteImport } from './routes/metodo.pilar-2.videos'
 import { Route as MetodoPilar2TomDeVozRouteImport } from './routes/metodo.pilar-2.tom-de-voz'
 import { Route as MetodoPilar2RedesSociaisRouteImport } from './routes/metodo.pilar-2.redes-sociais'
@@ -34,9 +37,13 @@ import { Route as MetodoPilar1DetetiveDoTempoRouteImport } from './routes/metodo
 import { Route as MetodoPilar1ConclusaoRouteImport } from './routes/metodo.pilar-1.conclusao'
 import { Route as MetodoPilar1AprendaIaRouteImport } from './routes/metodo.pilar-1.aprenda-ia'
 import { Route as MetodoConsultoriaIaComoUsarRouteImport } from './routes/metodo.consultoria-ia.como-usar'
+import { Route as MetodoPilar2RedesSociaisIndexRouteImport } from './routes/metodo.pilar-2.redes-sociais.index'
+import { Route as MetodoPilar1DetetiveDoTempoIndexRouteImport } from './routes/metodo.pilar-1.detetive-do-tempo.index'
+import { Route as MetodoPilar1AprendaIaIndexRouteImport } from './routes/metodo.pilar-1.aprenda-ia.index'
 import { Route as MetodoPilar2RedesSociaisInstagramRouteImport } from './routes/metodo.pilar-2.redes-sociais.instagram'
 import { Route as MetodoPilar1DetetiveDoTempoRelatorioRouteImport } from './routes/metodo.pilar-1.detetive-do-tempo.relatorio'
 import { Route as MetodoPilar1AprendaIaToolRouteImport } from './routes/metodo.pilar-1.aprenda-ia.$tool'
+import { Route as MetodoPilar2RedesSociaisInstagramIndexRouteImport } from './routes/metodo.pilar-2.redes-sociais.instagram.index'
 import { Route as MetodoPilar2RedesSociaisInstagramFormatoRouteImport } from './routes/metodo.pilar-2.redes-sociais.instagram.$formato'
 import { Route as MetodoPilar1AprendaIaClaudeInstalarSkillsRouteImport } from './routes/metodo.pilar-1.aprenda-ia.claude.instalar-skills'
 import { Route as MetodoPilar1AprendaIaToolLessonSlugRouteImport } from './routes/metodo.pilar-1.aprenda-ia.$tool.$lessonSlug'
@@ -96,6 +103,22 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MetodoPilar2IndexRoute = MetodoPilar2IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MetodoPilar2Route,
+} as any)
+const MetodoPilar1IndexRoute = MetodoPilar1IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MetodoPilar1Route,
+} as any)
+const MetodoConsultoriaIaIndexRoute =
+  MetodoConsultoriaIaIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => MetodoConsultoriaIaRoute,
+  } as any)
 const MetodoPilar2VideosRoute = MetodoPilar2VideosRouteImport.update({
   id: '/videos',
   path: '/videos',
@@ -173,6 +196,24 @@ const MetodoConsultoriaIaComoUsarRoute =
     path: '/como-usar',
     getParentRoute: () => MetodoConsultoriaIaRoute,
   } as any)
+const MetodoPilar2RedesSociaisIndexRoute =
+  MetodoPilar2RedesSociaisIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => MetodoPilar2RedesSociaisRoute,
+  } as any)
+const MetodoPilar1DetetiveDoTempoIndexRoute =
+  MetodoPilar1DetetiveDoTempoIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => MetodoPilar1DetetiveDoTempoRoute,
+  } as any)
+const MetodoPilar1AprendaIaIndexRoute =
+  MetodoPilar1AprendaIaIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => MetodoPilar1AprendaIaRoute,
+  } as any)
 const MetodoPilar2RedesSociaisInstagramRoute =
   MetodoPilar2RedesSociaisInstagramRouteImport.update({
     id: '/instagram',
@@ -190,6 +231,12 @@ const MetodoPilar1AprendaIaToolRoute =
     id: '/$tool',
     path: '/$tool',
     getParentRoute: () => MetodoPilar1AprendaIaRoute,
+  } as any)
+const MetodoPilar2RedesSociaisInstagramIndexRoute =
+  MetodoPilar2RedesSociaisInstagramIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => MetodoPilar2RedesSociaisInstagramRoute,
   } as any)
 const MetodoPilar2RedesSociaisInstagramFormatoRoute =
   MetodoPilar2RedesSociaisInstagramFormatoRouteImport.update({
@@ -236,12 +283,19 @@ export interface FileRoutesByFullPath {
   '/metodo/pilar-2/redes-sociais': typeof MetodoPilar2RedesSociaisRouteWithChildren
   '/metodo/pilar-2/tom-de-voz': typeof MetodoPilar2TomDeVozRoute
   '/metodo/pilar-2/videos': typeof MetodoPilar2VideosRoute
+  '/metodo/consultoria-ia/': typeof MetodoConsultoriaIaIndexRoute
+  '/metodo/pilar-1/': typeof MetodoPilar1IndexRoute
+  '/metodo/pilar-2/': typeof MetodoPilar2IndexRoute
   '/metodo/pilar-1/aprenda-ia/$tool': typeof MetodoPilar1AprendaIaToolRouteWithChildren
   '/metodo/pilar-1/detetive-do-tempo/relatorio': typeof MetodoPilar1DetetiveDoTempoRelatorioRoute
   '/metodo/pilar-2/redes-sociais/instagram': typeof MetodoPilar2RedesSociaisInstagramRouteWithChildren
+  '/metodo/pilar-1/aprenda-ia/': typeof MetodoPilar1AprendaIaIndexRoute
+  '/metodo/pilar-1/detetive-do-tempo/': typeof MetodoPilar1DetetiveDoTempoIndexRoute
+  '/metodo/pilar-2/redes-sociais/': typeof MetodoPilar2RedesSociaisIndexRoute
   '/metodo/pilar-1/aprenda-ia/$tool/$lessonSlug': typeof MetodoPilar1AprendaIaToolLessonSlugRoute
   '/metodo/pilar-1/aprenda-ia/claude/instalar-skills': typeof MetodoPilar1AprendaIaClaudeInstalarSkillsRoute
   '/metodo/pilar-2/redes-sociais/instagram/$formato': typeof MetodoPilar2RedesSociaisInstagramFormatoRoute
+  '/metodo/pilar-2/redes-sociais/instagram/': typeof MetodoPilar2RedesSociaisInstagramIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -250,14 +304,9 @@ export interface FileRoutesByTo {
   '/mensagens': typeof MensagensRoute
   '/meus-projetos': typeof MeusProjetosRoute
   '/api/chat': typeof ApiChatRoute
-  '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
-  '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
-  '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
   '/metodo': typeof MetodoIndexRoute
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
-  '/metodo/pilar-1/aprenda-ia': typeof MetodoPilar1AprendaIaRouteWithChildren
   '/metodo/pilar-1/conclusao': typeof MetodoPilar1ConclusaoRoute
-  '/metodo/pilar-1/detetive-do-tempo': typeof MetodoPilar1DetetiveDoTempoRouteWithChildren
   '/metodo/pilar-2/conclusao': typeof MetodoPilar2ConclusaoRoute
   '/metodo/pilar-2/consultoria-imagem': typeof MetodoPilar2ConsultoriaImagemRoute
   '/metodo/pilar-2/identidade': typeof MetodoPilar2IdentidadeRoute
@@ -265,15 +314,20 @@ export interface FileRoutesByTo {
   '/metodo/pilar-2/metodo': typeof MetodoPilar2MetodoRoute
   '/metodo/pilar-2/pagina-profissional': typeof MetodoPilar2PaginaProfissionalRoute
   '/metodo/pilar-2/pesquisa-mercado': typeof MetodoPilar2PesquisaMercadoRoute
-  '/metodo/pilar-2/redes-sociais': typeof MetodoPilar2RedesSociaisRouteWithChildren
   '/metodo/pilar-2/tom-de-voz': typeof MetodoPilar2TomDeVozRoute
   '/metodo/pilar-2/videos': typeof MetodoPilar2VideosRoute
+  '/metodo/consultoria-ia': typeof MetodoConsultoriaIaIndexRoute
+  '/metodo/pilar-1': typeof MetodoPilar1IndexRoute
+  '/metodo/pilar-2': typeof MetodoPilar2IndexRoute
   '/metodo/pilar-1/aprenda-ia/$tool': typeof MetodoPilar1AprendaIaToolRouteWithChildren
   '/metodo/pilar-1/detetive-do-tempo/relatorio': typeof MetodoPilar1DetetiveDoTempoRelatorioRoute
-  '/metodo/pilar-2/redes-sociais/instagram': typeof MetodoPilar2RedesSociaisInstagramRouteWithChildren
+  '/metodo/pilar-1/aprenda-ia': typeof MetodoPilar1AprendaIaIndexRoute
+  '/metodo/pilar-1/detetive-do-tempo': typeof MetodoPilar1DetetiveDoTempoIndexRoute
+  '/metodo/pilar-2/redes-sociais': typeof MetodoPilar2RedesSociaisIndexRoute
   '/metodo/pilar-1/aprenda-ia/$tool/$lessonSlug': typeof MetodoPilar1AprendaIaToolLessonSlugRoute
   '/metodo/pilar-1/aprenda-ia/claude/instalar-skills': typeof MetodoPilar1AprendaIaClaudeInstalarSkillsRoute
   '/metodo/pilar-2/redes-sociais/instagram/$formato': typeof MetodoPilar2RedesSociaisInstagramFormatoRoute
+  '/metodo/pilar-2/redes-sociais/instagram': typeof MetodoPilar2RedesSociaisInstagramIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -302,12 +356,19 @@ export interface FileRoutesById {
   '/metodo/pilar-2/redes-sociais': typeof MetodoPilar2RedesSociaisRouteWithChildren
   '/metodo/pilar-2/tom-de-voz': typeof MetodoPilar2TomDeVozRoute
   '/metodo/pilar-2/videos': typeof MetodoPilar2VideosRoute
+  '/metodo/consultoria-ia/': typeof MetodoConsultoriaIaIndexRoute
+  '/metodo/pilar-1/': typeof MetodoPilar1IndexRoute
+  '/metodo/pilar-2/': typeof MetodoPilar2IndexRoute
   '/metodo/pilar-1/aprenda-ia/$tool': typeof MetodoPilar1AprendaIaToolRouteWithChildren
   '/metodo/pilar-1/detetive-do-tempo/relatorio': typeof MetodoPilar1DetetiveDoTempoRelatorioRoute
   '/metodo/pilar-2/redes-sociais/instagram': typeof MetodoPilar2RedesSociaisInstagramRouteWithChildren
+  '/metodo/pilar-1/aprenda-ia/': typeof MetodoPilar1AprendaIaIndexRoute
+  '/metodo/pilar-1/detetive-do-tempo/': typeof MetodoPilar1DetetiveDoTempoIndexRoute
+  '/metodo/pilar-2/redes-sociais/': typeof MetodoPilar2RedesSociaisIndexRoute
   '/metodo/pilar-1/aprenda-ia/$tool/$lessonSlug': typeof MetodoPilar1AprendaIaToolLessonSlugRoute
   '/metodo/pilar-1/aprenda-ia/claude/instalar-skills': typeof MetodoPilar1AprendaIaClaudeInstalarSkillsRoute
   '/metodo/pilar-2/redes-sociais/instagram/$formato': typeof MetodoPilar2RedesSociaisInstagramFormatoRoute
+  '/metodo/pilar-2/redes-sociais/instagram/': typeof MetodoPilar2RedesSociaisInstagramIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -337,12 +398,19 @@ export interface FileRouteTypes {
     | '/metodo/pilar-2/redes-sociais'
     | '/metodo/pilar-2/tom-de-voz'
     | '/metodo/pilar-2/videos'
+    | '/metodo/consultoria-ia/'
+    | '/metodo/pilar-1/'
+    | '/metodo/pilar-2/'
     | '/metodo/pilar-1/aprenda-ia/$tool'
     | '/metodo/pilar-1/detetive-do-tempo/relatorio'
     | '/metodo/pilar-2/redes-sociais/instagram'
+    | '/metodo/pilar-1/aprenda-ia/'
+    | '/metodo/pilar-1/detetive-do-tempo/'
+    | '/metodo/pilar-2/redes-sociais/'
     | '/metodo/pilar-1/aprenda-ia/$tool/$lessonSlug'
     | '/metodo/pilar-1/aprenda-ia/claude/instalar-skills'
     | '/metodo/pilar-2/redes-sociais/instagram/$formato'
+    | '/metodo/pilar-2/redes-sociais/instagram/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -351,14 +419,9 @@ export interface FileRouteTypes {
     | '/mensagens'
     | '/meus-projetos'
     | '/api/chat'
-    | '/metodo/consultoria-ia'
-    | '/metodo/pilar-1'
-    | '/metodo/pilar-2'
     | '/metodo'
     | '/metodo/consultoria-ia/como-usar'
-    | '/metodo/pilar-1/aprenda-ia'
     | '/metodo/pilar-1/conclusao'
-    | '/metodo/pilar-1/detetive-do-tempo'
     | '/metodo/pilar-2/conclusao'
     | '/metodo/pilar-2/consultoria-imagem'
     | '/metodo/pilar-2/identidade'
@@ -366,15 +429,20 @@ export interface FileRouteTypes {
     | '/metodo/pilar-2/metodo'
     | '/metodo/pilar-2/pagina-profissional'
     | '/metodo/pilar-2/pesquisa-mercado'
-    | '/metodo/pilar-2/redes-sociais'
     | '/metodo/pilar-2/tom-de-voz'
     | '/metodo/pilar-2/videos'
+    | '/metodo/consultoria-ia'
+    | '/metodo/pilar-1'
+    | '/metodo/pilar-2'
     | '/metodo/pilar-1/aprenda-ia/$tool'
     | '/metodo/pilar-1/detetive-do-tempo/relatorio'
-    | '/metodo/pilar-2/redes-sociais/instagram'
+    | '/metodo/pilar-1/aprenda-ia'
+    | '/metodo/pilar-1/detetive-do-tempo'
+    | '/metodo/pilar-2/redes-sociais'
     | '/metodo/pilar-1/aprenda-ia/$tool/$lessonSlug'
     | '/metodo/pilar-1/aprenda-ia/claude/instalar-skills'
     | '/metodo/pilar-2/redes-sociais/instagram/$formato'
+    | '/metodo/pilar-2/redes-sociais/instagram'
   id:
     | '__root__'
     | '/'
@@ -402,12 +470,19 @@ export interface FileRouteTypes {
     | '/metodo/pilar-2/redes-sociais'
     | '/metodo/pilar-2/tom-de-voz'
     | '/metodo/pilar-2/videos'
+    | '/metodo/consultoria-ia/'
+    | '/metodo/pilar-1/'
+    | '/metodo/pilar-2/'
     | '/metodo/pilar-1/aprenda-ia/$tool'
     | '/metodo/pilar-1/detetive-do-tempo/relatorio'
     | '/metodo/pilar-2/redes-sociais/instagram'
+    | '/metodo/pilar-1/aprenda-ia/'
+    | '/metodo/pilar-1/detetive-do-tempo/'
+    | '/metodo/pilar-2/redes-sociais/'
     | '/metodo/pilar-1/aprenda-ia/$tool/$lessonSlug'
     | '/metodo/pilar-1/aprenda-ia/claude/instalar-skills'
     | '/metodo/pilar-2/redes-sociais/instagram/$formato'
+    | '/metodo/pilar-2/redes-sociais/instagram/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -498,6 +573,27 @@ declare module '@tanstack/react-router' {
       fullPath: '/api/chat'
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/metodo/pilar-2/': {
+      id: '/metodo/pilar-2/'
+      path: '/'
+      fullPath: '/metodo/pilar-2/'
+      preLoaderRoute: typeof MetodoPilar2IndexRouteImport
+      parentRoute: typeof MetodoPilar2Route
+    }
+    '/metodo/pilar-1/': {
+      id: '/metodo/pilar-1/'
+      path: '/'
+      fullPath: '/metodo/pilar-1/'
+      preLoaderRoute: typeof MetodoPilar1IndexRouteImport
+      parentRoute: typeof MetodoPilar1Route
+    }
+    '/metodo/consultoria-ia/': {
+      id: '/metodo/consultoria-ia/'
+      path: '/'
+      fullPath: '/metodo/consultoria-ia/'
+      preLoaderRoute: typeof MetodoConsultoriaIaIndexRouteImport
+      parentRoute: typeof MetodoConsultoriaIaRoute
     }
     '/metodo/pilar-2/videos': {
       id: '/metodo/pilar-2/videos'
@@ -597,6 +693,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MetodoConsultoriaIaComoUsarRouteImport
       parentRoute: typeof MetodoConsultoriaIaRoute
     }
+    '/metodo/pilar-2/redes-sociais/': {
+      id: '/metodo/pilar-2/redes-sociais/'
+      path: '/'
+      fullPath: '/metodo/pilar-2/redes-sociais/'
+      preLoaderRoute: typeof MetodoPilar2RedesSociaisIndexRouteImport
+      parentRoute: typeof MetodoPilar2RedesSociaisRoute
+    }
+    '/metodo/pilar-1/detetive-do-tempo/': {
+      id: '/metodo/pilar-1/detetive-do-tempo/'
+      path: '/'
+      fullPath: '/metodo/pilar-1/detetive-do-tempo/'
+      preLoaderRoute: typeof MetodoPilar1DetetiveDoTempoIndexRouteImport
+      parentRoute: typeof MetodoPilar1DetetiveDoTempoRoute
+    }
+    '/metodo/pilar-1/aprenda-ia/': {
+      id: '/metodo/pilar-1/aprenda-ia/'
+      path: '/'
+      fullPath: '/metodo/pilar-1/aprenda-ia/'
+      preLoaderRoute: typeof MetodoPilar1AprendaIaIndexRouteImport
+      parentRoute: typeof MetodoPilar1AprendaIaRoute
+    }
     '/metodo/pilar-2/redes-sociais/instagram': {
       id: '/metodo/pilar-2/redes-sociais/instagram'
       path: '/instagram'
@@ -617,6 +734,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/metodo/pilar-1/aprenda-ia/$tool'
       preLoaderRoute: typeof MetodoPilar1AprendaIaToolRouteImport
       parentRoute: typeof MetodoPilar1AprendaIaRoute
+    }
+    '/metodo/pilar-2/redes-sociais/instagram/': {
+      id: '/metodo/pilar-2/redes-sociais/instagram/'
+      path: '/'
+      fullPath: '/metodo/pilar-2/redes-sociais/instagram/'
+      preLoaderRoute: typeof MetodoPilar2RedesSociaisInstagramIndexRouteImport
+      parentRoute: typeof MetodoPilar2RedesSociaisInstagramRoute
     }
     '/metodo/pilar-2/redes-sociais/instagram/$formato': {
       id: '/metodo/pilar-2/redes-sociais/instagram/$formato'
@@ -644,10 +768,12 @@ declare module '@tanstack/react-router' {
 
 interface MetodoConsultoriaIaRouteChildren {
   MetodoConsultoriaIaComoUsarRoute: typeof MetodoConsultoriaIaComoUsarRoute
+  MetodoConsultoriaIaIndexRoute: typeof MetodoConsultoriaIaIndexRoute
 }
 
 const MetodoConsultoriaIaRouteChildren: MetodoConsultoriaIaRouteChildren = {
   MetodoConsultoriaIaComoUsarRoute: MetodoConsultoriaIaComoUsarRoute,
+  MetodoConsultoriaIaIndexRoute: MetodoConsultoriaIaIndexRoute,
 }
 
 const MetodoConsultoriaIaRouteWithChildren =
@@ -670,11 +796,13 @@ const MetodoPilar1AprendaIaToolRouteWithChildren =
 
 interface MetodoPilar1AprendaIaRouteChildren {
   MetodoPilar1AprendaIaToolRoute: typeof MetodoPilar1AprendaIaToolRouteWithChildren
+  MetodoPilar1AprendaIaIndexRoute: typeof MetodoPilar1AprendaIaIndexRoute
   MetodoPilar1AprendaIaClaudeInstalarSkillsRoute: typeof MetodoPilar1AprendaIaClaudeInstalarSkillsRoute
 }
 
 const MetodoPilar1AprendaIaRouteChildren: MetodoPilar1AprendaIaRouteChildren = {
   MetodoPilar1AprendaIaToolRoute: MetodoPilar1AprendaIaToolRouteWithChildren,
+  MetodoPilar1AprendaIaIndexRoute: MetodoPilar1AprendaIaIndexRoute,
   MetodoPilar1AprendaIaClaudeInstalarSkillsRoute:
     MetodoPilar1AprendaIaClaudeInstalarSkillsRoute,
 }
@@ -686,12 +814,15 @@ const MetodoPilar1AprendaIaRouteWithChildren =
 
 interface MetodoPilar1DetetiveDoTempoRouteChildren {
   MetodoPilar1DetetiveDoTempoRelatorioRoute: typeof MetodoPilar1DetetiveDoTempoRelatorioRoute
+  MetodoPilar1DetetiveDoTempoIndexRoute: typeof MetodoPilar1DetetiveDoTempoIndexRoute
 }
 
 const MetodoPilar1DetetiveDoTempoRouteChildren: MetodoPilar1DetetiveDoTempoRouteChildren =
   {
     MetodoPilar1DetetiveDoTempoRelatorioRoute:
       MetodoPilar1DetetiveDoTempoRelatorioRoute,
+    MetodoPilar1DetetiveDoTempoIndexRoute:
+      MetodoPilar1DetetiveDoTempoIndexRoute,
   }
 
 const MetodoPilar1DetetiveDoTempoRouteWithChildren =
@@ -703,6 +834,7 @@ interface MetodoPilar1RouteChildren {
   MetodoPilar1AprendaIaRoute: typeof MetodoPilar1AprendaIaRouteWithChildren
   MetodoPilar1ConclusaoRoute: typeof MetodoPilar1ConclusaoRoute
   MetodoPilar1DetetiveDoTempoRoute: typeof MetodoPilar1DetetiveDoTempoRouteWithChildren
+  MetodoPilar1IndexRoute: typeof MetodoPilar1IndexRoute
 }
 
 const MetodoPilar1RouteChildren: MetodoPilar1RouteChildren = {
@@ -710,6 +842,7 @@ const MetodoPilar1RouteChildren: MetodoPilar1RouteChildren = {
   MetodoPilar1ConclusaoRoute: MetodoPilar1ConclusaoRoute,
   MetodoPilar1DetetiveDoTempoRoute:
     MetodoPilar1DetetiveDoTempoRouteWithChildren,
+  MetodoPilar1IndexRoute: MetodoPilar1IndexRoute,
 }
 
 const MetodoPilar1RouteWithChildren = MetodoPilar1Route._addFileChildren(
@@ -718,12 +851,15 @@ const MetodoPilar1RouteWithChildren = MetodoPilar1Route._addFileChildren(
 
 interface MetodoPilar2RedesSociaisInstagramRouteChildren {
   MetodoPilar2RedesSociaisInstagramFormatoRoute: typeof MetodoPilar2RedesSociaisInstagramFormatoRoute
+  MetodoPilar2RedesSociaisInstagramIndexRoute: typeof MetodoPilar2RedesSociaisInstagramIndexRoute
 }
 
 const MetodoPilar2RedesSociaisInstagramRouteChildren: MetodoPilar2RedesSociaisInstagramRouteChildren =
   {
     MetodoPilar2RedesSociaisInstagramFormatoRoute:
       MetodoPilar2RedesSociaisInstagramFormatoRoute,
+    MetodoPilar2RedesSociaisInstagramIndexRoute:
+      MetodoPilar2RedesSociaisInstagramIndexRoute,
   }
 
 const MetodoPilar2RedesSociaisInstagramRouteWithChildren =
@@ -733,12 +869,14 @@ const MetodoPilar2RedesSociaisInstagramRouteWithChildren =
 
 interface MetodoPilar2RedesSociaisRouteChildren {
   MetodoPilar2RedesSociaisInstagramRoute: typeof MetodoPilar2RedesSociaisInstagramRouteWithChildren
+  MetodoPilar2RedesSociaisIndexRoute: typeof MetodoPilar2RedesSociaisIndexRoute
 }
 
 const MetodoPilar2RedesSociaisRouteChildren: MetodoPilar2RedesSociaisRouteChildren =
   {
     MetodoPilar2RedesSociaisInstagramRoute:
       MetodoPilar2RedesSociaisInstagramRouteWithChildren,
+    MetodoPilar2RedesSociaisIndexRoute: MetodoPilar2RedesSociaisIndexRoute,
   }
 
 const MetodoPilar2RedesSociaisRouteWithChildren =
@@ -757,6 +895,7 @@ interface MetodoPilar2RouteChildren {
   MetodoPilar2RedesSociaisRoute: typeof MetodoPilar2RedesSociaisRouteWithChildren
   MetodoPilar2TomDeVozRoute: typeof MetodoPilar2TomDeVozRoute
   MetodoPilar2VideosRoute: typeof MetodoPilar2VideosRoute
+  MetodoPilar2IndexRoute: typeof MetodoPilar2IndexRoute
 }
 
 const MetodoPilar2RouteChildren: MetodoPilar2RouteChildren = {
@@ -770,6 +909,7 @@ const MetodoPilar2RouteChildren: MetodoPilar2RouteChildren = {
   MetodoPilar2RedesSociaisRoute: MetodoPilar2RedesSociaisRouteWithChildren,
   MetodoPilar2TomDeVozRoute: MetodoPilar2TomDeVozRoute,
   MetodoPilar2VideosRoute: MetodoPilar2VideosRoute,
+  MetodoPilar2IndexRoute: MetodoPilar2IndexRoute,
 }
 
 const MetodoPilar2RouteWithChildren = MetodoPilar2Route._addFileChildren(

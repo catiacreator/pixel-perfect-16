@@ -1,7 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import DetetiveDoTempo from "@/page-views/pilar1/DetetiveDoTempo";
+import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/metodo/pilar-1/detetive-do-tempo")({
-  head: () => ({ meta: [{ title: "Detetive do Tempo — Leveza no Digital" }] }),
-  component: DetetiveDoTempo,
+  component: () => <Outlet />,
 });
