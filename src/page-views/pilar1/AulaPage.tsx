@@ -127,9 +127,21 @@ export default function AulaPage() {
   const { prev, next } = neighbours(tool.slug, aula.id);
   const done = isDone(tool.slug, aula.id);
 
+  // Agrupa aulas por módulo, preservando ordem
+  const grupos = useMemo(() => {
+    const map = new Map<string, Aula[]>();
+    for (const a of tool.aulas) {
+      const arr = map.get(a.modulo) ?? [];
+      arr.push(a);
+      map.set(a.modulo, arr);
+    }
+    return Array.from(map.entries());
+  }, [tool]);
+
   return (
     <Layout>
-      <div className="px-5 md:px-10 py-10 max-w-3xl mx-auto">
+      <div className="px-5 md:px-10 py-10 max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8">
+        <div className="min-w-0">
         {/* Breadcrumb */}
         <div className="text-xs text-muted mb-4 flex items-center gap-1 flex-wrap">
           <Link to="/metodo/pilar-1/aprenda-ia" className="hover:text-terracotta">
