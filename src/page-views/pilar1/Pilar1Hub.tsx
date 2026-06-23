@@ -20,42 +20,39 @@ export default function Pilar1Hub() {
 
       <div className="max-w-[1100px] mx-auto px-5 md:px-10 pb-24">
         {/* Passo 1 — destaque hero */}
-        <div className="border-t border-[var(--color-border)] py-10 md:py-14 grid grid-cols-[auto_1fr_auto] gap-6 md:gap-10 items-start">
-          <div className="font-display text-4xl md:text-5xl text-ink/20 tabular-nums tracking-tight leading-none pt-1 w-12 md:w-16">
-            00
+        <div className="bg-cream rounded-2xl border border-terracotta/25 shadow-[0_8px_24px_-16px_rgba(180,90,40,0.25)] px-6 md:px-8 py-7 md:py-8 mb-8 grid grid-cols-[3.5rem_1fr_auto] md:grid-cols-[4rem_1fr_auto] gap-5 md:gap-8 items-center">
+          <div className="font-display text-4xl md:text-5xl text-terracotta/30 tabular-nums tracking-tight leading-none">
+            I
           </div>
           <div className="min-w-0">
-            <p className="text-[11px] tracking-[0.2em] uppercase text-terracotta font-medium mb-2">
-              / Passo 1 · Comece agora por aqui
+            <p className="text-[11px] tracking-[0.25em] uppercase text-terracotta font-medium mb-1.5">
+              Etapa 1 · Comece agora por aqui
             </p>
-            <h3 className="font-display text-3xl md:text-4xl tracking-tight text-ink leading-tight mb-3">
+            <h3 className="font-display text-xl md:text-2xl tracking-tight text-ink leading-snug mb-1.5">
               Vamos começar pelo seu{" "}
               <span className="italic font-normal text-terracotta" style={{ fontFamily: "var(--font-editorial)" }}>
                 Documento Mestre
               </span>
             </h3>
-            <p className="text-sm md:text-[15px] text-ink/55 leading-relaxed max-w-xl mb-5">
+            <p className="text-sm md:text-[15px] text-ink/55 leading-relaxed max-w-2xl">
               É a base de tudo. Em 5 minutos, defines o que vais criar — e a IA passa a falar a tua língua.
             </p>
-            <Link
-              to="/doc-mestre"
-              className="group inline-flex items-center gap-2 bg-ink text-cream pl-5 pr-2 py-2 rounded-full text-sm font-medium hover:bg-forest transition-all"
-            >
-              Começar Documento Mestre
-              <span className="w-8 h-8 rounded-full bg-cream text-ink flex items-center justify-center">
-                <ArrowUpRight size={14} strokeWidth={2.5} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </span>
-            </Link>
           </div>
-          <div className="hidden md:block pt-2 text-[11px] tracking-[0.2em] uppercase text-ink/35">
-            5 min
-          </div>
+          <Link
+            to="/doc-mestre"
+            className="group inline-flex items-center gap-2 bg-ink text-cream pl-5 pr-4 py-2.5 rounded-full text-sm font-medium hover:bg-forest transition-all shadow-[0_2px_6px_-2px_rgba(40,30,20,0.4)]"
+          >
+            Começar
+            <ArrowUpRight size={15} strokeWidth={2.25} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </Link>
         </div>
 
-        {/* Etapas */}
-        <div className="mt-4">
+        <p className="text-[11px] tracking-[0.28em] uppercase text-ink/45 font-medium mb-5">
+          As etapas do Pilar 1
+        </p>
+
+        <div className="space-y-4">
           <EtapaCard
-            numero="02"
             icon={<GraduationCap size={18} />}
             label="Etapa 2 · Aprender"
             titulo="Domine as principais IAs para o seu negócio"
@@ -63,7 +60,6 @@ export default function Pilar1Hub() {
             to="/metodo/pilar-1/aprenda-ia"
           />
           <EtapaCard
-            numero="03"
             icon={<Search size={18} />}
             label="Etapa 3 · Descobrir"
             titulo="Detetive do Tempo"
@@ -75,7 +71,6 @@ export default function Pilar1Hub() {
             ]}
           />
           <EtapaCard
-            numero="04"
             icon={<Trophy size={18} />}
             label="Etapa 4 · Fechar"
             titulo="Revise e celebre"
