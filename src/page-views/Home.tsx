@@ -77,9 +77,10 @@ export default function Home() {
           />
         </div>
 
-        <div className="relative max-w-[1400px] mx-auto px-5 md:px-10 pt-10 md:pt-14 pb-12 md:pb-16">
+        <div className="relative max-w-[1400px] mx-auto px-5 md:px-10 pt-6 md:pt-8 pb-8 md:pb-10">
           {/* Linha topo */}
-          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-6 mb-8 md:mb-12">
+          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-6 mb-5 md:mb-7">
+
 
             <div className="flex items-center gap-2.5">
               <span className="w-1.5 h-1.5 rounded-full bg-cream animate-pulse" />
@@ -98,7 +99,7 @@ export default function Home() {
           </div>
 
           {/* Título editorial */}
-          <h1 className="font-editorial font-normal text-[34px] md:text-[54px] lg:text-[68px] leading-[1] tracking-[-0.02em] text-cream max-w-5xl">
+          <h1 className="font-editorial font-normal text-[28px] md:text-[42px] lg:text-[52px] leading-[1] tracking-[-0.02em] text-cream max-w-5xl">
             Crie no digital
             <br />
             com{" "}
@@ -109,9 +110,10 @@ export default function Home() {
           </h1>
 
           {/* Sub + CTAs */}
-          <div className="mt-7 md:mt-10 grid grid-cols-1 md:grid-cols-[1.2fr_auto] items-end gap-6">
+          <div className="mt-5 md:mt-6 grid grid-cols-1 md:grid-cols-[1.2fr_auto] items-end gap-4">
 
-            <p className="font-editorial text-lg md:text-2xl text-cream/80 max-w-xl leading-snug">
+
+            <p className="font-editorial text-base md:text-lg text-cream/80 max-w-xl leading-snug">
               Uma trilha simples para transformar o que sabe em conteúdo,
               autoridade e liberdade — com recurso a Inteligência Artificial.
             </p>
@@ -137,7 +139,8 @@ export default function Home() {
         </div>
 
         {/* recorte cream para transição */}
-        <div className="h-10 md:h-16 bg-cream rounded-t-[40px] md:rounded-t-[60px] -mb-px" />
+        <div className="h-6 md:h-10 bg-cream rounded-t-[40px] md:rounded-t-[60px] -mb-px" />
+
       </section>
 
 
