@@ -1,142 +1,90 @@
+# Reimplementar Pilar 1 do zero, alinhado à documentação
 
-# Pilar 2 — Criar Autoridade · Plano de Implementação
+O Pilar 1 já existe (~2.3k linhas em `src/page-views/pilar1/` + 14 rotas em `src/routes/`). A doc agora é a fonte da verdade. Vou reescrever cada camada (dados → componentes → páginas) para bater 1:1 com a doc, reusando a infra que já provou funcionar (Doc Mestre, edge functions `refinar-doc-mestre`, `detetive-tempo-ia`, hooks de progresso, `PromptCard`, `fillPrompt`).
 
-Escopo: reescrever as 6 etapas do Pilar 2 do zero, alinhadas à documentação enviada. Os arquivos já existem como stubs (50–150 linhas cada) e serão substituídos por implementações completas.
+## Estrutura final de rotas
 
-## Aviso sobre conteúdo truncado
-
-Sua mensagem cortou no meio do **Prompt Consultoria 1 — Estudo Visual de Roupas** (no "Look 1"). Como você pediu para começar com o que já tenho, vou marcar como `// TODO: completar prompt` os seguintes blocos e deixar placeholders claros na UI:
-
-- Prompt Consultoria 1 — final do bloco "3 LOOKS BASE PRONTOS PRA GRAVAR" em diante
-- Prompt Consultoria 2 — Cabelo (não enviado)
-- Etapa 4 — Redes Sociais (estrutura, prompts, formulários não enviados)
-- Etapa 5 — Vídeos (não enviada)
-- Etapa 6 — Conclusão / Checklist (não enviada)
-
-Você cola depois e eu completo sem refazer o resto.
-
-## Etapa 1 — Pesquisa de Mercado (`/metodo/pilar-2/pesquisa-mercado`)
-
-- 2 passos com vídeo placeholder (`VideoPlaceholder`) + botão "Marcar como concluído" usando `use-aula-progress`.
-- Passo 1: botão externo "Abrir NotebookLM" → `https://notebooklm.google.com/`.
-- Passo 2: caixinha com 5 inputs numerados ("As 5 maiores dores do seu público").
-- Persistência via campo `dores_publico_top5` no Doc Mestre (server fn `salvar-dores-publico`).
-- Link "Próxima aula → Definindo Seu Método".
-
-## Etapa 2 — Definindo Seu Método (`/metodo/pilar-2/metodo`)
-
-- Reaproveita o componente atual `EsbocoMetodo.tsx` como base.
-- PASSO 1: botão "Criar meu método com Inteligência Artificial" abre `ConversaModal` apontando para edge function `construir-metodo` (já existente em `mekzmmliixsxgtnbfgiy`).
-- Payload do POST conforme documentação (mensagens + dados Doc Mestre + arrays de dores/desejos).
-- Estado de chat persistido em localStorage por sessão; botão "Recomeçar".
-- PASSO 2: tabs `Ponto A → Vitória` (5 cards editáveis com select de Intensidade Alta/Moderada/Baixa + setas de reordenar) e `Meu Método` (nome + promessa).
-- Botões "Salvar esboço" (server fn `salvar-esboco-metodo`) e "Revisar Doc Mestre".
-
-## Etapa 3 — Identidade de Marca (4 sub-rotas)
-
-### 3.1 Arquétipos (`/metodo/pilar-2/identidade`)
-
-3 seções (Seu arquétipo / Cliente / Encontro) cada uma com:
-- Descrição
-- Botões "Copiar prompt N" (preenche placeholders com dados do Doc Mestre via `fill-prompt`) e "Ver prompt" (modal scroll)
-- Formulários com persistência (selects de 12 arquétipos + textareas)
-
-Prompts 1, 2 e 3 (verbatim, ~10KB texto) vão para `src/data/prompts/pilar2-arquetipos.ts`.
-
-### 3.2 Tom de Voz (`/metodo/pilar-2/tom-de-voz`)
-
-- Botões prompt 4 + textarea de cola + 4 campos auto-preenchidos (regex parser nos rótulos `Campo: tom_de_voz` etc).
-- Botão "Baixar PDF — Tom de Voz" (gerador simples com `jspdf` se já instalado; senão `window.print()` em rota dedicada).
-
-### 3.3 Identidade Visual (`/metodo/pilar-2/identidade-visual`)
-
-- Instruções com botão "Abrir Pinterest" + botão "Copiar prompt 5".
-- Parser do KIT FINAL (10 seções numeradas com emojis) para preencher os campos automaticamente quando o usuário cola.
-- Campos: vibe, paleta (5 cores), 3 tipografias com link Google Fonts, estilo de imagem, elementos, antipadrões, 3 prompts de imagem.
-
-### 3.4 Consultoria de Imagem (`/metodo/pilar-2/consultoria-imagem`)
-
-- 2 cards (Roupas / Cabelo), cada um com "Copiar prompt" + "Ver prompt".
-- Prompt 1 cheio; Prompt 2 com placeholder TODO.
-
-Prompts 4 e 5 + Consultoria → `src/data/prompts/pilar2-tom-visual.ts`.
-
-## Etapa 4 — Redes Sociais (`/metodo/pilar-2/redes-sociais`)
-
-Manter estrutura atual (Instagram + formatos). Adicionar TODO no topo:
-"Conteúdo pendente — aguardando documentação detalhada".
-
-## Etapa 5 — Vídeos (`/metodo/pilar-2/videos`)
-
-Mesmo TODO. Estrutura atual preservada.
-
-## Etapa 6 — Conclusão (`/metodo/pilar-2/conclusao`)
-
-Mesmo TODO. Checklist atual preservado até nova doc.
-
-## Modelo de dados — Doc Mestre
-
-Migration adicionando colunas ao `doc_mestre` (tabela existente):
-
-```sql
-ALTER TABLE public.doc_mestre ADD COLUMN IF NOT EXISTS
-  dores_publico_top5 jsonb,
-  metodo_esboco jsonb,                 -- { pontos: [{dor, intensidade, vitoria}], nome, promessa }
-  arquetipo_dominante text,
-  arquetipo_secundario text,
-  arquetipo_palavras_usar text,
-  arquetipo_palavras_evitar text,
-  arquetipo_resultado_completo text,
-  arquetipo_cliente_dominante text,
-  arquetipo_cliente_secundario text,
-  arquetipo_cliente_dor_principal text,
-  arquetipo_cliente_prova_social text,
-  arquetipo_cliente_resultado_completo text,
-  arquetipo_ajustes_comunicacao text,
-  tom_de_voz text,
-  crenca_central text,
-  opinioes_polemicas text,
-  cases text,
-  identidade_visual jsonb;             -- vibe, paleta, tipografias, estilo, elementos, antipadrões, prompts
+```text
+/doc-mestre                                           Documento Mestre
+/metodo/pilar-1                                       Hub do Pilar 1 (6 etapas)
+/metodo/pilar-1/aprenda-ia                            Hub das 7 ferramentas
+/metodo/pilar-1/aprenda-ia/$tool                      Hub de uma ferramenta
+/metodo/pilar-1/aprenda-ia/$tool/$lessonSlug          Aula individual
+/metodo/pilar-1/aprenda-ia/claude/instalar-skills     Página completa das 15+6 Skills
+/metodo/pilar-1/detetive-do-tempo                     Mapeamento de tarefas
+/metodo/pilar-1/detetive-do-tempo/relatorio           Relatório com custos
+/metodo/pilar-1/detetive-do-tempo/plano               (mantido)
+/metodo/pilar-1/conclusao                             Checklist 12 itens
+/metodo/consultoria-ia                                Bônus (mantido)
 ```
 
-Server functions novas em `src/lib/pilar2.functions.ts`:
-- `salvarDoresPublico`, `salvarEsbocoMetodo`, `salvarArquetipos`, `salvarTomDeVoz`, `salvarIdentidadeVisual`
-- Cada uma com `requireSupabaseAuth`, upsert por `user_id`
+Sem rotas novas — só conteúdo reescrito.
 
-## Arquivos a criar/editar
+## Camada de dados (`src/data/`)
 
-**Novos:**
-- `src/data/prompts/pilar2-arquetipos.ts` (3 prompts verbatim)
-- `src/data/prompts/pilar2-tom-visual.ts` (prompts 4, 5, consultoria 1)
-- `src/lib/pilar2.functions.ts`
-- `src/lib/pilar2-parsers.ts` (parsers para tom de voz e identidade visual)
-- `src/components/PromptBlock.tsx` (componente "Copiar prompt" + "Ver prompt" reutilizável)
-- `supabase/migrations/<ts>_pilar2_doc_mestre.sql`
+- **`pilar1-curriculum.ts`** (novo, substitui `curriculum.ts` no que toca a Pilar 1): catálogo único e tipado de ferramentas e aulas.
+  - 7 ferramentas: `chatgpt` (9 aulas), `claude` (15 aulas + página Skills), `gemini` (2), `notebooklm` (3), `grok` (2), `lovable` (5), `tella` (1).
+  - Cada aula: `{ id, slug, titulo, descricao, videoUrl?, promptId?, gptUrl?, links? }`.
+  - Marca explicitamente aulas com prompt (`1-3` ChatGPT, `1-2` Claude) e aulas com link de GPT/externo (`2-1/2-2/2-3`, `1-4 Lovable`, `1-5 Lovable`).
+- **`src/data/prompts/pilar1-projetos.ts`** (novo): prompts verbatim "Criar Projetos no ChatGPT" (3481 chars) e "Organizar Projetos no Claude" (2817 chars), conforme doc.
+- **`src/data/prompts/pilar1-automatize.ts`** (novo): as 10 automações da aula `chatgpt/3-1` (e-mails, redes sociais, reuniões, resumos, apresentações, projetos, pesquisa, aprender, documentos, decisões), cada uma com prompt pré-preenchido pelo Doc Mestre.
+- **`src/data/prompts/consultoria-ia.ts`** (novo/atualizado): prompt "Planejador de Evento de IA" (2066 chars).
+- **`src/data/skills-mentoria.ts`** (novo): array tipado das 15 Skills da mentoria + 6 Skills de mercado (com emoji, nome, descrição, link de download `.md`).
 
-**Reescritos:**
-- `src/page-views/pilar2/PesquisaMercado.tsx`
-- `src/page-views/pilar2/EsbocoMetodo.tsx`
-- `src/page-views/pilar2/Identidade.tsx`
-- `src/page-views/pilar2/TomDeVoz.tsx`
-- `src/page-views/pilar2/IdentidadeVisual.tsx`
-- `src/page-views/pilar2/ConsultoriaImagem.tsx`
+Prompts são strings cruas com placeholders `[nome]`, `[profissao]`, `[dores_array]`, etc. `fillPrompt` (já existe) faz a substituição com o Doc Mestre.
 
-**Intocados nesta rodada:** Pilar2Hub, RedesSociais*, Videos, ConclusaoPilar2, PaginaProfissional (recebem TODO banner).
+## Camada de servidor (`src/lib/`)
+
+Reaproveitar o que existe; nenhum novo edge function. Confirmar que estes server fns continuam funcionando e estão protegidos:
+
+- `doc-mestre.functions.ts` → `salvarDocMestre`, `carregarDocMestre`, `refinarDocMestre` (chama edge `refinar-doc-mestre`).
+- `detetive.functions.ts` → `salvarTarefas`, `chatDetetiveTempo` (chama edge `detetive-tempo-ia`), `gerarRelatorio`.
+- `fill-prompt.ts` → permanece como helper único de preenchimento.
+
+Se algum estiver desalinhado com a doc (ex.: faltam campos novos do Doc Mestre), eu adiciono coluna na tabela `doc_mestre` via migração e atualizo o server fn.
+
+## Camada de componentes (`src/components/`)
+
+Reusar o que já existe (`PromptCard`, `SaveBar`, `TodoBanner`, `EtapaCard`, `PilarBreadcrumb`, `PilarSidebar`, `VideoPlaceholder`, `ConversaModal`).
+
+Pequenos novos:
+- **`AulaLayout.tsx`** — shell padrão de aula (breadcrumb, vídeo, descrição, opcional `PromptCard`, opcional GPT/link externo, navegação prev/next dentro da ferramenta).
+- **`SkillCard.tsx`** — card de uma Skill (emoji + nome + descrição + botão "Baixar .md").
+- **`ChecklistItem.tsx`** — item do checklist de conclusão (com persistência por usuário em `localStorage` por enquanto, no mesmo padrão do Pilar 2).
+
+## Camada de páginas (`src/page-views/`)
+
+Reescritas para casar com a doc:
+
+1. **`DocMestre.tsx`** — formulário com todos os campos da doc (Nome, Profissão, Tempo de atuação, Localização, O que faço, Como resolvo, Público, 5 Dores, 5 Desejos, Horas/dia, Dias/semana, Faturamento, Produtos/serviços dinâmicos, Tom). Ações: Visualizar PDF, Subir PDF/TXT, Colar texto, Zerar tudo, Refinar com IA (expande copy-prompt + aplicar via edge fn).
+2. **`pilar1/Pilar1Hub.tsx`** — hero "RECUPERAR SEU TEMPO" + 5 cards de etapa (Doc Mestre · Aprenda IA · Detetive · Relatório · Conclusão).
+3. **`pilar1/AprendaIAHub.tsx`** — 7 cards de ferramenta com contagem de aulas concluídas.
+4. **`pilar1/ToolHub.tsx`** — lista de aulas da ferramenta (chips "com prompt", "com GPT", "vídeo").
+5. **`pilar1/AulaPage.tsx`** — renderiza aula via `AulaLayout`, lendo do `pilar1-curriculum`. Se tiver prompt, monta `PromptCard` com `fillPrompt(promptTemplate, docMestre)`.
+6. **`pilar1/InstalarSkills.tsx`** — grid das 15 Skills da Mentoria + seção "Skills de Mercado" (6 nichos). Cada card com download.
+7. **`pilar1/DetetiveDoTempo.tsx`** — 3 categorias (Produção, Marketing, Estratégia), inputs Faturamento/Horas/Dias, lista dinâmica de tarefas, botões Adicionar/Zerar/Salvar. Botão "Conversa comigo" abre `ConversaModal` ligado à edge `detetive-tempo-ia`.
+8. **`pilar1/RelatorioDoTempo.tsx`** — tabela Tarefa/Categoria/h-sem/R$/sem/R$/mês, cards de totais por categoria, top-3 tarefas mais caras, sugestões de automação.
+9. **`pilar1/ConclusaoPilar1.tsx`** — checklist de 12 itens conforme doc; mensagem ao bater 12/12 e CTA "Avançar para Pilar 2".
+10. **`consultoria/ConsultoriaIA.tsx`** — descrição + `PromptCard` (Planejador de Evento) + download da Skill `consultoria-ia.md`.
 
 ## Ordem de execução
 
-1. Migration + server fns + tipos
-2. Componente `PromptBlock` + arquivos de prompts (verbatim)
-3. Etapa 1 → Etapa 2 → Etapa 3 (4 sub-rotas)
-4. Banner TODO nas etapas 4/5/6
+1. Camada de dados (curriculum + prompts + skills).
+2. Componentes (`AulaLayout`, `SkillCard`, `ChecklistItem`).
+3. Server fns — checar/ajustar Doc Mestre e Detetive.
+4. Páginas, na ordem: DocMestre → Pilar1Hub → AprendaIAHub → ToolHub → AulaPage → InstalarSkills → Detetive → Relatorio → Conclusao → ConsultoriaIA.
+5. Limpar/ajustar arquivos das rotas para apontarem para as novas páginas (assinaturas permanecem).
 
 ## Detalhes técnicos
 
-- Persistência: `requireSupabaseAuth` + upsert no `doc_mestre`; client invoca via `useServerFn`.
-- Edge function `construir-metodo`: chamada client-side direta (já hospedada em projeto separado), com `fetch` POST e streaming de mensagens (ConversaModal já implementa).
-- "Copiar prompt": `navigator.clipboard.writeText(fillPrompt(template, docMestre))` + toast.
-- Selects de arquétipos: array constante com os 12 nomes (INOCENTE, EXPLORADORA, …).
-- PDFs: rotas separadas `/pdf/pilar-2/tom-de-voz` e `/pdf/pilar-2/identidade-visual` com layout print-friendly e `window.print()` automático.
+- Persistência do progresso de aula: `use-aula-progress.ts` (já existe) — manter chave por `tool/lessonSlug`.
+- Persistência do checklist Pilar 1: `localStorage` (mesmo padrão de Pilar 2) — chave `pilar1:checklist`.
+- Edge functions: nenhuma nova; chamadas via `createServerFn` em `src/lib/*.functions.ts` com `requireSupabaseAuth` quando tocam tabelas do usuário.
+- Estado de Detetive vive em `detetive-storage.ts` (já existe) + `doc_mestre`.
+- PDFs: `window.print()` com folha de estilo print-only (mesmo padrão Pilar 2).
+- Tudo o que a doc lista mas eu não tenho dado real (IDs de vídeo, IDs reais de GPT, URLs reais dos `.md` das Skills) entra como `TODO` visível na UI via `TodoBanner` — sem inventar.
 
-Confirme para eu começar.
+## Riscos / pontos a confirmar enquanto executo
+
+- Se `doc_mestre` no banco não tem colunas para "Tempo de atuação" / "Localização" / "Tom" / "Produtos[]" → migração com `GRANT` + RLS, conforme regra do projeto.
+- Se `curriculum.ts` é usado por código fora do Pilar 1, eu mantenho compat e migro só Pilar 1 para `pilar1-curriculum.ts`.
