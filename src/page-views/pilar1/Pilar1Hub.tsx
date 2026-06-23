@@ -20,27 +20,27 @@ export default function Pilar1Hub() {
 
       <div className="max-w-[1100px] mx-auto px-5 md:px-10 pt-10 md:pt-14 pb-24">
         {/* Passo 1 — destaque hero */}
-        <div className="relative overflow-hidden bg-gradient-to-br from-terracotta/15 via-cream-warm to-gold/15 rounded-2xl border border-terracotta/30 shadow-[0_10px_30px_-18px_rgba(180,90,40,0.35)] px-6 md:px-8 py-7 md:py-8 mb-8 grid grid-cols-[3.5rem_1fr_auto] md:grid-cols-[4rem_1fr_auto] gap-5 md:gap-8 items-center">
-          <div className="font-display text-4xl md:text-5xl text-terracotta/30 tabular-nums tracking-tight leading-none">
+        <div className="relative overflow-hidden bg-terracotta rounded-2xl border border-terracotta shadow-[0_14px_36px_-18px_rgba(180,90,40,0.55)] px-6 md:px-8 py-7 md:py-8 mb-8 grid grid-cols-[3.5rem_1fr_auto] md:grid-cols-[4rem_1fr_auto] gap-5 md:gap-8 items-center">
+          <div className="font-display text-4xl md:text-5xl text-cream/30 tabular-nums tracking-tight leading-none">
             I
           </div>
           <div className="min-w-0">
-            <p className="text-[11px] tracking-[0.25em] uppercase text-terracotta font-medium mb-1.5">
+            <p className="text-[11px] tracking-[0.25em] uppercase text-cream/80 font-medium mb-1.5">
               Etapa 1 · Comece agora por aqui
             </p>
-            <h3 className="font-display text-xl md:text-2xl tracking-tight text-ink leading-snug mb-1.5">
+            <h3 className="font-display text-xl md:text-2xl tracking-tight text-cream leading-snug mb-1.5">
               Vamos começar pelo seu{" "}
-              <span className="italic font-normal text-terracotta" style={{ fontFamily: "var(--font-editorial)" }}>
+              <span className="italic font-normal text-gold" style={{ fontFamily: "var(--font-editorial)" }}>
                 Documento Mestre
               </span>
             </h3>
-            <p className="text-sm md:text-[15px] text-ink/55 leading-relaxed max-w-2xl">
+            <p className="text-sm md:text-[15px] text-cream/75 leading-relaxed max-w-2xl">
               É a base de tudo. Em 5 minutos, defines o que vais criar — e a IA passa a falar a tua língua.
             </p>
           </div>
           <Link
             to="/doc-mestre"
-            className="group inline-flex items-center gap-2 bg-ink text-cream pl-5 pr-4 py-2.5 rounded-full text-sm font-medium hover:bg-forest transition-all shadow-[0_2px_6px_-2px_rgba(40,30,20,0.4)]"
+            className="group inline-flex items-center gap-2 bg-cream text-ink pl-5 pr-4 py-2.5 rounded-full text-sm font-medium hover:bg-cream-warm transition-all shadow-[0_2px_6px_-2px_rgba(40,30,20,0.3)]"
           >
             Começar
             <ArrowUpRight size={15} strokeWidth={2.25} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
