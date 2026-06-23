@@ -18,7 +18,7 @@ export default function Pilar1Hub() {
         subtitulo="Porque sem tempo, não tem nada. Comece por organizar a sua rotina para criar com calma — não em pânico."
       />
 
-      <div className="max-w-[1100px] mx-auto px-5 md:px-10 pb-24">
+      <div className="max-w-[1100px] mx-auto px-5 md:px-10 pt-10 md:pt-14 pb-24">
         {/* Passo 1 — destaque hero */}
         <div className="bg-cream rounded-2xl border border-terracotta/25 shadow-[0_8px_24px_-16px_rgba(180,90,40,0.25)] px-6 md:px-8 py-7 md:py-8 mb-8 grid grid-cols-[3.5rem_1fr_auto] md:grid-cols-[4rem_1fr_auto] gap-5 md:gap-8 items-center">
           <div className="font-display text-4xl md:text-5xl text-terracotta/30 tabular-nums tracking-tight leading-none">
