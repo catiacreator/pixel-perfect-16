@@ -20,7 +20,7 @@
   --color-border-soft: #F1EEE9;
   --color-success: #6D7A73;
   --font-serif: "Instrument Serif", Georgia, serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-sans: "Inter Tight", "Inter", system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
   --font-script: "Caveat", "Dancing Script", cursive;
 }
@@ -182,7 +182,7 @@
   --color-ash: #BABABA;
   --color-mist: rgba(255, 255, 255, 0.08);
 
-  --font-display: "Instrument Serif", Georgia, serif;
+  --font-display: "Inter Tight", "Inter", system-ui, sans-serif;
   --font-editorial: "Instrument Serif", Georgia, serif;
 }
 
