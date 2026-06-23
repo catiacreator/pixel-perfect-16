@@ -14,6 +14,7 @@ import { Route as MeusProjetosRouteImport } from './routes/meus-projetos'
 import { Route as MetodoRouteImport } from './routes/metodo'
 import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as DocMestreRouteImport } from './routes/doc-mestre'
+import { Route as ConquistasRouteImport } from './routes/conquistas'
 import { Route as AssistenteRouteImport } from './routes/assistente'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MetodoIndexRouteImport } from './routes/metodo.index'
@@ -73,6 +74,11 @@ const MensagensRoute = MensagensRouteImport.update({
 const DocMestreRoute = DocMestreRouteImport.update({
   id: '/doc-mestre',
   path: '/doc-mestre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConquistasRoute = ConquistasRouteImport.update({
+  id: '/conquistas',
+  path: '/conquistas',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AssistenteRoute = AssistenteRouteImport.update({
@@ -273,6 +279,7 @@ const MetodoPilar1AprendaIaToolLessonSlugRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/assistente': typeof AssistenteRoute
+  '/conquistas': typeof ConquistasRoute
   '/doc-mestre': typeof DocMestreRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
@@ -315,6 +322,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/assistente': typeof AssistenteRoute
+  '/conquistas': typeof ConquistasRoute
   '/doc-mestre': typeof DocMestreRoute
   '/mensagens': typeof MensagensRoute
   '/meus-projetos': typeof MeusProjetosRoute
@@ -350,6 +358,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/assistente': typeof AssistenteRoute
+  '/conquistas': typeof ConquistasRoute
   '/doc-mestre': typeof DocMestreRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
@@ -394,6 +403,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/assistente'
+    | '/conquistas'
     | '/doc-mestre'
     | '/mensagens'
     | '/metodo'
@@ -436,6 +446,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/assistente'
+    | '/conquistas'
     | '/doc-mestre'
     | '/mensagens'
     | '/meus-projetos'
@@ -470,6 +481,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/assistente'
+    | '/conquistas'
     | '/doc-mestre'
     | '/mensagens'
     | '/metodo'
@@ -513,6 +525,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AssistenteRoute: typeof AssistenteRoute
+  ConquistasRoute: typeof ConquistasRoute
   DocMestreRoute: typeof DocMestreRoute
   MensagensRoute: typeof MensagensRoute
   MetodoRoute: typeof MetodoRouteWithChildren
@@ -556,6 +569,13 @@ declare module '@tanstack/react-router' {
       path: '/doc-mestre'
       fullPath: '/doc-mestre'
       preLoaderRoute: typeof DocMestreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conquistas': {
+      id: '/conquistas'
+      path: '/conquistas'
+      fullPath: '/conquistas'
+      preLoaderRoute: typeof ConquistasRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/assistente': {
@@ -979,6 +999,7 @@ const MetodoRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AssistenteRoute: AssistenteRoute,
+  ConquistasRoute: ConquistasRoute,
   DocMestreRoute: DocMestreRoute,
   MensagensRoute: MensagensRoute,
   MetodoRoute: MetodoRouteWithChildren,

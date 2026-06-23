@@ -8,6 +8,7 @@ const NAV = [
   { to: "/assistente", label: "Assistente IA", icon: Bot },
   { to: "/minha-base", label: "Minha base", icon: Database },
   { to: "/metodo/pilar-1/aprenda-ia/claude/instalar-skills", label: "Skills", icon: Award },
+  { to: "/conquistas", label: "Conquistas", icon: Trophy },
   { to: "/profissionais", label: "Profissionais", icon: Users },
   { to: "/buscar", label: "Buscar", icon: Search },
 ];
