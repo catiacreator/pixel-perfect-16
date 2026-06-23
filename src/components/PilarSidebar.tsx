@@ -29,6 +29,7 @@ type Item = {
   to: string;
   icon: LucideIcon;
   enBreve?: boolean;
+  badge?: string;
   children?: SubItem[];
 };
 
@@ -45,10 +46,26 @@ const PILARES: Record<number, PilarDef> = {
     title: "Recuperar Seu Tempo",
     enabled: true,
     items: [
-      { num: 1, label: "Documento Mestre", to: "/doc-mestre", icon: FileText },
-      { num: 2, label: "Detetive do Tempo", to: "/metodo/pilar-1/detetive-do-tempo", icon: Clock },
-      { num: 3, label: "Aprenda IA", to: "/metodo/pilar-1/aprenda-ia", icon: BookOpen },
-      { num: 4, label: "Conclusão Pilar 1", to: "/metodo/pilar-1/conclusao", icon: CheckCircle2 },
+      { num: 1, label: "Preencha seu Documento Mestre", to: "/doc-mestre", icon: FileText },
+      {
+        num: 2,
+        label: "Domine as Práticas",
+        to: "/metodo/pilar-1/aprenda-ia",
+        icon: BookOpen,
+        badge: "AULAS",
+        children: [
+          { label: "ChatGPT", to: "/metodo/pilar-1/aprenda-ia/chatgpt" },
+          { label: "Claude", to: "/metodo/pilar-1/aprenda-ia/claude" },
+          { label: "Gemini", to: "/metodo/pilar-1/aprenda-ia/gemini" },
+          { label: "Grok", to: "/metodo/pilar-1/aprenda-ia/grok" },
+          { label: "NotebookLM", to: "/metodo/pilar-1/aprenda-ia/notebooklm" },
+          { label: "Lovable", to: "/metodo/pilar-1/aprenda-ia/lovable" },
+          { label: "Tella", to: "/metodo/pilar-1/aprenda-ia/tella" },
+        ],
+      },
+      { num: 3, label: "Detetive do Tempo", to: "/metodo/pilar-1/detetive-do-tempo", icon: Clock },
+      { num: 4, label: "Relatório do tempo", to: "/metodo/pilar-1/detetive-do-tempo/relatorio", icon: FileText },
+      { num: 5, label: "Revise e celebre", to: "/metodo/pilar-1/conclusao", icon: Trophy },
     ],
   },
   2: {
@@ -135,9 +152,14 @@ function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2; onNavigate?: () => v
                     }`}
                   >
                     <Icon size={15} strokeWidth={1.75} className="text-ink/55 shrink-0" />
-                    <span className="truncate">
+                    <span className="truncate flex-1">
                       {item.num}. {item.label}
                     </span>
+                    {item.badge && (
+                      <span className="ml-1 text-[9px] tracking-[0.18em] uppercase px-1.5 py-0.5 rounded-full bg-terracotta/15 text-terracotta">
+                        {item.badge}
+                      </span>
+                    )}
                   </Link>
                   {hasChildren && (
                     <button
