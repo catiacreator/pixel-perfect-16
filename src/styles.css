@@ -182,9 +182,10 @@
   --color-ash: #BABABA;
   --color-mist: rgba(255, 255, 255, 0.08);
 
-  --font-display: "Inter", "Inter Tight", system-ui, sans-serif;
+  --font-display: "Instrument Serif", Georgia, serif;
   --font-editorial: "Instrument Serif", Georgia, serif;
 }
+
 
 
 @layer base {
@@ -196,10 +197,12 @@
     margin: 0;
     background-color: var(--color-cream);
     color: var(--color-ink);
-    font-family: var(--font-display);
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
 }
+
 
 @keyframes marquee {
   from { transform: translateX(0); }
