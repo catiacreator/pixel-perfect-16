@@ -125,37 +125,8 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Mini-stats */}
-          <div className="mt-16 md:mt-24 grid grid-cols-2 md:grid-cols-4 gap-px bg-[var(--color-border)] rounded-2xl overflow-hidden border border-[var(--color-border)]">
-            {[
-              { v: "04", l: "Pilares" },
-              { v: "02", l: "Disponíveis" },
-              { v: "IA", l: "Em cada passo" },
-              { v: "pt-PT", l: "Português de Portugal" },
-            ].map((s) => (
-              <div key={s.l} className="bg-cream px-5 py-6">
-                <p className="font-display text-3xl md:text-4xl tracking-tight text-ink">{s.v}</p>
-                <p className="text-[11px] tracking-[0.2em] uppercase text-ink/40 mt-2">{s.l}</p>
-              </div>
-            ))}
-          </div>
         </div>
 
-        {/* Marquee */}
-        <div className="relative border-y border-[var(--color-border)] bg-cream-warm/40 overflow-hidden">
-          <div className="flex gap-12 py-4 whitespace-nowrap animate-[marquee_38s_linear_infinite]">
-            {[...MARQUEE, ...MARQUEE, ...MARQUEE].map((m, i) => (
-              <span
-                key={i}
-                className="inline-flex items-center gap-3 text-[13px] tracking-[0.15em] uppercase text-ink/55"
-              >
-                <Star size={11} className="text-terracotta" strokeWidth={1.5} />
-                {m}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* COMECE POR AQUI */}
       <section className="relative">
