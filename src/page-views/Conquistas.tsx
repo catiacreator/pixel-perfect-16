@@ -56,8 +56,6 @@ type TopRow = { nome: string; tier: string; pontos: number; avatar?: string };
 
 const TOP_BASE: TopRow[] = [];
 
-  { nome: "Fernanda Reis", tier: "Em Ação", pontos: 170 },
-];
 
 function fmtDate(d: Date) {
   return `${d.getDate()} de ${d.toLocaleDateString("pt-BR", { month: "short" }).replace(".", "")}.`;
