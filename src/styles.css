@@ -20,10 +20,10 @@
   --color-border: #EAE4DD;
   --color-border-soft: #F1EEE9;
   --color-success: #6D7A73;
-  --font-serif: "Instrument Serif", Georgia, serif;
+  --font-serif: "Archivo Black", "Inter Tight", system-ui, sans-serif;
   --font-sans: "Inter Tight", "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
-  --font-script: "Caveat", "Dancing Script", cursive;
+  --font-mono: "Inter Tight", "Inter", system-ui, sans-serif;
+  --font-script: "Archivo Black", "Inter Tight", system-ui, sans-serif;
 }
 
 
