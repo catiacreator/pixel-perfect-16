@@ -277,20 +277,21 @@ export default function Conquistas() {
 }
 
 function PointRow({
-  icon: Icon,
+  emoji,
   label,
   pts,
 }: {
-  icon: typeof Star;
+  emoji: string;
   label: string;
   pts: string;
 }) {
   return (
     <div className="flex items-center gap-2.5">
-      <Icon size={16} className="text-ink/55" strokeWidth={1.75} />
+      <span className="text-base leading-none">{emoji}</span>
       <span className="text-ink/75">{label}</span>
       <span className="text-ink/40">—</span>
       <span className="font-semibold text-ink">{pts}</span>
     </div>
   );
 }
+
