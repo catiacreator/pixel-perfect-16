@@ -98,6 +98,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <FileText size={13} strokeWidth={2.25} /> Documento
               <ArrowUpRight size={13} strokeWidth={2.25} />
             </Link>
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className="hidden md:inline-flex items-center gap-1.5 text-[13px] px-3 py-2 border border-[var(--color-border)] rounded-full text-ink/80 hover:bg-ink/5"
+                aria-label="Admin"
+              >
+                <Shield size={13} strokeWidth={2.25} /> Admin
+              </Link>
+            )}
             <Link
               to="/mensagens"
               className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center text-ink/70 hover:bg-ink/5 hover:text-ink transition-colors"
@@ -105,6 +114,22 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             >
               <Mail size={15} strokeWidth={1.75} />
             </Link>
+            {signedIn ? (
+              <button
+                onClick={handleLogout}
+                className="hidden md:inline-flex w-10 h-10 rounded-full border border-[var(--color-border)] items-center justify-center text-ink/60 hover:bg-ink/5 hover:text-ink"
+                aria-label="Sair"
+              >
+                <LogOut size={15} strokeWidth={1.75} />
+              </button>
+            ) : (
+              <Link
+                to="/auth"
+                className="hidden md:inline-flex text-[13px] px-4 py-2 border border-[var(--color-border)] rounded-full hover:bg-ink/5"
+              >
+                Entrar
+              </Link>
+            )}
             <button
               onClick={() => setOpen((v) => !v)}
               className="lg:hidden w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center text-ink"
