@@ -37,12 +37,13 @@ export default function Pilar1Hub() {
             <p className="text-[11px] tracking-[0.25em] uppercase text-cream/80 font-medium mb-1.5">
               Etapa 1 · Comece agora por aqui
             </p>
-            <h3 className="font-display text-xl md:text-2xl tracking-tight text-cream leading-snug mb-1.5">
+            <h3 className="font-display text-lg md:text-xl tracking-tight text-cream leading-snug mb-1.5">
               Vamos começar pelo seu{" "}
               <span className="italic font-normal text-cream" style={{ fontFamily: "var(--font-editorial)" }}>
                 Documento Mestre
               </span>
             </h3>
+
             <p className="text-sm md:text-[15px] text-cream/75 leading-relaxed max-w-2xl">
               É a base de tudo. Em 5 minutos, defines o que vais criar — e a IA passa a falar a tua língua.
             </p>
