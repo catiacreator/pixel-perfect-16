@@ -72,7 +72,7 @@ export default function AprendaIAHub() {
         {/* CTA */}
         <div className="mt-10 rounded-2xl border border-terracotta bg-gradient-to-br from-white to-cream-warm/60 p-6 text-center">
           <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">Etapa seguinte</p>
-          <p className="font-serif text-xl md:text-2xl text-ink mb-4">
+          <p className="text-xl md:text-2xl font-semibold tracking-tight text-ink mb-4">
             Identifica os gargalos com o Detetive do Tempo
           </p>
           <Link
