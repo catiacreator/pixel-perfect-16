@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as MinhaBaseRouteImport } from './routes/minha-base'
 import { Route as MeusProjetosRouteImport } from './routes/meus-projetos'
 import { Route as MetodoRouteImport } from './routes/metodo'
 import { Route as MensagensRouteImport } from './routes/mensagens'
@@ -49,6 +50,11 @@ import { Route as MetodoPilar2RedesSociaisInstagramFormatoRouteImport } from './
 import { Route as MetodoPilar1AprendaIaClaudeInstalarSkillsRouteImport } from './routes/metodo.pilar-1.aprenda-ia.claude.instalar-skills'
 import { Route as MetodoPilar1AprendaIaToolLessonSlugRouteImport } from './routes/metodo.pilar-1.aprenda-ia.$tool.$lessonSlug'
 
+const MinhaBaseRoute = MinhaBaseRouteImport.update({
+  id: '/minha-base',
+  path: '/minha-base',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MeusProjetosRoute = MeusProjetosRouteImport.update({
   id: '/meus-projetos',
   path: '/meus-projetos',
@@ -271,6 +277,7 @@ export interface FileRoutesByFullPath {
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
+  '/minha-base': typeof MinhaBaseRoute
   '/api/chat': typeof ApiChatRoute
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
@@ -311,6 +318,7 @@ export interface FileRoutesByTo {
   '/doc-mestre': typeof DocMestreRoute
   '/mensagens': typeof MensagensRoute
   '/meus-projetos': typeof MeusProjetosRoute
+  '/minha-base': typeof MinhaBaseRoute
   '/api/chat': typeof ApiChatRoute
   '/metodo': typeof MetodoIndexRoute
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
@@ -346,6 +354,7 @@ export interface FileRoutesById {
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
+  '/minha-base': typeof MinhaBaseRoute
   '/api/chat': typeof ApiChatRoute
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
@@ -389,6 +398,7 @@ export interface FileRouteTypes {
     | '/mensagens'
     | '/metodo'
     | '/meus-projetos'
+    | '/minha-base'
     | '/api/chat'
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
@@ -429,6 +439,7 @@ export interface FileRouteTypes {
     | '/doc-mestre'
     | '/mensagens'
     | '/meus-projetos'
+    | '/minha-base'
     | '/api/chat'
     | '/metodo'
     | '/metodo/consultoria-ia/como-usar'
@@ -463,6 +474,7 @@ export interface FileRouteTypes {
     | '/mensagens'
     | '/metodo'
     | '/meus-projetos'
+    | '/minha-base'
     | '/api/chat'
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
@@ -505,11 +517,19 @@ export interface RootRouteChildren {
   MensagensRoute: typeof MensagensRoute
   MetodoRoute: typeof MetodoRouteWithChildren
   MeusProjetosRoute: typeof MeusProjetosRoute
+  MinhaBaseRoute: typeof MinhaBaseRoute
   ApiChatRoute: typeof ApiChatRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/minha-base': {
+      id: '/minha-base'
+      path: '/minha-base'
+      fullPath: '/minha-base'
+      preLoaderRoute: typeof MinhaBaseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/meus-projetos': {
       id: '/meus-projetos'
       path: '/meus-projetos'
@@ -963,6 +983,7 @@ const rootRouteChildren: RootRouteChildren = {
   MensagensRoute: MensagensRoute,
   MetodoRoute: MetodoRouteWithChildren,
   MeusProjetosRoute: MeusProjetosRoute,
+  MinhaBaseRoute: MinhaBaseRoute,
   ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
