@@ -247,11 +247,11 @@ function ModuloCard({
                     {a.titulo}
                   </p>
                 </div>
-                {a.promptPersonalizado && (
+                {a.promptPersonalizado ? (
                   <span title="Inclui prompt personalizado" className="text-terracotta opacity-70 shrink-0">
                     <Sparkles size={14} />
                   </span>
-                )}
+                ) : null}
                 <span
                   className={`text-xs font-semibold shrink-0 ${
                     done ? "text-terracotta" : "text-muted group-hover:text-terracotta"
