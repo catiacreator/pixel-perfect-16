@@ -77,9 +77,10 @@ export default function Home() {
           />
         </div>
 
-        <div className="relative max-w-[1400px] mx-auto px-5 md:px-10 pt-10 md:pt-14 pb-12 md:pb-16">
+        <div className="relative max-w-[1400px] mx-auto px-5 md:px-10 pt-6 md:pt-8 pb-8 md:pb-10">
           {/* Linha topo */}
-          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-6 mb-8 md:mb-12">
+          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-6 mb-5 md:mb-7">
+
 
             <div className="flex items-center gap-2.5">
               <span className="w-1.5 h-1.5 rounded-full bg-cream animate-pulse" />
