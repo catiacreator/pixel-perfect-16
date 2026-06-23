@@ -31,24 +31,34 @@ type DocState = {
   nome: string;
   profissao: string;
   tempoAtuacao: string;
+  localizacao: string;
   oQueFaz: string;
   comoResolve: string;
   publico: string;
   dores: string[];
   desejos: string[];
   produtos: Produto[];
+  horasDia: string;
+  diasSemana: string;
+  faturamentoMensal: string;
+  tomDeVoz: string;
 };
 
 const EMPTY: DocState = {
   nome: "",
   profissao: "",
   tempoAtuacao: "",
+  localizacao: "",
   oQueFaz: "",
   comoResolve: "",
   publico: "",
   dores: ["", "", "", "", ""],
   desejos: ["", "", "", "", ""],
   produtos: [],
+  horasDia: "",
+  diasSemana: "",
+  faturamentoMensal: "",
+  tomDeVoz: "",
 };
 
 const STORAGE_KEY = "leveza.doc-mestre.v1";
