@@ -155,22 +155,24 @@ function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2; onNavigate?: () => v
 
             return (
               <li key={item.to}>
-                <div className="flex items-stretch">
+                <div
+                  className={`flex items-stretch rounded-full transition-colors ${
+                    active || open
+                      ? "bg-[#f3e4d0]"
+                      : "hover:bg-ink/5"
+                  }`}
+                >
                   <Link
                     to={item.to}
                     onClick={onNavigate}
-                    className={`flex-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] transition-colors ${
-                      active
-                        ? "bg-terracotta/10 text-ink font-medium"
-                        : "text-ink/70 hover:bg-ink/5 hover:text-ink"
-                    }`}
+                    className="flex-1 flex items-center gap-2.5 pl-3 pr-2 py-2 text-[13px] text-ink min-w-0"
                   >
-                    <Icon size={15} strokeWidth={1.75} className="text-ink/55 shrink-0" />
-                    <span className="truncate flex-1">
+                    <Icon size={15} strokeWidth={1.75} className="text-ink/70 shrink-0" />
+                    <span className="truncate flex-1 font-medium">
                       {item.num}. {item.label}
                     </span>
                     {item.badge && (
-                      <span className="ml-1 text-[9px] tracking-[0.18em] uppercase px-1.5 py-0.5 rounded-full bg-terracotta/15 text-terracotta">
+                      <span className="ml-1 text-[9px] tracking-[0.18em] uppercase px-2 py-0.5 rounded-full bg-terracotta text-cream font-semibold">
                         {item.badge}
                       </span>
                     )}
@@ -178,7 +180,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2; onNavigate?: () => v
                   {hasChildren && (
                     <button
                       onClick={() => setOpenId(open ? null : item.to)}
-                      className="px-2 text-ink/40 hover:text-ink transition-colors"
+                      className="px-2.5 text-ink/55 hover:text-ink transition-colors"
                       aria-label="Expandir"
                     >
                       <ChevronDown
@@ -190,7 +192,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2; onNavigate?: () => v
                 </div>
 
                 {hasChildren && open && (
-                  <ul className="ml-7 mt-0.5 mb-1 space-y-0.5 border-l border-[var(--color-border)] pl-3">
+                  <ul className="mt-1 mb-1 space-y-0.5 pl-3">
                     {item.children!.map((c) => {
                       const cActive = isActive(c.to);
                       return (
@@ -198,22 +200,22 @@ function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2; onNavigate?: () => v
                           <Link
                             to={c.to}
                             onClick={onNavigate}
-                            className={`flex items-center gap-2 px-2.5 py-1.5 rounded-md text-[12.5px] transition-colors ${
+                            className={`flex items-center gap-2 pl-3 pr-3 py-2 rounded-full text-[12.5px] transition-colors ${
                               cActive
-                                ? "bg-terracotta/15 text-ink"
-                                : "text-ink/60 hover:text-ink"
+                                ? "bg-[#f3e4d0] text-ink font-medium"
+                                : "text-ink/70 hover:bg-ink/5 hover:text-ink"
                             }`}
                           >
                             {(() => {
                               const ToolIcon = TOOL_ICONS[c.label];
-                              if (ToolIcon) return <ToolIcon size={13} className="text-ink/55" />;
-                              if (c.label === "Tom de Voz") return <Mic size={12} className="text-ink/45" />;
-                              if (c.label === "Identidade Visual") return <Palette size={12} className="text-ink/45" />;
-                              return <Shirt size={12} className="text-ink/45" />;
+                              if (ToolIcon) return <ToolIcon size={13} className="text-terracotta shrink-0" />;
+                              if (c.label === "Tom de Voz") return <Mic size={12} className="text-terracotta shrink-0" />;
+                              if (c.label === "Identidade Visual") return <Palette size={12} className="text-terracotta shrink-0" />;
+                              return <Shirt size={12} className="text-terracotta shrink-0" />;
                             })()}
-                            {c.label}
+                            <span className="flex-1 truncate">{c.label}</span>
                             {cActive && (
-                              <span className="ml-auto w-1.5 h-1.5 rounded-full bg-terracotta" />
+                              <span className="w-1.5 h-1.5 rounded-full bg-terracotta shrink-0" />
                             )}
                           </Link>
                         </li>
