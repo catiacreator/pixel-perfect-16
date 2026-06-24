@@ -94,7 +94,7 @@ export default function DetetiveDoTempo() {
         subtitulo="Mapeie suas tarefas e descubra quanto custam em reais"
       />
 
-      <div className="px-5 md:px-10 pb-16 max-w-2xl mx-auto">
+      <div className="px-5 md:px-10 pb-16 max-w-4xl mx-auto">
         <div className="rounded-2xl border border-border bg-white shadow-sm p-5 mb-6">
           <div className="flex items-start gap-3 mb-3">
             <PlayCircle size={22} className="text-terracotta flex-shrink-0 mt-0.5" />

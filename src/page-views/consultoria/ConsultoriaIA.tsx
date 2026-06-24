@@ -6,7 +6,7 @@ import { Briefcase, ArrowRight, ArrowLeft } from "lucide-react";
 export default function ConsultoriaIA() {
   return (
     <Layout>
-      <div className="px-5 md:px-10 py-10 max-w-2xl mx-auto">
+      <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-10 h-10 rounded-xl border border-terracotta text-terracotta flex items-center justify-center">
             <Briefcase size={18} />

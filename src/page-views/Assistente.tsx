@@ -147,7 +147,7 @@ function ChatWindow({
   const empty = messages.length === 0;
 
   return (
-    <div className="px-5 md:px-10 py-8 max-w-3xl mx-auto">
+    <div className="px-5 md:px-10 py-8 max-w-5xl mx-auto">
       {/* Cabeçalho */}
       <div className="flex items-start justify-between gap-4 mb-6">
         <div className="flex items-start gap-3">

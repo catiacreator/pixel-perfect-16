@@ -158,7 +158,7 @@ export default function AulaPage() {
         titulo={aula.titulo}
       />
 
-      <div className="max-w-[1100px] mx-auto px-5 md:px-10 pt-8 md:pt-10 pb-24">
+      <div className="max-w-[1280px] mx-auto px-5 md:px-10 pt-8 md:pt-10 pb-24">
         <Link
           to={`/metodo/pilar-1/aprenda-ia/${tool.slug}`}
           className="inline-flex items-center gap-2 text-sm text-ink/65 hover:text-terracotta transition-colors mb-8"

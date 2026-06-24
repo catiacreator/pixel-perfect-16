@@ -47,7 +47,7 @@ export default function RelatorioDoTempo() {
   if (!hydrated) {
     return (
       <Layout>
-        <div className="px-5 py-10 max-w-2xl mx-auto text-muted text-sm">A carregar…</div>
+        <div className="px-5 py-10 max-w-4xl mx-auto text-muted text-sm">A carregar…</div>
       </Layout>
     );
   }
@@ -56,7 +56,7 @@ export default function RelatorioDoTempo() {
     return (
       <Layout>
         <PilarBreadcrumb pilar={1} pilarLabel="Recuperar seu Tempo" backTo="/metodo/pilar-1/detetive-do-tempo" backLabel="Voltar para o Detetive do Tempo" />
-        <div className="px-5 md:px-10 py-10 max-w-2xl mx-auto">
+        <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
           <h1 className="font-serif text-3xl text-ink mb-4">Relatório — Detetive do Tempo</h1>
           <div className="rounded-2xl border border-dashed border-border bg-white p-8 text-center text-muted mb-6">
             Faltam dados. Volte para o Detetive do Tempo, preencha faturamento, horas, dias e adicione as suas tarefas.
@@ -86,7 +86,7 @@ export default function RelatorioDoTempo() {
         subtitulo="Onde o seu tempo está realmente indo — em horas e em reais"
       />
 
-      <div className="px-5 md:px-10 pb-16 max-w-2xl mx-auto print:max-w-none">
+      <div className="px-5 md:px-10 pb-16 max-w-4xl mx-auto print:max-w-none">
         {/* hero cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">

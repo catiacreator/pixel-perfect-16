@@ -380,7 +380,7 @@ export default function DocMestre() {
 
   return (
     <Layout>
-      <div className="px-5 md:px-10 py-10 max-w-3xl mx-auto print:max-w-none print:py-0">
+      <div className="px-5 md:px-10 py-10 max-w-5xl mx-auto print:max-w-none print:py-0">
         {/* Cabeçalho */}
         <div className="print:hidden">
           <p className="text-xs tracking-[0.2em] uppercase text-terracotta mb-2">Seu mapa pessoal</p>

@@ -57,7 +57,7 @@ export default function ConclusaoPilar1() {
         subtitulo="Checklist do Pilar 1 — RECUPERAR SEU TEMPO"
       />
 
-      <div className="px-5 md:px-10 pb-16 max-w-2xl mx-auto">
+      <div className="px-5 md:px-10 pb-16 max-w-4xl mx-auto">
         <div className="rounded-2xl border border-border bg-white shadow-sm p-5 mb-4">
           <p className="text-sm text-ink leading-relaxed">
             <span className="font-semibold">Marque o que você concluiu.</span>{" "}

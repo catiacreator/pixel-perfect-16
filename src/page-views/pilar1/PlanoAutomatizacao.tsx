@@ -75,7 +75,7 @@ export default function PlanoAutomatizacao() {
   if (!hydrated) {
     return (
       <Layout>
-        <div className="px-5 py-10 max-w-2xl mx-auto text-muted text-sm">A carregar…</div>
+        <div className="px-5 py-10 max-w-4xl mx-auto text-muted text-sm">A carregar…</div>
       </Layout>
     );
   }
@@ -96,7 +96,7 @@ export default function PlanoAutomatizacao() {
         subtitulo="A IA olha para as suas tarefas mais caras e diz exatamente por onde começar"
       />
 
-      <div className="px-5 md:px-10 pb-16 max-w-2xl mx-auto">
+      <div className="px-5 md:px-10 pb-16 max-w-4xl mx-auto">
         {!rel.preenchido ? (
           <div className="rounded-2xl border border-dashed border-border bg-white p-8 text-center text-muted">
             Faltam dados. Preencha o Detetive do Tempo primeiro.

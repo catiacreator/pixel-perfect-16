@@ -14,7 +14,7 @@ export default function PilarBreadcrumb({
 }) {
   return (
     <div className="w-full border-b border-[var(--color-border)]">
-      <div className="max-w-[1100px] mx-auto px-5 md:px-10 py-4 flex items-center justify-between flex-wrap gap-3">
+      <div className="max-w-[1280px] mx-auto px-5 md:px-10 py-4 flex items-center justify-between flex-wrap gap-3">
         <Link
           to={backTo}
           className="inline-flex items-center gap-2 text-[11px] tracking-[0.2em] uppercase text-ink/55 hover:text-ink transition-colors"
