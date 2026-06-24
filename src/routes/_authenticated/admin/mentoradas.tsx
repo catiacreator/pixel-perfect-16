@@ -2,12 +2,13 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useMemo } from "react";
-import { Search, Trash2, Coins } from "lucide-react";
+import { Search, Trash2, Coins, Check, Clock } from "lucide-react";
 import { toast } from "sonner";
 import {
   listMentoradas,
   deleteMentorada,
   adjustPoints,
+  setApproval,
 } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/mentoradas")({
@@ -18,6 +19,7 @@ function MentoradasPage() {
   const fetch = useServerFn(listMentoradas);
   const del = useServerFn(deleteMentorada);
   const adjust = useServerFn(adjustPoints);
+  const approve = useServerFn(setApproval);
   const qc = useQueryClient();
 
   const { data } = useSuspenseQuery({ queryKey: ["admin-mentoradas"], queryFn: () => fetch() });
@@ -43,6 +45,15 @@ function MentoradasPage() {
     onError: (e) => toast.error(e.message),
   });
 
+  const approveMut = useMutation({
+    mutationFn: (v: { userId: string; approved: boolean }) => approve({ data: v }),
+    onSuccess: (_d, v) => {
+      toast.success(v.approved ? "Acesso aprovado" : "Acesso revogado");
+      qc.invalidateQueries({ queryKey: ["admin-mentoradas"] });
+    },
+    onError: (e) => toast.error(e.message),
+  });
+
   return (
     <div className="p-8 max-w-6xl mx-auto">
       <h1 className="text-2xl font-semibold">Mentoradas</h1>
@@ -54,17 +65,18 @@ function MentoradasPage() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Buscar nome ou e-mail"
-          className="w-full h-11 pl-10 pr-4 rounded-full border border-[var(--color-border)] bg-cream-warm text-sm"
+          className="w-full h-11 pl-10 pr-4 rounded-full border border-[var(--color-border)] bg-white text-sm"
         />
       </div>
 
-      <div className="mt-5 bg-cream-warm border border-[var(--color-border)] rounded-2xl overflow-hidden">
+      <div className="mt-5 bg-white border border-[var(--color-border)] rounded-2xl overflow-hidden">
         <table className="w-full text-sm">
           <thead className="text-[11px] uppercase tracking-wider text-ink/50">
             <tr className="border-b border-[var(--color-border)]">
               <th className="text-left px-5 py-3 font-medium">Nome</th>
               <th className="text-left px-5 py-3 font-medium">E-mail</th>
               <th className="text-left px-5 py-3 font-medium">Tier</th>
+              <th className="text-left px-5 py-3 font-medium">Estado</th>
               <th className="text-right px-5 py-3 font-medium">Pontos</th>
               <th className="px-5 py-3" />
             </tr>
@@ -83,8 +95,28 @@ function MentoradasPage() {
                 </td>
                 <td className="px-5 py-3 text-ink/60">{m.email}</td>
                 <td className="px-5 py-3 text-ink/60">{m.tier}</td>
+                <td className="px-5 py-3">
+                  {m.approved ? (
+                    <span className="inline-flex items-center gap-1 text-xs text-sage">
+                      <Check size={13} /> Aprovada
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1 text-xs text-terracotta">
+                      <Clock size={13} /> Pendente
+                    </span>
+                  )}
+                </td>
                 <td className="px-5 py-3 text-right font-medium">{m.pontos}</td>
                 <td className="px-5 py-3 text-right">
+                  <button
+                    onClick={() =>
+                      approveMut.mutate({ userId: m.id, approved: !m.approved })
+                    }
+                    disabled={approveMut.isPending}
+                    className="inline-flex items-center gap-1 text-xs text-ink/60 hover:text-ink mr-3 disabled:opacity-50"
+                  >
+                    {m.approved ? "Revogar" : "Aprovar"}
+                  </button>
                   <button
                     onClick={() => setAdjusting({ id: m.id, nome: m.nome ?? "" })}
                     className="inline-flex items-center gap-1 text-xs text-ink/60 hover:text-ink mr-3"
@@ -105,7 +137,7 @@ function MentoradasPage() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={5} className="px-5 py-10 text-center text-ink/50">
+                <td colSpan={6} className="px-5 py-10 text-center text-ink/50">
                   Nenhuma mentorada encontrada.
                 </td>
               </tr>
@@ -152,14 +184,14 @@ function AdjustDialog({
           value={delta}
           onChange={(e) => setDelta(e.target.value)}
           placeholder="ex: +20 ou -10"
-          className="mt-4 w-full h-11 px-4 rounded-full border border-[var(--color-border)] bg-cream-warm text-sm"
+          className="mt-4 w-full h-11 px-4 rounded-full border border-[var(--color-border)] bg-white text-sm"
         />
         <textarea
           value={motivo}
           onChange={(e) => setMotivo(e.target.value)}
           placeholder="Motivo"
           rows={3}
-          className="mt-3 w-full p-3 rounded-2xl border border-[var(--color-border)] bg-cream-warm text-sm"
+          className="mt-3 w-full p-3 rounded-2xl border border-[var(--color-border)] bg-white text-sm"
         />
         <div className="flex gap-2 mt-4">
           <button onClick={onClose} className="flex-1 h-11 rounded-full border border-[var(--color-border)] text-sm">

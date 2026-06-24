@@ -8,6 +8,14 @@ export const Route = createFileRoute("/_authenticated")({
     if (error || !data.user) {
       throw redirect({ to: "/auth" });
     }
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("approved")
+      .eq("id", data.user.id)
+      .maybeSingle();
+    if (!profile?.approved) {
+      throw redirect({ to: "/pending" });
+    }
     return { user: data.user };
   },
   component: () => <Outlet />,

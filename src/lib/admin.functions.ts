@@ -70,10 +70,26 @@ export const listMentoradas = createServerFn({ method: "GET" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data, error } = await supabaseAdmin
       .from("profiles")
-      .select("id, nome, email, tier, pontos, sequencia, ultima_atividade, created_at")
+      .select("id, nome, email, tier, pontos, sequencia, ultima_atividade, created_at, approved")
       .order("created_at", { ascending: false });
     if (error) throw error;
     return data ?? [];
+  });
+
+export const setApproval = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { userId: string; approved: boolean }) =>
+    z.object({ userId: z.string().uuid(), approved: z.boolean() }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context.supabase, context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("profiles")
+      .update({ approved: data.approved })
+      .eq("id", data.userId);
+    if (error) throw error;
+    return { ok: true };
   });
 
 export const getMentorada = createServerFn({ method: "GET" })

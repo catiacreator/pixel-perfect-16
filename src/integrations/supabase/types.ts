@@ -204,8 +204,30 @@ export type Database = {
         }
         Relationships: []
       }
+      master_documents: {
+        Row: {
+          created_at: string
+          data: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          data?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          data?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
+          approved: boolean
           avatar_url: string | null
           created_at: string
           email: string | null
@@ -218,6 +240,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          approved?: boolean
           avatar_url?: string | null
           created_at?: string
           email?: string | null
@@ -230,6 +253,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          approved?: boolean
           avatar_url?: string | null
           created_at?: string
           email?: string | null
