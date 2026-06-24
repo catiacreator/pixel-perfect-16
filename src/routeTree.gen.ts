@@ -55,6 +55,7 @@ import { Route as MetodoPilar1DetetiveDoTempoPlanoRouteImport } from './routes/m
 import { Route as MetodoPilar1AprendaIaToolRouteImport } from './routes/metodo.pilar-1.aprenda-ia.$tool'
 import { Route as AuthenticatedAdminMentoradasIdRouteImport } from './routes/_authenticated/admin/mentoradas.$id'
 import { Route as MetodoPilar2RedesSociaisInstagramIndexRouteImport } from './routes/metodo.pilar-2.redes-sociais.instagram.index'
+import { Route as MetodoPilar1AprendaIaToolIndexRouteImport } from './routes/metodo.pilar-1.aprenda-ia.$tool.index'
 import { Route as MetodoPilar2RedesSociaisInstagramFormatoRouteImport } from './routes/metodo.pilar-2.redes-sociais.instagram.$formato'
 import { Route as MetodoPilar1AprendaIaClaudeInstalarSkillsRouteImport } from './routes/metodo.pilar-1.aprenda-ia.claude.instalar-skills'
 import { Route as MetodoPilar1AprendaIaToolLessonSlugRouteImport } from './routes/metodo.pilar-1.aprenda-ia.$tool.$lessonSlug'
@@ -308,6 +309,12 @@ const MetodoPilar2RedesSociaisInstagramIndexRoute =
     path: '/',
     getParentRoute: () => MetodoPilar2RedesSociaisInstagramRoute,
   } as any)
+const MetodoPilar1AprendaIaToolIndexRoute =
+  MetodoPilar1AprendaIaToolIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => MetodoPilar1AprendaIaToolRoute,
+  } as any)
 const MetodoPilar2RedesSociaisInstagramFormatoRoute =
   MetodoPilar2RedesSociaisInstagramFormatoRouteImport.update({
     id: '/$formato',
@@ -375,6 +382,7 @@ export interface FileRoutesByFullPath {
   '/metodo/pilar-1/aprenda-ia/$tool/$lessonSlug': typeof MetodoPilar1AprendaIaToolLessonSlugRoute
   '/metodo/pilar-1/aprenda-ia/claude/instalar-skills': typeof MetodoPilar1AprendaIaClaudeInstalarSkillsRoute
   '/metodo/pilar-2/redes-sociais/instagram/$formato': typeof MetodoPilar2RedesSociaisInstagramFormatoRoute
+  '/metodo/pilar-1/aprenda-ia/$tool/': typeof MetodoPilar1AprendaIaToolIndexRoute
   '/metodo/pilar-2/redes-sociais/instagram/': typeof MetodoPilar2RedesSociaisInstagramIndexRoute
 }
 export interface FileRoutesByTo {
@@ -407,7 +415,6 @@ export interface FileRoutesByTo {
   '/metodo/pilar-1': typeof MetodoPilar1IndexRoute
   '/metodo/pilar-2': typeof MetodoPilar2IndexRoute
   '/admin/mentoradas/$id': typeof AuthenticatedAdminMentoradasIdRoute
-  '/metodo/pilar-1/aprenda-ia/$tool': typeof MetodoPilar1AprendaIaToolRouteWithChildren
   '/metodo/pilar-1/detetive-do-tempo/plano': typeof MetodoPilar1DetetiveDoTempoPlanoRoute
   '/metodo/pilar-1/detetive-do-tempo/relatorio': typeof MetodoPilar1DetetiveDoTempoRelatorioRoute
   '/metodo/pilar-1/aprenda-ia': typeof MetodoPilar1AprendaIaIndexRoute
@@ -416,6 +423,7 @@ export interface FileRoutesByTo {
   '/metodo/pilar-1/aprenda-ia/$tool/$lessonSlug': typeof MetodoPilar1AprendaIaToolLessonSlugRoute
   '/metodo/pilar-1/aprenda-ia/claude/instalar-skills': typeof MetodoPilar1AprendaIaClaudeInstalarSkillsRoute
   '/metodo/pilar-2/redes-sociais/instagram/$formato': typeof MetodoPilar2RedesSociaisInstagramFormatoRoute
+  '/metodo/pilar-1/aprenda-ia/$tool': typeof MetodoPilar1AprendaIaToolIndexRoute
   '/metodo/pilar-2/redes-sociais/instagram': typeof MetodoPilar2RedesSociaisInstagramIndexRoute
 }
 export interface FileRoutesById {
@@ -468,6 +476,7 @@ export interface FileRoutesById {
   '/metodo/pilar-1/aprenda-ia/$tool/$lessonSlug': typeof MetodoPilar1AprendaIaToolLessonSlugRoute
   '/metodo/pilar-1/aprenda-ia/claude/instalar-skills': typeof MetodoPilar1AprendaIaClaudeInstalarSkillsRoute
   '/metodo/pilar-2/redes-sociais/instagram/$formato': typeof MetodoPilar2RedesSociaisInstagramFormatoRoute
+  '/metodo/pilar-1/aprenda-ia/$tool/': typeof MetodoPilar1AprendaIaToolIndexRoute
   '/metodo/pilar-2/redes-sociais/instagram/': typeof MetodoPilar2RedesSociaisInstagramIndexRoute
 }
 export interface FileRouteTypes {
@@ -520,6 +529,7 @@ export interface FileRouteTypes {
     | '/metodo/pilar-1/aprenda-ia/$tool/$lessonSlug'
     | '/metodo/pilar-1/aprenda-ia/claude/instalar-skills'
     | '/metodo/pilar-2/redes-sociais/instagram/$formato'
+    | '/metodo/pilar-1/aprenda-ia/$tool/'
     | '/metodo/pilar-2/redes-sociais/instagram/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -552,7 +562,6 @@ export interface FileRouteTypes {
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
     | '/admin/mentoradas/$id'
-    | '/metodo/pilar-1/aprenda-ia/$tool'
     | '/metodo/pilar-1/detetive-do-tempo/plano'
     | '/metodo/pilar-1/detetive-do-tempo/relatorio'
     | '/metodo/pilar-1/aprenda-ia'
@@ -561,6 +570,7 @@ export interface FileRouteTypes {
     | '/metodo/pilar-1/aprenda-ia/$tool/$lessonSlug'
     | '/metodo/pilar-1/aprenda-ia/claude/instalar-skills'
     | '/metodo/pilar-2/redes-sociais/instagram/$formato'
+    | '/metodo/pilar-1/aprenda-ia/$tool'
     | '/metodo/pilar-2/redes-sociais/instagram'
   id:
     | '__root__'
@@ -612,6 +622,7 @@ export interface FileRouteTypes {
     | '/metodo/pilar-1/aprenda-ia/$tool/$lessonSlug'
     | '/metodo/pilar-1/aprenda-ia/claude/instalar-skills'
     | '/metodo/pilar-2/redes-sociais/instagram/$formato'
+    | '/metodo/pilar-1/aprenda-ia/$tool/'
     | '/metodo/pilar-2/redes-sociais/instagram/'
   fileRoutesById: FileRoutesById
 }
@@ -953,6 +964,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MetodoPilar2RedesSociaisInstagramIndexRouteImport
       parentRoute: typeof MetodoPilar2RedesSociaisInstagramRoute
     }
+    '/metodo/pilar-1/aprenda-ia/$tool/': {
+      id: '/metodo/pilar-1/aprenda-ia/$tool/'
+      path: '/'
+      fullPath: '/metodo/pilar-1/aprenda-ia/$tool/'
+      preLoaderRoute: typeof MetodoPilar1AprendaIaToolIndexRouteImport
+      parentRoute: typeof MetodoPilar1AprendaIaToolRoute
+    }
     '/metodo/pilar-2/redes-sociais/instagram/$formato': {
       id: '/metodo/pilar-2/redes-sociais/instagram/$formato'
       path: '/$formato'
@@ -1038,12 +1056,14 @@ const MetodoConsultoriaIaRouteWithChildren =
 
 interface MetodoPilar1AprendaIaToolRouteChildren {
   MetodoPilar1AprendaIaToolLessonSlugRoute: typeof MetodoPilar1AprendaIaToolLessonSlugRoute
+  MetodoPilar1AprendaIaToolIndexRoute: typeof MetodoPilar1AprendaIaToolIndexRoute
 }
 
 const MetodoPilar1AprendaIaToolRouteChildren: MetodoPilar1AprendaIaToolRouteChildren =
   {
     MetodoPilar1AprendaIaToolLessonSlugRoute:
       MetodoPilar1AprendaIaToolLessonSlugRoute,
+    MetodoPilar1AprendaIaToolIndexRoute: MetodoPilar1AprendaIaToolIndexRoute,
   }
 
 const MetodoPilar1AprendaIaToolRouteWithChildren =
@@ -1209,13 +1229,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
