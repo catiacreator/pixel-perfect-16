@@ -67,7 +67,7 @@ function AuthPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-cream px-4 font-display">
-      <div className="w-full max-w-md bg-cream-warm border border-[var(--color-border)] rounded-2xl p-8">
+      <div className="w-full max-w-md bg-white border border-[var(--color-border)] rounded-2xl p-8">
         <div className="flex items-center gap-2.5 mb-6">
           <span className="w-2 h-2 rounded-full bg-terracotta shadow-[0_0_18px_2px_var(--color-terracotta)]" />
           <span className="text-[15px] font-semibold tracking-tight text-ink">Leveza</span>

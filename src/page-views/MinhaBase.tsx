@@ -312,7 +312,7 @@ const DOCS = [
   },
   {
     icon: BookOpen,
-    titulo: "Esboço do Método",
+    titulo: "O Teu Método",
     sub: "Passos, promessa e diferencial do seu método",
     to: "/metodo/pilar-2/metodo",
   },
@@ -321,7 +321,7 @@ const DOCS = [
 const ACESSO_RAPIDO = [
   { icon: Sparkles, label: "Aprender IA", to: "/metodo/pilar-1/aprenda-ia", color: "text-violet-500" },
   { icon: Star, label: "Identidade de Marca", to: "/metodo/pilar-2/identidade", color: "text-pink-500" },
-  { icon: Target, label: "Redes Sociais", to: "/metodo/pilar-2/redes-sociais", color: "text-emerald-600" },
+  { icon: Target, label: "Redes Sociais", to: "/metodo/pilar-2/redes-sociais", color: "text-sage" },
   { icon: FileText, label: "Documento Mestre", to: "/doc-mestre", color: "text-amber-600" },
 ];
 
@@ -335,7 +335,7 @@ type Conquista = {
 
 const CONQUISTAS: Conquista[] = [
   { id: "doc", icon: FileText, titulo: "Documento Mestre", sub: "Se conheceu de verdade", desbloqueada: true },
-  { id: "detetive", icon: Search, titulo: "Detetive do Tempo", sub: "Descobriu onde o tempo vai", desbloqueada: true },
+  { id: "detetive", icon: Search, titulo: "Mapa do Tempo", sub: "Descobriu onde o tempo vai", desbloqueada: true },
   { id: "arq", icon: Compass, titulo: "Arquétipos Decifrados", sub: "Você + cliente com clareza", desbloqueada: true },
   { id: "voz", icon: Mic, titulo: "Voz Definida", sub: "Sua marca tem som próprio", desbloqueada: false },
   { id: "visual", icon: Palette, titulo: "Identidade Visual", sub: "Paleta, tipografia e mood", desbloqueada: false },
@@ -343,7 +343,7 @@ const CONQUISTAS: Conquista[] = [
   { id: "pagina", icon: Globe, titulo: "Página Profissional", sub: "Página profissional no ar", desbloqueada: true },
   { id: "linha", icon: BookOpen, titulo: "Linha Editorial", sub: "Conteúdo com estratégia", desbloqueada: false },
   { id: "bio", icon: Star, titulo: "Bio do Instagram", sub: "Bio publicada no perfil", desbloqueada: false },
-  { id: "rainha", icon: Crown, titulo: "Rainha da Trilha", sub: "Concluiu todos os pilares", desbloqueada: false },
+  { id: "rainha", icon: Crown, titulo: "Rainha da Jornada", sub: "Concluiu todos os pilares", desbloqueada: false },
 ];
 
 function weekStartMonday(d: Date) {
@@ -456,7 +456,7 @@ export default function MinhaBase() {
                 <p className="font-display text-xl text-ink mt-1">{state.streak}</p>
                 <p className="text-[10px] tracking-[0.18em] uppercase text-ink/50">Dia</p>
               </div>
-              <div className="rounded-2xl border border-terracotta/30 bg-cream-warm px-4 py-3 text-center min-w-[92px]">
+              <div className="rounded-2xl border border-terracotta/30 bg-white px-4 py-3 text-center min-w-[92px]">
                 <Rocket className="mx-auto text-terracotta" size={18} />
                 <p className="text-[13px] font-semibold text-ink mt-1">Em Movimento</p>
                 <p className="text-[11px] text-ink/55">{nivel}/10</p>
@@ -496,7 +496,7 @@ export default function MinhaBase() {
                   key={d.titulo}
                   className="rounded-2xl border border-[var(--color-border)] bg-white p-4 flex items-center gap-4"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-cream-warm flex items-center justify-center text-terracotta shrink-0">
+                  <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-terracotta shrink-0">
                     <Icon size={20} strokeWidth={1.75} />
                   </div>
                   <div className="min-w-0 flex-1">
@@ -506,14 +506,14 @@ export default function MinhaBase() {
                   <div className="flex items-center gap-1.5 shrink-0">
                     <Link
                       to={d.to}
-                      className="w-9 h-9 rounded-lg border border-[var(--color-border)] flex items-center justify-center text-ink/70 hover:bg-cream-warm"
+                      className="w-9 h-9 rounded-lg border border-[var(--color-border)] flex items-center justify-center text-ink/70 hover:bg-white"
                       aria-label="Abrir"
                     >
                       <ExternalLink size={14} />
                     </Link>
                     <button
                       onClick={() => window.print()}
-                      className="w-9 h-9 rounded-lg border border-[var(--color-border)] flex items-center justify-center text-ink/70 hover:bg-cream-warm"
+                      className="w-9 h-9 rounded-lg border border-[var(--color-border)] flex items-center justify-center text-ink/70 hover:bg-white"
                       aria-label="Baixar"
                     >
                       <Download size={14} />
@@ -548,19 +548,19 @@ export default function MinhaBase() {
                       onClick={() => togglePostagem(p.id)}
                       className={`flex-1 flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors ${
                         p.feita
-                          ? "border-emerald-300 bg-emerald-50/60 text-emerald-700 line-through"
-                          : "border-[var(--color-border)] text-ink hover:bg-cream-warm"
+                          ? "border-sage/40 bg-sage/10/60 text-sage line-through"
+                          : "border-[var(--color-border)] text-ink hover:bg-white"
                       }`}
                     >
                       {p.feita ? (
-                        <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
+                        <CheckCircle2 size={16} className="text-sage shrink-0" />
                       ) : (
                         <Circle size={16} className="text-ink/40 shrink-0" />
                       )}
                       <span className="truncate">{p.nome}</span>
                     </button>
                     <button
-                      className="w-10 h-10 rounded-lg border border-[var(--color-border)] flex items-center justify-center text-terracotta hover:bg-cream-warm"
+                      className="w-10 h-10 rounded-lg border border-[var(--color-border)] flex items-center justify-center text-terracotta hover:bg-white"
                       aria-label="Ideias com IA"
                       title="3 ideias + prompt para o ChatGPT"
                     >
@@ -587,8 +587,8 @@ export default function MinhaBase() {
                       onClick={() => toggleTarefa(t.id)}
                       className={`w-6 h-6 rounded-full border flex items-center justify-center text-[10px] font-semibold shrink-0 ${
                         t.feita
-                          ? "bg-emerald-500 border-emerald-500 text-white"
-                          : "border-[var(--color-border)] text-ink/50 bg-cream-warm"
+                          ? "bg-sage/100 border-sage text-white"
+                          : "border-[var(--color-border)] text-ink/50 bg-white"
                       }`}
                     >
                       {t.feita ? "✓" : i + 1}
@@ -605,7 +605,7 @@ export default function MinhaBase() {
                 ))}
                 <button
                   onClick={addTarefa}
-                  className="w-full mt-1 flex items-center justify-center gap-1.5 text-sm text-ink/55 rounded-lg border border-dashed border-[var(--color-border)] py-2.5 hover:bg-cream-warm"
+                  className="w-full mt-1 flex items-center justify-center gap-1.5 text-sm text-ink/55 rounded-lg border border-dashed border-[var(--color-border)] py-2.5 hover:bg-white"
                 >
                   <Plus size={14} /> Adicionar mais uma tarefa
                 </button>
@@ -620,7 +620,7 @@ export default function MinhaBase() {
                 key={p.id}
                 className={`text-[11px] px-2.5 py-1 rounded-full border ${
                   p.feita
-                    ? "bg-emerald-50 border-emerald-200 text-emerald-700"
+                    ? "bg-sage/10 border-sage/30 text-sage"
                     : "bg-white border-[var(--color-border)] text-ink/50"
                 }`}
               >
@@ -638,7 +638,7 @@ export default function MinhaBase() {
                 <CalendarIcon size={16} className="text-terracotta" />
                 <h2 className="font-display text-base text-ink">Calendário Editorial</h2>
               </div>
-              <div className="inline-flex rounded-full bg-cream-warm p-1 text-[12px]">
+              <div className="inline-flex rounded-full bg-white p-1 text-[12px]">
                 {(["7", "30"] as const).map((v) => (
                   <button
                     key={v}
@@ -706,7 +706,7 @@ export default function MinhaBase() {
                 <Link
                   key={a.label}
                   to={a.to}
-                  className="rounded-xl border border-[var(--color-border)] bg-white px-4 py-3 flex items-center gap-3 hover:bg-cream-warm transition-colors"
+                  className="rounded-xl border border-[var(--color-border)] bg-white px-4 py-3 flex items-center gap-3 hover:bg-white transition-colors"
                 >
                   <Icon size={16} className={a.color} />
                   <span className="text-sm text-ink flex-1">{a.label}</span>
@@ -719,7 +719,7 @@ export default function MinhaBase() {
 
         {/* CONQUISTAS */}
         <section className="mt-10">
-          <h2 className="font-display text-lg text-ink mb-1">Conquistas da trilha</h2>
+          <h2 className="font-display text-lg text-ink mb-1">Marcos da jornada</h2>
           <p className="text-xs text-ink/55 mb-4">Desbloqueadas automaticamente conforme você avança.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             {CONQUISTAS.map((c) => {

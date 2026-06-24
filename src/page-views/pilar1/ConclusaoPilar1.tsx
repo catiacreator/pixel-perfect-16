@@ -30,7 +30,7 @@ const ITENS = [
   { icon: BookOpen, label: "NotebookLM", to: "/metodo/pilar-1/aprenda-ia/notebooklm" },
   { icon: Feather, label: "Lovable", to: "/metodo/pilar-1/aprenda-ia/lovable" },
   { icon: Video, label: "Tella", to: "/metodo/pilar-1/aprenda-ia/tella" },
-  { icon: Search, label: "Mapeei minhas tarefas no Detetive do Tempo", to: "/metodo/pilar-1/detetive-do-tempo" },
+  { icon: Search, label: "Mapeei minhas tarefas no Mapa do Tempo", to: "/metodo/pilar-1/detetive-do-tempo" },
   { icon: BarChart3, label: "Gerei meu relatório e vi quanto cada tarefa custa", to: "/metodo/pilar-1/detetive-do-tempo/relatorio" },
 ];
 

@@ -55,17 +55,17 @@ export default function RelatorioDoTempo() {
   if (!rel.preenchido) {
     return (
       <Layout>
-        <PilarBreadcrumb pilar={1} pilarLabel="Recuperar seu Tempo" backTo="/metodo/pilar-1/detetive-do-tempo" backLabel="Voltar para o Detetive do Tempo" />
+        <PilarBreadcrumb pilar={1} pilarLabel="Recuperar seu Tempo" backTo="/metodo/pilar-1/detetive-do-tempo" backLabel="Voltar para o Mapa do Tempo" />
         <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
-          <h1 className="font-serif text-3xl text-ink mb-4">Relatório — Detetive do Tempo</h1>
+          <h1 className="font-serif text-3xl text-ink mb-4">Relatório — Mapa do Tempo</h1>
           <div className="rounded-2xl border border-dashed border-border bg-white p-8 text-center text-muted mb-6">
-            Faltam dados. Volte para o Detetive do Tempo, preencha faturamento, horas, dias e adicione as suas tarefas.
+            Faltam dados. Volte para o Mapa do Tempo, preencha faturamento, horas, dias e adicione as suas tarefas.
           </div>
           <Link
             to="/metodo/pilar-1/detetive-do-tempo"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-semibold"
           >
-            Ir para o Detetive <ArrowRight size={15} />
+            Ir para o Mapa do Tempo <ArrowRight size={15} />
           </Link>
         </div>
       </Layout>
@@ -77,12 +77,12 @@ export default function RelatorioDoTempo() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar={1} pilarLabel="Recuperar seu Tempo" backTo="/metodo/pilar-1/detetive-do-tempo" backLabel="Voltar para o Detetive do Tempo" />
+      <PilarBreadcrumb pilar={1} pilarLabel="Recuperar seu Tempo" backTo="/metodo/pilar-1/detetive-do-tempo" backLabel="Voltar para o Mapa do Tempo" />
       <PillarHeader
         numeral="I"
         icon={<Hourglass size={18} />}
         pilarLabel="Pilar 1"
-        titulo="Relatório do Detetive"
+        titulo="Relatório do Mapa do Tempo"
         subtitulo="Onde o seu tempo está realmente indo — em horas e em reais"
       />
 

@@ -43,7 +43,7 @@ export function AdminShell() {
 
   return (
     <div className="min-h-screen flex bg-cream text-ink font-display">
-      <aside className="w-60 shrink-0 border-r border-[var(--color-border)] bg-cream-warm flex flex-col">
+      <aside className="w-60 shrink-0 border-r border-[var(--color-border)] bg-white flex flex-col">
         <div className="px-5 py-5 border-b border-[var(--color-border)]">
           <div className="flex items-center gap-2.5">
             <span className="w-2 h-2 rounded-full bg-terracotta shadow-[0_0_18px_2px_var(--color-terracotta)]" />

@@ -76,7 +76,7 @@ function ConteudoPage() {
         {data.pilares.map((p) => {
           const etapas = data.etapas.filter((e) => e.pilar_id === p.id);
           return (
-            <div key={p.id} className="bg-cream-warm border border-[var(--color-border)] rounded-2xl p-5">
+            <div key={p.id} className="bg-white border border-[var(--color-border)] rounded-2xl p-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-[11px] uppercase tracking-wider text-ink/40">{p.slug}</p>

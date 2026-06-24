@@ -34,7 +34,7 @@ function MentoradaDetalhe() {
       </div>
 
       <h2 className="text-sm font-semibold mt-8">Histórico de pontos</h2>
-      <div className="mt-3 bg-cream-warm border border-[var(--color-border)] rounded-2xl divide-y divide-[var(--color-border)]">
+      <div className="mt-3 bg-white border border-[var(--color-border)] rounded-2xl divide-y divide-[var(--color-border)]">
         {data.log.length === 0 && <p className="p-5 text-sm text-ink/50">Sem registros.</p>}
         {data.log.map((l) => (
           <div key={l.id} className="flex items-center justify-between px-5 py-3">
@@ -42,7 +42,7 @@ function MentoradaDetalhe() {
               <p className="text-sm">{l.motivo}</p>
               <p className="text-[11px] text-ink/40">{new Date(l.created_at).toLocaleString("pt-BR")}</p>
             </div>
-            <span className={`text-sm font-medium ${l.delta >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
+            <span className={`text-sm font-medium ${l.delta >= 0 ? "text-sage" : "text-rose-700"}`}>
               {l.delta >= 0 ? "+" : ""}{l.delta}
             </span>
           </div>
@@ -53,7 +53,7 @@ function MentoradaDetalhe() {
       <div className="mt-3 flex flex-wrap gap-2">
         {data.conquistas.length === 0 && <p className="text-sm text-ink/50">Nenhuma ainda.</p>}
         {data.conquistas.map((c: any) => (
-          <div key={c.id} className="px-3 py-2 bg-cream-warm border border-[var(--color-border)] rounded-full text-xs">
+          <div key={c.id} className="px-3 py-2 bg-white border border-[var(--color-border)] rounded-full text-xs">
             {c.conquista?.emoji} {c.conquista?.nome}
           </div>
         ))}
@@ -64,7 +64,7 @@ function MentoradaDetalhe() {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="bg-cream-warm border border-[var(--color-border)] rounded-2xl p-5">
+    <div className="bg-white border border-[var(--color-border)] rounded-2xl p-5">
       <p className="text-[11px] uppercase tracking-wider text-ink/40">{label}</p>
       <p className="text-xl font-semibold mt-1">{value}</p>
     </div>

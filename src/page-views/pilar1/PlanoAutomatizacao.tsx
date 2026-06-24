@@ -99,13 +99,13 @@ export default function PlanoAutomatizacao() {
       <div className="px-5 md:px-10 pb-16 max-w-4xl mx-auto">
         {!rel.preenchido ? (
           <div className="rounded-2xl border border-dashed border-border bg-white p-8 text-center text-muted">
-            Faltam dados. Preencha o Detetive do Tempo primeiro.
+            Faltam dados. Preencha o Mapa do Tempo primeiro.
             <div className="mt-4">
               <Link
                 to="/metodo/pilar-1/detetive-do-tempo"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-semibold"
               >
-                Ir para o Detetive <ArrowRight size={14} />
+                Ir para o Mapa do Tempo <ArrowRight size={14} />
               </Link>
             </div>
           </div>

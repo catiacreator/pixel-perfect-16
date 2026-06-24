@@ -81,7 +81,7 @@ export default function AprendaIAHub() {
                   <div className="mt-3 flex items-center justify-between text-[11px] font-medium">
                     <span className="text-cream/85">
                       {pct === 100 ? (
-                        <span className="inline-flex items-center gap-1 text-emerald-300">
+                        <span className="inline-flex items-center gap-1 text-sage">
                           <Check size={11} /> 100% visto
                         </span>
                       ) : (
@@ -110,7 +110,7 @@ export default function AprendaIAHub() {
             to="/metodo/pilar-1/detetive-do-tempo"
             className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-terracotta to-gold text-cream text-sm font-semibold shadow-lg hover:shadow-xl transition-shadow"
           >
-            Próximo passo: Detetive do Tempo <ArrowRight size={15} />
+            Próximo passo: Mapa do Tempo <ArrowRight size={15} />
           </Link>
         </div>
       </div>

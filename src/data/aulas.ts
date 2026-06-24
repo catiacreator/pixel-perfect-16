@@ -107,7 +107,7 @@ export const TOOLS: Tool[] = [
     slug: "chatgpt",
     nome: "ChatGPT",
     descricao: "Aulas, prompts e exemplos para dominar o ChatGPT no seu dia a dia.",
-    cor: "from-emerald-500/20 to-emerald-700/10",
+    cor: "from-sage/20 to-sage/10",
     inicial: "G",
     aulas: [
       {

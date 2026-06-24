@@ -9,7 +9,7 @@ export type Skill = {
 export const SKILLS_GERAIS: Skill[] = [
   { id: "01", emoji: "🧠", nome: "Segundo Cérebro", descricao: "Cria o documento completo para a IA trabalhar como se fosse você.", file: "/skills/01-segundo-cerebro.md" },
   { id: "02", emoji: "🎯", nome: "Cliente Ideal", descricao: "Mapeia o cliente ideal — dores, desejos, objeções e linguagem.", file: "/skills/02-cliente-ideal.md" },
-  { id: "03", emoji: "🕵️", nome: "Detetive do Tempo", descricao: "Mapeia onde perdes tempo, calcula o custo e indica o que automatizar.", file: "/skills/03-detetive-do-tempo.md" },
+  { id: "03", emoji: "🕵️", nome: "Mapa do Tempo", descricao: "Mapeia onde perdes tempo, calcula o custo e indica o que automatizar.", file: "/skills/03-detetive-do-tempo.md" },
   { id: "04", emoji: "🎨", nome: "Identidade Visual", descricao: "Paleta, tipografia e mood board para o Instagram.", file: "/skills/04-identidade-visual.md" },
   { id: "05", emoji: "📲", nome: "Conteúdo para Redes Sociais", descricao: "Cria posts — carrossel, Reels, Stories — com estratégia completa.", file: "/skills/05-conteudo-redes-sociais.md" },
   { id: "06", emoji: "💰", nome: "Oferta, Método e Proposta", descricao: "Estrutura o método, precifica com payback e gera proposta e página de vendas.", file: "/skills/06-oferta-metodo-proposta.md" },

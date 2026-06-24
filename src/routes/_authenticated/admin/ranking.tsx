@@ -38,13 +38,13 @@ function RankingPage() {
             if (confirm("Zerar pontos e sequência de todas?")) resetMut.mutate();
           }}
           disabled={resetMut.isPending}
-          className="inline-flex items-center gap-2 px-4 h-10 rounded-full border border-[var(--color-border)] bg-cream-warm text-sm hover:bg-ink/5"
+          className="inline-flex items-center gap-2 px-4 h-10 rounded-full border border-[var(--color-border)] bg-white text-sm hover:bg-ink/5"
         >
           <RotateCcw size={14} /> Resetar ranking
         </button>
       </div>
 
-      <div className="mt-5 bg-cream-warm border border-[var(--color-border)] rounded-2xl overflow-hidden">
+      <div className="mt-5 bg-white border border-[var(--color-border)] rounded-2xl overflow-hidden">
         <table className="w-full text-sm">
           <thead className="text-[11px] uppercase tracking-wider text-ink/50">
             <tr className="border-b border-[var(--color-border)]">

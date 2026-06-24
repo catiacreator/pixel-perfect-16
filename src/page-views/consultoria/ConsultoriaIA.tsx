@@ -115,7 +115,7 @@ export default function ConsultoriaIA() {
         {/* Como começar */}
         <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-11 h-11 rounded-xl border border-terracotta/40 bg-cream-warm text-terracotta flex items-center justify-center">
+            <div className="w-11 h-11 rounded-xl border border-terracotta/40 bg-white text-terracotta flex items-center justify-center">
               <Sparkles size={18} />
             </div>
             <div>
@@ -137,7 +137,7 @@ export default function ConsultoriaIA() {
         {/* Planeje seu evento */}
         <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-11 h-11 rounded-xl border border-terracotta/40 bg-cream-warm text-terracotta flex items-center justify-center">
+            <div className="w-11 h-11 rounded-xl border border-terracotta/40 bg-white text-terracotta flex items-center justify-center">
               <Calendar size={18} />
             </div>
             <div>

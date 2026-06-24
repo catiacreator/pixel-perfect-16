@@ -81,7 +81,7 @@ export default function InstagramFormato() {
 
         {formato.progresso && (
           <div className="rounded-2xl border border-border bg-white p-5 mb-6">
-            <p className="text-xs tracking-[0.1em] uppercase text-muted mb-1">Trilha · {formato.titulo}</p>
+            <p className="text-xs tracking-[0.1em] uppercase text-muted mb-1">Jornada · {formato.titulo}</p>
             <p className="font-serif text-lg text-ink mb-2">Sua máquina de carrosséis</p>
             <p className="text-sm text-muted mb-3">
               Cria um Projeto GPT que entende o teu jeito, a tua linha editorial e a tua identidade visual. Depois é

@@ -85,7 +85,7 @@ export default function Home() {
             <div className="flex items-center gap-2.5">
               <span className="w-1.5 h-1.5 rounded-full bg-cream animate-pulse" />
               <span className="text-[11px] tracking-[0.3em] uppercase text-cream/70">
-                Trilha · Edição 2026
+                Jornada · Edição 2026
               </span>
             </div>
             <div className="hidden md:block h-px bg-cream/20" />
@@ -120,7 +120,7 @@ export default function Home() {
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 to="/metodo/pilar-1"
-                className="group inline-flex items-center gap-2 bg-cream text-ink pl-5 pr-2 py-2 rounded-full text-sm font-medium hover:bg-cream-warm transition-all shadow-[0_8px_24px_-10px_rgba(0,0,0,0.35)]"
+                className="group inline-flex items-center gap-2 bg-cream text-ink pl-5 pr-2 py-2 rounded-full text-sm font-medium hover:bg-white transition-all shadow-[0_8px_24px_-10px_rgba(0,0,0,0.35)]"
               >
                 Começar agora
                 <span className="w-8 h-8 rounded-full bg-ink text-cream flex items-center justify-center">

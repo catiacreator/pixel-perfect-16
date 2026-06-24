@@ -76,7 +76,7 @@ export default function DetetiveDoTempo() {
     }));
 
   const zerar = () => {
-    if (!confirm("Zerar todos os dados do Detetive do Tempo?")) return;
+    if (!confirm("Zerar todos os dados do Mapa do Tempo?")) return;
     clearDetetive();
     setState(INITIAL_STATE);
   };
@@ -90,7 +90,7 @@ export default function DetetiveDoTempo() {
         numeral="I"
         icon={<Hourglass size={18} />}
         pilarLabel="Pilar 1"
-        titulo="Detetive do Tempo"
+        titulo="Mapa do Tempo"
         subtitulo="Mapeie suas tarefas e descubra quanto custam em reais"
       />
 
@@ -233,7 +233,7 @@ export default function DetetiveDoTempo() {
         />
 
         <div className="rounded-2xl border border-border bg-white shadow-sm p-5 text-center mb-6">
-          <p className="font-serif text-base text-ink mb-3">Tarefas mapeadas? Veja o Relatório do Detetive do Tempo</p>
+          <p className="font-serif text-base text-ink mb-3">Tarefas mapeadas? Veja o Relatório do Mapa do Tempo</p>
           <Link
             to="/metodo/pilar-1/detetive-do-tempo/relatorio"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-semibold shadow-sm"

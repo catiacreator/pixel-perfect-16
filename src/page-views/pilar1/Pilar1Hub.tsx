@@ -37,7 +37,7 @@ export default function Pilar1Hub() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar={1} pilarLabel={data?.titulo ?? "Pilar 1"} backTo="/metodo" backLabel="Voltar para Trilha" />
+      <PilarBreadcrumb pilar={1} pilarLabel={data?.titulo ?? "Pilar 1"} backTo="/metodo" backLabel="Voltar para Jornada" />
       <PillarHeader
         numeral="01"
         icon={<Hourglass size={18} />}
@@ -85,7 +85,7 @@ export default function Pilar1Hub() {
                 subLinks={SUBLINKS[e.slug]}
               />
               {e.video_url && (
-                <span className="absolute top-4 right-4 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-terracotta bg-cream-warm border border-[var(--color-border)] rounded-full px-2 py-1">
+                <span className="absolute top-4 right-4 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-terracotta bg-white border border-[var(--color-border)] rounded-full px-2 py-1">
                   <Play size={10} /> Vídeo
                 </span>
               )}

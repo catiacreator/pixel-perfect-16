@@ -28,7 +28,7 @@ function Overview() {
         {cards.map((c) => {
           const Icon = c.icon;
           return (
-            <div key={c.label} className="bg-cream-warm border border-[var(--color-border)] rounded-2xl p-5">
+            <div key={c.label} className="bg-white border border-[var(--color-border)] rounded-2xl p-5">
               <Icon size={18} className="text-terracotta" />
               <p className="text-[11px] uppercase tracking-wider text-ink/40 mt-3">{c.label}</p>
               <p className="text-2xl font-semibold mt-1">{c.value}</p>
@@ -38,7 +38,7 @@ function Overview() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
-        <div className="bg-cream-warm border border-[var(--color-border)] rounded-2xl p-5">
+        <div className="bg-white border border-[var(--color-border)] rounded-2xl p-5">
           <h2 className="text-sm font-semibold">Top 5</h2>
           <div className="mt-4 flex flex-col">
             {data.top5.length === 0 && <p className="text-sm text-ink/50">Sem dados ainda.</p>}
@@ -55,7 +55,7 @@ function Overview() {
           </div>
         </div>
 
-        <div className="bg-cream-warm border border-[var(--color-border)] rounded-2xl p-5">
+        <div className="bg-white border border-[var(--color-border)] rounded-2xl p-5">
           <h2 className="text-sm font-semibold">Atividade recente</h2>
           <div className="mt-4 flex flex-col">
             {data.atividade.length === 0 && <p className="text-sm text-ink/50">Sem atividade.</p>}
@@ -65,7 +65,7 @@ function Overview() {
                   <p className="text-sm truncate">{a.profiles?.nome ?? "Mentorada"}</p>
                   <p className="text-[11px] text-ink/50 truncate">{a.motivo}</p>
                 </div>
-                <span className={`text-sm font-medium ${a.delta >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
+                <span className={`text-sm font-medium ${a.delta >= 0 ? "text-sage" : "text-rose-700"}`}>
                   {a.delta >= 0 ? "+" : ""}{a.delta}
                 </span>
               </div>

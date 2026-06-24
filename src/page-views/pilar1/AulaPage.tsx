@@ -186,7 +186,7 @@ export default function AulaPage() {
             onClick={() => toggle(tool.slug, aula.id)}
             className={`shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold border transition-colors ${
               done
-                ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                ? "bg-sage/10 text-sage border-sage/40"
                 : "bg-white text-ink border-border hover:border-terracotta hover:text-terracotta"
             }`}
           >

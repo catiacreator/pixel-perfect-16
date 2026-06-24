@@ -82,7 +82,7 @@ export default function PillarHeader({
           {(subtitulo || icon) && (
             <div className="mt-6 md:mt-8 flex items-center gap-4">
               {icon && (
-                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-cream-warm border border-[var(--color-border)] flex items-center justify-center text-terracotta shrink-0">
+                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-white border border-[var(--color-border)] flex items-center justify-center text-terracotta shrink-0">
                   {icon}
                 </div>
               )}
