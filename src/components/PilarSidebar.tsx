@@ -94,7 +94,7 @@ const PILARES: Record<number, PilarDef> = {
           { label: "Tella", to: "/metodo/pilar-1/aprenda-ia/tella" },
         ],
       },
-      { num: 3, label: "Detetive do Tempo", to: "/metodo/pilar-1/detetive-do-tempo", icon: Clock },
+      { num: 3, label: "Mapa do Tempo", to: "/metodo/pilar-1/detetive-do-tempo", icon: Clock },
       { num: 4, label: "Relatório do tempo", to: "/metodo/pilar-1/detetive-do-tempo/relatorio", icon: FileText },
       { num: 5, label: "Revise e celebre", to: "/metodo/pilar-1/conclusao", icon: Trophy },
     ],
@@ -105,7 +105,7 @@ const PILARES: Record<number, PilarDef> = {
     enabled: true,
     items: [
       { num: 1, label: "Pesquisa de Mercado", to: "/metodo/pilar-2/pesquisa-mercado", icon: Search },
-      { num: 2, label: "Esboço do Método", to: "/metodo/pilar-2/metodo", icon: Compass },
+      { num: 2, label: "O Teu Método", to: "/metodo/pilar-2/metodo", icon: Compass },
       {
         num: 3,
         label: "Identidade de Marca",
@@ -140,7 +140,23 @@ const PILARES: Record<number, PilarDef> = {
     ],
   },
   3: { pilar: 3, title: "Criar Soluções", enabled: false, items: [] },
-  4: { pilar: 4, title: "Aprender a Vender", enabled: false, items: [] },
+  4: {
+    pilar: 4,
+    title: "Aprender a Vender",
+    enabled: true,
+    items: [
+      { num: 1, label: "Escolha seu Caminho", to: "/metodo/pilar-4", icon: Compass },
+      { num: 2, label: "Fundação da Venda", to: "/metodo/pilar-4/fundacao", icon: CircleDot },
+      { num: 3, label: "Alto Ticket", to: "/metodo/pilar-4/alto-ticket", icon: Zap },
+      { num: 4, label: "Lançamentos", to: "/metodo/pilar-4/lancamentos", icon: Sparkles },
+      { num: 5, label: "Low Ticket", to: "/metodo/pilar-4/low-ticket", icon: CircleDot, enBreve: true },
+      { num: 6, label: "Eventos Presenciais", to: "/metodo/pilar-4/eventos-presenciais", icon: CalendarDays },
+      { num: 7, label: "Copy de Venda", to: "/metodo/pilar-4/copy", icon: FileText },
+      { num: 8, label: "Tráfego Pago", to: "/metodo/pilar-4/trafego-pago", icon: Zap, enBreve: true },
+      { num: 9, label: "Revise e celebre", to: "/metodo/pilar-4/conclusao", icon: Trophy },
+      { num: 10, label: "Palestras de IA (Bônus)", to: "/metodo/pilar-4", icon: Mic },
+    ],
+  },
 };
 
 const PILAR_SHORT: Record<number, string> = {
@@ -150,7 +166,7 @@ const PILAR_SHORT: Record<number, string> = {
   4: "Aprender a Vender",
 };
 
-function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2; onNavigate?: () => void }) {
+function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2 | 3 | 4; onNavigate?: () => void }) {
   const def = PILARES[pilar];
   const location = useLocation();
   const pathname = location.pathname;
@@ -329,14 +345,14 @@ function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2; onNavigate?: () => v
           onClick={onNavigate}
           className="mt-4 inline-flex items-center gap-2 text-[12px] text-ink/60 hover:text-ink transition-colors"
         >
-          <ArrowLeft size={13} /> Voltar para Trilha
+          <ArrowLeft size={13} /> Voltar para Jornada
         </Link>
       </div>
     </div>
   );
 }
 
-export default function PilarSidebar({ pilar }: { pilar: 1 | 2 }) {
+export default function PilarSidebar({ pilar }: { pilar: 1 | 2 | 3 | 4 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (

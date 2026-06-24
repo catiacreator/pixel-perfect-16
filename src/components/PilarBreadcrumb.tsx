@@ -7,7 +7,7 @@ export default function PilarBreadcrumb({
   backTo,
   backLabel,
 }: {
-  pilar: 1 | 2;
+  pilar: 1 | 2 | 3 | 4;
   pilarLabel: string;
   backTo: string;
   backLabel: string;
@@ -26,10 +26,10 @@ export default function PilarBreadcrumb({
           <span className="text-ink/45 font-medium hidden sm:inline">
             Ir para pilar
           </span>
-          <div className="inline-flex items-center gap-1 bg-cream-warm border border-[var(--color-border)] rounded-full p-1">
+          <div className="inline-flex items-center gap-1 bg-white border border-[var(--color-border)] rounded-full p-1">
             {[1, 2, 3, 4].map((n) => {
               const active = pilar === n;
-              const enabled = n === 1 || n === 2;
+              const enabled = n === 1 || n === 2 || n === 4;
               const base =
                 "w-7 h-7 rounded-full flex items-center justify-center text-[12px] tracking-normal font-medium transition-colors";
               if (active) {
