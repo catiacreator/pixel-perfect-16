@@ -57,7 +57,7 @@ export default function TomDeVoz() {
         backTo="/metodo/pilar-2/identidade"
         backLabel="Voltar para Identidade de Marca"
       />
-      <div className="px-5 md:px-10 py-10 max-w-2xl mx-auto">
+      <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
         <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">
           Etapa 3.2 · Tom de Voz
         </p>

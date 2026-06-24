@@ -23,6 +23,13 @@ import {
   CircleDot,
   Zap,
   FileText,
+  LayoutGrid,
+  AlignLeft,
+  CalendarDays,
+  UserCircle2,
+  FolderOpen,
+  CalendarClock,
+  Instagram,
   type LucideIcon,
 } from "lucide-react";
 
@@ -34,6 +41,16 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   NotebookLM: Book,
   Lovable: Heart,
   Tella: Video,
+  "Modelos de Posts": LayoutGrid,
+  "Linha Editorial": AlignLeft,
+  "Calendário Editorial": CalendarDays,
+  "Bio": UserCircle2,
+  "Projeto de Postagens": FolderOpen,
+  "Como agendar": CalendarClock,
+  "Instagram": Instagram,
+  "↳ Carrossel": LayoutGrid,
+  "↳ Stories": CircleDot,
+  "↳ Reels": Video,
 };
 
 type SubItem = { label: string; to: string };
@@ -100,7 +117,24 @@ const PILARES: Record<number, PilarDef> = {
           { label: "Consultoria de Imagem", to: "/metodo/pilar-2/consultoria-imagem" },
         ],
       },
-      { num: 4, label: "Redes Sociais", to: "/metodo/pilar-2/redes-sociais", icon: MessageSquare },
+      {
+        num: 4,
+        label: "Redes Sociais",
+        to: "/metodo/pilar-2/redes-sociais",
+        icon: MessageSquare,
+        children: [
+          { label: "Modelos de Posts", to: "/metodo/pilar-2/redes-sociais?aba=modelos" },
+          { label: "Linha Editorial", to: "/metodo/pilar-2/redes-sociais?aba=linha" },
+          { label: "Calendário Editorial", to: "/metodo/pilar-2/redes-sociais?aba=calendario" },
+          { label: "Bio", to: "/metodo/pilar-2/redes-sociais?aba=bio" },
+          { label: "Projeto de Postagens", to: "/metodo/pilar-2/redes-sociais?aba=projeto" },
+          { label: "Como agendar", to: "/metodo/pilar-2/redes-sociais?aba=agendar" },
+          { label: "Instagram", to: "/metodo/pilar-2/redes-sociais/instagram" },
+          { label: "↳ Carrossel", to: "/metodo/pilar-2/redes-sociais/instagram/carrossel" },
+          { label: "↳ Stories", to: "/metodo/pilar-2/redes-sociais/instagram/stories" },
+          { label: "↳ Reels", to: "/metodo/pilar-2/redes-sociais/instagram/reels" },
+        ],
+      },
       { num: 5, label: "Vídeos", to: "/metodo/pilar-2/videos", icon: Video },
       { num: 6, label: "Conclusão Pilar 2", to: "/metodo/pilar-2/conclusao", icon: Trophy },
     ],
@@ -120,8 +154,22 @@ function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2; onNavigate?: () => v
   const def = PILARES[pilar];
   const location = useLocation();
   const pathname = location.pathname;
+  // location.search can be an object in TanStack Router
+  const searchStr = typeof location.search === "string"
+    ? location.search
+    : Object.keys(location.search as Record<string,string>).length > 0
+      ? "?" + new URLSearchParams(location.search as Record<string,string>).toString()
+      : "";
 
-  const isActive = (to: string) => pathname === to || pathname.startsWith(to + "/");
+  const isActive = (to: string) => {
+    const [toPath, toQuery] = to.split("?");
+    if (toQuery) {
+      const currentAba = new URLSearchParams(searchStr.replace(/^\?/, "")).get("aba");
+      const targetAba = new URLSearchParams(toQuery).get("aba");
+      return pathname === toPath && currentAba === targetAba;
+    }
+    return pathname === toPath || pathname.startsWith(toPath + "/");
+  };
   const activeParent = def.items.find(
     (i) => i.children && (isActive(i.to) || i.children.some((c) => isActive(c.to))),
   );

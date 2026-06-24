@@ -121,7 +121,7 @@ export default function AulaPage() {
   if (!tool || !aula) {
     return (
       <Layout>
-        <div className="px-5 md:px-10 py-16 max-w-3xl mx-auto text-center">
+        <div className="px-5 md:px-10 py-16 max-w-4xl mx-auto text-center">
           <h1 className="font-display text-3xl text-ink mb-3">Aula não encontrada</h1>
           <Link
             to="/metodo/pilar-1/aprenda-ia"

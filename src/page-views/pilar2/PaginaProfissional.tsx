@@ -9,7 +9,7 @@ export default function PaginaProfissional() {
   return (
     <Layout>
       <PilarBreadcrumb pilar={2} pilarLabel="Criar Autoridade" backTo="/metodo/pilar-2/redes-sociais/instagram" backLabel="Voltar para Instagram" />
-      <div className="px-5 md:px-10 py-10 max-w-2xl mx-auto">
+      <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
         <h1 className="font-serif text-3xl text-ink mb-2">Página Profissional</h1>
         <p className="italic text-muted mb-6">
           Transforme tudo o que preencheste até aqui numa página que apresenta o teu trabalho.

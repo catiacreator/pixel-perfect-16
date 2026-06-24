@@ -465,11 +465,6 @@ export default function DocMestre() {
             value={doc.tempoAtuacao}
             onChange={(v) => set("tempoAtuacao", v)}
           />
-          <Field
-            label="Localização (cidade / estado)"
-            value={doc.localizacao}
-            onChange={(v) => set("localizacao", v)}
-          />
         </section>
 
         {/* SECÇÃO ROTINA */}

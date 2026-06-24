@@ -211,4 +211,28 @@
   to { transform: translateX(-33.3333%); }
 }
 
+/* Inputs: fundo cream, borda terracotta */
+input,
+textarea,
+select {
+  background-color: var(--color-cream) !important;
+  border-color: var(--color-terracotta) !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-terracotta) !important;
+  box-shadow: 0 0 0 3px rgb(195 102 54 / 0.12);
+}
+
+/* Sombra subtil em todos os cards */
+.rounded-2xl.border {
+  box-shadow: 0 1px 4px 0 rgb(45 42 38 / 0.06), 0 0 0 0 transparent;
+}
+.rounded-xl.border {
+  box-shadow: 0 1px 3px 0 rgb(45 42 38 / 0.05);
+}
+
 

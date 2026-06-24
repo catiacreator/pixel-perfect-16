@@ -34,6 +34,8 @@ export type Pilar2State = {
   pares: ParDorVitoria[]; // até 5
   nomeMetodo: string;
   promessa: string;
+  pilares: string;
+  posicionamento: string;
   metodoChat: { role: "user" | "assistant"; content: string }[];
 
   // Etapa 3.1 — Arquétipos
@@ -89,6 +91,8 @@ export const EMPTY_PILAR2: Pilar2State = {
   ],
   nomeMetodo: "",
   promessa: "",
+  pilares: "",
+  posicionamento: "",
   metodoChat: [],
 
   arquetipoDominante: "",

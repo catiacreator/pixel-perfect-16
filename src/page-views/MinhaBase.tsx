@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import {
@@ -25,7 +25,214 @@ import {
   Lock,
   Rocket,
   Flame,
+  X,
+  Pencil,
+  Trash2,
 } from "lucide-react";
+
+const CALENDAR_STORAGE_KEY = "leveza.calendario.v1";
+
+type DayEntry = {
+  formato: string;
+  tema: string;
+  stories: string;
+  observacoes: string;
+};
+
+function loadCalendar(): Record<string, DayEntry> {
+  try { return JSON.parse(localStorage.getItem(CALENDAR_STORAGE_KEY) || "{}"); } catch { return {}; }
+}
+
+function saveCalendar(data: Record<string, DayEntry>) {
+  localStorage.setItem(CALENDAR_STORAGE_KEY, JSON.stringify(data));
+}
+
+function DayModal({ date, onClose, onCalendarChange }: { date: Date; onClose: () => void; onCalendarChange: () => void }) {
+  const key = date.toISOString().slice(0, 10);
+  const [all, setAll] = useState<Record<string, DayEntry>>(loadCalendar);
+  const existing = all[key];
+  const hasContent = existing && Object.values(existing).some(v => v.trim() !== "");
+
+  // Start in view mode if there's already saved content, edit mode otherwise
+  const [mode, setMode] = useState<"edit" | "view">(hasContent ? "view" : "edit");
+  const [draft, setDraft] = useState<DayEntry>(existing ?? { formato: "", tema: "", stories: "", observacoes: "" });
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const label = date.toLocaleDateString("pt-BR", { day: "numeric", month: "long" });
+
+  function handleSave() {
+    const isEmpty = Object.values(draft).every(v => v.trim() === "");
+    const next = { ...all };
+    if (isEmpty) {
+      delete next[key];
+    } else {
+      next[key] = draft;
+    }
+    saveCalendar(next);
+    setAll(next);
+    onCalendarChange();
+    if (!isEmpty) setMode("view");
+    else onClose();
+  }
+
+  function handleDelete() {
+    const next = { ...all };
+    delete next[key];
+    saveCalendar(next);
+    setAll(next);
+    onCalendarChange();
+    onClose();
+  }
+
+  function handleEdit() {
+    setDraft(all[key] ?? { formato: "", tema: "", stories: "", observacoes: "" });
+    setMode("edit");
+    setConfirmDelete(false);
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" onClick={onClose}>
+      <div className="absolute inset-0 bg-ink/30 backdrop-blur-sm" />
+      <div
+        className="relative w-full sm:max-w-lg bg-[#F5EFE6] rounded-t-3xl sm:rounded-2xl p-6 shadow-2xl max-h-[90vh] overflow-y-auto"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between mb-5">
+          <p className="font-serif text-lg text-ink capitalize">{label}</p>
+          <button onClick={onClose} className="w-8 h-8 rounded-full flex items-center justify-center hover:bg-ink/10 transition-colors">
+            <X size={16} className="text-ink/60" />
+          </button>
+        </div>
+
+        {/* VIEW MODE */}
+        {mode === "view" && existing && (
+          <div className="space-y-4">
+            {existing.formato && (
+              <div>
+                <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">Formato</p>
+                <p className="text-sm text-ink bg-white/60 rounded-xl px-4 py-2.5">{existing.formato}</p>
+              </div>
+            )}
+            {existing.tema && (
+              <div>
+                <p className="text-[10px] tracking-[0.2em] uppercase text-ink/50 font-semibold mb-1">Tema / Conteúdo do Post</p>
+                <p className="text-sm text-ink bg-white/60 rounded-xl px-4 py-2.5 whitespace-pre-wrap">{existing.tema}</p>
+              </div>
+            )}
+            {existing.stories && (
+              <div>
+                <p className="text-[10px] tracking-[0.2em] uppercase text-ink/50 font-semibold mb-1">Stories do Dia</p>
+                <p className="text-sm text-ink bg-white/60 rounded-xl px-4 py-2.5 whitespace-pre-wrap">{existing.stories}</p>
+              </div>
+            )}
+            {existing.observacoes && (
+              <div>
+                <p className="text-[10px] tracking-[0.2em] uppercase text-ink/50 font-semibold mb-1">Observações</p>
+                <p className="text-sm text-ink bg-white/60 rounded-xl px-4 py-2.5 whitespace-pre-wrap">{existing.observacoes}</p>
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="flex items-center justify-between pt-2">
+              {confirmDelete ? (
+                <div className="flex items-center gap-2">
+                  <p className="text-xs text-ink/60">Confirmar exclusão?</p>
+                  <button onClick={handleDelete} className="text-xs font-semibold px-3 py-1.5 rounded-full bg-red-500 text-white">Excluir</button>
+                  <button onClick={() => setConfirmDelete(false)} className="text-xs px-3 py-1.5 rounded-full border border-ink/20 text-ink/60">Cancelar</button>
+                </div>
+              ) : (
+                <button
+                  onClick={() => setConfirmDelete(true)}
+                  className="flex items-center gap-1.5 text-xs text-ink/40 hover:text-red-500 transition-colors"
+                >
+                  <Trash2 size={13} /> Excluir
+                </button>
+              )}
+              <button
+                onClick={handleEdit}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-ink text-cream text-sm font-medium hover:bg-ink/80 transition-colors"
+              >
+                <Pencil size={13} /> Editar
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* EDIT MODE */}
+        {mode === "edit" && (
+          <div className="space-y-4">
+            {/* FORMATO */}
+            <div>
+              <label className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold block mb-1.5">Formato</label>
+              <input
+                type="text"
+                value={draft.formato}
+                onChange={e => setDraft(d => ({ ...d, formato: e.target.value }))}
+                placeholder="Ex: Reels, Carrossel, Post Único..."
+                className="w-full rounded-xl border-2 border-terracotta/50 focus:border-terracotta bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-ink/30 outline-none transition-colors"
+              />
+            </div>
+
+            {/* TEMA */}
+            <div>
+              <label className="text-[10px] tracking-[0.2em] uppercase text-ink/50 font-semibold block mb-1.5">Tema / Conteúdo do Post</label>
+              <textarea
+                value={draft.tema}
+                onChange={e => setDraft(d => ({ ...d, tema: e.target.value }))}
+                placeholder="O que você vai postar? Qual o tema, gancho ou ideia principal..."
+                rows={4}
+                className="w-full rounded-xl border border-ink/15 focus:border-ink/40 bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-ink/30 outline-none transition-colors resize-none"
+              />
+            </div>
+
+            {/* STORIES */}
+            <div>
+              <label className="flex items-center gap-1.5 text-[10px] tracking-[0.2em] uppercase text-ink/50 font-semibold mb-1.5">
+                <span className="w-3 h-3 rounded bg-ink/20 inline-block" />
+                Stories do Dia
+              </label>
+              <textarea
+                value={draft.stories}
+                onChange={e => setDraft(d => ({ ...d, stories: e.target.value }))}
+                placeholder="O que você vai fazer nos stories? Bastidor, enquete, caixinha..."
+                rows={3}
+                className="w-full rounded-xl border border-ink/15 focus:border-ink/40 bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-ink/30 outline-none transition-colors resize-none"
+              />
+            </div>
+
+            {/* OBSERVAÇÕES */}
+            <div>
+              <label className="text-[10px] tracking-[0.2em] uppercase text-ink/50 font-semibold block mb-1.5">Observações</label>
+              <textarea
+                value={draft.observacoes}
+                onChange={e => setDraft(d => ({ ...d, observacoes: e.target.value }))}
+                placeholder="Notas, referências, lembretes..."
+                rows={3}
+                className="w-full rounded-xl border border-ink/15 focus:border-ink/40 bg-transparent px-4 py-2.5 text-sm text-ink placeholder:text-ink/30 outline-none transition-colors resize-none"
+              />
+            </div>
+
+            {/* Save / Cancel */}
+            <div className="flex items-center justify-between pt-1">
+              {hasContent && (
+                <button onClick={() => setMode("view")} className="text-sm text-ink/45 hover:text-ink transition-colors">
+                  Cancelar
+                </button>
+              )}
+              <button
+                onClick={handleSave}
+                className="ml-auto px-5 py-2.5 rounded-full bg-terracotta text-cream text-sm font-semibold hover:bg-terracotta-dark transition-colors"
+              >
+                Salvar
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 const STORAGE_KEY = "leveza.minha-base.v1";
 const DOC_KEY = "leveza.doc-mestre.v1";
@@ -159,6 +366,8 @@ export default function MinhaBase() {
   const [state, setState] = useState<BaseState>(EMPTY);
   const [nome, setNome] = useState("");
   const [mounted, setMounted] = useState(false);
+  const [selectedDay, setSelectedDay] = useState<Date | null>(null);
+  const [calVersion, setCalVersion] = useState(0);
 
   useEffect(() => {
     setState(loadState());
@@ -442,9 +651,6 @@ export default function MinhaBase() {
                   </button>
                 ))}
               </div>
-              <Link to="/metodo/pilar-2/redes-sociais" className="text-[12px] text-terracotta hover:underline">
-                Editar calendário →
-              </Link>
             </div>
 
             <div className="grid grid-cols-7 text-[10px] tracking-[0.2em] uppercase text-ink/50 mb-1">
@@ -456,17 +662,30 @@ export default function MinhaBase() {
               {calendarDays.map((d) => {
                 const isToday = d.toDateString() === hoje.toDateString();
                 const isOther = d.getMonth() !== hoje.getMonth();
+                const key = d.toISOString().slice(0, 10);
+                // calVersion ensures dots refresh after save/delete
+                const cal = calVersion >= 0 ? loadCalendar() : {};
+                const entry = cal[key];
+                const hasContent = entry && Object.values(entry).some(v => v.trim() !== "");
                 return (
                   <div
                     key={d.toISOString()}
-                    className={`bg-white p-2 min-h-[72px] ${
+                    onClick={() => setSelectedDay(d)}
+                    className={`bg-white p-2 min-h-[72px] cursor-pointer hover:bg-cream-warm/60 transition-colors ${
                       isToday ? "ring-1 ring-terracotta ring-inset" : ""
-                    } ${isOther ? "bg-cream-warm/30" : ""}`}
+                    } ${isOther ? "opacity-40" : ""}`}
                   >
                     <p className={`text-[11px] font-semibold ${isToday ? "text-terracotta" : "text-ink/70"}`}>
                       {fmtDay(d)}
                     </p>
-                    <p className="text-[10px] text-ink/30 mt-1">·</p>
+                    {hasContent && (
+                      <div className="mt-1.5 space-y-0.5">
+                        {entry.formato && (
+                          <p className="text-[9px] leading-tight text-terracotta font-medium truncate">{entry.formato}</p>
+                        )}
+                        <span className="block w-1.5 h-1.5 rounded-full bg-terracotta" />
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -573,6 +792,14 @@ export default function MinhaBase() {
           )}
         </section>
       </div>
+
+      {selectedDay && (
+        <DayModal
+          date={selectedDay}
+          onClose={() => setSelectedDay(null)}
+          onCalendarChange={() => setCalVersion(v => v + 1)}
+        />
+      )}
     </Layout>
   );
 }
