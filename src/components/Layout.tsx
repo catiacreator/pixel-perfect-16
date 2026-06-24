@@ -3,13 +3,14 @@ import { useLocation, useRouter } from "@tanstack/react-router";
 import { FileText, Mail, Map, Bot, Database, Award, Users, Search, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, LogOut } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { initMasterDocSync, resetMasterDocSync } from "@/lib/master-doc-sync";
 
 const NAV = [
   { to: "/", label: "Início", icon: Map },
   { to: "/assistente", label: "Assistente IA", icon: Bot },
-  { to: "/minha-base", label: "Minha base", icon: Database },
+  { to: "/minha-base", label: "A Minha Base", icon: Database },
   { to: "/metodo/pilar-1/aprenda-ia/claude/instalar-skills", label: "Skills", icon: Award },
-  { to: "/conquistas", label: "Conquistas", icon: Trophy },
+  { to: "/conquistas", label: "Marcos", icon: Trophy },
   { to: "/profissionais", label: "Profissionais", icon: Users },
   { to: "/buscar", label: "Buscar", icon: Search },
 ];
@@ -28,6 +29,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       if (!active) return;
       setSignedIn(!!user);
       if (user) {
+        void initMasterDocSync();
         const { data } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
         if (active) setIsAdmin(!!data);
       } else {
@@ -52,6 +54,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   async function handleLogout() {
     await supabase.auth.signOut();
+    resetMasterDocSync();
     router.navigate({ to: "/auth" });
   }
 
@@ -142,7 +145,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         {/* Navegação mobile */}
         {open && (
-          <nav className="lg:hidden border-t border-[var(--color-border)] bg-cream-warm px-5 py-3 flex flex-col gap-1">
+          <nav className="lg:hidden border-t border-[var(--color-border)] bg-white px-5 py-3 flex flex-col gap-1">
             {NAV.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.to);
@@ -174,7 +177,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <p className="text-sm font-semibold text-ink">Leveza no Digital</p>
             </div>
             <p className="text-xs text-ink/50 mt-2 max-w-sm">
-              Transforme conhecimento em liberdade. Trilha guiada com Inteligência Artificial.
+              Transforme conhecimento em liberdade. Jornada guiada com Inteligência Artificial.
             </p>
           </div>
           <p className="text-[11px] tracking-wider uppercase text-ink/40 text-right">

@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { EMPTY_PILAR2, readPilar2, writePilar2, type Pilar2State } from "./pilar2-storage";
+import { HYDRATED_EVENT } from "./master-doc-sync";
 
 export function usePilar2() {
   const [state, setState] = useState<Pilar2State>(EMPTY_PILAR2);
@@ -11,9 +12,11 @@ export function usePilar2() {
     const onChange = () => setState(readPilar2());
     window.addEventListener("leveza:pilar2-changed", onChange);
     window.addEventListener("storage", onChange);
+    window.addEventListener(HYDRATED_EVENT, onChange);
     return () => {
       window.removeEventListener("leveza:pilar2-changed", onChange);
       window.removeEventListener("storage", onChange);
+      window.removeEventListener(HYDRATED_EVENT, onChange);
     };
   }, []);
 
