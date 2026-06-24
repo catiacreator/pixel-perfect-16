@@ -6,24 +6,24 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-cream: #F8F5F1;
-  --color-cream-warm: #FAF8F6;
-  --color-ink: #2D2A26;
-  --color-muted: #8C857E;
-  --color-terracotta: #C36636;
-  --color-terracotta-dark: #A24F26;
-  --color-gold: #C4A484;
-  --color-sage: #6D7A73;
+  --color-cream: #F5F2EC;
+  --color-cream-warm: #FBF7F0;
+  --color-ink: #2A1A10;
+  --color-muted: #8E7B64;
+  --color-terracotta: #7C3D29;
+  --color-terracotta-dark: #5C2A1A;
+  --color-gold: #C99A6A;
+  --color-sage: #6F8477;
   --color-navy: #3F4A5A;
   --color-forest: #14110F;
   --color-forest-soft: #221E1A;
-  --color-border: #EAE4DD;
-  --color-border-soft: #F1EEE9;
-  --color-success: #6D7A73;
-  --font-serif: "Archivo Black", "Inter Tight", system-ui, sans-serif;
-  --font-sans: "Inter Tight", "Inter", system-ui, sans-serif;
-  --font-mono: "Inter Tight", "Inter", system-ui, sans-serif;
-  --font-script: "Archivo Black", "Inter Tight", system-ui, sans-serif;
+  --color-border: #E7DBC9;
+  --color-border-soft: #F1E8DA;
+  --color-success: #6F8477;
+  --font-serif: "DM Serif Display", Georgia, serif;
+  --font-sans: "DM Sans", "Inter Tight", system-ui, sans-serif;
+  --font-mono: "DM Sans", "Inter Tight", system-ui, sans-serif;
+  --font-script: "DM Serif Display", Georgia, serif;
 }
 
 
@@ -157,21 +157,21 @@
 
 /* Restore custom brand palette tokens (override shadcn @theme inline above) */
 @theme {
-  --color-cream: #F8F5F1;
-  --color-cream-warm: #FAF8F6;
-  --color-ink: #2D2A26;
-  --color-ink-soft: #6B645E;
-  --color-muted: #8C857E;
-  --color-terracotta: #C36636;
-  --color-terracotta-dark: #A24F26;
-  --color-gold: #C4A484;
-  --color-sage: #6D7A73;
+  --color-cream: #F5F2EC;
+  --color-cream-warm: #FBF7F0;
+  --color-ink: #2A1A10;
+  --color-ink-soft: #6B5443;
+  --color-muted: #8E7B64;
+  --color-terracotta: #7C3D29;
+  --color-terracotta-dark: #5C2A1A;
+  --color-gold: #C99A6A;
+  --color-sage: #6F8477;
   --color-navy: #3F4A5A;
   --color-forest: #14110F;
   --color-forest-soft: #221E1A;
-  --color-border: #EAE4DD;
-  --color-border-soft: #F1EEE9;
-  --color-success: #6D7A73;
+  --color-border: #E7DBC9;
+  --color-border-soft: #F1E8DA;
+  --color-success: #6F8477;
 
   /* Modern dark palette (Arounda-inspired) */
   --color-coal: #0E0C0D;
@@ -183,9 +183,9 @@
   --color-ash: #BABABA;
   --color-mist: rgba(255, 255, 255, 0.08);
 
-  --font-display: "Inter Tight", "Inter", system-ui, sans-serif;
-  --font-editorial: "Archivo Black", "Inter Tight", system-ui, sans-serif;
-  --font-tool: "Archivo Black", "Inter Tight", system-ui, sans-serif;
+  --font-display: "DM Sans", "Inter Tight", system-ui, sans-serif;
+  --font-editorial: "DM Serif Display", Georgia, serif;
+  --font-tool: "DM Serif Display", Georgia, serif;
 }
 
 
@@ -202,6 +202,13 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+  }
+
+  /* Títulos em DM Serif Display — peso natural (elegante) */
+  h1, h2, h3 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    letter-spacing: -0.01em;
   }
 }
 
@@ -224,7 +231,7 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--color-terracotta) !important;
-  box-shadow: 0 0 0 3px rgb(195 102 54 / 0.12);
+  box-shadow: 0 0 0 3px rgb(124 61 41 / 0.16);
 }
 
 /* Sombra subtil em todos os cards */

@@ -25,11 +25,11 @@ export default function EtapaCard({
   numero?: string;
 }) {
   return (
-    <div className="group relative bg-cream rounded-2xl border border-[var(--color-border)] shadow-[0_1px_2px_rgba(60,40,20,0.04)] hover:shadow-[0_8px_24px_-12px_rgba(60,40,20,0.12)] hover:border-terracotta/30 transition-all px-6 md:px-8 py-6 md:py-7">
+    <div className="group relative bg-white rounded-2xl border border-[var(--color-border)] shadow-[0_1px_2px_rgba(60,40,20,0.04)] hover:shadow-[0_8px_24px_-12px_rgba(60,40,20,0.12)] hover:border-terracotta/30 transition-all px-6 md:px-8 py-6 md:py-7">
       <div className="grid grid-cols-[3.5rem_1fr_auto] md:grid-cols-[4rem_1fr_auto] items-start gap-5 md:gap-8">
         {/* Ícone */}
         <div className="pt-1">
-          <span className="inline-flex items-center justify-center w-11 h-11 md:w-12 md:h-12 rounded-xl bg-cream-warm border border-[var(--color-border)] text-terracotta">
+          <span className="inline-flex items-center justify-center w-11 h-11 md:w-12 md:h-12 rounded-xl bg-white border border-[var(--color-border)] text-terracotta">
             {icon}
           </span>
         </div>
@@ -79,7 +79,7 @@ export default function EtapaCard({
             <Link
               key={s.to}
               to={s.to}
-              className="text-[12px] px-4 py-2 rounded-full bg-cream-warm/60 border border-[var(--color-border)] text-ink/75 hover:bg-cream-warm hover:text-ink hover:border-terracotta/40 transition-colors"
+              className="text-[12px] px-4 py-2 rounded-full bg-cream-warm/60 border border-[var(--color-border)] text-ink/75 hover:bg-white hover:text-ink hover:border-terracotta/40 transition-colors"
             >
               {s.label}
             </Link>
