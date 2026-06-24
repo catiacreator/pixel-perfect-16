@@ -87,10 +87,45 @@ export default function MetodoChat({ open, onClose }: { open: boolean; onClose: 
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
+
+      // Método pronto: a IA devolve a estrutura final — grava no Pilar 2
+      // (alimenta o O Teu Método e a secção "Seu Método" do Doc Mestre).
+      if (data && data.type === "metodo" && data.data) {
+        const m = data.data;
+        const passos: any[] = Array.isArray(m.passos) ? m.passos : [];
+        const fechamento: string =
+          m.mensagem_fechamento ||
+          "Pronto! Montei o teu método. Podes revê-lo e editá-lo abaixo.";
+        const final: ChatMsg[] = [...novas, { role: "assistant", content: fechamento }];
+        update((prev) => ({
+          ...prev,
+          nomeMetodo: m.nome_metodo ?? prev.nomeMetodo,
+          promessa: m.promessa_final ?? prev.promessa,
+          pilares: passos.length
+            ? passos
+                .map((p) => `${p.nome ?? ""} — ${p.descricao || p.vitoria || ""}`.trim())
+                .join("\n")
+            : prev.pilares,
+          pares: passos.length
+            ? passos.map((p, i) => ({
+                dor: p.dor_base || prev.pares[i]?.dor || "",
+                intensidade: prev.pares[i]?.intensidade ?? "Alta",
+                vitoria: p.vitoria || "",
+              }))
+            : prev.pares,
+          metodoChat: final,
+        }));
+        setMessages(final);
+        return;
+      }
+
+      // Ainda a conversar (faz mais perguntas)
       const reply: string =
-        typeof data === "string"
-          ? data
-          : data.reply || data.message || data.content || JSON.stringify(data);
+        data && data.type === "mensagem"
+          ? data.content
+          : typeof data === "string"
+            ? data
+            : data.reply || data.message || data.content || JSON.stringify(data);
       const final: ChatMsg[] = [...novas, { role: "assistant", content: reply }];
       setMessages(final);
       update({ metodoChat: final });
@@ -164,8 +199,8 @@ export default function MetodoChat({ open, onClose }: { open: boolean; onClose: 
       </div>
 
       {/* Input */}
-      <div className="border-t border-[var(--color-border)] bg-white">
-        <div className="flex items-end gap-2 px-4 py-3">
+      <div className="border-t border-[var(--color-border)] bg-cream-warm/50 p-3">
+        <div className="flex items-end gap-2 rounded-2xl border-2 border-[var(--color-border)] bg-white px-3 py-2 shadow-sm transition-colors focus-within:border-terracotta focus-within:ring-2 focus-within:ring-terracotta/20">
           <textarea
             ref={inputRef}
             value={input}
@@ -176,11 +211,11 @@ export default function MetodoChat({ open, onClose }: { open: boolean; onClose: 
                 void enviar();
               }
             }}
-            placeholder="Escreva sua resposta... (Enter para enviar) ou use o microfone"
+            placeholder="Escreva sua resposta… (Enter para enviar) ou use o microfone"
             rows={1}
-            className="flex-1 resize-none outline-none text-sm text-ink placeholder:text-ink/35 bg-transparent py-1"
+            className="flex-1 resize-none outline-none text-sm text-ink placeholder:text-ink/55 bg-transparent py-1.5 max-h-32"
           />
-          <button className="w-9 h-9 rounded-full border border-[var(--color-border)] flex items-center justify-center text-ink/50 hover:text-ink transition-colors shrink-0">
+          <button className="w-9 h-9 rounded-full border border-[var(--color-border)] bg-white flex items-center justify-center text-ink/60 hover:text-ink hover:border-terracotta transition-colors shrink-0">
             <Mic size={15} />
           </button>
           <button
@@ -191,7 +226,7 @@ export default function MetodoChat({ open, onClose }: { open: boolean; onClose: 
             <Send size={14} />
           </button>
         </div>
-        <p className="text-[10px] text-ink/35 px-4 pb-2.5 flex items-center justify-between">
+        <p className="text-[10px] text-ink/50 px-1 pt-2 flex items-center justify-between">
           <span>Enter envia · Shift+Enter quebra linha</span>
           <button onClick={onClose} className="hover:text-ink transition-colors">Fechar</button>
         </p>

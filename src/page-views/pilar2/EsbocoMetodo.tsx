@@ -27,7 +27,7 @@ import type { ParDorVitoria } from "@/lib/pilar2-storage";
 const INTENSIDADES: Array<{ id: ParDorVitoria["intensidade"]; dot: string }> = [
   { id: "Alta", dot: "bg-rose-500" },
   { id: "Moderada", dot: "bg-amber-500" },
-  { id: "Baixa", dot: "bg-emerald-500" },
+  { id: "Baixa", dot: "bg-sage/100" },
 ];
 
 const AULA_TOOL = "pilar-2";
@@ -111,14 +111,16 @@ export default function EsbocoMetodo() {
     });
   };
 
-  const doresFallback = state.doresTop5;
+  const doc = typeof window !== "undefined" ? readDoc() : {};
+  const doresDoc: string[] = Array.isArray(doc.dores) ? doc.dores : [];
+  // Pré-preenche as dores a partir do Documento Mestre quando o Pilar 2 ainda não as tem
+  const doresFallback = state.doresTop5.filter(Boolean).length ? state.doresTop5 : doresDoc;
   const pares = state.pares.map((p, i) => ({
     ...p,
     dor: p.dor || doresFallback[i] || "",
   }));
   const vitoriasFeitas = pares.filter((p) => p.vitoria.trim().length > 0).length;
 
-  const doc = typeof window !== "undefined" ? readDoc() : {};
   const promptRefinar = buildRefinePrompt(doc, pares);
 
   function copiarPrompt() {
@@ -182,7 +184,7 @@ export default function EsbocoMetodo() {
             onClick={() => toggle(AULA_TOOL, AULA_ID)}
             className={`inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-medium border transition-colors ${
               concluida
-                ? "bg-emerald-50 text-emerald-700 border-emerald-300"
+                ? "bg-sage/10 text-sage border-sage/40"
                 : "bg-white text-ink border-border hover:border-terracotta"
             }`}
           >
@@ -215,8 +217,8 @@ export default function EsbocoMetodo() {
               </div>
             </div>
             <div className="flex flex-wrap gap-2 mb-4 ml-13">
-              {(state.doresTop5.filter(Boolean).length
-                ? state.doresTop5.filter(Boolean)
+              {(doresFallback.filter(Boolean).length
+                ? doresFallback.filter(Boolean)
                 : ["Eu não sei usar Inteligência Artificial…"]
               ).map((d, i) => (
                 <span
@@ -257,7 +259,7 @@ export default function EsbocoMetodo() {
                 : "bg-white border-border text-ink"
             }`}
           >
-            Ponto A → Vitória
+            Partida → Chegada
           </button>
           <button
             onClick={() => setTab("metodo")}
@@ -276,7 +278,7 @@ export default function EsbocoMetodo() {
             <div className="rounded-2xl border border-border bg-white p-5 md:p-6 mb-5">
               <div className="flex items-center gap-2 mb-2">
                 <Sparkles size={16} className="text-terracotta" />
-                <p className="font-serif text-lg text-ink">Revisão: Ponto A → Vitória</p>
+                <p className="font-serif text-lg text-ink">Revisão: Partida → Chegada</p>
               </div>
               <p className="text-sm text-ink/65 leading-relaxed">
                 Aqui ficam os pares preenchidos pela IA. Você pode <strong className="text-ink">editar</strong>{" "}
@@ -294,14 +296,14 @@ export default function EsbocoMetodo() {
                   key={i}
                   className="rounded-2xl border border-border bg-white overflow-hidden grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[var(--color-border)]"
                 >
-                  {/* Ponto A · Dor */}
+                  {/* Partida · Dor */}
                   <div className="p-5">
                     <div className="flex items-start gap-3 mb-3">
                       <span className="w-7 h-7 rounded-full bg-terracotta text-cream text-xs font-semibold flex items-center justify-center shrink-0">
                         {i + 1}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-[11px] tracking-[0.2em] uppercase text-terracotta">Ponto A · Dor</p>
+                        <p className="text-[11px] tracking-[0.2em] uppercase text-terracotta">Partida · Dor</p>
                         <p className="text-xs text-ink/55 mt-0.5">O que a pessoa sente hoje</p>
                       </div>
                       {/* Reorder buttons */}
@@ -326,7 +328,7 @@ export default function EsbocoMetodo() {
                       value={p.dor}
                       onChange={(e) => setPar(i, { dor: e.target.value })}
                       rows={3}
-                      className="w-full rounded-xl border border-border bg-cream-warm/30 p-3 text-sm font-serif italic outline-none focus:border-terracotta resize-none mb-4"
+                      className="w-full rounded-xl border border-border bg-cream-warm/30 p-3 text-sm font-sans text-ink/80 outline-none focus:border-terracotta resize-none mb-4"
                     />
                     <p className="text-[10px] tracking-[0.2em] uppercase text-ink/45 mb-2">
                       Intensidade da dor
@@ -352,9 +354,9 @@ export default function EsbocoMetodo() {
                     </div>
                   </div>
 
-                  {/* Ponto B · Vitória */}
+                  {/* Chegada · Vitória */}
                   <div className="p-5">
-                    <p className="text-[11px] tracking-[0.2em] uppercase text-emerald-700">Ponto B · Vitória</p>
+                    <p className="text-[11px] tracking-[0.2em] uppercase text-sage">Chegada · Vitória</p>
                     <p className="text-xs text-ink/55 mt-0.5 mb-3">O resultado concreto que ela conquista com você</p>
                     <textarea
                       value={p.vitoria}
@@ -457,7 +459,7 @@ export default function EsbocoMetodo() {
                   value={state.pilares}
                   onChange={(e) => update({ pilares: e.target.value })}
                   rows={5}
-                  placeholder={`Base Clara — a cliente otimiza o perfil, define o nicho e cria uma bio que converte.\nConteúdo com IA — a cliente transforma ideias em posts, Reels e carrosséis com prompts prontos.\nCalendário Simples — a cliente organiza uma semana de conteúdo com agilidade e previsibilidade.`}
+                  placeholder={`Alicerce — a cliente otimiza o perfil, define o nicho e cria uma bio que converte.\nCriação com IA — a cliente transforma ideias em posts, Reels e carrosséis com prompts prontos.\nRitmo Semanal — a cliente organiza uma semana de conteúdo com agilidade e previsibilidade.`}
                   className="w-full rounded-xl border border-border p-3 text-sm outline-none focus:border-terracotta resize-none"
                 />
               </div>

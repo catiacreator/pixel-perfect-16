@@ -3,13 +3,115 @@ import { Link, useSearchParams } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import VideoPlaceholder from "../../components/VideoPlaceholder";
-import PromptStep from "../../components/PromptStep";
 import ColarResultado from "../../components/ColarResultado";
 import TodoBanner from "../../components/TodoBanner";
-import { ArrowRight, Smartphone, Copy, Check, ChevronDown, ClipboardPaste } from "lucide-react";
+import { ArrowRight, Smartphone, Copy, Check, ChevronDown, ClipboardPaste, Play, FileText, Eye, EyeOff } from "lucide-react";
+import { usePilar2 } from "@/lib/pilar2-hooks";
 
 const BIO_STORAGE_KEY = "leveza.bio.v1";
 const BIO_CONQUISTA_KEY = "leveza.bio.conquista.v1";
+
+function readDoc(): Record<string, unknown> {
+  try {
+    return JSON.parse(window.localStorage.getItem("leveza.doc-mestre.v1") || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function asList(v: unknown): string[] {
+  return Array.isArray(v) ? v.filter((x) => typeof x === "string" && x.trim()) : [];
+}
+
+// Monta o prompt da linha editorial a partir do Documento Mestre + Método do
+// utilizador (não tem dados fixos — funciona para qualquer conta).
+function buildLinhaEditorialPrompt(
+  doc: Record<string, unknown>,
+  metodo: { nomeMetodo: string; promessa: string; pilares: string; posicionamento: string; tomDeVoz: string; cases: string },
+  formato: "reels" | "estatico" | null,
+): string {
+  const nome = (doc.nome as string) || "[o teu nome]";
+  const profissao = (doc.profissao as string) || "";
+  const publico = (doc.publico as string) || "[o teu público]";
+  const dores = asList(doc.dores);
+  const dorPrincipal = dores[0] || "[a tua dor principal]";
+  const tom = metodo.tomDeVoz || (doc.tomDeVoz as string) || "";
+  const cases = metodo.cases || "";
+  const posicionamento = metodo.posicionamento || "";
+  const nomeMetodo = metodo.nomeMetodo || "[o teu método]";
+  const promessa = metodo.promessa || "";
+
+  const pilaresList = (metodo.pilares || "")
+    .split("\n")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  const nPilares = pilaresList.length || 5;
+  const pilaresTexto = pilaresList.length
+    ? pilaresList.map((p, i) => `${i + 1}. ${p}`).join("\n")
+    : "[preenche os pilares do teu método no O Teu Método]";
+
+  const reels = formato === "reels";
+  const formatoLinha = reels
+    ? "APAREÇO em vídeo — podes incluir Reels na semana (máximo 2 por semana)."
+    : "NÃO apareço em vídeo — usa apenas Carrossel e Imagem única (sem Reels).";
+
+  return `Sou ${nome}${profissao ? `, ${profissao}` : ""}. Este é o meu Documento Mestre:
+
+Promessa: ${promessa || "[a tua promessa]"}
+Quem eu ajudo: ${publico}
+Dor principal a enfatizar: ${dorPrincipal}
+${cases ? `Cases / provas sociais: ${cases}\n` : ""}${posicionamento ? `Posicionamento: ${posicionamento}\n` : ""}${tom ? `Tom de voz: ${tom}\n` : ""}
+MEU MÉTODO
+Nome do método: ${nomeMetodo}
+${promessa ? `Promessa do método: ${promessa}\n` : ""}Pilares do método (definem o NÚMERO e os NOMES dos pilares de conteúdo):
+${pilaresTexto}
+
+Quero que montes a minha LINHA EDITORIAL de Instagram em 3 partes.
+
+═══════════════════════════════
+PARTE 1 — POSICIONAMENTO
+═══════════════════════════════
+Uma frase clara no formato: "Eu ajudo X a Y sem Z".
+
+═══════════════════════════════
+PARTE 2 — PILARES DE CONTEÚDO
+═══════════════════════════════
+REGRA OBRIGATÓRIA: os pilares de conteúdo são EXATAMENTE os ${nPilares} pilares do meu método acima — mesmo número, mesmos nomes. Não reduzas, não agrupes, não inventes.
+
+Para cada pilar, entrega:
+PILAR — [nome exato do pilar]
+O que ensina ao meu seguidor: [1 frase direta]
+Como aparece no conteúdo: [3 exemplos de posts no meu nicho e na minha voz]
+Tipo de conteúdo ideal: [quais dos 8 tipos abaixo funcionam melhor]
+
+Os 8 tipos de conteúdo (vocabulário oficial):
+- RADAR (topo/atrair) — novidade do nicho com o teu olhar
+- POSIÇÃO (topo/autoridade) — ponto de vista forte sobre o tema
+- CONVERSA (topo/engajar) — pergunta, enquete ou provocação leve
+- BASTIDOR (topo/engajar) — bastidores reais, mostrar como fazes ao vivo
+- REACENDE (topo/engajar) — story ou post que reativa seguidor parado
+- DIRECT (meio/relacionar) — DM genuíno (rotina diária, fora do calendário)
+- EMPURRÃO (fundo/vender) — confronto que gera urgência (máximo 1x por semana)
+- PROVA REAL (fundo/provar) — resultado real de cliente
+
+═══════════════════════════════
+PARTE 3 — CALENDÁRIO DA SEMANA (7 dias)
+═══════════════════════════════
+Distribui TODOS os ${nPilares} pilares ao longo da semana (rodízio) — nenhum pode ficar de fora.
+${formatoLinha}
+Regras: EMPURRÃO no máximo 1x; DIRECT não entra no calendário; equilibra o funil (4 topo / 1 meio / 2 fundo); story obrigatório todos os dias (ideia específica e concreta, ligada ao tema do post); usa a minha voz e o meu nicho; usa os cases reais que te dei.
+
+Devolve o calendário EXATAMENTE neste formato (não mudes os marcadores):
+[CALENDARIO_INICIO]
+Segunda | [tipo] tema do post — Pilar X | formato sugerido | story: o que mostrar
+Terça | [tipo] tema do post — Pilar Y | formato sugerido | story: o que mostrar
+Quarta | [tipo] tema do post — Pilar Z | formato sugerido | story: o que mostrar
+Quinta | [tipo] tema do post — Pilar W | formato sugerido | story: o que mostrar
+Sexta | [tipo] tema do post — Pilar V | formato sugerido | story: o que mostrar
+Sábado | [tipo] tema do post — Pilar U | formato sugerido | story: o que mostrar
+Domingo | [tipo] tema do post — Pilar T | formato sugerido | story: o que mostrar
+[CALENDARIO_FIM]`;
+}
 
 const PROMPT_BIO = `Você é especialista em copywriting para Instagram de profissionais autônomos.
 
@@ -197,6 +299,110 @@ function BioConquista() {
   );
 }
 
+function OpcaoFormato({
+  ativo,
+  onClick,
+  icon,
+  titulo,
+  desc,
+}: {
+  ativo: boolean;
+  onClick: () => void;
+  icon: React.ReactNode;
+  titulo: string;
+  desc: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`relative text-left rounded-2xl border p-4 flex items-start gap-3 transition-colors ${
+        ativo
+          ? "border-terracotta bg-terracotta/5"
+          : "border-[var(--color-border)] bg-white hover:border-terracotta/50"
+      }`}
+    >
+      <span className="w-10 h-10 rounded-xl bg-gold/25 text-terracotta-dark flex items-center justify-center shrink-0">
+        {icon}
+      </span>
+      <span className="min-w-0 pr-5">
+        <span className={`block text-sm font-semibold ${ativo ? "text-terracotta" : "text-ink"}`}>
+          {titulo}
+        </span>
+        <span className="block text-xs text-ink/55 mt-0.5 leading-relaxed">{desc}</span>
+      </span>
+      {ativo && (
+        <span className="absolute top-3.5 right-3.5 w-5 h-5 rounded-full bg-terracotta text-cream flex items-center justify-center">
+          <Check size={12} strokeWidth={3} />
+        </span>
+      )}
+    </button>
+  );
+}
+
+function LinhaEditorial({ formato }: { formato: "reels" | "estatico" | null }) {
+  const { state } = usePilar2();
+  const [copiado, setCopiado] = useState(false);
+  const [mostrar, setMostrar] = useState(false);
+  const [doc, setDoc] = useState<Record<string, unknown>>({});
+
+  useEffect(() => {
+    setDoc(readDoc());
+    const onChange = () => setDoc(readDoc());
+    window.addEventListener("leveza:hydrated", onChange);
+    return () => window.removeEventListener("leveza:hydrated", onChange);
+  }, []);
+
+  const prompt = buildLinhaEditorialPrompt(doc, state, formato);
+  const semMetodo = !state.pilares.trim();
+
+  function copiar() {
+    navigator.clipboard?.writeText(prompt);
+    setCopiado(true);
+    setTimeout(() => setCopiado(false), 1500);
+  }
+
+  return (
+    <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6 mb-4">
+      <p className="text-[10px] tracking-[0.2em] uppercase text-ink/45 mb-1">Prompt com o teu Doc Mestre</p>
+      <div className="flex items-start justify-between gap-4 mb-3">
+        <div>
+          <h3 className="font-serif text-xl text-ink">Crie sua linha editorial</h3>
+          <p className="text-sm text-ink/55 mt-1 leading-relaxed">
+            Copia este prompt, cola no ChatGPT (ou IA à tua escolha) e recebe a tua linha editorial já
+            personalizada com tudo o que preencheste no Documento Mestre e no Método.
+          </p>
+        </div>
+        <button
+          onClick={copiar}
+          className="shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl bg-terracotta text-cream text-sm font-medium hover:bg-terracotta-dark transition-colors"
+        >
+          {copiado ? <Check size={14} /> : <Copy size={14} />}
+          {copiado ? "Copiado!" : "Copiar"}
+        </button>
+      </div>
+
+      {semMetodo && (
+        <p className="text-xs text-terracotta mb-3">
+          ⚠️ Preenche o teu Método (nome, promessa e pilares) no O Teu Método para o prompt ficar completo.
+        </p>
+      )}
+
+      <button
+        onClick={() => setMostrar((v) => !v)}
+        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl border border-[var(--color-border)] text-sm font-medium text-ink hover:border-terracotta transition-colors"
+      >
+        {mostrar ? <EyeOff size={15} /> : <Eye size={15} />}
+        {mostrar ? "Ocultar prompt" : "Mostrar prompt"}
+      </button>
+      {mostrar && (
+        <pre className="mt-3 text-xs bg-[#F5EFE6] rounded-xl p-4 whitespace-pre-wrap text-ink/60 leading-relaxed max-h-[28rem] overflow-auto">
+          {prompt}
+        </pre>
+      )}
+    </div>
+  );
+}
+
 const TABS = [
   { id: "modelos", label: "Modelos de Posts" },
   { id: "linha", label: "Linha Editorial" },
@@ -226,7 +432,7 @@ export default function RedesSociais() {
             <button
               key={t.id}
               onClick={() => setParams({ aba: t.id })}
-              className={`text-sm px-4 py-1.5 rounded-full border ${aba === t.id ? "bg-ink text-cream border-ink" : "border-border text-ink"}`}
+              className={`text-sm px-4 py-1.5 rounded-full border transition-colors ${aba === t.id ? "bg-gradient-to-br from-terracotta to-terracotta-dark text-cream border-transparent" : "bg-white border-border text-ink hover:border-terracotta/50"}`}
             >
               {t.label}
             </button>
@@ -244,20 +450,37 @@ export default function RedesSociais() {
 
         {aba === "linha" && (
           <>
-            <p className="text-xs tracking-[0.15em] uppercase text-muted mb-2">Passo 1 — Antes de gerar</p>
-            <h2 className="font-serif text-xl text-ink mb-3">Você vai aparecer em vídeo?</h2>
-            <div className="grid grid-cols-2 gap-3 mb-6">
-              <button onClick={() => setFormato("reels")} className={`rounded-xl border p-4 text-left ${formato === "reels" ? "border-terracotta" : "border-border"}`}>
-                <p className="text-sm font-semibold text-ink mb-1">Apareço em Reels</p>
-                <p className="text-xs text-muted">Gravo vídeo — quero Reels no calendário</p>
-              </button>
-              <button onClick={() => setFormato("estatico")} className={`rounded-xl border p-4 text-left ${formato === "estatico" ? "border-terracotta" : "border-border"}`}>
-                <p className="text-sm font-semibold text-ink mb-1">Prefiro posts estáticos</p>
-                <p className="text-xs text-muted">Carrossel e imagem única — sem precisar aparecer</p>
-              </button>
+            {/* Passo 1 — escolha de formato */}
+            <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6 mb-4">
+              <p className="text-[11px] tracking-[0.2em] uppercase text-ink/45 mb-1">Passo 1 — Antes de gerar</p>
+              <h2 className="font-serif text-xl text-ink mb-1.5">Você vai aparecer em vídeo?</h2>
+              <p className="text-sm text-ink/55 mb-5">
+                Isto define se o teu calendário vai incluir Reels ou só posts estáticos (carrossel e imagem única).
+              </p>
+              <div className="grid md:grid-cols-2 gap-3">
+                <OpcaoFormato
+                  ativo={formato === "reels"}
+                  onClick={() => setFormato("reels")}
+                  icon={<Play size={18} />}
+                  titulo="Apareço em Reels"
+                  desc="Gravo vídeo — quero Reels no calendário"
+                />
+                <OpcaoFormato
+                  ativo={formato === "estatico"}
+                  onClick={() => setFormato("estatico")}
+                  icon={<FileText size={18} />}
+                  titulo="Prefiro posts estáticos"
+                  desc="Carrossel e imagem única — sem precisar aparecer"
+                />
+              </div>
+              {!formato && (
+                <p className="text-xs text-terracotta mt-4">
+                  ⚠️ Escolhe um formato para o prompt ser gerado corretamente.
+                </p>
+              )}
             </div>
-            {!formato && <p className="text-xs text-terracotta mb-4">⚠️ Escolha um formato para o prompt ser gerado corretamente.</p>}
-            <PromptStep numero={6} titulo="Crie sua linha editorial" descricao="Prompt personalizado com o teu Documento Mestre." prompt="Com base no meu Documento Mestre e na minha escolha de formato (Reels ou posts estáticos), cria a minha linha editorial: 5 a 7 categorias de conteúdo recorrentes, cada uma com objetivo e exemplos de tema." />
+
+            <LinhaEditorial formato={formato} />
             <ColarResultado label="Cole o que a IA te devolveu" />
           </>
         )}

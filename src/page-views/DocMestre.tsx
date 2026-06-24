@@ -9,7 +9,11 @@ import {
   ArrowRight,
   ArrowUp,
   ArrowDown,
-  Printer,
+  ArrowLeft,
+  Eye,
+  Save,
+  FileText,
+  GripVertical,
   RotateCcw,
   Copy,
   Check,
@@ -18,8 +22,11 @@ import {
   Play,
 } from "lucide-react";
 import { Link } from "@/lib/router-compat";
+import { useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { extractDocMestre } from "@/lib/doc-mestre.functions";
+import { usePilar2 } from "@/lib/pilar2-hooks";
+import { HYDRATED_EVENT } from "@/lib/master-doc-sync";
 
 // ------------------------------------------------------------------
 // Tipos + estado
@@ -63,6 +70,23 @@ const EMPTY: DocState = {
 
 const STORAGE_KEY = "leveza.doc-mestre.v1";
 
+// Sugestões mostradas como placeholder em cada caixa (uma por posição)
+const DORES_PLACEHOLDER = [
+  "Eu não sei usar Inteligência Artificial para criar conteúdo.",
+  "Eu não sei o básico do Instagram para começar.",
+  "Eu não sei por onde começar meu calendário de posts.",
+  "Eu travo na hora de transformar ideias em conteúdo.",
+  "Eu não consigo ganhar seguidores no Instagram.",
+];
+
+const DESEJOS_PLACEHOLDER = [
+  "Quero dominar ferramentas de Inteligência Artificial de forma simples.",
+  "Quero crescer seguidores qualificados de forma consistente.",
+  "Quero gerar leads a partir do meu conteúdo.",
+  "Quero ter um fluxo de criação rápido e sustentável.",
+  "Quero vender mais com conteúdo que posiciona minha marca.",
+];
+
 function loadInitial(): DocState {
   if (typeof window === "undefined") return EMPTY;
   try {
@@ -72,8 +96,8 @@ function loadInitial(): DocState {
     return {
       ...EMPTY,
       ...parsed,
-      dores: padArray(parsed.dores ?? [], 5),
-      desejos: padArray(parsed.desejos ?? [], 5),
+      dores: padArray((parsed.dores ?? []).slice(0, 5), 5),
+      desejos: padArray((parsed.desejos ?? []).slice(0, 5), 5),
       produtos: Array.isArray(parsed.produtos) ? parsed.produtos : [],
     };
   } catch {
@@ -155,64 +179,91 @@ function Field({
 
 function SortableList({
   titulo,
-  ajuda,
+  subtitulo,
+  dragHint,
   itens,
+  placeholders,
   onChange,
 }: {
   titulo: string;
-  ajuda: string;
+  subtitulo: React.ReactNode;
+  dragHint: string;
   itens: string[];
+  placeholders: string[];
   onChange: (n: string[]) => void;
 }) {
-  const move = (i: number, dir: -1 | 1) => {
-    const j = i + dir;
-    if (j < 0 || j >= itens.length) return;
-    const next = [...itens];
-    [next[i], next[j]] = [next[j], next[i]];
-    onChange(next);
-  };
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [overIndex, setOverIndex] = useState<number | null>(null);
+
   const set = (i: number, v: string) => {
     const next = [...itens];
     next[i] = v;
     onChange(next);
   };
-  const remove = (i: number) => onChange(itens.filter((_, idx) => idx !== i));
-  const add = () => onChange([...itens, ""]);
+
+  const drop = (target: number) => {
+    if (dragIndex === null || dragIndex === target) {
+      setDragIndex(null);
+      setOverIndex(null);
+      return;
+    }
+    const next = [...itens];
+    const [moved] = next.splice(dragIndex, 1);
+    next.splice(target, 0, moved);
+    onChange(next);
+    setDragIndex(null);
+    setOverIndex(null);
+  };
 
   return (
-    <div className="mb-4">
+    <div className="mb-5">
       <label className="text-xs tracking-[0.1em] uppercase text-muted mb-1 block">{titulo}</label>
-      <p className="text-xs text-muted mb-2">{ajuda}</p>
-      <div className="space-y-2">
+      <p className="text-xs text-muted mb-1">{subtitulo}</p>
+      <p className="text-xs text-muted/80 mb-3 inline-flex items-center gap-1.5">
+        Arraste pelo
+        <GripVertical size={13} className="text-muted/60" />
+        {dragHint}
+      </p>
+      <div className="space-y-3">
         {itens.map((it, i) => (
-          <div key={i} className="flex items-start gap-1.5">
-            <div className="flex flex-col items-center pt-2 w-5">
-              <span className="text-[10px] font-semibold text-muted">{i + 1}</span>
+          <div
+            key={i}
+            onDragOver={(e) => {
+              e.preventDefault();
+              if (overIndex !== i) setOverIndex(i);
+            }}
+            onDrop={() => drop(i)}
+            className={`flex items-stretch gap-3 rounded-xl transition-colors ${
+              overIndex === i && dragIndex !== null && dragIndex !== i
+                ? "ring-2 ring-terracotta/40"
+                : ""
+            } ${dragIndex === i ? "opacity-40" : ""}`}
+          >
+            <div
+              draggable
+              onDragStart={() => setDragIndex(i)}
+              onDragEnd={() => {
+                setDragIndex(null);
+                setOverIndex(null);
+              }}
+              className="flex items-center gap-2 cursor-grab active:cursor-grabbing select-none px-1"
+              aria-label="Arraste para reordenar"
+            >
+              <GripVertical size={16} className="text-muted/50" />
+              <span className="w-7 h-7 shrink-0 rounded-full bg-gold/25 text-ink/70 text-xs font-semibold flex items-center justify-center">
+                {i + 1}
+              </span>
             </div>
             <textarea
               value={it}
               onChange={(e) => set(i, e.target.value)}
-              rows={1}
-              className="flex-1 rounded-xl border border-border bg-white p-2.5 text-sm outline-none focus:border-terracotta resize-none"
+              placeholder={placeholders[i] ?? ""}
+              rows={2}
+              className="flex-1 rounded-xl border border-border bg-white p-3 text-sm outline-none focus:border-terracotta resize-none shadow-[0_1px_2px_rgba(45,42,38,0.04)] placeholder:text-muted/50"
             />
-            <button
-              type="button"
-              onClick={() => remove(i)}
-              className="mt-2 text-muted hover:text-terracotta"
-              aria-label="Remover"
-            >
-              <X size={14} />
-            </button>
           </div>
         ))}
       </div>
-      <button
-        type="button"
-        onClick={add}
-        className="mt-2 text-xs flex items-center gap-1 text-terracotta font-semibold"
-      >
-        <Plus size={13} /> Adicionar
-      </button>
     </div>
   );
 }
@@ -284,9 +335,19 @@ TOM DE COMUNICAÇÃO:`;
 // ------------------------------------------------------------------
 
 export default function DocMestre() {
+  const router = useRouter();
+  const { state: metodo } = usePilar2();
   const [doc, setDoc] = useState<DocState>(() => loadInitial());
   const [savedAt, setSavedAt] = useState<string>("");
   const firstSave = useRef(true);
+
+  const handleBack = () => {
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      router.history.back();
+    } else {
+      router.navigate({ to: "/metodo/pilar-1" });
+    }
+  };
 
   // autosave
   useEffect(() => {
@@ -304,6 +365,16 @@ export default function DocMestre() {
     }, 400);
     return () => clearTimeout(t);
   }, [doc]);
+
+  // Recarrega quando o estado é hidratado do Supabase (login / outro dispositivo)
+  useEffect(() => {
+    const onHydrated = () => {
+      firstSave.current = true; // não re-grava logo após hidratar
+      setDoc(loadInitial());
+    };
+    window.addEventListener(HYDRATED_EVENT, onHydrated);
+    return () => window.removeEventListener(HYDRATED_EVENT, onHydrated);
+  }, []);
 
   const set = <K extends keyof DocState>(k: K, v: DocState[K]) =>
     setDoc((p) => ({ ...p, [k]: v }));
@@ -368,6 +439,19 @@ export default function DocMestre() {
   const [refineResult, setRefineResult] = useState("");
   const prompt = useMemo(() => buildRefinePrompt(doc), [doc]);
 
+  // Secção 4 — dados do método (vêm do O Teu Método, Pilar 2).
+  // As dores herdam do Documento Mestre quando o par ainda não foi editado.
+  const paresMetodo = metodo.pares
+    .map((par, i) => ({ ...par, dor: par.dor || doc.dores[i] || "" }))
+    .filter((par) => par.dor.trim() || par.vitoria.trim());
+  const metodoPreenchido = !!(
+    metodo.nomeMetodo ||
+    metodo.promessa ||
+    metodo.pilares ||
+    metodo.posicionamento ||
+    paresMetodo.some((par) => par.vitoria.trim())
+  );
+
   const copyPrompt = async () => {
     try {
       await navigator.clipboard.writeText(prompt);
@@ -382,15 +466,57 @@ export default function DocMestre() {
     <Layout>
       <div className="px-5 md:px-10 py-10 max-w-5xl mx-auto print:max-w-none print:py-0">
         {/* Cabeçalho */}
-        <div className="print:hidden">
-          <p className="text-xs tracking-[0.2em] uppercase text-terracotta mb-2">Seu mapa pessoal</p>
-          <h1 className="font-serif text-3xl md:text-5xl text-ink mb-2 leading-tight">
-            Documento Mestre
-          </h1>
-          <p className="text-muted mb-6 max-w-xl">
-            Preenche o documento para teres clareza total do teu projecto. Cada secção alimenta os
-            prompts do site — quanto mais detalhe, melhor é a IA contigo.
-          </p>
+        <div className="print:hidden mb-6">
+          <button
+            onClick={handleBack}
+            className="inline-flex items-center gap-1.5 text-sm text-ink/60 hover:text-ink transition-colors mb-5"
+          >
+            <ArrowLeft size={16} /> Voltar
+          </button>
+
+          <div className="rounded-3xl border border-border bg-gradient-to-br from-cream-warm to-cream p-6 md:p-8">
+            <div className="flex flex-col lg:flex-row lg:items-start gap-6">
+              {/* Ícone */}
+              <div className="shrink-0 w-14 h-14 rounded-2xl border border-terracotta/30 bg-cream flex items-center justify-center text-terracotta">
+                <FileText size={24} strokeWidth={1.75} />
+              </div>
+
+              {/* Texto */}
+              <div className="flex-1 min-w-0">
+                <p className="text-xs tracking-[0.25em] uppercase text-terracotta mb-2">
+                  Seu mapa pessoal
+                </p>
+                <h1 className="font-serif text-3xl md:text-5xl text-ink leading-tight mb-3">
+                  Documento Mestre
+                </h1>
+                <p className="text-muted max-w-xl">
+                  Preenche o documento para aos poucos teres mais clareza do teu projecto. A cada
+                  passo vais compreendendo melhor como ter mais liberdade, tempo e lucro.
+                </p>
+              </div>
+
+              {/* Ações */}
+              <div className="flex flex-col items-stretch lg:items-end gap-2 shrink-0">
+                <div className="flex gap-2">
+                  <button
+                    onClick={resetAll}
+                    className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-2xl border border-border bg-white text-ink hover:border-terracotta transition-colors"
+                  >
+                    <RotateCcw size={15} /> Zerar tudo
+                  </button>
+                  <button
+                    onClick={printPDF}
+                    className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-2xl bg-gradient-to-br from-terracotta to-terracotta-dark text-cream hover:opacity-95 transition-opacity"
+                  >
+                    <Eye size={15} /> Visualizar PDF
+                  </button>
+                </div>
+                <span className="self-end inline-flex items-center gap-1.5 text-xs text-ink/60 px-3 py-1.5 rounded-full border border-border bg-white">
+                  <Save size={12} /> {savedAt ? `Salvo às ${savedAt}` : "Autosave activo"}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Vídeo */}
@@ -401,25 +527,6 @@ export default function DocMestre() {
             </div>
             <p className="text-sm opacity-80">Vídeo de explicação (3 min)</p>
           </div>
-        </div>
-
-        {/* Toolbar */}
-        <div className="print:hidden flex flex-wrap items-center gap-2 mb-4">
-          <span className="text-xs text-muted mr-auto">
-            {savedAt ? `Salvo às ${savedAt}` : "Autosave activo"}
-          </span>
-          <button
-            onClick={resetAll}
-            className="text-sm px-3 py-1.5 rounded-full border border-border bg-white flex items-center gap-1.5 hover:border-terracotta"
-          >
-            <RotateCcw size={13} /> Zerar tudo
-          </button>
-          <button
-            onClick={printPDF}
-            className="text-sm px-3 py-1.5 rounded-full border border-border bg-white flex items-center gap-1.5 hover:border-terracotta"
-          >
-            <Printer size={13} /> Visualizar PDF
-          </button>
         </div>
 
         {/* Import card */}
@@ -470,7 +577,7 @@ export default function DocMestre() {
         {/* SECÇÃO ROTINA */}
         <section className="rounded-2xl border border-border bg-white p-5 mb-5 print:border-0 print:p-0 print:mb-8">
           <h2 className="font-serif text-xl text-ink mb-4">Tua rotina e receita</h2>
-          <p className="text-xs text-muted mb-4">Usado pelo Detetive do Tempo e pelos prompts personalizados.</p>
+          <p className="text-xs text-muted mb-4">Usado pelo Mapa do Tempo e pelos prompts personalizados.</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             <Field label="Horas por dia" value={doc.horasDia} onChange={(v) => set("horasDia", v)} placeholder="ex: 8" />
             <Field label="Dias por semana" value={doc.diasSemana} onChange={(v) => set("diasSemana", v)} placeholder="ex: 5" />
@@ -561,33 +668,119 @@ export default function DocMestre() {
           />
           <SortableList
             titulo="Dores principais do teu público"
-            ajuda="Escreve as 5 dores — ordena por grau de urgência (1 = mais urgente)."
+            subtitulo={
+              <>
+                Escreve as <strong className="font-semibold text-ink/70">5 dores principais</strong> — uma em cada caixinha.
+              </>
+            }
+            dragHint="para reordenar por grau de urgência."
             itens={doc.dores}
+            placeholders={DORES_PLACEHOLDER}
             onChange={(v) => set("dores", v)}
           />
           <SortableList
             titulo="Desejos do teu público"
-            ajuda="Escreve os 5 desejos — ordena por grau de relevância."
+            subtitulo={
+              <>
+                Escreve os <strong className="font-semibold text-ink/70">5 desejos principais</strong> — um em cada caixinha.
+              </>
+            }
+            dragHint="para reordenar por grau de relevância."
             itens={doc.desejos}
+            placeholders={DESEJOS_PLACEHOLDER}
             onChange={(v) => set("desejos", v)}
           />
         </section>
 
-        {/* SECÇÃO 4 */}
-        <section className="rounded-2xl border border-dashed border-border bg-cream-warm/30 p-5 mb-8 print:border-0 print:p-0 print:mb-8">
-          <div className="flex items-center justify-between mb-2">
-            <h2 className="font-serif text-xl text-ink">4. O teu método</h2>
+        {/* SECÇÃO 4 — Seu Método (vem do O Teu Método, Pilar 2) */}
+        <section className="rounded-2xl border border-border bg-white p-5 md:p-6 mb-8 print:border-0 print:p-0 print:mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <span className="w-8 h-8 rounded-full bg-gold/25 text-ink/70 text-sm font-semibold flex items-center justify-center shrink-0">
+              4
+            </span>
+            <h2 className="font-serif text-xl text-ink">Seu Método</h2>
+          </div>
+
+          <div className="flex items-center justify-between gap-3 flex-wrap rounded-xl border border-border bg-cream-warm/50 px-4 py-3 mb-6 print:hidden">
+            <p className="text-sm text-muted">
+              Estes campos vêm do{" "}
+              <strong className="font-semibold text-ink/70">O Teu Método</strong> (Pilar 2). Para
+              editar, abra a página do método.
+            </p>
             <Link
               to="/metodo/pilar-2/metodo"
-              className="text-xs font-semibold text-terracotta flex items-center gap-1"
+              className="shrink-0 inline-flex items-center gap-1.5 text-sm font-medium px-4 py-2 rounded-full border border-border bg-white text-ink hover:border-terracotta transition-colors"
             >
-              Editar método <ArrowRight size={12} />
+              Editar método <ArrowRight size={14} />
             </Link>
           </div>
-          <p className="text-sm text-muted">
-            Estes campos vêm do Esboço do Método (Pilar 2). Preenche-o primeiro para os veres aqui:
-            nome do método, promessa, pilares, posicionamento e mapa Ponto A → Ponto B.
-          </p>
+
+          {metodoPreenchido ? (
+            <div className="space-y-5">
+              {metodo.nomeMetodo && (
+                <div>
+                  <p className="text-xs tracking-[0.1em] uppercase text-muted mb-1.5">Nome do método</p>
+                  <p className="font-serif text-lg text-ink">{metodo.nomeMetodo}</p>
+                </div>
+              )}
+              {metodo.promessa && (
+                <div>
+                  <p className="text-xs tracking-[0.1em] uppercase text-muted mb-1.5">Promessa</p>
+                  <p className="text-sm text-ink/80 whitespace-pre-wrap leading-relaxed">{metodo.promessa}</p>
+                </div>
+              )}
+              {metodo.pilares && (
+                <div>
+                  <p className="text-xs tracking-[0.1em] uppercase text-muted mb-1.5">Pilares</p>
+                  <p className="text-sm text-ink/80 whitespace-pre-wrap leading-relaxed">{metodo.pilares}</p>
+                </div>
+              )}
+              {metodo.posicionamento && (
+                <div className="rounded-xl border border-border bg-cream-warm/40 p-4">
+                  <p className="text-xs tracking-[0.1em] uppercase text-terracotta mb-1.5">
+                    Meu posicionamento
+                  </p>
+                  <p className="text-sm text-ink/80 whitespace-pre-wrap leading-relaxed">
+                    {metodo.posicionamento}
+                  </p>
+                </div>
+              )}
+              {paresMetodo.length > 0 && (
+                <div>
+                  <p className="text-xs tracking-[0.1em] uppercase text-muted mb-3">
+                    Partida → Chegada (vitória)
+                  </p>
+                  <div className="space-y-3">
+                    {paresMetodo.map((par, i) => (
+                      <div
+                        key={i}
+                        className="rounded-2xl border border-border overflow-hidden grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-[var(--color-border)]"
+                      >
+                        <div className="p-4">
+                          <p className="text-[11px] tracking-[0.2em] uppercase text-terracotta mb-1.5">
+                            Partida · Dor {i + 1}
+                          </p>
+                          <p className="text-sm text-ink/80">{par.dor}</p>
+                        </div>
+                        <div className="p-4">
+                          <p className="text-[11px] tracking-[0.2em] uppercase text-terracotta mb-1.5">
+                            Chegada · Vitória
+                          </p>
+                          <p className="text-sm text-ink/80">{par.vitoria || "—"}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <p className="text-sm text-muted">
+              Ainda não preencheste o O Teu Método. Abre a página do método para definir nome,
+              promessa, pilares, posicionamento e o mapa Partida → Chegada — depois aparecem aqui
+              automaticamente.
+            </p>
+          )}
         </section>
 
         {/* Refinar com IA */}
