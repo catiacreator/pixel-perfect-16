@@ -49,7 +49,7 @@ export default function EsbocoMetodo() {
 
       {/* Hero do pilar */}
       <header className="bg-cream-warm/60 border-b border-[var(--color-border)]">
-        <div className="max-w-[1100px] mx-auto px-5 md:px-10 py-10 md:py-14 grid grid-cols-[auto_1fr] gap-5 md:gap-8 items-start">
+        <div className="max-w-[1280px] mx-auto px-5 md:px-10 py-10 md:py-14 grid grid-cols-[auto_1fr] gap-5 md:gap-8 items-start">
           <div className="flex flex-col items-center gap-3">
             <span className="font-serif text-5xl md:text-6xl text-terracotta leading-none">2</span>
             <div className="w-12 h-12 rounded-2xl border border-[var(--color-border)] bg-white flex items-center justify-center text-ink/70">
@@ -73,7 +73,7 @@ export default function EsbocoMetodo() {
         </div>
       </header>
 
-      <div className="max-w-[1100px] mx-auto px-5 md:px-10 py-10">
+      <div className="max-w-[1280px] mx-auto px-5 md:px-10 py-10">
         {/* Vídeo da aula */}
         <div className="relative rounded-2xl overflow-hidden border border-border bg-gradient-to-br from-ink/90 to-ink aspect-video flex items-center justify-center mb-5">
           <div className="absolute top-5 left-5 right-5 flex items-center justify-between text-cream">

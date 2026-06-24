@@ -47,7 +47,7 @@ export default function Pilar1Hub() {
         subtitulo={data?.descricao ?? ""}
       />
 
-      <div className="max-w-[1100px] mx-auto px-5 md:px-10 pt-10 md:pt-14 pb-24">
+      <div className="max-w-[1280px] mx-auto px-5 md:px-10 pt-10 md:pt-14 pb-24">
         <Link
           to="/doc-mestre"
           className="group relative overflow-hidden bg-terracotta rounded-2xl border border-terracotta shadow-[0_14px_36px_-18px_rgba(180,90,40,0.55)] px-6 md:px-8 py-7 md:py-8 mb-8 grid grid-cols-[3.5rem_1fr_auto] md:grid-cols-[4rem_1fr_auto] gap-5 md:gap-8 items-center transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_22px_48px_-18px_rgba(180,90,40,0.65)] hover:bg-terracotta/95"

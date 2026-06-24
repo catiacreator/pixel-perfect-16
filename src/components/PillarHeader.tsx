@@ -42,7 +42,7 @@ export default function PillarHeader({
       <div aria-hidden className="pointer-events-none absolute -bottom-32 left-1/3 w-[22rem] h-[22rem] rounded-full bg-gold/15 blur-3xl" />
       <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "radial-gradient(var(--color-ink) 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
 
-      <div className="relative px-5 md:px-10 pt-10 md:pt-16 pb-8 md:pb-12 max-w-[1100px] mx-auto">
+      <div className="relative px-5 md:px-10 pt-10 md:pt-16 pb-8 md:pb-12 max-w-[1280px] mx-auto">
       <div className="grid grid-cols-[4rem_1fr] md:grid-cols-[7rem_1fr] gap-5 md:gap-10 items-start">
         {/* Roman numeral */}
         <div

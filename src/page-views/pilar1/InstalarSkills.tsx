@@ -17,7 +17,7 @@ export default function InstalarSkills() {
   return (
     <Layout>
       <PilarBreadcrumb pilar={1} pilarLabel="Recuperar seu Tempo" backTo="/metodo/pilar-1/aprenda-ia/claude" backLabel="Voltar para Claude" />
-      <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
+      <div className="px-5 md:px-10 py-10 max-w-5xl mx-auto">
         <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">Aula 1.5 · Claude</p>
         <h1 className="font-serif text-3xl text-ink mb-3">Instalando Skills no seu Claude</h1>
         <p className="text-muted mb-8">

@@ -58,7 +58,7 @@ export default function ToolHub() {
 
   return (
     <Layout>
-      <div className="px-5 md:px-10 py-8 max-w-4xl mx-auto">
+      <div className="px-5 md:px-10 py-8 max-w-5xl mx-auto">
         {/* Breadcrumb */}
         <div className="text-xs text-muted mb-5 flex items-center gap-1 flex-wrap">
           <Link to="/metodo/pilar-1" className="hover:text-terracotta">Pilar 1</Link>
