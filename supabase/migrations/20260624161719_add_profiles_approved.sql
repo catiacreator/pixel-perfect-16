@@ -4,13 +4,9 @@
 ALTER TABLE public.profiles
   ADD COLUMN IF NOT EXISTS approved BOOLEAN NOT NULL DEFAULT false;
 
--- 2. Admins existentes ficam automaticamente aprovados
-UPDATE public.profiles p
-SET approved = true
-WHERE EXISTS (
-  SELECT 1 FROM public.user_roles r
-  WHERE r.user_id = p.id AND r.role = 'admin'
-);
+-- 2. Todas as contas JÁ existentes ficam aprovadas.
+--    Só contas novas (criadas após esta migration) é que ficam pendentes.
+UPDATE public.profiles SET approved = true;
 
 -- 3. Recriar handle_new_user para aprovar admins automaticamente no signup.
 --    (mentoradas comuns continuam approved=false e dependem de aprovação manual)
