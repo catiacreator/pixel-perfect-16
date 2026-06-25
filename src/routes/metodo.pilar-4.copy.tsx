@@ -38,7 +38,7 @@ function CopyVenda() {
     <Pilar4Page
       etapa="Etapa 7 · Texto"
       titulo="Crie sua Oferta"
-      subtitulo="Escolhe o formato e gera a tua proposta personalizada — com o contexto do teu Documento Mestre."
+      subtitulo="Escolha o formato e gera a sua proposta personalizada — com o contexto do seu Documento Mestre."
     >
       <div className="grid sm:grid-cols-2 gap-3 mb-6">
         {FORMATOS_OFERTA.map((f) => {
@@ -74,10 +74,10 @@ function CopyVenda() {
         <div className="flex items-start justify-between gap-4 mb-1">
           <div>
             <p className="font-serif text-lg text-ink">
-              {formato ? `Prompt — ${formato.nome}` : "Escolhe um formato acima"}
+              {formato ? `Prompt — ${formato.nome}` : "Escolha um formato acima"}
             </p>
             <p className="text-sm text-ink/60 mt-1">
-              O prompt usa o teu método, público, tom e posicionamento (do Documento Mestre) e gera uma
+              O prompt usa o seu método, público, tom e posicionamento (do Documento Mestre) e gera uma
               oferta completa: nome, entregáveis, formato, preço, proposta de valor e CTA.
             </p>
           </div>

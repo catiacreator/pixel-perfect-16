@@ -30,15 +30,15 @@ function buildLinhaEditorialPrompt(
   metodo: { nomeMetodo: string; promessa: string; pilares: string; posicionamento: string; tomDeVoz: string; cases: string },
   formato: "reels" | "estatico" | null,
 ): string {
-  const nome = (doc.nome as string) || "[o teu nome]";
+  const nome = (doc.nome as string) || "[o seu nome]";
   const profissao = (doc.profissao as string) || "";
-  const publico = (doc.publico as string) || "[o teu público]";
+  const publico = (doc.publico as string) || "[o seu público]";
   const dores = asList(doc.dores);
-  const dorPrincipal = dores[0] || "[a tua dor principal]";
+  const dorPrincipal = dores[0] || "[a sua dor principal]";
   const tom = metodo.tomDeVoz || (doc.tomDeVoz as string) || "";
   const cases = metodo.cases || "";
   const posicionamento = metodo.posicionamento || "";
-  const nomeMetodo = metodo.nomeMetodo || "[o teu método]";
+  const nomeMetodo = metodo.nomeMetodo || "[o seu método]";
   const promessa = metodo.promessa || "";
 
   const pilaresList = (metodo.pilares || "")
@@ -48,16 +48,16 @@ function buildLinhaEditorialPrompt(
   const nPilares = pilaresList.length || 5;
   const pilaresTexto = pilaresList.length
     ? pilaresList.map((p, i) => `${i + 1}. ${p}`).join("\n")
-    : "[preenche os pilares do teu método no O Teu Método]";
+    : "[preenche os pilares do seu método no O Seu Método]";
 
   const reels = formato === "reels";
   const formatoLinha = reels
-    ? "APAREÇO em vídeo — podes incluir Reels na semana (máximo 2 por semana)."
+    ? "APAREÇO em vídeo — pode incluir Reels na semana (máximo 2 por semana)."
     : "NÃO apareço em vídeo — usa apenas Carrossel e Imagem única (sem Reels).";
 
   return `Sou ${nome}${profissao ? `, ${profissao}` : ""}. Este é o meu Documento Mestre:
 
-Promessa: ${promessa || "[a tua promessa]"}
+Promessa: ${promessa || "[a sua promessa]"}
 Quem eu ajudo: ${publico}
 Dor principal a enfatizar: ${dorPrincipal}
 ${cases ? `Cases / provas sociais: ${cases}\n` : ""}${posicionamento ? `Posicionamento: ${posicionamento}\n` : ""}${tom ? `Tom de voz: ${tom}\n` : ""}
@@ -76,7 +76,7 @@ Uma frase clara no formato: "Eu ajudo X a Y sem Z".
 ═══════════════════════════════
 PARTE 2 — PILARES DE CONTEÚDO
 ═══════════════════════════════
-REGRA OBRIGATÓRIA: os pilares de conteúdo são EXATAMENTE os ${nPilares} pilares do meu método acima — mesmo número, mesmos nomes. Não reduzas, não agrupes, não inventes.
+REGRA OBRIGATÓRIA: os pilares de conteúdo são EXATAMENTE os ${nPilares} pilares do meu método acima — mesmo número, mesmos nomes. Não reduza, não agrupe, não invente.
 
 Para cada pilar, entrega:
 PILAR — [nome exato do pilar]
@@ -85,10 +85,10 @@ Como aparece no conteúdo: [3 exemplos de posts no meu nicho e na minha voz]
 Tipo de conteúdo ideal: [quais dos 8 tipos abaixo funcionam melhor]
 
 Os 8 tipos de conteúdo (vocabulário oficial):
-- RADAR (topo/atrair) — novidade do nicho com o teu olhar
+- RADAR (topo/atrair) — novidade do nicho com o seu olhar
 - POSIÇÃO (topo/autoridade) — ponto de vista forte sobre o tema
 - CONVERSA (topo/engajar) — pergunta, enquete ou provocação leve
-- BASTIDOR (topo/engajar) — bastidores reais, mostrar como fazes ao vivo
+- BASTIDOR (topo/engajar) — bastidores reais, mostrar como faz ao vivo
 - REACENDE (topo/engajar) — story ou post que reativa seguidor parado
 - DIRECT (meio/relacionar) — DM genuíno (rotina diária, fora do calendário)
 - EMPURRÃO (fundo/vender) — confronto que gera urgência (máximo 1x por semana)
@@ -97,11 +97,11 @@ Os 8 tipos de conteúdo (vocabulário oficial):
 ═══════════════════════════════
 PARTE 3 — CALENDÁRIO DA SEMANA (7 dias)
 ═══════════════════════════════
-Distribui TODOS os ${nPilares} pilares ao longo da semana (rodízio) — nenhum pode ficar de fora.
+Distribua TODOS os ${nPilares} pilares ao longo da semana (rodízio) — nenhum pode ficar de fora.
 ${formatoLinha}
-Regras: EMPURRÃO no máximo 1x; DIRECT não entra no calendário; equilibra o funil (4 topo / 1 meio / 2 fundo); story obrigatório todos os dias (ideia específica e concreta, ligada ao tema do post); usa a minha voz e o meu nicho; usa os cases reais que te dei.
+Regras: EMPURRÃO no máximo 1x; DIRECT não entra no calendário; equilibra o funil (4 topo / 1 meio / 2 fundo); story obrigatório todos os dias (ideia específica e concreta, ligada ao tema do post); usa a minha voz e o meu nicho; usa os cases reais que me passou.
 
-Devolve o calendário EXATAMENTE neste formato (não mudes os marcadores):
+Devolve o calendário EXATAMENTE neste formato (não mude os marcadores):
 [CALENDARIO_INICIO]
 Segunda | [tipo] tema do post — Pilar X | formato sugerido | story: o que mostrar
 Terça | [tipo] tema do post — Pilar Y | formato sugerido | story: o que mostrar
@@ -363,13 +363,13 @@ function LinhaEditorial({ formato }: { formato: "reels" | "estatico" | null }) {
 
   return (
     <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6 mb-4">
-      <p className="text-[10px] tracking-[0.2em] uppercase text-ink/45 mb-1">Prompt com o teu Doc Mestre</p>
+      <p className="text-[10px] tracking-[0.2em] uppercase text-ink/45 mb-1">Prompt com o seu Doc Mestre</p>
       <div className="flex items-start justify-between gap-4 mb-3">
         <div>
           <h3 className="font-serif text-xl text-ink">Crie sua linha editorial</h3>
           <p className="text-sm text-ink/55 mt-1 leading-relaxed">
-            Copia este prompt, cola no ChatGPT (ou IA à tua escolha) e recebe a tua linha editorial já
-            personalizada com tudo o que preencheste no Documento Mestre e no Método.
+            Copie este prompt, cola no ChatGPT (ou IA à sua escolha) e recebe a sua linha editorial já
+            personalizada com tudo o que preencheu no Documento Mestre e no Método.
           </p>
         </div>
         <button
@@ -383,7 +383,7 @@ function LinhaEditorial({ formato }: { formato: "reels" | "estatico" | null }) {
 
       {semMetodo && (
         <p className="text-xs text-terracotta mb-3">
-          ⚠️ Preenche o teu Método (nome, promessa e pilares) no O Teu Método para o prompt ficar completo.
+          ⚠️ Preencha o seu Método (nome, promessa e pilares) no O Seu Método para o prompt ficar completo.
         </p>
       )}
 
@@ -455,7 +455,7 @@ export default function RedesSociais() {
               <p className="text-[11px] tracking-[0.2em] uppercase text-ink/45 mb-1">Passo 1 — Antes de gerar</p>
               <h2 className="font-serif text-xl text-ink mb-1.5">Você vai aparecer em vídeo?</h2>
               <p className="text-sm text-ink/55 mb-5">
-                Isto define se o teu calendário vai incluir Reels ou só posts estáticos (carrossel e imagem única).
+                Isto define se o seu calendário vai incluir Reels ou só posts estáticos (carrossel e imagem única).
               </p>
               <div className="grid md:grid-cols-2 gap-3">
                 <OpcaoFormato
@@ -475,7 +475,7 @@ export default function RedesSociais() {
               </div>
               {!formato && (
                 <p className="text-xs text-terracotta mt-4">
-                  ⚠️ Escolhe um formato para o prompt ser gerado corretamente.
+                  ⚠️ Escolha um formato para o prompt ser gerado corretamente.
                 </p>
               )}
             </div>
@@ -488,7 +488,7 @@ export default function RedesSociais() {
         {aba === "calendario" && (
           <>
             <h2 className="font-serif text-xl text-ink mb-2">Defina o tema de cada dia da semana</h2>
-            <p className="text-sm text-muted mb-4">Use a tua linha editorial pra distribuir os temas pelos dias.</p>
+            <p className="text-sm text-muted mb-4">Use a sua linha editorial pra distribuir os temas pelos dias.</p>
             <div className="flex gap-2 mb-6">
               <button className="text-xs font-semibold text-terracotta">✨ Preencher calendário automaticamente</button>
             </div>
@@ -537,8 +537,8 @@ export default function RedesSociais() {
             <div className="rounded-2xl border border-border bg-white p-5">
               <p className="font-serif text-lg text-ink mb-2">Seu assistente de conteúdo no ChatGPT</p>
               <p className="text-sm text-muted mb-3">
-                Configura um projeto no ChatGPT com toda a tua identidade — ele cria carrosséis, roteiros de Reels e
-                stories no teu tom, sem precisares de explicar tudo de novo.
+                Configura um projeto no ChatGPT com toda a sua identidade — ele cria carrosséis, roteiros de Reels e
+                stories no seu tom, sem precisares de explicar tudo de novo.
               </p>
               <div className="flex gap-2">
                 <button className="text-xs font-semibold px-3 py-1.5 rounded-full border border-border">Baixar PDF</button>

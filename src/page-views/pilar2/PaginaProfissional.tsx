@@ -12,13 +12,13 @@ export default function PaginaProfissional() {
       <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
         <h1 className="font-serif text-3xl text-ink mb-2">Página Profissional</h1>
         <p className="italic text-muted mb-6">
-          Transforme tudo o que preencheste até aqui numa página que apresenta o teu trabalho.
+          Transforme tudo o que preencheu até aqui numa página que apresenta o seu trabalho.
         </p>
 
         <PromptStep
           numero={8}
           titulo="Gerar a estrutura da sua Página Profissional"
-          descricao="Usa o teu Documento Mestre, arquétipos, tom de voz e identidade visual para gerar o mockup de uma página de uma única secção: quem é, o que entrega, prova social e CTA."
+          descricao="Use o seu Documento Mestre, arquétipos, tom de voz e identidade visual para gerar o mockup de uma página de uma única secção: quem é, o que entrega, prova social e CTA."
           prompt="Com base no meu Documento Mestre, arquétipos, tom de voz e identidade visual, cria a estrutura de uma página profissional de uma secção: hero com promessa, sobre mim, o que entrego, prova social e CTA final."
         />
 
@@ -27,7 +27,7 @@ export default function PaginaProfissional() {
         <div className="rounded-2xl border border-border bg-white p-5 my-6">
           <p className="font-serif text-lg text-ink mb-2">Construir a página no Lovable</p>
           <p className="text-sm text-muted mb-3">
-            Cola a estrutura acima num novo projeto Lovable e pede para construir a página seguindo a tua identidade
+            Cole a estrutura acima num novo projeto Lovable e pede para construir a página seguindo a sua identidade
             visual.
           </p>
           <a href="https://lovable.dev" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-sm font-semibold text-terracotta">

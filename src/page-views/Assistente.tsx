@@ -183,7 +183,7 @@ function ChatWindow({
             <p className="text-[11px] tracking-[0.2em] uppercase text-ink/40">Assistente</p>
             <h1 className="font-serif text-2xl md:text-3xl text-ink leading-tight">Leveza no Digital</h1>
             <p className="text-sm text-ink/60 mt-1">
-              Pergunta o que quiseres sobre o método, conteúdo, vendas e IA.
+              Pergunta o que quiser sobre o método, conteúdo, vendas e IA.
             </p>
           </div>
         </div>
@@ -208,7 +208,7 @@ function ChatWindow({
             <div className="w-14 h-14 mx-auto rounded-full bg-gold/15 text-gold flex items-center justify-center mb-4">
               <Sparkles size={22} strokeWidth={1.5} />
             </div>
-            <p className="font-serif text-xl text-ink mb-2">Olá. Por onde queres começar?</p>
+            <p className="font-serif text-xl text-ink mb-2">Olá. Por onde quer começar?</p>
             <p className="text-sm text-ink/55 mb-6">
               Posso ajudar-te com ideias de conteúdo, estruturar ofertas, dúvidas do método ou usar IA no dia a dia.
             </p>
@@ -289,7 +289,7 @@ function ChatWindow({
             }
           }}
           rows={1}
-          placeholder="Escreve a tua pergunta…"
+          placeholder="Escreve a sua pergunta…"
           className="flex-1 resize-none bg-transparent outline-none text-[14.5px] text-ink placeholder:text-ink/35 py-2 max-h-40"
           disabled={isLoading}
         />

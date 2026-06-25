@@ -116,7 +116,7 @@ export const TOOLS: Tool[] = [
         titulo: "ChatGPT no desktop",
         topicos: [
           "Conhecendo os botões principais: Nova conversa, campo de mensagem, histórico, anexar ficheiros, criar imagens, personalizar e configurações",
-          "Entregando contexto: explica quem és e o que fazes",
+          "Entregando contexto: explica quem és e o que faz",
           "Anexar ficheiros: PDF, planilhas, documentos, imagens",
           "Criar imagens: como pedir uma imagem",
           "Histórico de conversas: como encontrar conversas antigas",
@@ -132,7 +132,7 @@ export const TOOLS: Tool[] = [
           "Mostrar como funciona a parte de voz a alguém ao vivo",
           "Educação — explicações em voz alta, inclusive infantil",
           "Treinar apresentações, aulas e falas importantes",
-          "Conversar enquanto caminhas ou fazes outra tarefa",
+          "Conversar enquanto caminhas ou faz outra tarefa",
           "Pedir feedback sobre clareza, tom e argumentação em tempo real",
         ],
       },
@@ -161,7 +161,7 @@ export const TOOLS: Tool[] = [
         modulo: "2 · Criando Robôs Agentes de IA",
         titulo: "Detectar Gargalos do Especialista",
         resumo:
-          "Identifica os pontos de travamento no teu negócio que podem ser automatizados.",
+          "Identifica os pontos de travamento no seu negócio que podem ser automatizados.",
         links: [
           {
             label: "Abrir Robô Detector de Gargalos",
@@ -172,9 +172,9 @@ export const TOOLS: Tool[] = [
       {
         id: "2-2",
         modulo: "2 · Criando Robôs Agentes de IA",
-        titulo: "Criar Robôs que ajudam os teus Clientes",
+        titulo: "Criar Robôs que ajudam os seus Clientes",
         resumo:
-          "Desenvolve robôs especializados que agregam valor direto aos teus clientes.",
+          "Desenvolve robôs especializados que agregam valor direto aos seus clientes.",
         links: [
           { label: "Criar GPT", href: "https://chatgpt.com/gpts" },
           {
@@ -221,9 +221,9 @@ export const TOOLS: Tool[] = [
       {
         id: "5-1",
         modulo: "5 · Automatize com IA",
-        titulo: "Automatize com IA · 10 tarefas que tomam o teu tempo",
+        titulo: "Automatize com IA · 10 tarefas que tomam o seu tempo",
         resumo:
-          "10 automações práticas para libertar a tua agenda — cada uma com um prompt pronto a personalizar com o teu Documento Mestre.",
+          "10 automações práticas para libertar a sua agenda — cada uma com um prompt pronto a personalizar com o seu Documento Mestre.",
         topicos: [
           "1. Escrever e-mails e mensagens — respostas, follow-ups, propostas",
           "2. Criar conteúdo para redes sociais — legendas, carrosséis, Stories, Reels",
@@ -232,7 +232,7 @@ export const TOOLS: Tool[] = [
           "5. Criar apresentações — slides, roteiro e pitch",
           "6. Planejar projetos — cronograma, etapas e responsáveis",
           "7. Pesquisar e comparar — produtos, ferramentas, concorrentes",
-          "8. Aprender coisas novas — explicações simples no teu nível",
+          "8. Aprender coisas novas — explicações simples no seu nível",
           "9. Criar documentos e templates — contratos, fichas, checklists",
           "10. Tomar decisões difíceis — prós/contras, cenários e impacto",
         ],
@@ -268,7 +268,7 @@ export const TOOLS: Tool[] = [
         topicos: [
           "Mapa completo da interface — Projetos, Artefatos, Conectores",
           "O segredo para o Claude te conhecer de verdade",
-          "Planos: qual faz sentido para o teu momento",
+          "Planos: qual faz sentido para o seu momento",
           "Como conectar Gmail, Google Drive e Canva",
           "WhisperFlow: o truque de microfone no lugar do nativo do Claude",
         ],
@@ -286,7 +286,7 @@ export const TOOLS: Tool[] = [
           "Como transformar o trabalho de um projeto numa skill reutilizável",
         ],
         promptPersonalizado: {
-          label: "Cole num chat do Claude e descubra os teus Projetos",
+          label: "Cole num chat do Claude e descubra os seus Projetos",
           template: PROMPT_PROJETOS_CLAUDE,
         },
       },
@@ -300,14 +300,14 @@ export const TOOLS: Tool[] = [
         modulo: "1 · Conhecendo o Claude",
         titulo: "Como criar Skills no Claude",
         resumo:
-          "Aprende a criar as tuas próprias Skills no Claude para automatizar tarefas com o teu método.",
+          "Aprende a criar as suas próprias Skills no Claude para automatizar tarefas com o seu método.",
       },
       {
         id: "1-5",
         modulo: "1 · Conhecendo o Claude",
-        titulo: "Instalando Skills no teu Claude",
+        titulo: "Instalando Skills no seu Claude",
         resumo:
-          "Página de referência com download das skills da Mentoria. Abre na rota dedicada.",
+          "Página de referência com download das skills da Mentoria. Abra na rota dedicada.",
         links: [
           {
             label: "Abrir página de instalação de skills",
@@ -325,7 +325,7 @@ export const TOOLS: Tool[] = [
         modulo: "1 · Conhecendo o Claude",
         titulo: "Artefatos",
         resumo:
-          "Usa os Artifacts do Claude para criar documentos, código e visualizações lado a lado com a conversa.",
+          "Use os Artifacts do Claude para criar documentos, código e visualizações lado a lado com a conversa.",
       },
       {
         id: "1-8",
@@ -334,10 +334,10 @@ export const TOOLS: Tool[] = [
         links: [{ label: "Conhecer Claude for Chrome", href: "https://claude.com/claude-for-chrome" }],
         topicos: [
           "O que é a extensão Claude in Chrome e como instalar",
-          "Como liberar o acesso e conectar o Claude ao teu navegador",
-          "Na prática: pedir ao Claude para analisar o teu Instagram e gerar relatório de métricas",
+          "Como liberar o acesso e conectar o Claude ao seu navegador",
+          "Na prática: pedir ao Claude para analisar o seu Instagram e gerar relatório de métricas",
           "Apagar spam do e-mail, preencher formulários, coletar links",
-          "Ensinar o Claude a executar tarefas que já fazes — novas habilidades personalizadas",
+          "Ensinar o Claude a executar tarefas que já faz — novas habilidades personalizadas",
           "Função 'Perguntar antes de agir': mantém o controlo de tudo",
         ],
       },
@@ -373,7 +373,7 @@ export const TOOLS: Tool[] = [
         topicos: [
           "O que é o Granola, plano gratuito vs pago",
           "Download, conectar ao Claude pelos Conectores e login",
-          "Como o Granola grava tudo no teu computador — sem entrar no Zoom ou Meet",
+          "Como o Granola grava tudo no seu computador — sem entrar no Zoom ou Meet",
           "Pedir ao Claude para buscar transcrições direto do Granola",
           "Caso real: PDF de resumo de mentoria com próximos passos",
           "Porque usar Granola dentro do Claude é melhor",
@@ -384,7 +384,7 @@ export const TOOLS: Tool[] = [
         modulo: "1 · Conhecendo o Claude",
         titulo: "Claude Design — design profissional com consistência de marca",
         resumo:
-          "Usa o Claude Design para criar materiais visuais profissionais com consistência. Design System completo (paleta, tipografia, estilo, referências), portfólios, páginas, apresentações, carrosséis alinhados ao teu negócio. Transforma o Claude num verdadeiro diretor de arte.",
+          "Use o Claude Design para criar materiais visuais profissionais com consistência. Design System completo (paleta, tipografia, estilo, referências), portfólios, páginas, apresentações, carrosséis alinhados ao seu negócio. Transforma o Claude num verdadeiro diretor de arte.",
       },
       {
         id: "1-15",
@@ -396,7 +396,7 @@ export const TOOLS: Tool[] = [
         modulo: "2 · Aulão de Mentoria",
         titulo: "Super Aulão sobre Claude",
         resumo:
-          "Aulão de Mentoria: um mergulho completo no Claude reunindo tudo o que precisas para dominar a ferramenta.",
+          "Aulão de Mentoria: um mergulho completo no Claude reunindo tudo o que precisa para dominar a ferramenta.",
       },
     ],
   },
@@ -416,7 +416,7 @@ export const TOOLS: Tool[] = [
         topicos: [
           "O que é o Lovable e porque é ideal para criar páginas sem programar",
           "Login, créditos e diferença entre conta gratuita e paga",
-          "Usar um mockup do ChatGPT como modelo para criar a tua página",
+          "Usar um mockup do ChatGPT como modelo para criar a sua página",
           "Visualizar e ajustar a página para celular, tablet e computador em tempo real",
           "Plan vs Build: a diferença e como economizar créditos ao editar",
           "Publicar a página, gerar link e conectar um domínio personalizado",
@@ -426,11 +426,11 @@ export const TOOLS: Tool[] = [
       {
         id: "1-2",
         modulo: "1 · Lovable na prática",
-        titulo: "Criar o teu domínio no Registro.br",
+        titulo: "Criar o seu domínio no Registro.br",
         links: [{ label: "Abrir Registro.br", href: "https://registro.br" }],
         topicos: [
           "Como criar conta no Registro.br para comprar domínios",
-          "Pesquisar se o domínio que queres está disponível",
+          "Pesquisar se o domínio que quer está disponível",
           "Dicas para escolher um bom domínio (nome, nicho, ferramenta)",
           "Como conectar o domínio ao site criado no Lovable",
           "Autenticar e finalizar a conexão via CPF e código por e-mail",
@@ -441,7 +441,7 @@ export const TOOLS: Tool[] = [
         modulo: "1 · Lovable na prática",
         titulo: "Go Full Page — capturando a página inteira",
         resumo:
-          "Instala e usa a extensão Go Full Page no Chrome para tirar screenshot completo do teu app ou página criada no Lovable — do topo até ao rodapé, num clique.",
+          "Instala e usa a extensão Go Full Page no Chrome para tirar screenshot completo do seu app ou página criada no Lovable — do topo até ao rodapé, num clique.",
         links: [
           {
             label: "Instalar Go Full Page",
@@ -454,7 +454,7 @@ export const TOOLS: Tool[] = [
         modulo: "1 · Lovable na prática",
         titulo: "Criar ideias de apps no ChatGPT para construir no Lovable",
         topicos: [
-          "Usar um robô GPT para gerar ideias de apps com base na tua área e gargalos",
+          "Usar um robô GPT para gerar ideias de apps com base na sua área e gargalos",
           "Na prática: transformar uma ideia de app de RH em MVP com telas, funcionalidades e prompt pronto para colar no Lovable",
           "O que é MVP e porque começar pequeno é a estratégia certa",
           "Como economizar créditos do Lovable conectando o projeto ao GitHub e continuando no Claude Code",
@@ -483,8 +483,8 @@ export const TOOLS: Tool[] = [
         titulo: "Explorando o Gemini",
         topicos: [
           "O que é o Gemini e como navegar pela interface: conversas, Gems, NotebookLM e ferramentas extras",
-          "Criar conteúdo de Instagram a partir do teu Documento Mestre",
-          "Criação de imagens e vídeos curtos — inclusive animar uma foto tua a falar",
+          "Criar conteúdo de Instagram a partir do seu Documento Mestre",
+          "Criação de imagens e vídeos curtos — inclusive animar uma foto sua a falar",
           "Canvas: escrever, editar e exportar textos colaborativos dentro do Gemini",
           "Deep Research: pesquisas profundas de mercado, concorrência e tendências com fontes",
           "Outras funcionalidades: aprendizagem guiada e criação de músicas curtas",
@@ -496,7 +496,7 @@ export const TOOLS: Tool[] = [
         modulo: "1 · Explorando o Gemini",
         titulo: "NotebookLM (dentro de Gemini)",
         resumo:
-          "Aprende a usar o NotebookLM do Google para transformar as tuas fontes em podcasts, vídeos, apresentações e respostas baseadas no teu próprio conteúdo.",
+          "Aprende a usar o NotebookLM do Google para transformar as suas fontes em podcasts, vídeos, apresentações e respostas baseadas no seu próprio conteúdo.",
         links: [
           {
             label: "Instalar extensão YouTube → NotebookLM",
@@ -510,7 +510,7 @@ export const TOOLS: Tool[] = [
   {
     slug: "notebooklm",
     nome: "NotebookLM",
-    descricao: "Estuda, pesquisa e cria conteúdo a partir das tuas fontes.",
+    descricao: "Estuda, pesquisa e cria conteúdo a partir das suas fontes.",
     cor: "from-violet-500/20 to-purple-700/10",
     inicial: "N",
     aulas: [
@@ -531,14 +531,14 @@ export const TOOLS: Tool[] = [
         modulo: "1 · NotebookLM",
         titulo: "NotebookLM — Podcasts e Vídeos",
         resumo:
-          "Aprende a usar o NotebookLM para gerar podcasts e vídeos a partir das tuas fontes — material original na voz da IA.",
+          "Aprende a usar o NotebookLM para gerar podcasts e vídeos a partir das suas fontes — material original na voz da IA.",
       },
       {
         id: "1-3",
         modulo: "1 · NotebookLM",
         titulo: "NotebookLM — Apresentações",
         resumo:
-          "Cria apresentações profissionais direto no NotebookLM usando os teus documentos como base.",
+          "Cria apresentações profissionais direto no NotebookLM usando os seus documentos como base.",
       },
     ],
   },
@@ -563,7 +563,7 @@ export const TOOLS: Tool[] = [
         modulo: "1 · Grok",
         titulo: "Grok no celular",
         resumo:
-          "Usa o Grok no celular: instalação, login, principais botões e como aproveitar a IA em qualquer lugar.",
+          "Use o Grok no celular: instalação, login, principais botões e como aproveitar a IA em qualquer lugar.",
         links: [{ label: "Aceder ao Grok", href: "https://grok.com" }],
       },
     ],

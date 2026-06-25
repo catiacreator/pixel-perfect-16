@@ -54,7 +54,7 @@ function AltoTicket() {
             <p className="text-sm text-ink/70 leading-relaxed mb-2">
               Uma das formas mais poderosas de vender alto ticket online é oferecer uma sessão de
               diagnóstico gratuita. Nessa conversa 1:1 entendes a dor do potencial cliente, mostras o
-              caminho da transformação e apresentas a tua consultoria ou mentoria como a melhor solução.
+              caminho da transformação e apresentas a sua consultoria ou mentoria como a melhor solução.
             </p>
             <p className="text-sm text-ink/70 leading-relaxed">
               É um modelo simples, escalável e com altíssima taxa de conversão — ideal para quem está a

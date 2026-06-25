@@ -31,7 +31,7 @@ const DocMestreSchema = z.object({
 
 const SYSTEM = `És um extractor estruturado. Lês um texto livre sobre um expert/mentor digital
 e extrais os campos pedidos para um Documento Mestre, em português de Portugal.
-Mantém a voz original sempre que possível. NÃO inventes informação — se um campo
+Mantém a voz original sempre que possível. NÃO invente informação — se um campo
 não estiver presente, deixa-o vazio ("") ou array vazio. Limita "dores" e "desejos"
 a no máximo 5 itens cada, ordenados por urgência/relevância.`;
 

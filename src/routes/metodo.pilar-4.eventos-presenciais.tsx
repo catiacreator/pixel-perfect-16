@@ -55,7 +55,7 @@ function EventosPresenciais() {
               Prompt — Crie seu Projeto de Evento
             </p>
             <p className="text-sm text-ink/60">
-              Gerado com os teus dados do Documento Mestre. Entrega um projeto completo: nome e
+              Gerado com os seus dados do Documento Mestre. Entrega um projeto completo: nome e
               conceito, público, formato, programação, experiência, precificação, copy e logística.
             </p>
           </div>

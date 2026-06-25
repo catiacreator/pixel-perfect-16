@@ -90,7 +90,7 @@ export default function Identidade() {
         {/* 1. SEU ARQUÉTIPO */}
         <h2 className="font-serif text-xl text-ink mb-2">1. Seu arquétipo</h2>
         <p className="text-sm text-muted mb-3">
-          Descobre o SEU arquétipo dominante e secundário. Define como você ESCREVE: palavras a usar,
+          Descubra o SEU arquétipo dominante e secundário. Define como você ESCREVE: palavras a usar,
           palavras a evitar e estrutura de história.
         </p>
         <PromptCard
@@ -138,7 +138,7 @@ export default function Identidade() {
         {/* 2. CLIENTE */}
         <h2 className="font-serif text-xl text-ink mb-2">2. Arquétipo do cliente</h2>
         <p className="text-sm text-muted mb-3">
-          Descobre o arquétipo do seu público. Define como você VENDE: dor a enfatizar, prova social
+          Descubra o arquétipo do seu público. Define como você VENDE: dor a enfatizar, prova social
           que ressoa, objeção a antecipar.
         </p>
         <PromptCard
@@ -190,7 +190,7 @@ export default function Identidade() {
         <PromptCard
           numero={3}
           titulo="O encontro entre os arquétipos"
-          descricao="Usa as 4 caixinhas acima preenchidas."
+          descricao="Use as 4 caixinhas acima preenchidas."
           prompt={PROMPT_ENCONTRO}
         />
         <div className="rounded-2xl border border-border bg-white p-5 mb-8">

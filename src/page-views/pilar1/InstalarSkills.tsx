@@ -59,7 +59,7 @@ export default function InstalarSkills() {
         </div>
 
         <h2 className="font-serif text-xl text-ink mb-1">6 Skills de mercado</h2>
-        <p className="text-sm text-muted mb-4">Escolhe a tua área — depois é só pedir para instalar.</p>
+        <p className="text-sm text-muted mb-4">Escolha a sua área — depois é só pedir para instalar.</p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {SKILLS_NICHO.map((s) => (
             <div key={s.id} className="rounded-xl border border-border bg-white p-4 flex flex-col items-center text-center gap-2">

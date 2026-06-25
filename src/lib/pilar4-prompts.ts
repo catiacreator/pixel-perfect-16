@@ -44,7 +44,7 @@ function produtosTexto(doc: DocMestre): string {
 // Bloco de contexto comum (usado em todos os prompts do Pilar 4).
 export function perfilContexto(doc: DocMestre, metodo: MetodoInfo): string {
   const tom = metodo.tomDeVoz || doc.tomDeVoz || "—";
-  return `PROFISSIONAL: ${doc.nome || "[o teu nome]"}
+  return `PROFISSIONAL: ${doc.nome || "[o seu nome]"}
 Profissão: ${doc.profissao || "—"}
 O que faz: ${doc.oQueFaz || "—"}
 Como resolve: ${doc.comoResolve || "—"}
@@ -125,7 +125,7 @@ export function buildOfertaPrompt(
   metodo: MetodoInfo,
   formato: FormatoOferta,
 ): string {
-  const tom = metodo.tomDeVoz || doc.tomDeVoz || "o teu tom natural";
+  const tom = metodo.tomDeVoz || doc.tomDeVoz || "o seu tom natural";
   return `Você é especialista em criação de ${formato.especialista} para profissionais autônomos.
 
 CONTEXTO DA PROFISSIONAL:
@@ -145,8 +145,8 @@ Entregue:
 REGRAS:
 - Foco no RESULTADO final do cliente, não nas horas entregues.
 - Posicione a oferta como solução definitiva para a dor principal do público.
-- Usa a minha voz: ${tom}.
-- Não inventes dados que não estão no contexto.`;
+- Use a minha voz: ${tom}.
+- Não invente dados que não estão no contexto.`;
 }
 
 // ---------- Eventos Presenciais ----------
@@ -171,5 +171,5 @@ Com essas informações, crie um PROJETO DE EVENTO PRESENCIAL completo. Entregue
 📌 LOGÍSTICA ESSENCIAL (local, capacidade, confirmação de presença, o que levar)
 🚀 PRIMEIROS 3 PASSOS PARA EU COMEÇAR HOJE
 
-Usa a minha voz e o meu nicho. Não inventes dados fora do contexto acima.`;
+Use a minha voz e o meu nicho. Não invente dados fora do contexto acima.`;
 }

@@ -74,7 +74,7 @@ function PromptBlock({ template, label }: { template: string; label?: string }) 
       <div className="p-4 border-b border-border flex items-center gap-2 flex-wrap bg-cream-warm/30">
         <Sparkles size={14} className="text-terracotta" />
         <p className="text-sm font-semibold text-ink">Prompt personalizado</p>
-        <span className="text-xs text-muted">— já preenchido com o teu Documento Mestre</span>
+        <span className="text-xs text-muted">— já preenchido com o seu Documento Mestre</span>
         <button
           onClick={copy}
           className="ml-auto text-xs px-3 py-1.5 rounded-full bg-ink text-cream flex items-center gap-1.5"

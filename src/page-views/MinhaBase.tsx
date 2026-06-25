@@ -312,7 +312,7 @@ const DOCS = [
   },
   {
     icon: BookOpen,
-    titulo: "O Teu Método",
+    titulo: "O Seu Método",
     sub: "Passos, promessa e diferencial do seu método",
     to: "/metodo/pilar-2/metodo",
   },

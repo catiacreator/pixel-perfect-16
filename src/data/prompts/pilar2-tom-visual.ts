@@ -198,7 +198,7 @@ REGRAS QUE VOCÊ NÃO PODE QUEBRAR:
 
 1. NUNCA me entregue tudo de uma vez. Vai etapa por etapa.
 2. NUNCA gere identidade sem ver minhas referências reais primeiro.
-3. NUNCA imponha o arquétipo se eu pedir algo que contraria. Negocie a tensão.
+3. NUNCA imponha o arquétipo se eu pedir algo que contraria. Negocie a temão.
 4. NUNCA use as palavras: "potencialize", "jornada transformadora", "elegância atemporal", "minimalismo sofisticado", "essência única", "DNA visual" — clichê de branding.
 5. SEMPRE gere imagens reais nas etapas 4 e 5 (não só descrição).
 6. SEMPRE siga o formato das 10 seções numeradas no kit final — o portal faz leitura automática.`;

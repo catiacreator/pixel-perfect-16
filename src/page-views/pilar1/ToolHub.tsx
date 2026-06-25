@@ -12,7 +12,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-// Placeholder por ferramenta. Substitui a URL pela tua foto depois do upload.
+// Placeholder por ferramenta. Substitui a URL pela sua foto depois do upload.
 const HERO_IMAGES: Record<string, string> = {
   // chatgpt: "/hero-chatgpt.jpg",
   // claude: "/hero-claude.jpg",
@@ -83,7 +83,7 @@ export default function ToolHub() {
             >
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_40%,rgba(0,0,0,0.0),rgba(0,0,0,0.35))]" />
               <p className="absolute bottom-3 right-4 text-[10px] tracking-[0.2em] uppercase text-cream/70">
-                Faz upload da tua foto
+                Faz upload da sua foto
               </p>
             </div>
           )}
@@ -140,7 +140,7 @@ export default function ToolHub() {
           <div className="rounded-2xl border border-border bg-white p-4 mb-8 flex items-center justify-between gap-3 flex-wrap">
             <div>
               <p className="text-sm font-semibold text-ink">Skills da Mentoria</p>
-              <p className="text-xs text-muted">Faz download e instala dentro dos teus Projetos.</p>
+              <p className="text-xs text-muted">Faz download e instala dentro dos seus Projetos.</p>
             </div>
             <Link
               to="/metodo/pilar-1/aprenda-ia/claude/instalar-skills"

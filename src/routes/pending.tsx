@@ -51,8 +51,8 @@ function PendingPage() {
           <h1 className="text-2xl font-semibold text-ink">Acesso pendente</h1>
           <p className="text-sm text-ink/60 mt-3 leading-relaxed">
             {checking
-              ? "A verificar o teu acesso…"
-              : "O teu pedido foi recebido. Aguarda que a mentora aprove o teu perfil — receberás um aviso assim que estiveres dentro."}
+              ? "A verificar o seu acesso…"
+              : "O seu pedido foi recebido. Aguarda que a mentora aprove o seu perfil — receberás um aviso assim que estiveres dentro."}
           </p>
 
           <button

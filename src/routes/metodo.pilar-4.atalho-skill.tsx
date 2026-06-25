@@ -48,8 +48,8 @@ function AtalhoSkill() {
           <p className="font-serif text-lg text-ink">Skill: Oferta + Método + Proposta</p>
         </div>
         <p className="text-sm text-ink/60 mb-4">
-          Um ficheiro <code className="text-terracotta">.md</code> já personalizado com o teu Documento
-          Mestre, para importares no teu Claude Project. Em 60 minutos guiados, sais com a oferta, o
+          Um ficheiro <code className="text-terracotta">.md</code> já personalizado com o seu Documento
+          Mestre, para importares no seu Claude Project. Em 60 minutos guiados, sais com a oferta, o
           método e a proposta prontos.
         </p>
         <button

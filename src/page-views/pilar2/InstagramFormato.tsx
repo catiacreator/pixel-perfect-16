@@ -84,7 +84,7 @@ export default function InstagramFormato() {
             <p className="text-xs tracking-[0.1em] uppercase text-muted mb-1">Jornada · {formato.titulo}</p>
             <p className="font-serif text-lg text-ink mb-2">Sua máquina de carrosséis</p>
             <p className="text-sm text-muted mb-3">
-              Cria um Projeto GPT que entende o teu jeito, a tua linha editorial e a tua identidade visual. Depois é
+              Cria um Projeto GPT que entende o seu jeito, a sua linha editorial e a sua identidade visual. Depois é
               só escolher um dos 5 estilos e pedir "me faça um carrossel EDUCATIVO sobre X".
             </p>
             <p className="text-xs text-muted">Progresso: {formato.progresso.done}/{formato.progresso.total}</p>
@@ -96,7 +96,7 @@ export default function InstagramFormato() {
             <p className="text-xs tracking-[0.1em] uppercase text-muted mb-1">Documento de contexto</p>
             <p className="font-serif text-lg text-ink mb-2">{formato.pdfPlaybook}</p>
             <p className="text-sm text-muted mb-3">
-              Baixa este documento e coloca no teu agente GPT ou Claude como base de conhecimento — ele gera stories
+              Baixa este documento e coloca no seu agente GPT ou Claude como base de conhecimento — ele gera stories
               do mês inteiro seguindo o playbook.
             </p>
             <button className="text-xs font-semibold px-3 py-1.5 rounded-full bg-ink text-cream flex items-center gap-1.5">

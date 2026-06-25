@@ -89,13 +89,13 @@ export default function MetodoChat({ open, onClose }: { open: boolean; onClose: 
       const data = await res.json();
 
       // Método pronto: a IA devolve a estrutura final — grava no Pilar 2
-      // (alimenta o O Teu Método e a secção "Seu Método" do Doc Mestre).
+      // (alimenta o O Seu Método e a secção "Seu Método" do Doc Mestre).
       if (data && data.type === "metodo" && data.data) {
         const m = data.data;
         const passos: any[] = Array.isArray(m.passos) ? m.passos : [];
         const fechamento: string =
           m.mensagem_fechamento ||
-          "Pronto! Montei o teu método. Podes revê-lo e editá-lo abaixo.";
+          "Pronto! Montei o seu método. Pode revisá-lo e editá-lo abaixo.";
         const final: ChatMsg[] = [...novas, { role: "assistant", content: fechamento }];
         update((prev) => ({
           ...prev,

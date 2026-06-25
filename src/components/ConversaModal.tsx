@@ -90,8 +90,8 @@ export default function ConversaModal({
           {!extraido ? (
             <>
               <p className="text-sm text-muted">
-                Conta-me sobre a tua rotina — em texto livre, como se estivesses a falar com um amigo.
-                A IA vai extrair as tarefas e propor uma lista para tu aprovares.
+                Conta-me sobre a sua rotina — em texto livre, como se estivesses a falar com um amigo.
+                A IA vai extrair as tarefas e propor uma lista para você aprovares.
               </p>
               <div className="rounded-xl border border-border bg-white p-4">
                 <p className="text-xs tracking-[0.18em] uppercase text-muted mb-2">Inspira-te com estas perguntas</p>

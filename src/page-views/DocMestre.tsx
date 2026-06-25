@@ -461,7 +461,7 @@ export default function DocMestre() {
   const [refineResult, setRefineResult] = useState("");
   const prompt = useMemo(() => buildRefinePrompt(doc), [doc]);
 
-  // Secção 4 — dados do método (vêm do O Teu Método, Pilar 2).
+  // Secção 4 — dados do método (vêm do O Seu Método, Pilar 2).
   // As dores herdam do Documento Mestre quando o par ainda não foi editado.
   const paresMetodo = metodo.pares
     .map((par, i) => ({ ...par, dor: par.dor || doc.dores[i] || "" }))
@@ -512,8 +512,8 @@ export default function DocMestre() {
                   Documento Mestre
                 </h1>
                 <p className="text-muted max-w-xl">
-                  Preenche o documento para aos poucos teres mais clareza do teu projecto. A cada
-                  passo vais compreendendo melhor como ter mais liberdade, tempo e lucro.
+                  Preencha o documento para aos poucos ter mais clareza do seu projecto. A cada
+                  passo vai compreendendo melhor como ter mais liberdade, tempo e lucro.
                 </p>
               </div>
 
@@ -556,7 +556,7 @@ export default function DocMestre() {
           <div className="flex items-start gap-3 flex-wrap">
             <div className="flex-1 min-w-[200px]">
               <p className="text-sm font-semibold text-ink">
-                Já tens um documento sobre ti? Importa.
+                Já tem um documento sobre ti? Importa.
               </p>
               <p className="text-xs text-muted mt-0.5">
                 A IA lê e preenche os campos automaticamente.
@@ -582,7 +582,7 @@ export default function DocMestre() {
 
         {/* SECÇÃO 1 */}
         <section className="rounded-2xl border border-border bg-white p-5 mb-5 print:border-0 print:p-0 print:mb-8">
-          <h2 className="font-serif text-xl text-ink mb-4">1. Quem és tu</h2>
+          <h2 className="font-serif text-xl text-ink mb-4">1. Quem és você</h2>
           <Field label="Nome" value={doc.nome} onChange={(v) => set("nome", v)} />
           <Field
             label="Profissão / Especialidade"
@@ -598,7 +598,7 @@ export default function DocMestre() {
 
         {/* SECÇÃO ROTINA */}
         <section className="rounded-2xl border border-border bg-white p-5 mb-5 print:border-0 print:p-0 print:mb-8">
-          <h2 className="font-serif text-xl text-ink mb-4">Tua rotina e receita</h2>
+          <h2 className="font-serif text-xl text-ink mb-4">Sua rotina e receita</h2>
           <p className="text-xs text-muted mb-4">Usado pelo Mapa do Tempo e pelos prompts personalizados.</p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             <Field label="Horas por dia" value={doc.horasDia} onChange={(v) => set("horasDia", v)} placeholder="ex: 8" />
@@ -610,7 +610,7 @@ export default function DocMestre() {
             value={doc.tomDeVoz}
             onChange={(v) => set("tomDeVoz", v)}
             textarea
-            placeholder="Como falas com o teu público — formal, próximo, técnico, divertido…"
+            placeholder="Como falas com o seu público — formal, próximo, técnico, divertido…"
           />
         </section>
 
@@ -618,7 +618,7 @@ export default function DocMestre() {
         <section className="rounded-2xl border border-border bg-white p-5 mb-5 print:border-0 print:p-0 print:mb-8">
           <h2 className="font-serif text-xl text-ink mb-4">2. O que entregas</h2>
           <Field
-            label="O que fazes (em 1 frase)"
+            label="O que faz (em 1 frase)"
             value={doc.oQueFaz}
             onChange={(v) => set("oQueFaz", v)}
             textarea
@@ -681,7 +681,7 @@ export default function DocMestre() {
 
         {/* SECÇÃO 3 */}
         <section className="rounded-2xl border border-border bg-white p-5 mb-5 print:border-0 print:p-0 print:mb-8">
-          <h2 className="font-serif text-xl text-ink mb-4">3. O teu público</h2>
+          <h2 className="font-serif text-xl text-ink mb-4">3. O seu público</h2>
           <Field
             label="Público que atendes"
             value={doc.publico}
@@ -689,7 +689,7 @@ export default function DocMestre() {
             textarea
           />
           <SortableList
-            titulo="Dores principais do teu público"
+            titulo="Dores principais do seu público"
             subtitulo={
               <>
                 Escreve as <strong className="font-semibold text-ink/70">5 dores principais</strong> — uma em cada caixinha.
@@ -701,7 +701,7 @@ export default function DocMestre() {
             onChange={(v) => set("dores", v)}
           />
           <SortableList
-            titulo="Desejos do teu público"
+            titulo="Desejos do seu público"
             subtitulo={
               <>
                 Escreve os <strong className="font-semibold text-ink/70">5 desejos principais</strong> — um em cada caixinha.
@@ -714,7 +714,7 @@ export default function DocMestre() {
           />
         </section>
 
-        {/* SECÇÃO 4 — Seu Método (vem do O Teu Método, Pilar 2) */}
+        {/* SECÇÃO 4 — Seu Método (vem do O Seu Método, Pilar 2) */}
         <section className="rounded-2xl border border-border bg-white p-5 md:p-6 mb-8 print:border-0 print:p-0 print:mb-8">
           <div className="flex items-center gap-3 mb-4">
             <span className="w-8 h-8 rounded-full bg-gold/25 text-ink/70 text-sm font-semibold flex items-center justify-center shrink-0">
@@ -726,7 +726,7 @@ export default function DocMestre() {
           <div className="flex items-center justify-between gap-3 flex-wrap rounded-xl border border-border bg-cream-warm/50 px-4 py-3 mb-6 print:hidden">
             <p className="text-sm text-muted">
               Estes campos vêm do{" "}
-              <strong className="font-semibold text-ink/70">O Teu Método</strong> (Pilar 2). Para
+              <strong className="font-semibold text-ink/70">O Seu Método</strong> (Pilar 2). Para
               editar, abra a página do método.
             </p>
             <Link
@@ -798,7 +798,7 @@ export default function DocMestre() {
             </div>
           ) : (
             <p className="text-sm text-muted">
-              Ainda não preencheste o O Teu Método. Abre a página do método para definir nome,
+              Ainda não preencheu o O Seu Método. Abra a página do método para definir nome,
               promessa, pilares, posicionamento e o mapa Partida → Chegada — depois aparecem aqui
               automaticamente.
             </p>
@@ -822,7 +822,7 @@ export default function DocMestre() {
               {/* Passo 1 */}
               <div>
                 <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">
-                  Passo 1 — Copia o prompt e cola no ChatGPT
+                  Passo 1 — Copie o prompt e cola no ChatGPT
                 </p>
                 <div className="relative">
                   <pre className="text-xs bg-cream-warm/40 border border-border rounded-xl p-3 max-h-64 overflow-auto whitespace-pre-wrap font-sans">
@@ -841,13 +841,13 @@ export default function DocMestre() {
               {/* Passo 2 */}
               <div>
                 <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">
-                  Passo 2 — Cola aqui a resposta do ChatGPT
+                  Passo 2 — Cole aqui a resposta do ChatGPT
                 </p>
                 <textarea
                   rows={6}
                   value={refineResult}
                   onChange={(e) => setRefineResult(e.target.value)}
-                  placeholder="Cola o texto retornado pelo ChatGPT…"
+                  placeholder="Cole o texto retornado pelo ChatGPT…"
                   className="w-full rounded-xl border border-border bg-white p-3 text-sm outline-none focus:border-terracotta"
                 />
                 <button
@@ -876,7 +876,7 @@ export default function DocMestre() {
             to="/metodo/pilar-1/aprenda-ia"
             className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-ink text-cream text-sm font-semibold hover:bg-terracotta transition-colors"
           >
-            Domina as principais IAs para o teu negócio <ArrowRight size={15} />
+            Domina as principais IAs para o seu negócio <ArrowRight size={15} />
           </Link>
         </div>
       </div>
@@ -896,13 +896,13 @@ export default function DocMestre() {
               </button>
             </div>
             <p className="text-xs text-muted mb-3">
-              Cola texto livre (bio, apresentação, anotações). A IA interpreta e distribui pelos campos.
+              Cole texto livre (bio, apresentação, anotações). A IA interpreta e distribui pelos campos.
             </p>
             <textarea
               rows={10}
               value={importText}
               onChange={(e) => setImportText(e.target.value)}
-              placeholder="Cola aqui o texto…"
+              placeholder="Cole aqui o texto…"
               className="w-full rounded-xl border border-border bg-white p-3 text-sm outline-none focus:border-terracotta"
             />
             {importError && <p className="text-xs text-terracotta mt-2">{importError}</p>}

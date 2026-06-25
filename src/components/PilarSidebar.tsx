@@ -105,7 +105,7 @@ const PILARES: Record<number, PilarDef> = {
     enabled: true,
     items: [
       { num: 1, label: "Pesquisa de Mercado", to: "/metodo/pilar-2/pesquisa-mercado", icon: Search },
-      { num: 2, label: "O Teu Método", to: "/metodo/pilar-2/metodo", icon: Compass },
+      { num: 2, label: "O Seu Método", to: "/metodo/pilar-2/metodo", icon: Compass },
       {
         num: 3,
         label: "Identidade de Marca",

@@ -6,7 +6,7 @@ import TodoBanner from "../../components/TodoBanner";
 import { Check, AlertTriangle, Trophy } from "lucide-react";
 
 const CONCLUIDOS = [
-  { titulo: "O Teu Método", to: "/metodo/pilar-2/metodo" },
+  { titulo: "O Seu Método", to: "/metodo/pilar-2/metodo" },
   { titulo: "Identidade de Marca", to: "/metodo/pilar-2/identidade" },
 ];
 

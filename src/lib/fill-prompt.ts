@@ -70,7 +70,7 @@ export function fillPrompt(template: string): PromptFillResult {
   const map: Record<string, string> = {
     "[NOME]": tag("Nome", d.nome),
     "[PROFISSÃO]": tag("Profissão", d.profissao),
-    "[O QUE FAZ]": tag("O que fazes", d.oQueFaz),
+    "[O QUE FAZ]": tag("O que faz", d.oQueFaz),
     "[COMO RESOLVE]": tag("Como resolves", d.comoResolve),
     "[PÚBLICO]": tag("Público", d.publico),
     "[5 DORES]":

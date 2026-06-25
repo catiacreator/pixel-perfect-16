@@ -10,7 +10,7 @@ export default function Aula() {
   return (
     <div className="space-y-4 text-ink/85 leading-relaxed">
       <p>
-        Escreve aqui o texto da aula <strong>ChatGPT no desktop</strong>. Podes usar
+        Escreve aqui o texto da aula <strong>ChatGPT no desktop</strong>. Pode usar
         parágrafos, listas, imagens, citações e links.
       </p>
       <p>

@@ -26,14 +26,14 @@ export function downloadMarkdown(filename: string, content: string) {
 export function buildSkillOferta(doc: DocMestre, metodo: MetodoInfo): string {
   return `# Skill: Oferta + Método + Proposta
 
-Tu és o meu consultor de vendas e ofertas. Vamos fazer uma sessão guiada de cerca de 60 minutos que termina com a minha oferta pronta, o meu método em formato vendável e a minha proposta de valor numa frase.
+Você és o meu consultor de vendas e ofertas. Vamos fazer uma sessão guiada de cerca de 60 minutos que termina com a minha oferta pronta, o meu método em formato vendável e a minha proposta de valor numa frase.
 
 ## Contexto sobre mim (não voltes a perguntar o que já está aqui)
 ${perfilContexto(doc, metodo)}
 
 ## Como conduzir a sessão
-- Faz UMA pergunta de cada vez, espera a minha resposta e só avança quando tiveres clareza.
-- Usa o meu tom de voz e o meu nicho. Não inventes dados que não estão no contexto.
+- Faz UMA pergunta de cada vez, espera a minha resposta e só avança quando tiver clareza.
+- Use o meu tom de voz e o meu nicho. Não invente dados que não estão no contexto.
 - Avança por blocos, anunciando cada bloco.
 
 BLOCO 1 — Diagnóstico (10 min): confirma o público, a dor mais urgente e o resultado concreto que eu entrego.
@@ -48,7 +48,7 @@ BLOCO 5 — Fecho (5 min): cristaliza a minha proposta de valor numa única fras
 3. Proposta de valor numa frase.
 4. Argumentos para as principais objeções.
 
-Começa por me cumprimentar pelo nome e fazer a primeira pergunta do Bloco 1.
+Comece por me cumprimentar pelo nome e fazer a primeira pergunta do Bloco 1.
 `;
 }
 
@@ -57,13 +57,13 @@ Começa por me cumprimentar pelo nome e fazer a primeira pergunta do Bloco 1.
 export function buildSkillSalaSecreta(doc: DocMestre, metodo: MetodoInfo): string {
   return `# Skill: Monte sua versão da Sala Secreta
 
-Tu és o meu estrategista de lançamento. Vamos montar a minha "Sala Secreta" — um espaço fechado que aquece o público durante alguns dias antes de abrir a venda. No final, saio com o mecanismo completo.
+Você és o meu estrategista de lançamento. Vamos montar a minha "Sala Secreta" — um espaço fechado que aquece o público durante alguns dias antes de abrir a venda. No final, saio com o mecanismo completo.
 
 ## Contexto sobre mim (não voltes a perguntar o que já está aqui)
 ${perfilContexto(doc, metodo)}
 
 ## Como conduzir a sessão
-- Uma pergunta de cada vez. Usa o meu tom e o meu nicho.
+- Uma pergunta de cada vez. Use o meu tom e o meu nicho.
 - Avança por blocos, anunciando cada um.
 
 BLOCO 1 — Conceito: nome da sala + tema central + transformação prometida.
@@ -79,6 +79,6 @@ BLOCO 5 — Pitch: como abro a oferta dentro da sala no último dia.
 4. Roteiro de 7 blocos.
 5. Pitch de abertura da oferta.
 
-Começa por me cumprimentar pelo nome e fazer a primeira pergunta do Bloco 1.
+Comece por me cumprimentar pelo nome e fazer a primeira pergunta do Bloco 1.
 `;
 }

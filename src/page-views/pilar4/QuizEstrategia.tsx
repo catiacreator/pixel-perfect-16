@@ -12,7 +12,7 @@ type Pergunta = { q: string; opcoes: Opcao[] };
 
 const PERGUNTAS: Pergunta[] = [
   {
-    q: "Quanto custa (ou vai custar) a tua oferta principal?",
+    q: "Quanto custa (ou vai custar) a sua oferta principal?",
     opcoes: [
       { label: "Até R$ 197", scores: { low: 2 } },
       { label: "Entre R$ 200 e R$ 2.000", scores: { lancamento: 1, low: 1 } },
@@ -28,7 +28,7 @@ const PERGUNTAS: Pergunta[] = [
     ],
   },
   {
-    q: "Já tens audiência para aquecer antes de vender?",
+    q: "Já tem audiência para aquecer antes de vender?",
     opcoes: [
       { label: "Sim, tenho seguidores ou lista", scores: { lancamento: 2 } },
       { label: "Pouca ou nenhuma ainda", scores: { alto: 1, eventos: 1 } },
@@ -42,7 +42,7 @@ const PERGUNTAS: Pergunta[] = [
     ],
   },
   {
-    q: "Qual é o teu objetivo agora?",
+    q: "Qual é o seu objetivo agora?",
     opcoes: [
       { label: "Validar uma ideia com algo acessível", scores: { low: 2 } },
       { label: "Faturar alto com poucos clientes", scores: { alto: 2 } },
@@ -60,12 +60,12 @@ const RESULTADOS: Record<Estrategia, { titulo: string; desc: string; to: string 
   },
   lancamento: {
     titulo: "Lançamento — Sala Secreta",
-    desc: "Aquece a tua audiência num espaço fechado e abre a oferta em escala.",
+    desc: "Aquece a sua audiência num espaço fechado e abre a oferta em escala.",
     to: "/metodo/pilar-4/lancamentos",
   },
   eventos: {
     titulo: "Venda Presencial",
-    desc: "Cria o projeto do teu evento e vende com pitch de palco — alta taxa de conversão.",
+    desc: "Cria o projeto do seu evento e vende com pitch de palco — alta taxa de conversão.",
     to: "/metodo/pilar-4/eventos-presenciais",
   },
   low: {
@@ -122,8 +122,8 @@ export default function QuizEstrategia() {
           <p className="font-serif text-lg text-ink">Descobrir minha estratégia</p>
         </div>
         <p className="text-sm text-ink/60 mb-4">
-          Responde a 5 perguntas rápidas e a IA indica qual estratégia de venda faz mais sentido para ti
-          agora — depois abrimos só o caminho que precisas de estudar.
+          Responde a 5 perguntas rápidas e a IA indica qual estratégia de venda faz mais sentido para você
+          agora — depois abrimos só o caminho que precisa de estudar.
         </p>
         <button
           onClick={() => setIniciado(true)}
@@ -141,7 +141,7 @@ export default function QuizEstrategia() {
     return (
       <div className="rounded-2xl border border-terracotta/30 bg-white p-6">
         <p className="text-[11px] tracking-[0.2em] uppercase text-terracotta mb-1">
-          A tua estratégia recomendada
+          A sua estratégia recomendada
         </p>
         <h3 className="font-serif text-2xl text-ink mb-2">{r.titulo}</h3>
         <p className="text-sm text-ink/65 mb-5 max-w-xl">{r.desc}</p>

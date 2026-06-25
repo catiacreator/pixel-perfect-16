@@ -23,7 +23,7 @@ Lês uma descrição livre da rotina (em português do Brasil) e devolves uma li
 de tarefas com duração e frequência. Regras:
 - Categoriza cada tarefa como Produção (entregar para o cliente), Marketing (vender/atrair)
   ou Estratégia (planeamento, finanças, decisões).
-- Usa nomes curtos, na voz do utilizador. Não inventes tarefas que não foram mencionadas.
+- Use nomes curtos, na voz do utilizador. Não invente tarefas que não foram mencionadas.
 - Se a pessoa der intervalos ("2 a 3 horas"), usa o valor mais alto.
 - Se a frequência for ambígua, assume "/ semana".
 - O resumo deve ser empático e celebrar o esforço de mapear.`;
@@ -48,7 +48,7 @@ export const extractTarefas = createServerFn({ method: "POST" })
 // Pergunta de aquecimento para guiar o utilizador na conversa
 export const PERGUNTAS_GUIA = [
   "Conta-me um dia típico de trabalho — do momento em que abres o computador até fechares.",
-  "Quais são as tarefas que tu próprio fazes para entregar para os clientes?",
-  "E para vender / atrair novos clientes — o que fazes (redes sociais, propostas, reuniões)?",
-  "Há tarefas de bastidores (financeiro, planeamento, e-mails) que comem o teu tempo?",
+  "Quais são as tarefas que você próprio faz para entregar para os clientes?",
+  "E para vender / atrair novos clientes — o que faz (redes sociais, propostas, reuniões)?",
+  "Há tarefas de bastidores (financeiro, planeamento, e-mails) que comem o seu tempo?",
 ];

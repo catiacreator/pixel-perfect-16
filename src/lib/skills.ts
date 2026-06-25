@@ -13,7 +13,7 @@ export const SKILLS_GERAIS: Skill[] = [
   { id: "04", emoji: "🎨", nome: "Identidade Visual", descricao: "Paleta, tipografia e mood board para o Instagram.", file: "/skills/04-identidade-visual.md" },
   { id: "05", emoji: "📲", nome: "Conteúdo para Redes Sociais", descricao: "Cria posts — carrossel, Reels, Stories — com estratégia completa.", file: "/skills/05-conteudo-redes-sociais.md" },
   { id: "06", emoji: "💰", nome: "Oferta, Método e Proposta", descricao: "Estrutura o método, precifica com payback e gera proposta e página de vendas.", file: "/skills/06-oferta-metodo-proposta.md" },
-  { id: "07", emoji: "🧭", nome: "Bússola", descricao: "Ponto de partida — identifica onde estás e direciona o caminho.", file: "/skills/07-bussola.md" },
+  { id: "07", emoji: "🧭", nome: "Bússola", descricao: "Ponto de partida — identifica onde está e direciona o caminho.", file: "/skills/07-bussola.md" },
   { id: "08", emoji: "🤖", nome: "Criar Robô / Skill / Sistema", descricao: "Criar robôs GPT e skills no Claude do zero.", file: "/skills/08-criar-robo-skill-sistema.md" },
   { id: "09", emoji: "🎬", nome: "Clone de Vídeo", descricao: "Workflow completo: foto → HeyGen → edição no CapCut/Captions.", file: "/skills/09-clone-video.md" },
   { id: "10", emoji: "💜", nome: "Lovable", descricao: "Primeiro prompt, poupar créditos, publicar e ligar domínio.", file: "/skills/10-lovable-guia.md" },

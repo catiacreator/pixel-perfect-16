@@ -61,7 +61,7 @@ export default function Pilar1Hub() {
               <span className="italic font-normal text-cream" style={{ fontFamily: "var(--font-editorial)" }}>Documento Mestre</span>
             </h3>
             <p className="text-sm md:text-[15px] text-cream/75 leading-relaxed max-w-2xl">
-              É a base de tudo. Em 5 minutos, defines o que vais criar — e a IA passa a falar a tua língua.
+              É a base de tudo. Em 5 minutos, defines o que vai criar — e a IA passa a falar a sua língua.
             </p>
           </div>
           <span className="inline-flex items-center gap-2 bg-cream text-ink pl-5 pr-4 py-2.5 rounded-full text-sm font-medium shadow-[0_2px_6px_-2px_rgba(40,30,20,0.3)] transition-all duration-300 group-hover:bg-ink group-hover:text-cream group-hover:shadow-[0_6px_14px_-4px_rgba(40,30,20,0.5)]">

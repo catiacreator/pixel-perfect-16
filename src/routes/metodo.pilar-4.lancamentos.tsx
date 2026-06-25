@@ -63,7 +63,7 @@ function Lancamentos() {
             <p className="font-serif text-lg text-ink">Skill: Monte sua versão da Sala Secreta</p>
           </div>
           <p className="text-sm text-ink/60 mb-4">
-            Ficheiro <code className="text-terracotta">.md</code> personalizado com o teu Documento
+            Ficheiro <code className="text-terracotta">.md</code> personalizado com o seu Documento
             Mestre. Sessão guiada que leva do zero ao mecanismo completo: nome, tema, captação, cadência
             de aquecimento, roteiro de 7 blocos e pitch.
           </p>

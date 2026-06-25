@@ -63,7 +63,7 @@ export default function TomDeVoz() {
         </p>
         <h1 className="font-serif text-3xl text-ink mb-2">Tom de Voz da Marca</h1>
         <p className="italic text-muted mb-8">
-          Usa seus arquétipos, palavras a usar/evitar e ajustes da ponte para entregar 4 campos prontos.
+          Use seus arquétipos, palavras a usar/evitar e ajustes da ponte para entregar 4 campos prontos.
         </p>
 
         <PromptCard
