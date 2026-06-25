@@ -79,7 +79,7 @@ export default function DetetiveDoTempo() {
     }));
 
   const zerar = () => {
-    if (!confirm("Zerar todos os dados do Mapa do Tempo?")) return;
+    if (!confirm("Apagar todos os dados do Mapa do Tempo?")) return;
     clearDetetive();
     setState(INITIAL_STATE);
   };
@@ -99,7 +99,7 @@ export default function DetetiveDoTempo() {
       />
 
       <div className="px-5 md:px-10 pb-16 max-w-4xl mx-auto">
-        <div className="mb-4">
+        <div className="mt-8 mb-6 flex justify-start">
           <InfoButton titulo="Para que serve o Mapa do Tempo?" label="Para que serve o Mapa do Tempo?">
             <p>
               Aqui você mapeia todas as suas tarefas (Produção, Marketing e Estratégia) com o tempo
@@ -134,7 +134,7 @@ export default function DetetiveDoTempo() {
               <h2 className="font-serif text-xl text-ink leading-tight mb-0.5">Vamos calcular o custo real do seu tempo</h2>
               <p className="text-xs text-muted">Leva 10 minutos. {savedAt && <span className="inline-flex items-center gap-1 ml-1"><Check size={11} /> Salvo às {savedAt}</span>}</p>
             </div>
-            <button onClick={zerar} className="text-xs font-semibold text-muted hover:text-terracotta flex items-center gap-1">↺ Zerar tudo</button>
+            <button onClick={zerar} className="text-xs font-semibold text-muted hover:text-terracotta flex items-center gap-1">↺ Apagar tudo</button>
           </div>
           <div className="mb-3 flex items-center gap-2">
             <label className="text-[11px] tracking-[0.18em] uppercase text-muted">Moeda</label>

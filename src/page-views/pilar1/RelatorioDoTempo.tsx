@@ -88,7 +88,7 @@ export default function RelatorioDoTempo() {
       />
 
       <div className="px-5 md:px-10 pb-16 max-w-4xl mx-auto print:max-w-none">
-        <div className="mb-4">
+        <div className="mt-8 mb-6 flex justify-start">
           <InfoButton titulo="Para que serve o Relatório do Tempo?" label="Para que serve o Relatório do Tempo?">
             <p>
               Cruza as suas tarefas com o faturamento e mostra: o <strong>valor da sua hora</strong>, o{" "}
