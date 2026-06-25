@@ -423,14 +423,36 @@ export default function DocMestre() {
 
   const onFileUpload = async (file: File | null) => {
     if (!file) return;
-    if (file.size > 1_000_000) {
-      setImportError("Ficheiro demasiado grande. Máximo 1 MB.");
+    if (file.size > 8_000_000) {
+      setImportError("Ficheiro demasiado grande. Máximo 8 MB.");
       setImportOpen(true);
       return;
     }
-    const text = await file.text();
-    setImportText(text);
-    setImportOpen(true);
+    const isPdf =
+      file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf");
+    try {
+      let text: string;
+      if (isPdf) {
+        const { getDocumentProxy, extractText } = await import("unpdf");
+        const pdf = await getDocumentProxy(new Uint8Array(await file.arrayBuffer()));
+        const res = await extractText(pdf, { mergePages: true });
+        text = Array.isArray(res.text) ? res.text.join("\n") : res.text;
+      } else {
+        text = await file.text();
+      }
+      if (!text.trim()) {
+        setImportError(
+          "Não consegui ler texto desse ficheiro. Se for um PDF digitalizado (imagem), cola o texto manualmente.",
+        );
+        setImportOpen(true);
+        return;
+      }
+      setImportText(text);
+      setImportOpen(true);
+    } catch {
+      setImportError("Erro ao ler o ficheiro. Tenta colar o texto manualmente.");
+      setImportOpen(true);
+    }
   };
 
   // Refinar com IA (2 passos)
@@ -541,10 +563,10 @@ export default function DocMestre() {
               </p>
             </div>
             <label className="text-sm px-3 py-1.5 rounded-full border border-border bg-white flex items-center gap-1.5 cursor-pointer hover:border-terracotta">
-              <FileUp size={14} /> Subir TXT/MD
+              <FileUp size={14} /> Subir TXT/MD/PDF
               <input
                 type="file"
-                accept=".txt,.md,text/plain,text/markdown"
+                accept=".txt,.md,.pdf,text/plain,text/markdown,application/pdf"
                 className="hidden"
                 onChange={(e) => onFileUpload(e.target.files?.[0] ?? null)}
               />
