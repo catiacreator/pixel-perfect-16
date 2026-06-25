@@ -9,6 +9,7 @@ import {
   Briefcase,
   Sparkles,
   Star,
+  GraduationCap,
 } from "lucide-react";
 
 const PILARES = [
@@ -139,6 +140,52 @@ export default function Home() {
 
 
 
+
+      {/* ACADEMIA DE IA — antes dos pilares */}
+      <section className="relative">
+        <div className="max-w-[1400px] mx-auto px-5 md:px-10 pt-10 md:pt-14">
+          <div className="mb-6">
+            <p className="text-[11px] tracking-[0.3em] uppercase text-terracotta mb-3">
+              / Academia de IA
+            </p>
+            <h2 className="font-display text-4xl md:text-6xl tracking-[-0.025em] text-ink max-w-3xl leading-[1.02]">
+              Aprenda as ferramentas,
+              <br />
+              <span className="text-ink/35">domine a prática.</span>
+            </h2>
+          </div>
+
+          <Link
+            to="/metodo/pilar-1/aprenda-ia"
+            className="group relative overflow-hidden rounded-3xl border border-[var(--color-border)] bg-white p-6 md:p-8 grid grid-cols-1 md:grid-cols-[auto_1fr_auto] items-center gap-5 md:gap-8 transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:border-terracotta/45"
+          >
+            <span className="w-[60px] h-[60px] rounded-2xl bg-terracotta text-cream flex items-center justify-center shadow-[0_8px_20px_-8px_rgba(124,61,41,0.6)] transition-transform group-hover:scale-105">
+              <GraduationCap size={26} strokeWidth={1.75} />
+            </span>
+            <div className="min-w-0">
+              <h3 className="font-display text-2xl md:text-[1.7rem] leading-[1.1] tracking-[-0.02em] text-ink">
+                Domine as principais IAs para o seu negócio
+              </h3>
+              <p className="text-sm text-ink/55 mt-2 max-w-xl leading-relaxed">
+                Aulas práticas de cada ferramenta, com prompts e exemplos — uma jornada por cada uma.
+              </p>
+              <div className="flex flex-wrap gap-1.5 mt-4">
+                {["ChatGPT", "Claude", "Gemini", "Grok", "NotebookLM", "Lovable", "Tella"].map((t) => (
+                  <span
+                    key={t}
+                    className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-terracotta/[0.08] text-terracotta"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <span className="hidden md:flex w-11 h-11 rounded-full border border-terracotta/30 items-center justify-center text-terracotta transition-all group-hover:bg-terracotta group-hover:text-cream group-hover:border-terracotta shrink-0">
+              <ArrowUpRight size={18} strokeWidth={2} />
+            </span>
+          </Link>
+        </div>
+      </section>
 
       {/* PILARES — lista editorial */}
       <section className="relative">
