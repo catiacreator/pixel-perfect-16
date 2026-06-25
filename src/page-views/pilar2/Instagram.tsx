@@ -19,7 +19,7 @@ export default function Instagram() {
 
         <div className="flex items-center justify-between mb-4">
           <p className="font-serif text-lg text-ink">Formatos</p>
-          <p className="text-xs text-muted">Clique para entrar em cada trilha</p>
+          <p className="text-xs text-muted">Clique para entrar em cada jornada</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
@@ -27,7 +27,7 @@ export default function Instagram() {
             <Link key={f.slug} to={`/metodo/pilar-2/redes-sociais/instagram/${f.slug}`} className="rounded-2xl border border-border bg-white p-5 hover:border-terracotta">
               <p className="font-serif text-xl text-ink mb-2">{f.titulo}</p>
               <p className="text-sm text-muted mb-3">{f.desc}</p>
-              <span className="text-sm font-semibold text-terracotta">Abrir trilha →</span>
+              <span className="text-sm font-semibold text-terracotta">Abrir jornada →</span>
             </Link>
           ))}
         </div>

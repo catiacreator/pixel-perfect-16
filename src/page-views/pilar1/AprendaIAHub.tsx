@@ -30,7 +30,7 @@ export default function AprendaIAHub() {
 
       <div className="max-w-[1200px] mx-auto px-5 md:px-10 pt-10 pb-24">
         <p className="text-ink/70 text-sm md:text-base mb-8 max-w-2xl">
-          Escolha a IA que você quer aprender. Cada card abre uma trilha com aulas, prompts e
+          Escolha a IA que você quer aprender. Cada card abre uma jornada com aulas, prompts e
           exemplos práticos.
         </p>
 

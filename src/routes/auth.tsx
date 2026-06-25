@@ -78,7 +78,7 @@ function AuthPage() {
           {mode === "signin" ? "Entrar" : "Criar conta"}
         </h1>
         <p className="text-sm text-ink/60 mt-1">
-          {mode === "signin" ? "Acesse sua trilha." : "Comece sua trilha em segundos."}
+          {mode === "signin" ? "Acesse sua jornada." : "Comece sua jornada em segundos."}
         </p>
 
         <button

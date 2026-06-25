@@ -73,7 +73,7 @@ export default function InstagramFormato() {
           <div className="rounded-xl border border-gold bg-white p-4 mb-6 flex items-start gap-2">
             <Lock size={15} className="text-gold flex-shrink-0 mt-0.5" />
             <p className="text-sm text-muted">
-              Pra essa trilha funcionar, precisa terminar antes: <strong className="text-ink">{formato.dependencia}</strong>.
+              Pra essa jornada funcionar, precisa terminar antes: <strong className="text-ink">{formato.dependencia}</strong>.
               Você pode seguir mesmo assim, mas o prompt e os PDFs vão sair com lacunas.
             </p>
           </div>

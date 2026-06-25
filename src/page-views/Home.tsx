@@ -114,7 +114,7 @@ export default function Home() {
 
 
             <p className="font-editorial text-base md:text-lg text-cream/80 max-w-xl leading-snug">
-              Uma trilha simples para transformar o que sabe em conteúdo,
+              Uma jornada simples para transformar o que sabe em conteúdo,
               autoridade e liberdade — com recurso a Inteligência Artificial.
             </p>
             <div className="flex flex-wrap items-center gap-3">
@@ -157,7 +157,7 @@ export default function Home() {
                 / Os 4 pilares
               </p>
               <h2 className="font-display text-4xl md:text-6xl tracking-[-0.025em] text-ink max-w-3xl leading-[1.02]">
-                A sua trilha,
+                A sua jornada,
                 <br />
                 <span className="text-ink/35">passo a passo.</span>
               </h2>

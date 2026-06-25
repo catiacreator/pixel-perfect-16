@@ -119,7 +119,7 @@ DADOS DA PROFISSIONAL:
 Nome: Cátia Creator
 Profissão: especialista em IA e criação de conteudo
 O que faz: Ensino iniciantes e empreendedores a criar conteúdo com Inteligência Artificial por meio de uma comunidade com aulas gravadas. Ajudo a sair do zero até publicar e captar leads com consistência.
-Como resolve: Aulas gravadas on‑demand com passo a passo, templates, prompts de Inteligência Artificial, checklists e tutoriais. Comunidade ativa para dúvidas e feedback em grupo, com trilhas do zero ao primeiro calendário de conteúdo e automações básicas. Sucesso medido por crescimento do perfil e leads gerados, sem promessa de prazo fixo.
+Como resolve: Aulas gravadas on‑demand com passo a passo, templates, prompts de Inteligência Artificial, checklists e tutoriais. Comunidade ativa para dúvidas e feedback em grupo, com jornadas do zero ao primeiro calendário de conteúdo e automações básicas. Sucesso medido por crescimento do perfil e leads gerados, sem promessa de prazo fixo.
 Público: Iniciantes e empreendedores que querem começar a produzir conteúdo e usar Inteligência Artificial para crescer no Instagram e outras redes, incluindo micro e pequenos negócios em fase inicial.
 Dores do público: Eu não sei usar Inteligência Artificial para criar conteúdo. | Eu não sei o básico do Instagram para começar. | Eu não sei por onde começar meu calendário de posts.
 Desejos do público: Quero dominar ferramentas de Inteligência Artificial de forma simples. | Quero crescer seguidores qualificados de forma consistente. | Quero gerar leads a partir do meu conteúdo.
@@ -267,7 +267,7 @@ function BioConquista() {
         <p className="text-[10px] tracking-[0.2em] uppercase text-ink/45 mb-1">Conquista</p>
         <h3 className="font-serif text-xl text-ink mb-1">Meu Instagram já tem bio</h3>
         <p className="text-sm text-ink/55 mb-4 leading-relaxed">
-          Marque "Sim" quando sua bio estiver publicada no Instagram. Isso conta como uma conquista na sua trilha.
+          Marque "Sim" quando sua bio estiver publicada no Instagram. Isso conta como uma conquista na sua jornada.
         </p>
         <div className="flex gap-2">
           <button

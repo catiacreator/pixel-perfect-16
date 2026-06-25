@@ -163,7 +163,7 @@ export default function AulaPage() {
           to={`/metodo/pilar-1/aprenda-ia/${tool.slug}`}
           className="inline-flex items-center gap-2 text-sm text-ink/65 hover:text-terracotta transition-colors mb-8"
         >
-          <ArrowLeft size={14} /> Voltar para a trilha
+          <ArrowLeft size={14} /> Voltar para a jornada
         </Link>
 
         {/* Cabeçalho da aula */}
