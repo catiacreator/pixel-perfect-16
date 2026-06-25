@@ -414,10 +414,164 @@ const TABS = [
 
 const DIAS = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
 
+type DiaCal = { tema: string; formato: string; story: string };
+const CAL_KEY = "leveza.calendario.v1";
+const emptyCal = (): DiaCal[] => DIAS.map(() => ({ tema: "", formato: "", story: "" }));
+
+const norm = (s: string) => s.normalize("NFD").replace(/\p{M}/gu, "").toLowerCase();
+
+// "[BASTIDOR] tema do post — Pilar 2" -> "tema do post"
+function temaLimpo(t: string): string {
+  return t.replace(/^\s*\[[^\]]*\]\s*/, "").replace(/\s*[—–-]\s*Pilar.*$/i, "").trim();
+}
+
+// Sugestão simples de story a partir do tema (sem chamar IA)
+function storyDoTema(tema: string): string {
+  const t = temaLimpo(tema);
+  return t ? `Mostra um bastidor real ligado a "${t}" e fecha com uma pergunta nos stickers.` : "";
+}
+
+// Lê o bloco [CALENDARIO_INICIO]…[CALENDARIO_FIM] (ou linhas soltas "Dia | tema | formato | story: …")
+function parseCalendario(texto: string): DiaCal[] | null {
+  const m = texto.match(/\[CALENDARIO_INICIO\]([\s\S]*?)\[CALENDARIO_FIM\]/i);
+  const bloco = m ? m[1] : texto;
+  const byIdx: Record<number, DiaCal> = {};
+  for (const linha of bloco.split("\n").map((l) => l.trim()).filter(Boolean)) {
+    const p = linha.split("|").map((x) => x.trim());
+    if (p.length < 2) continue;
+    const idx = DIAS.findIndex((d) => norm(p[0]).startsWith(norm(d).slice(0, 3)));
+    if (idx < 0) continue;
+    byIdx[idx] = { tema: p[1] || "", formato: p[2] || "", story: (p[3] || "").replace(/^story:\s*/i, "") };
+  }
+  return Object.keys(byIdx).length ? DIAS.map((_, i) => byIdx[i] || { tema: "", formato: "", story: "" }) : null;
+}
+
+const escHtml = (s: string) =>
+  s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c] as string));
+
 export default function RedesSociais() {
   const [params, setParams] = useSearchParams();
   const aba = params.get("aba") || "modelos";
   const [formato, setFormato] = useState<"reels" | "estatico" | null>(null);
+
+  // ─── Calendário Editorial ───
+  const [cal, setCal] = useState<DiaCal[]>(emptyCal);
+  const [colado, setColado] = useState("");
+  const [aviso, setAviso] = useState("");
+  const calHydrated = useRef(false);
+
+  useEffect(() => {
+    const load = () => {
+      try {
+        const raw = localStorage.getItem(CAL_KEY);
+        if (raw) setCal(JSON.parse(raw));
+      } catch {
+        /* ignora JSON inválido */
+      }
+    };
+    load();
+    calHydrated.current = true;
+    // recarrega quando o Supabase hidrata o localStorage desta conta
+    window.addEventListener("leveza:hydrated", load);
+    return () => window.removeEventListener("leveza:hydrated", load);
+  }, []);
+
+  useEffect(() => {
+    if (!calHydrated.current) return;
+    try {
+      localStorage.setItem(CAL_KEY, JSON.stringify(cal));
+    } catch {
+      /* quota cheia — ignora */
+    }
+  }, [cal]);
+
+  const flashAviso = (msg: string) => {
+    setAviso(msg);
+    window.setTimeout(() => setAviso(""), 2500);
+  };
+
+  const setDia = (i: number, patch: Partial<DiaCal>) =>
+    setCal((prev) => prev.map((d, idx) => (idx === i ? { ...d, ...patch } : d)));
+
+  const preencherDaLinha = () => {
+    const parsed = parseCalendario(colado);
+    if (!parsed) {
+      flashAviso("Não encontrei o calendário. Cola o resultado da Linha Editorial (bloco CALENDARIO_INICIO…FIM).");
+      return;
+    }
+    setCal(parsed);
+    flashAviso("Calendário preenchido a partir da Linha Editorial ✓");
+  };
+
+  const preencherStories = () => {
+    setCal((prev) => prev.map((d) => (d.tema && !d.story ? { ...d, story: storyDoTema(d.tema) } : d)));
+    flashAviso("Stories sugeridos preenchidos ✓");
+  };
+
+  const zerarCal = () => {
+    if (!confirm("Apagar todo o calendário desta semana?")) return;
+    setCal(emptyCal());
+  };
+
+  const salvarCal = () => {
+    try {
+      localStorage.setItem(CAL_KEY, JSON.stringify(cal));
+      flashAviso("Calendário guardado ✓");
+    } catch {
+      flashAviso("Não foi possível guardar (armazenamento cheio).");
+    }
+  };
+
+  const baixarCalPDF = () => {
+    const doc = readDoc();
+    const nome = (doc.nome as string) || "";
+    const linhas = DIAS.map(
+      (d, i) => `<tr>
+        <td class="dia">${escHtml(d)}</td>
+        <td>${escHtml(cal[i]?.tema || "—")}</td>
+        <td class="fmt">${escHtml(cal[i]?.formato || "—")}</td>
+        <td>${escHtml(cal[i]?.story || "—")}</td>
+      </tr>`,
+    ).join("");
+    const html = `<!doctype html><html lang="pt"><head><meta charset="utf-8">
+<title>Calendário Editorial${nome ? " — " + escHtml(nome) : ""}</title>
+<style>
+  @page { size: A4 landscape; margin: 16mm; }
+  * { box-sizing: border-box; }
+  body { font-family: Georgia, "Times New Roman", serif; color: #2A1A10; margin: 0; }
+  .top { border-bottom: 3px solid #7C3D29; padding-bottom: 12px; margin-bottom: 22px; }
+  .kicker { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: .28em; text-transform: uppercase; color: #7C3D29; margin: 0 0 4px; }
+  h1 { font-size: 26px; margin: 0; color: #2A1A10; }
+  .sub { font-family: Arial, sans-serif; font-size: 12px; color: #8E7B64; margin: 4px 0 0; }
+  table { width: 100%; border-collapse: collapse; }
+  th { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #fff; background: #7C3D29; text-align: left; padding: 9px 12px; }
+  td { font-size: 13px; padding: 11px 12px; border-bottom: 1px solid #E7DBC9; vertical-align: top; }
+  tr:nth-child(even) td { background: #FBF7F0; }
+  td.dia { font-weight: bold; color: #7C3D29; white-space: nowrap; width: 90px; }
+  td.fmt { font-family: Arial, sans-serif; font-size: 12px; color: #6F8477; white-space: nowrap; width: 120px; }
+  .foot { font-family: Arial, sans-serif; font-size: 10px; color: #B7A88F; margin-top: 18px; }
+</style></head>
+<body>
+  <div class="top">
+    <p class="kicker">Leveza no Digital · Pilar 2</p>
+    <h1>Calendário Editorial da Semana</h1>
+    <p class="sub">${nome ? escHtml(nome) + " · " : ""}7 dias · tema, formato e story por dia</p>
+  </div>
+  <table>
+    <thead><tr><th>Dia</th><th>Tema do post</th><th>Formato</th><th>Story do dia</th></tr></thead>
+    <tbody>${linhas}</tbody>
+  </table>
+  <p class="foot">Gerado em Leveza no Digital</p>
+  <script>window.onload=function(){window.print();}</script>
+</body></html>`;
+    const w = window.open("", "_blank", "width=1000,height=800");
+    if (!w) {
+      flashAviso("Permite popups neste site para baixar o PDF.");
+      return;
+    }
+    w.document.write(html);
+    w.document.close();
+  };
 
   return (
     <Layout>
@@ -487,30 +641,113 @@ export default function RedesSociais() {
 
         {aba === "calendario" && (
           <>
-            <h2 className="font-serif text-xl text-ink mb-2">Defina o tema de cada dia da semana</h2>
-            <p className="text-sm text-muted mb-4">Use a sua linha editorial pra distribuir os temas pelos dias.</p>
-            <div className="flex gap-2 mb-6">
-              <button className="text-xs font-semibold text-terracotta">✨ Preencher calendário automaticamente</button>
+            {/* Cabeçalho do card */}
+            <div className="rounded-2xl border border-border bg-white overflow-hidden mb-5">
+              <div className="bg-gradient-to-br from-terracotta to-terracotta-dark px-6 py-5">
+                <p className="text-[11px] tracking-[0.22em] uppercase text-cream/70 mb-1">Pilar 2 · Etapa 4</p>
+                <h2 className="font-serif text-2xl text-cream">Calendário Editorial da Semana</h2>
+                <p className="text-sm text-cream/75 mt-1">
+                  Distribui os temas, formatos e stories pelos 7 dias — a partir da tua Linha Editorial.
+                </p>
+              </div>
+              <div className="p-6">
+                <label className="text-xs tracking-[0.1em] uppercase text-muted mb-1.5 block">
+                  Cola aqui o resultado da Linha Editorial
+                </label>
+                <textarea
+                  rows={4}
+                  value={colado}
+                  onChange={(e) => setColado(e.target.value)}
+                  placeholder="Cola o que a IA devolveu (inclui o bloco CALENDARIO_INICIO … CALENDARIO_FIM)…"
+                  className="w-full rounded-xl border border-border p-3 text-sm outline-none focus:border-terracotta resize-none mb-3"
+                />
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={preencherDaLinha}
+                    className="inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-terracotta text-cream hover:bg-terracotta-dark transition-colors"
+                  >
+                    ✨ Preencher calendário a partir da Linha Editorial
+                  </button>
+                  <button
+                    onClick={preencherStories}
+                    className="inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full border border-border text-ink hover:border-terracotta/50 transition-colors"
+                  >
+                    Preencher stories automaticamente
+                  </button>
+                </div>
+                {aviso && <p className="text-xs text-sage mt-3">{aviso}</p>}
+              </div>
             </div>
-            <div className="space-y-4">
-              {DIAS.map((dia) => (
-                <div key={dia} className="rounded-2xl border border-border bg-white p-4">
-                  <p className="font-serif text-lg text-ink mb-2">{dia}</p>
-                  <input placeholder="Tema — ex: [BASTIDOR] Conexão" className="w-full rounded-xl border border-border p-2 text-sm mb-2" />
-                  <select className="w-full rounded-xl border border-border p-2 text-sm mb-2">
-                    <option>Selecione o formato…</option>
+
+            {/* Tabela dos 7 dias */}
+            <div className="rounded-2xl border border-border bg-white overflow-hidden">
+              <div className="hidden md:grid grid-cols-[90px_1fr_150px_1fr] gap-3 px-4 py-3 bg-cream-warm/60 border-b border-border text-[10px] tracking-[0.14em] uppercase text-ink/50 font-medium">
+                <span>Dia</span>
+                <span>Tema do post</span>
+                <span>Formato</span>
+                <span>Story do dia</span>
+              </div>
+              {DIAS.map((dia, i) => (
+                <div
+                  key={dia}
+                  className="grid grid-cols-1 md:grid-cols-[90px_1fr_150px_1fr] gap-2 md:gap-3 px-4 py-3 border-b border-border last:border-0 md:items-center"
+                >
+                  <p className="font-serif text-base md:text-sm text-terracotta">{dia}</p>
+                  <input
+                    value={cal[i]?.tema || ""}
+                    onChange={(e) => setDia(i, { tema: e.target.value })}
+                    placeholder="[BASTIDOR] tema — Pilar 2"
+                    className="w-full rounded-lg border border-border p-2 text-sm"
+                  />
+                  <select
+                    value={cal[i]?.formato || ""}
+                    onChange={(e) => setDia(i, { formato: e.target.value })}
+                    className="w-full rounded-lg border border-border p-2 text-sm"
+                  >
+                    <option value="">Formato…</option>
+                    {cal[i]?.formato && !["Carrossel", "Reels", "Imagem única"].includes(cal[i].formato) && (
+                      <option value={cal[i].formato}>{cal[i].formato}</option>
+                    )}
                     <option>Carrossel</option>
                     <option>Reels</option>
-                    <option>Post único</option>
+                    <option>Imagem única</option>
                   </select>
-                  <input placeholder="Story do dia" className="w-full rounded-xl border border-border p-2 text-sm" />
+                  <input
+                    value={cal[i]?.story || ""}
+                    onChange={(e) => setDia(i, { story: e.target.value })}
+                    placeholder="Story do dia"
+                    className="w-full rounded-lg border border-border p-2 text-sm"
+                  />
                 </div>
               ))}
             </div>
-            <div className="flex flex-wrap gap-3 mt-6">
-              <button className="text-sm px-4 py-2 rounded-full border border-border">Zerar calendário</button>
-              <button className="text-sm px-4 py-2 rounded-full border border-border">Baixar PDF</button>
-              <Link to="/metodo/pilar-2/redes-sociais?aba=bio" className="text-sm px-4 py-2 rounded-full bg-ink text-cream">Ir para a próxima fase: Bio</Link>
+
+            {/* Ações */}
+            <div className="flex flex-wrap items-center gap-3 mt-6">
+              <button
+                onClick={zerarCal}
+                className="text-sm px-4 py-2 rounded-full border border-border text-ink hover:border-terracotta/50 transition-colors"
+              >
+                Zerar
+              </button>
+              <button
+                onClick={baixarCalPDF}
+                className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-full border border-border text-ink hover:border-terracotta/50 transition-colors"
+              >
+                <FileText size={14} /> Baixar PDF
+              </button>
+              <button
+                onClick={salvarCal}
+                className="text-sm px-4 py-2 rounded-full bg-terracotta text-cream hover:bg-terracotta-dark transition-colors"
+              >
+                Salvar
+              </button>
+              <Link
+                to="/metodo/pilar-2/redes-sociais?aba=bio"
+                className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-full bg-ink text-cream ml-auto"
+              >
+                Ir para a próxima fase: Bio <ArrowRight size={15} />
+              </Link>
             </div>
           </>
         )}
