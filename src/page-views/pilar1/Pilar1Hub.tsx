@@ -74,7 +74,9 @@ export default function Pilar1Hub() {
 
         <div className="space-y-4">
           {isLoading && <p className="text-sm text-ink/50">Carregando etapas…</p>}
-          {data?.etapas.map((e, idx) => (
+          {data?.etapas
+            .filter((e) => e.slug !== "aprenda-ia")
+            .map((e, idx) => (
             <div key={e.id} className="relative">
               <EtapaCard
                 icon={ICONS[e.slug] ?? <BookOpen size={18} />}
