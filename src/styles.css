@@ -20,10 +20,10 @@
   --color-border: #E7DBC9;
   --color-border-soft: #F1E8DA;
   --color-success: #6F8477;
-  --font-serif: "DM Serif Display", Georgia, serif;
+  --font-serif: "Archivo", "Archivo Black", system-ui, sans-serif;
   --font-sans: "DM Sans", "Inter Tight", system-ui, sans-serif;
   --font-mono: "DM Sans", "Inter Tight", system-ui, sans-serif;
-  --font-script: "DM Serif Display", Georgia, serif;
+  --font-script: "Archivo", "Archivo Black", system-ui, sans-serif;
 }
 
 
@@ -184,8 +184,8 @@
   --color-mist: rgba(255, 255, 255, 0.08);
 
   --font-display: "DM Sans", "Inter Tight", system-ui, sans-serif;
-  --font-editorial: "DM Serif Display", Georgia, serif;
-  --font-tool: "DM Serif Display", Georgia, serif;
+  --font-editorial: "Archivo", "Archivo Black", system-ui, sans-serif;
+  --font-tool: "Archivo", "Archivo Black", system-ui, sans-serif;
 }
 
 
@@ -204,11 +204,12 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* Títulos em DM Serif Display — peso natural (elegante) */
+  /* Títulos em Archivo — bold e impactante (estilo do print).
+     !important para vencer classes font-display/font-editorial/font-normal espalhadas. */
   h1, h2, h3 {
-    font-family: var(--font-serif);
-    font-weight: 400;
-    letter-spacing: -0.01em;
+    font-family: var(--font-serif) !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.02em;
   }
 }
 
