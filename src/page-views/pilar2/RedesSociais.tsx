@@ -7,6 +7,7 @@ import ColarResultado from "../../components/ColarResultado";
 import TodoBanner from "../../components/TodoBanner";
 import { ArrowRight, Smartphone, Copy, Check, ChevronDown, ClipboardPaste, Play, FileText, Eye, EyeOff } from "lucide-react";
 import { usePilar2 } from "@/lib/pilar2-hooks";
+import ModeloPost from "./ModeloPost";
 
 const BIO_STORAGE_KEY = "leveza.bio.v1";
 const BIO_CONQUISTA_KEY = "leveza.bio.conquista.v1";
@@ -596,6 +597,9 @@ export default function RedesSociais() {
         {aba === "modelos" && (
           <>
             <div className="mb-6"><VideoPlaceholder label="Criando carrosséis com IA: como ajustar e refinar seus posts" /></div>
+            <div className="mb-6">
+              <ModeloPost />
+            </div>
             <Link to="/metodo/pilar-2/redes-sociais?aba=linha" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-semibold">
               Ir para Linha Editorial <ArrowRight size={15} />
             </Link>
