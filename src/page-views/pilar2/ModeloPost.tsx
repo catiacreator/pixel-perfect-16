@@ -6,7 +6,7 @@ type CorFaixa = "terracota" | "sage" | "mostarda";
 const CORES: Record<CorFaixa, { label: string; band: string; titulo: string; rodape: string; swatch: string }> = {
   terracota: { label: "Terracota", band: "#7C3D29", titulo: "#F5EFE3", rodape: "#E0A94E", swatch: "#7C3D29" },
   sage: { label: "Sage", band: "#6F8477", titulo: "#F5EFE3", rodape: "#E7D8B5", swatch: "#6F8477" },
-  mostarda: { label: "Mostarda", band: "#C99A6A", titulo: "#2A1A10", rodape: "#5C2A1A", swatch: "#C99A6A" },
+  mostarda: { label: "Mostarda", band: "#D9A23C", titulo: "#2A1A10", rodape: "#5C2A1A", swatch: "#D9A23C" },
 };
 
 const FOTO_RATIO = 0.58; // fração da altura ocupada pela foto (resto é a faixa)
