@@ -64,8 +64,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {/* Logótipo */}
           <Link to="/" className="flex items-center gap-2.5 leading-none shrink-0 group">
             <span className="w-2 h-2 rounded-full bg-cream shadow-[0_0_18px_2px_rgba(245,242,236,0.6)]" />
-            <span className="font-serif text-[17px] tracking-tight text-cream leading-none">Leveza</span>
-            <span className="hidden sm:inline font-serif text-[12px] tracking-[0.2em] uppercase text-cream/55 leading-none">
+            <span className="font-sans font-semibold text-[16px] tracking-tight text-cream leading-none">Leveza</span>
+            <span className="hidden sm:inline font-sans font-semibold text-[16px] tracking-tight text-cream leading-none">
               no Digital
             </span>
           </Link>
@@ -172,7 +172,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="min-w-0">
             <div className="flex items-center gap-2.5">
               <span className="w-1.5 h-1.5 rounded-full bg-terracotta" />
-              <p className="font-serif text-base text-ink">Leveza no Digital</p>
+              <p className="font-sans font-semibold text-base text-ink">Leveza no Digital</p>
             </div>
             <p className="text-xs text-ink/50 mt-2 max-w-sm">
               Transforme conhecimento em liberdade. Jornada guiada com Inteligência Artificial.

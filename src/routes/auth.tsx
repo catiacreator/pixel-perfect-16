@@ -70,8 +70,8 @@ function AuthPage() {
       <div className="w-full max-w-md bg-white border border-[var(--color-border)] rounded-2xl p-8">
         <div className="flex items-center gap-2.5 mb-6">
           <span className="w-2 h-2 rounded-full bg-terracotta shadow-[0_0_18px_2px_var(--color-terracotta)]" />
-          <span className="font-serif text-[17px] tracking-tight text-ink leading-none">Leveza</span>
-          <span className="font-serif text-[12px] tracking-[0.2em] uppercase text-ink/45 leading-none">no Digital</span>
+          <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none">Leveza</span>
+          <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none">no Digital</span>
         </div>
 
         <h1 className="text-2xl font-semibold text-ink">
