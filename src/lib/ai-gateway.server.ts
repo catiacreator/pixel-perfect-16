@@ -70,8 +70,11 @@ export function resolveAiModel(runId?: string) {
       name: "google",
       baseURL: "https://generativelanguage.googleapis.com/v1beta/openai",
       headers: { Authorization: `Bearer ${geminiKey}` },
+      // Essencial: sem isto o AI SDK envia { type: "json_object" } (sem schema)
+      // e o Gemini devolve um objeto vazio. Com isto envia json_schema + strict.
+      supportsStructuredOutputs: true,
     });
-    return google("gemini-2.0-flash");
+    return google("gemini-2.5-flash");
   }
 
   throw new Error(
