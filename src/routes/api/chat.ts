@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
-import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
+import { resolveAiModel } from "@/lib/ai-gateway.server";
 
 const SYSTEM_PROMPT = `És o Assistente "Leveza no Digital" — um companheiro caloroso, prático e directo que ajuda o utilizador a transformar o que sabe em conteúdo, autoridade e liberdade, com recurso a Inteligência Artificial.
 
@@ -31,16 +31,18 @@ export const Route = createFileRoute("/api/chat")({
           return new Response("Messages are required", { status: 400 });
         }
 
-        const key = process.env.LOVABLE_API_KEY;
-        if (!key) return new Response("Missing LOVABLE_API_KEY", { status: 500 });
-
         const system = body.userContext?.trim()
           ? `${SYSTEM_PROMPT}\n\n## Sobre o utilizador (Documento Mestre + Método desta conta)\n${body.userContext.trim()}`
           : SYSTEM_PROMPT;
 
-        const gateway = createLovableAiGatewayProvider(key);
+        let model;
+        try {
+          model = resolveAiModel();
+        } catch (e) {
+          return new Response(e instanceof Error ? e.message : "Missing AI key", { status: 500 });
+        }
         const result = streamText({
-          model: gateway("google/gemini-3-flash-preview"),
+          model,
           system,
           messages: await convertToModelMessages(body.messages),
         });

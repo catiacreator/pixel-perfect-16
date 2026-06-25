@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { generateObject } from "ai";
 import { z } from "zod";
-import { createLovableAiGatewayProvider } from "@/lib/ai-gateway.server";
+import { resolveAiModel } from "@/lib/ai-gateway.server";
 
 const DocMestreSchema = z.object({
   nome: z.string().optional().default(""),
@@ -38,11 +38,8 @@ a no máximo 5 itens cada, ordenados por urgência/relevância.`;
 export const extractDocMestre = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => z.object({ text: z.string().min(1).max(60000) }).parse(input))
   .handler(async ({ data }) => {
-    const key = process.env.LOVABLE_API_KEY;
-    if (!key) throw new Error("Missing LOVABLE_API_KEY");
-    const gateway = createLovableAiGatewayProvider(key);
     const { object } = await generateObject({
-      model: gateway("google/gemini-3-flash-preview"),
+      model: resolveAiModel(),
       schema: DocMestreSchema,
       system: SYSTEM,
       prompt: `Texto fornecido pelo utilizador:\n\n${data.text}\n\nExtrai os campos do Documento Mestre.`,
