@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { generateObject } from "ai";
 import { z } from "zod";
-import { resolveAiModel } from "@/lib/ai-gateway.server";
+import { withAiModel } from "@/lib/ai-gateway.server";
 
 const TarefaSchema = z.object({
   nome: z.string().describe("Nome curto e claro da tarefa, como uma frase de ação."),
@@ -33,12 +33,14 @@ export const extractTarefas = createServerFn({ method: "POST" })
     z.object({ text: z.string().min(3).max(8000) }).parse(input),
   )
   .handler(async ({ data }) => {
-    const { object } = await generateObject({
-      model: resolveAiModel(),
-      schema: ExtractSchema,
-      system: SYSTEM,
-      prompt: `Descrição da rotina do utilizador:\n\n${data.text}\n\nExtrai as tarefas.`,
-    });
+    const { object } = await withAiModel((model) =>
+      generateObject({
+        model,
+        schema: ExtractSchema,
+        system: SYSTEM,
+        prompt: `Descrição da rotina do utilizador:\n\n${data.text}\n\nExtrai as tarefas.`,
+      }),
+    );
     return object;
   });
 
