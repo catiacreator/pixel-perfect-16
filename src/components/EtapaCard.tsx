@@ -25,7 +25,7 @@ export default function EtapaCard({
   numero?: string;
 }) {
   return (
-    <div className="group relative bg-white rounded-2xl border border-[var(--color-border)] shadow-[0_1px_2px_rgba(60,40,20,0.04)] hover:shadow-[0_8px_24px_-12px_rgba(60,40,20,0.12)] hover:border-terracotta/30 transition-all px-6 md:px-8 py-6 md:py-7">
+    <div className="group relative bg-white rounded-2xl border border-[var(--color-border)] shadow-[0_1px_2px_rgba(60,40,20,0.04)] transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_18px_40px_-18px_rgba(90,40,25,0.28)] hover:border-terracotta/40 px-6 md:px-8 py-6 md:py-7">
       <div className="grid grid-cols-[3.5rem_1fr_auto] md:grid-cols-[4rem_1fr_auto] items-start gap-5 md:gap-8">
         {/* Ícone */}
         <div className="pt-1">
