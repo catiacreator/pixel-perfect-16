@@ -139,7 +139,7 @@ const PILARES: Record<number, PilarDef> = {
       { num: 6, label: "Conclusão Pilar 2", to: "/metodo/pilar-2/conclusao", icon: Trophy },
     ],
   },
-  3: { pilar: 3, title: "Criar Soluções", enabled: false, items: [] },
+  3: { pilar: 3, title: "Crie o seu Produto", enabled: false, items: [] },
   4: {
     pilar: 4,
     title: "Aprender a Vender",
@@ -161,7 +161,7 @@ const PILARES: Record<number, PilarDef> = {
 const PILAR_SHORT: Record<number, string> = {
   1: "Recuperar Seu Tempo",
   2: "Criar Autoridade",
-  3: "Criar Soluções",
+  3: "Crie o seu Produto",
   4: "Aprender a Vender",
 };
 

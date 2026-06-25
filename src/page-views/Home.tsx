@@ -33,7 +33,7 @@ const PILARES = [
   {
     n: "03",
     icon: Lightbulb,
-    titulo: "Soluções com o seu conhecimento",
+    titulo: "Crie o seu produto",
     sub: "Transforme o que sabe em produtos digitais.",
     to: "#",
     status: "embreve" as const,
