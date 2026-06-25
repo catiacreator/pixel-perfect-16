@@ -185,7 +185,7 @@ export default function Home() {
                     {p.n}
                   </span>
 
-                  <div className="relative flex items-center justify-between mb-6">
+                  <div className="relative mb-6">
                     <span
                       className={`w-[52px] h-[52px] rounded-2xl flex items-center justify-center transition-transform group-hover:scale-105 ${
                         disponivel
@@ -194,13 +194,6 @@ export default function Home() {
                       }`}
                     >
                       <Icon size={22} strokeWidth={1.75} />
-                    </span>
-                    <span
-                      className={`text-[10px] font-medium tracking-[0.18em] uppercase px-3 py-1.5 rounded-full ${
-                        disponivel ? "bg-terracotta/10 text-terracotta" : "bg-ink/5 text-ink/40"
-                      }`}
-                    >
-                      {p.minutos}
                     </span>
                   </div>
 
@@ -219,14 +212,25 @@ export default function Home() {
                     {p.sub}
                   </p>
 
-                  {disponivel && (
-                    <div className="relative mt-6 inline-flex items-center gap-2.5 text-sm font-semibold text-terracotta">
-                      Começar
-                      <span className="w-9 h-9 rounded-full border border-terracotta/30 flex items-center justify-center transition-all duration-300 group-hover:bg-terracotta group-hover:text-cream group-hover:border-terracotta group-hover:translate-x-0.5">
-                        <ArrowUpRight size={15} strokeWidth={2.25} />
+                  <div className="relative mt-6 flex items-center justify-between gap-3">
+                    {disponivel ? (
+                      <span className="inline-flex items-center gap-2.5 text-sm font-semibold text-terracotta">
+                        Começar
+                        <span className="w-9 h-9 rounded-full border border-terracotta/30 flex items-center justify-center transition-all duration-300 group-hover:bg-terracotta group-hover:text-cream group-hover:border-terracotta group-hover:translate-x-0.5">
+                          <ArrowUpRight size={15} strokeWidth={2.25} />
+                        </span>
                       </span>
-                    </div>
-                  )}
+                    ) : (
+                      <span />
+                    )}
+                    <span
+                      className={`text-[10px] font-medium tracking-[0.18em] uppercase px-3 py-1.5 rounded-full ${
+                        disponivel ? "bg-terracotta/10 text-terracotta" : "bg-ink/5 text-ink/40"
+                      }`}
+                    >
+                      {p.minutos}
+                    </span>
+                  </div>
                 </Wrapper>
               );
             })}
