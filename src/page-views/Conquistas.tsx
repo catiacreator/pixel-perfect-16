@@ -124,7 +124,7 @@ export default function Conquistas() {
             <Trophy size={26} strokeWidth={1.5} />
           </div>
           <div>
-            <h1 className="font-serif text-4xl md:text-5xl text-ink tracking-tight">Os Meus Marcos</h1>
+            <h1 className="font-serif text-4xl md:text-5xl text-ink tracking-tight">As Minhas Vitórias</h1>
             <p className="text-ink/55 text-sm mt-2 max-w-2xl">
               Ganhe pontos a cada aula concluída, pilar finalizado, acesso diário,
               pesquisa respondida e uso da base de mentorado.

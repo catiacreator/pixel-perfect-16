@@ -719,7 +719,7 @@ export default function MinhaBase() {
 
         {/* CONQUISTAS */}
         <section className="mt-10">
-          <h2 className="font-display text-lg text-ink mb-1">Marcos da jornada</h2>
+          <h2 className="font-display text-lg text-ink mb-1">Vitórias da jornada</h2>
           <p className="text-xs text-ink/55 mb-4">Desbloqueadas automaticamente conforme você avança.</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             {CONQUISTAS.map((c) => {
@@ -759,7 +759,7 @@ export default function MinhaBase() {
         <section className="mt-10 mb-10">
           <div className="flex items-end justify-between gap-3 mb-3">
             <div>
-              <h2 className="font-display text-lg text-ink">Seus marcos</h2>
+              <h2 className="font-display text-lg text-ink">Suas vitórias</h2>
               <p className="text-xs text-ink/55">Lançamentos, criações e vitórias que você quer guardar.</p>
             </div>
             <button

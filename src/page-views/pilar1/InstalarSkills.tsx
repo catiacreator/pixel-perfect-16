@@ -31,7 +31,7 @@ export default function InstalarSkills() {
           {SKILLS_GERAIS.map((s) => {
             const done = instaladas.has(s.id);
             const baseCls = `text-xs font-semibold rounded-full py-2 flex items-center justify-center gap-1.5 ${
-              done ? "border border-success text-success" : s.file ? "bg-ink text-cream" : "bg-ink/30 text-cream/80 cursor-not-allowed"
+              done ? "border border-success text-success" : s.file ? "bg-terracotta text-cream" : "bg-terracotta/40 text-cream/80 cursor-not-allowed"
             }`;
             return (
               <div key={s.id} className="rounded-xl border border-border bg-white p-4 flex flex-col gap-2">
@@ -70,7 +70,7 @@ export default function InstalarSkills() {
                 <a
                   href={s.file}
                   download
-                  className="text-xs font-semibold rounded-full px-3 py-1.5 bg-ink text-cream w-full flex items-center justify-center gap-1.5"
+                  className="text-xs font-semibold rounded-full px-3 py-1.5 bg-terracotta text-cream w-full flex items-center justify-center gap-1.5"
                 >
                   <Download size={13} /> Baixar .md
                 </a>

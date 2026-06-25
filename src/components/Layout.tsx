@@ -1,6 +1,6 @@
 import { Link } from "@/lib/router-compat";
 import { useLocation, useRouter } from "@tanstack/react-router";
-import { FileText, Mail, Map, Bot, Database, Award, Users, Search, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, LogOut } from "lucide-react";
+import { FileText, Mail, Map, Bot, Database, Award, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, LogOut } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { initMasterDocSync, resetMasterDocSync } from "@/lib/master-doc-sync";
@@ -8,11 +8,9 @@ import { initMasterDocSync, resetMasterDocSync } from "@/lib/master-doc-sync";
 const NAV = [
   { to: "/", label: "Início", icon: Map },
   { to: "/assistente", label: "Assistente IA", icon: Bot },
-  { to: "/minha-base", label: "A Minha Base", icon: Database },
+  { to: "/minha-base", label: "A minha jornada", icon: Database },
   { to: "/metodo/pilar-1/aprenda-ia/claude/instalar-skills", label: "Skills", icon: Award },
-  { to: "/conquistas", label: "Marcos", icon: Trophy },
-  { to: "/profissionais", label: "Profissionais", icon: Users },
-  { to: "/buscar", label: "Buscar", icon: Search },
+  { to: "/conquistas", label: "Vitórias", icon: Trophy },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -61,13 +59,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen w-full flex flex-col bg-cream text-ink font-display">
       {/* Cabeçalho */}
-      <header className="w-full sticky top-0 z-40 bg-cream/80 backdrop-blur-md border-b border-[var(--color-border)]">
+      <header className="w-full sticky top-0 z-40 bg-terracotta text-cream border-b border-terracotta-dark/50">
         <div className="max-w-[1400px] mx-auto px-5 md:px-10 h-16 md:h-18 grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8">
           {/* Logótipo */}
           <Link to="/" className="flex items-center gap-2.5 leading-none shrink-0 group">
-            <span className="w-2 h-2 rounded-full bg-terracotta shadow-[0_0_18px_2px_var(--color-terracotta)]" />
-            <span className="text-[15px] font-semibold tracking-tight text-ink">Leveza</span>
-            <span className="hidden sm:inline text-[10px] tracking-[0.35em] uppercase text-ink/40">
+            <span className="w-2 h-2 rounded-full bg-cream shadow-[0_0_18px_2px_rgba(245,242,236,0.6)]" />
+            <span className="text-[15px] font-semibold tracking-tight text-cream">Leveza</span>
+            <span className="hidden sm:inline text-[10px] tracking-[0.35em] uppercase text-cream/50">
               no Digital
             </span>
           </Link>
@@ -82,8 +80,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   to={item.to}
                   className={`relative px-3.5 py-2 rounded-full text-[13px] transition-all ${
                     active
-                      ? "bg-ink/10 text-ink"
-                      : "text-ink/55 hover:text-ink"
+                      ? "bg-cream/20 text-cream"
+                      : "text-cream/70 hover:text-cream hover:bg-cream/10"
                   }`}
                 >
                   {item.label}
@@ -96,7 +94,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-2 justify-end">
             <Link
               to="/doc-mestre"
-              className="hidden md:inline-flex items-center gap-1.5 text-[13px] pl-4 pr-3 py-2 bg-terracotta text-cream rounded-full font-medium hover:bg-terracotta-dark transition-colors"
+              className="hidden md:inline-flex items-center gap-1.5 text-[13px] pl-4 pr-3 py-2 bg-cream text-ink rounded-full font-medium hover:bg-cream-warm transition-colors"
             >
               <FileText size={13} strokeWidth={2.25} /> Documento
               <ArrowUpRight size={13} strokeWidth={2.25} />
@@ -104,7 +102,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {isAdmin && (
               <Link
                 to="/admin"
-                className="hidden md:inline-flex items-center gap-1.5 text-[13px] px-3 py-2 border border-[var(--color-border)] rounded-full text-ink/80 hover:bg-ink/5"
+                className="hidden md:inline-flex items-center gap-1.5 text-[13px] px-3 py-2 border border-cream/30 rounded-full text-cream/90 hover:bg-cream/10"
                 aria-label="Admin"
               >
                 <Shield size={13} strokeWidth={2.25} /> Admin
@@ -112,7 +110,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             )}
             <Link
               to="/mensagens"
-              className="w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center text-ink/70 hover:bg-ink/5 hover:text-ink transition-colors"
+              className="w-10 h-10 rounded-full border border-cream/30 flex items-center justify-center text-cream/80 hover:bg-cream/10 hover:text-cream transition-colors"
               aria-label="Mensagens"
             >
               <Mail size={15} strokeWidth={1.75} />
@@ -120,7 +118,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {signedIn ? (
               <button
                 onClick={handleLogout}
-                className="hidden md:inline-flex w-10 h-10 rounded-full border border-[var(--color-border)] items-center justify-center text-ink/60 hover:bg-ink/5 hover:text-ink"
+                className="hidden md:inline-flex w-10 h-10 rounded-full border border-cream/30 items-center justify-center text-cream/80 hover:bg-cream/10 hover:text-cream"
                 aria-label="Sair"
               >
                 <LogOut size={15} strokeWidth={1.75} />
@@ -128,14 +126,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             ) : (
               <Link
                 to="/auth"
-                className="hidden md:inline-flex text-[13px] px-4 py-2 border border-[var(--color-border)] rounded-full hover:bg-ink/5"
+                className="hidden md:inline-flex text-[13px] px-4 py-2 border border-cream/30 text-cream rounded-full hover:bg-cream/10"
               >
                 Entrar
               </Link>
             )}
             <button
               onClick={() => setOpen((v) => !v)}
-              className="lg:hidden w-10 h-10 rounded-full border border-[var(--color-border)] flex items-center justify-center text-ink"
+              className="lg:hidden w-10 h-10 rounded-full border border-cream/30 flex items-center justify-center text-cream"
               aria-label="Menu"
             >
               {open ? <X size={18} /> : <Menu size={18} />}

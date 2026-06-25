@@ -89,13 +89,6 @@ export default function Home() {
               </span>
             </div>
             <div className="hidden md:block h-px bg-cream/20" />
-            <Link
-              to="/metodo"
-              className="hidden md:inline-flex items-center gap-1.5 text-[12px] tracking-wide text-cream/75 hover:text-cream transition-colors"
-            >
-              Ver o método completo
-              <ArrowUpRight size={13} strokeWidth={2} />
-            </Link>
           </div>
 
           {/* Título editorial */}
