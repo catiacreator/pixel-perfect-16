@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Pilar4Page } from "@/page-views/pilar4/Pilar4Page";
 import VideoPlaceholder from "@/components/VideoPlaceholder";
-import { Bot, ArrowRight, ExternalLink } from "lucide-react";
+import { Bot, ExternalLink } from "lucide-react";
+import QuizEstrategia from "@/page-views/pilar4/QuizEstrategia";
 
 function Fundacao() {
   return (
@@ -54,9 +55,7 @@ function Fundacao() {
           </p>
         </div>
 
-        <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta text-cream text-sm font-semibold hover:bg-terracotta-dark transition-colors">
-          Descobrir minha estratégia <ArrowRight size={15} />
-        </button>
+        <QuizEstrategia />
       </div>
     </Pilar4Page>
   );
