@@ -15,7 +15,7 @@ const PILARES = [
   {
     n: "01",
     icon: Hourglass,
-    titulo: "Recuperar o seu tempo",
+    titulo: "Crie com Leveza sem roubar o seu tempo",
     sub: "Organize a sua rotina para criar com calma, não em pânico.",
     to: "/metodo/pilar-1",
     status: "disponivel" as const,
