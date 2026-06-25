@@ -44,9 +44,9 @@ const PILARES = [
     icon: TrendingUp,
     titulo: "Aprender a vender",
     sub: "Venda no digital com método, sem forçar.",
-    to: "#",
-    status: "embreve" as const,
-    minutos: "Em breve",
+    to: "/metodo/pilar-4",
+    status: "disponivel" as const,
+    minutos: "9 etapas",
   },
 ];
 
@@ -156,11 +156,11 @@ export default function Home() {
               </h2>
             </div>
             <p className="text-xs text-ink/40 shrink-0">
-              2 disponíveis · 2 em breve
+              3 disponíveis · 1 em breve
             </p>
           </div>
 
-          <div className="border-t border-[var(--color-border)]">
+          <div className="grid sm:grid-cols-2 gap-4 md:gap-5">
             {PILARES.map((p) => {
               const Icon = p.icon;
               const disponivel = p.status === "disponivel";
@@ -170,48 +170,63 @@ export default function Home() {
                 <Wrapper
                   key={p.n}
                   {...props}
-                  className={`group relative grid grid-cols-[60px_1fr_auto] md:grid-cols-[100px_auto_1fr_auto_auto] items-center gap-4 md:gap-8 border-b border-[var(--color-border)] py-7 md:py-10 transition-colors ${
+                  className={`group relative overflow-hidden rounded-3xl border p-6 md:p-7 transition-all duration-300 ease-out ${
                     disponivel
-                      ? "hover:bg-cream-warm/40 cursor-pointer"
-                      : "opacity-50"
+                      ? "bg-white border-[var(--color-border)] hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:border-terracotta/45 cursor-pointer"
+                      : "bg-cream-warm/40 border-dashed border-[var(--color-border)]"
                   }`}
                 >
-                  <div className="font-display text-3xl md:text-5xl text-ink/20 tracking-tight">
+                  {/* número gigante de fundo */}
+                  <span
+                    className={`pointer-events-none absolute -top-5 right-2 font-display font-bold text-[110px] leading-none tracking-tighter tabular-nums transition-colors ${
+                      disponivel ? "text-terracotta/10 group-hover:text-terracotta/20" : "text-ink/[0.04]"
+                    }`}
+                  >
                     {p.n}
-                  </div>
-                  <div
-                    className={`hidden md:flex w-14 h-14 rounded-2xl items-center justify-center shrink-0 transition-colors ${
-                      disponivel
-                        ? "bg-ink/5 text-ink/70 group-hover:bg-terracotta group-hover:text-cream"
-                        : "bg-ink/5 text-ink/30"
-                    }`}
-                  >
-                    <Icon size={20} strokeWidth={1.6} />
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="font-display text-xl md:text-3xl text-ink leading-tight tracking-[-0.015em]">
-                      {p.titulo}
-                    </h3>
-                    <p className="text-[13px] md:text-sm text-ink/55 mt-1.5 leading-relaxed max-w-xl">
-                      {p.sub}
-                    </p>
-                  </div>
-                  <span
-                    className={`hidden md:inline-flex items-center text-[11px] tracking-[0.2em] uppercase ${
-                      disponivel ? "text-terracotta" : "text-ink/30"
-                    }`}
-                  >
-                    {p.minutos}
                   </span>
-                  <span
-                    className={`w-10 h-10 md:w-12 md:h-12 rounded-full border flex items-center justify-center shrink-0 transition-all ${
-                      disponivel
-                        ? "border-ink/15 text-ink group-hover:bg-ink group-hover:text-cream group-hover:border-ink group-hover:rotate-45"
-                        : "border-ink/10 text-ink/30"
+
+                  <div className="relative flex items-center justify-between mb-6">
+                    <span
+                      className={`w-[52px] h-[52px] rounded-2xl flex items-center justify-center transition-transform group-hover:scale-105 ${
+                        disponivel
+                          ? "bg-terracotta text-cream shadow-[0_8px_20px_-8px_rgba(124,61,41,0.6)]"
+                          : "bg-ink/5 text-ink/30"
+                      }`}
+                    >
+                      <Icon size={22} strokeWidth={1.75} />
+                    </span>
+                    <span
+                      className={`text-[10px] font-medium tracking-[0.18em] uppercase px-3 py-1.5 rounded-full ${
+                        disponivel ? "bg-terracotta/10 text-terracotta" : "bg-ink/5 text-ink/40"
+                      }`}
+                    >
+                      {p.minutos}
+                    </span>
+                  </div>
+
+                  <h3
+                    className={`relative font-display text-2xl md:text-[1.7rem] leading-[1.1] tracking-[-0.02em] ${
+                      disponivel ? "text-ink" : "text-ink/50"
                     }`}
                   >
-                    <ArrowUpRight size={16} strokeWidth={2} />
-                  </span>
+                    {p.titulo}
+                  </h3>
+                  <p
+                    className={`relative text-sm mt-2.5 leading-relaxed max-w-md ${
+                      disponivel ? "text-ink/55" : "text-ink/40"
+                    }`}
+                  >
+                    {p.sub}
+                  </p>
+
+                  {disponivel && (
+                    <div className="relative mt-6 inline-flex items-center gap-2.5 text-sm font-semibold text-terracotta">
+                      Começar
+                      <span className="w-9 h-9 rounded-full border border-terracotta/30 flex items-center justify-center transition-all duration-300 group-hover:bg-terracotta group-hover:text-cream group-hover:border-terracotta group-hover:translate-x-0.5">
+                        <ArrowUpRight size={15} strokeWidth={2.25} />
+                      </span>
+                    </div>
+                  )}
                 </Wrapper>
               );
             })}
