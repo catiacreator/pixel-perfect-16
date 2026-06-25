@@ -241,35 +241,35 @@ export default function Home() {
       {/* CAMINHO PARALELO */}
       <section className="relative">
         <div className="max-w-[1400px] mx-auto px-5 md:px-10 pb-20 md:pb-28">
-          <div className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-cream-warm via-[#EFE4CE] to-gold/40 border border-terracotta/20 p-8 md:p-14">
-            <div className="pointer-events-none absolute -top-32 -right-20 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle_at_center,var(--color-terracotta)_0%,transparent_60%)] opacity-20 blur-3xl" />
+          <div className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-terracotta to-terracotta-dark border border-terracotta-dark/50 p-8 md:p-14">
+            <div className="pointer-events-none absolute -top-32 -right-20 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle_at_center,var(--color-gold)_0%,transparent_60%)] opacity-25 blur-3xl" />
             <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] items-end gap-8">
               <div className="min-w-0">
                 <div className="flex items-center gap-2 mb-5">
-                  <Sparkles size={14} className="text-terracotta" />
-                  <p className="text-[11px] tracking-[0.3em] uppercase text-terracotta">
+                  <Sparkles size={14} className="text-gold" />
+                  <p className="text-[11px] tracking-[0.3em] uppercase text-gold">
                     Caminho especial
                   </p>
                 </div>
-                <h3 className="font-display text-3xl md:text-6xl text-ink tracking-[-0.025em] max-w-xl leading-[1.02]">
+                <h3 className="font-display text-3xl md:text-6xl text-cream tracking-[-0.025em] max-w-xl leading-[1.02]">
                   Consultoria de
                   <br />
-                  <span className="italic font-normal text-terracotta">
+                  <span className="italic font-normal text-gold">
                     Inteligência Artificial
                   </span>
                 </h3>
-                <p className="text-sm md:text-base text-ink/60 mt-6 max-w-lg leading-relaxed">
+                <p className="text-sm md:text-base text-cream/70 mt-6 max-w-lg leading-relaxed">
                   Para quem quer transformar Inteligência Artificial em serviço
                   premium. Atenda clientes, cobre mais, entregue resultados.
                 </p>
               </div>
               <Link
                 to="/metodo/consultoria-ia"
-                className="group inline-flex items-center gap-2.5 bg-ink text-cream pl-6 pr-2 py-2 rounded-full text-sm font-semibold hover:bg-terracotta transition-all shrink-0"
+                className="group inline-flex items-center gap-2.5 bg-cream text-ink pl-6 pr-2 py-2 rounded-full text-sm font-semibold hover:bg-white transition-all shrink-0"
               >
                 <Briefcase size={14} strokeWidth={2.25} />
                 Conhecer
-                <span className="w-9 h-9 rounded-full bg-cream text-ink flex items-center justify-center">
+                <span className="w-9 h-9 rounded-full bg-ink text-cream flex items-center justify-center">
                   <ArrowUpRight size={16} strokeWidth={2.5} />
                 </span>
               </Link>
