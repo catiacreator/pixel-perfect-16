@@ -42,8 +42,8 @@ export default function Pilar1Hub() {
         numeral="01"
         icon={<Hourglass size={18} />}
         pilarLabel="Pilar 1"
-        titulo={data?.titulo?.split(" ")[0] ?? "Recuperar"}
-        tituloHighlight={data ? data.titulo.split(" ").slice(1).join(" ") : "o seu tempo"}
+        titulo={data?.titulo?.split(" ")[0] ?? "Crie"}
+        tituloHighlight={data ? data.titulo.split(" ").slice(1).join(" ") : "com Leveza sem roubar o seu tempo"}
         subtitulo={data?.descricao ?? ""}
       />
 

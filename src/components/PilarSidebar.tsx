@@ -74,7 +74,7 @@ type PilarDef = {
 const PILARES: Record<number, PilarDef> = {
   1: {
     pilar: 1,
-    title: "Recuperar Seu Tempo",
+    title: "Crie com Leveza sem roubar o seu tempo",
     enabled: true,
     items: [
       { num: 1, label: "Preencha seu Documento Mestre", to: "/doc-mestre", icon: FileText },
@@ -159,7 +159,7 @@ const PILARES: Record<number, PilarDef> = {
 };
 
 const PILAR_SHORT: Record<number, string> = {
-  1: "Recuperar Seu Tempo",
+  1: "Crie com Leveza sem roubar o seu tempo",
   2: "Criar Autoridade",
   3: "Crie o seu Produto",
   4: "Aprender a Vender",

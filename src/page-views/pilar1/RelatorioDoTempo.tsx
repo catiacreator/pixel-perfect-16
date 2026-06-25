@@ -55,7 +55,7 @@ export default function RelatorioDoTempo() {
   if (!rel.preenchido) {
     return (
       <Layout>
-        <PilarBreadcrumb pilar={1} pilarLabel="Recuperar seu Tempo" backTo="/metodo/pilar-1/detetive-do-tempo" backLabel="Voltar para o Mapa do Tempo" />
+        <PilarBreadcrumb pilar={1} pilarLabel="Crie com Leveza sem roubar o seu tempo" backTo="/metodo/pilar-1/detetive-do-tempo" backLabel="Voltar para o Mapa do Tempo" />
         <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
           <h1 className="font-serif text-3xl text-ink mb-4">Relatório — Mapa do Tempo</h1>
           <div className="rounded-2xl border border-dashed border-border bg-white p-8 text-center text-muted mb-6">
@@ -77,7 +77,7 @@ export default function RelatorioDoTempo() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar={1} pilarLabel="Recuperar seu Tempo" backTo="/metodo/pilar-1/detetive-do-tempo" backLabel="Voltar para o Mapa do Tempo" />
+      <PilarBreadcrumb pilar={1} pilarLabel="Crie com Leveza sem roubar o seu tempo" backTo="/metodo/pilar-1/detetive-do-tempo" backLabel="Voltar para o Mapa do Tempo" />
       <PillarHeader
         numeral="I"
         icon={<Hourglass size={18} />}

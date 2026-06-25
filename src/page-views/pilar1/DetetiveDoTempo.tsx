@@ -85,7 +85,7 @@ export default function DetetiveDoTempo() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar={1} pilarLabel="Recuperar seu Tempo" backTo="/metodo/pilar-1" backLabel="Voltar para o Pilar 1" />
+      <PilarBreadcrumb pilar={1} pilarLabel="Crie com Leveza sem roubar o seu tempo" backTo="/metodo/pilar-1" backLabel="Voltar para o Pilar 1" />
       <PillarHeader
         numeral="I"
         icon={<Hourglass size={18} />}

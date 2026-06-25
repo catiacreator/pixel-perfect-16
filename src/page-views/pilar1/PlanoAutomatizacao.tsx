@@ -84,7 +84,7 @@ export default function PlanoAutomatizacao() {
     <Layout>
       <PilarBreadcrumb
         pilar={1}
-        pilarLabel="Recuperar seu Tempo"
+        pilarLabel="Crie com Leveza sem roubar o seu tempo"
         backTo="/metodo/pilar-1/detetive-do-tempo/relatorio"
         backLabel="Voltar para o Relatório"
       />

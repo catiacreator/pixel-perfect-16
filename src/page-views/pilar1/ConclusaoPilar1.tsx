@@ -48,13 +48,13 @@ export default function ConclusaoPilar1() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar={1} pilarLabel="Recuperar seu Tempo" backTo="/metodo/pilar-1" backLabel="Voltar para o Pilar 1" />
+      <PilarBreadcrumb pilar={1} pilarLabel="Crie com Leveza sem roubar o seu tempo" backTo="/metodo/pilar-1" backLabel="Voltar para o Pilar 1" />
       <PillarHeader
         numeral="I"
         icon={<Hourglass size={18} />}
         pilarLabel="Pilar 1"
         titulo="Revise e celebre"
-        subtitulo="Checklist do Pilar 1 — RECUPERAR SEU TEMPO"
+        subtitulo="Checklist do Pilar 1 — CRIE COM LEVEZA SEM ROUBAR O SEU TEMPO"
       />
 
       <div className="px-5 md:px-10 pb-16 max-w-4xl mx-auto">
