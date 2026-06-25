@@ -1,5 +1,12 @@
 export type Unidade = "h" | "min";
 export type Freq = "dia" | "semana" | "mes";
+export type Moeda = "BRL" | "EUR" | "USD";
+
+export const MOEDAS: { code: Moeda; label: string; simbolo: string; locale: string }[] = [
+  { code: "BRL", label: "Real (R$)", simbolo: "R$", locale: "pt-BR" },
+  { code: "EUR", label: "Euro (€)", simbolo: "€", locale: "pt-PT" },
+  { code: "USD", label: "Dólar ($)", simbolo: "$", locale: "en-US" },
+];
 
 export type Tarefa = {
   nome: string;
@@ -18,6 +25,7 @@ export type DetetiveState = {
   faturamento: string;
   horasDia: string;
   diasSemana: string;
+  moeda: Moeda;
   categorias: Categoria[];
 };
 
@@ -45,6 +53,7 @@ export const INITIAL_STATE: DetetiveState = {
   faturamento: "",
   horasDia: "",
   diasSemana: "",
+  moeda: "BRL",
   categorias: CATEGORIAS_INICIAIS,
 };
 
@@ -58,6 +67,7 @@ export function loadDetetive(): DetetiveState {
       faturamento: parsed.faturamento ?? "",
       horasDia: parsed.horasDia ?? "",
       diasSemana: parsed.diasSemana ?? "",
+      moeda: parsed.moeda ?? "BRL",
       categorias: parsed.categorias?.length ? parsed.categorias : CATEGORIAS_INICIAIS,
     };
   } catch {
@@ -155,6 +165,13 @@ export function calcularRelatorio(s: DetetiveState): Relatorio {
   };
 }
 
+/** Formata um valor na moeda escolhida (R$ / € / $). */
+export function fmtMoeda(n: number, moeda: Moeda = "BRL"): string {
+  const m = MOEDAS.find((x) => x.code === moeda) ?? MOEDAS[0];
+  return n.toLocaleString(m.locale, { style: "currency", currency: m.code, maximumFractionDigits: 0 });
+}
+
+/** @deprecated usar fmtMoeda(n, moeda) — mantido para compatibilidade. */
 export function brl(n: number): string {
-  return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+  return fmtMoeda(n, "BRL");
 }
