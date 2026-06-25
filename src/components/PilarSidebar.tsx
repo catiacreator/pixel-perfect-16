@@ -154,7 +154,6 @@ const PILARES: Record<number, PilarDef> = {
       { num: 7, label: "Copy de Venda", to: "/metodo/pilar-4/copy", icon: FileText },
       { num: 8, label: "Tráfego Pago", to: "/metodo/pilar-4/trafego-pago", icon: Zap, enBreve: true },
       { num: 9, label: "Revise e celebre", to: "/metodo/pilar-4/conclusao", icon: Trophy },
-      { num: 10, label: "Palestras de IA (Bônus)", to: "/metodo/pilar-4", icon: Mic },
     ],
   },
 };

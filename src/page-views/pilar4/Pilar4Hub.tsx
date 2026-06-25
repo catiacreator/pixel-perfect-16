@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
@@ -14,9 +13,6 @@ import {
   FileText,
   Megaphone,
   Trophy,
-  Mic,
-  ChevronDown,
-  Play,
   Wallet,
 } from "lucide-react";
 import type { ReactNode } from "react";
@@ -115,52 +111,6 @@ const ETAPAS: Etapa[] = [
 
 const NUMERAL = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
 
-function BonusAccordion() {
-  const [open, setOpen] = useState(false);
-  const aulas = [
-    "Aula 1 — Estratégia de Pitch de Vendas em Palestras (com Tamara)",
-    "Aula 2 — Continuação: Palestras de IA para Negócios",
-  ];
-  return (
-    <div className="rounded-2xl border border-terracotta/30 bg-white overflow-hidden mt-8">
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="w-full flex items-center gap-3 px-6 py-5 text-left hover:bg-cream-warm/40 transition-colors"
-      >
-        <span className="w-10 h-10 rounded-xl bg-gold/25 text-terracotta-dark flex items-center justify-center shrink-0">
-          <Mic size={18} />
-        </span>
-        <span className="flex-1 min-w-0">
-          <span className="block text-[11px] tracking-[0.2em] uppercase text-terracotta font-medium">
-            Bônus
-          </span>
-          <span className="block font-serif text-lg text-ink">Palestras de IA para Negócios</span>
-          <span className="block text-sm text-ink/55">2 aulas · posicione, venda e entregue palestras de IA</span>
-        </span>
-        <ChevronDown
-          size={18}
-          className={`text-ink/40 transition-transform ${open ? "rotate-180" : ""}`}
-        />
-      </button>
-      {open && (
-        <div className="px-6 pb-5 space-y-2 border-t border-[var(--color-border)] pt-4">
-          {aulas.map((a, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-3 rounded-xl border border-[var(--color-border)] bg-cream-warm/40 px-4 py-3"
-            >
-              <span className="w-8 h-8 rounded-full border border-[var(--color-border)] flex items-center justify-center text-terracotta shrink-0">
-                <Play size={14} className="ml-0.5" />
-              </span>
-              <span className="text-sm text-ink">{a}</span>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
 export default function Pilar4Hub() {
   return (
     <Layout>
@@ -223,8 +173,6 @@ export default function Pilar4Hub() {
             />
           ))}
         </div>
-
-        <BonusAccordion />
       </div>
     </Layout>
   );
