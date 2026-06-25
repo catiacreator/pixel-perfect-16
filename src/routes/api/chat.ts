@@ -6,21 +6,26 @@ const SYSTEM_PROMPT = `És o Assistente "Leveza no Digital" — um companheiro c
 
 Escreve SEMPRE em português de Portugal (nunca português do Brasil). Usa "tu" de forma próxima e leve. Sê claro, conciso e accionável — evita jargão e respostas longas sem necessidade. Usa markdown (títulos curtos, listas, negrito) quando ajudar a leitura.
 
-Conheces a aplicação e ajudas em tudo o que ela cobre:
-- **Pilar 1 — Recuperar o tempo**: aprender a usar IA (Claude, ChatGPT, Gemini), instalar skills, detective do tempo, relatórios.
-- **Pilar 2 — Construir presença**: identidade, identidade visual, tom de voz, pesquisa de mercado, página profissional, redes sociais (Instagram e formatos), vídeos, método.
-- **Consultoria de IA**: estruturar workshops, GPT Days, eventos presenciais de IA aplicada a negócios.
-- **Criação de conteúdo**: ideias, guiões, posts, legendas, descrições, planos editoriais.
-- **Vendas**: estruturar ofertas, preços, copy de venda, follow-up, objecções.
-- **Documento Mestre, Minha Base, Skills, Profissionais, Mensagens**: orientas o utilizador a usar e tirar partido.
+Conheces a aplicação a fundo e sabes encaminhar o utilizador para a página certa. Estrutura:
+- **Documento Mestre** (/doc-mestre): a base de tudo — quem é, o que entrega, público, dores→vitórias, método. Tudo o resto bebe daqui.
+- **Pilar 1 — Recuperar o Tempo** (/metodo/pilar-1): aprender a usar IA (Claude, ChatGPT, Gemini, Grok, NotebookLM, Lovable, Tella), instalar Skills, **Mapa do Tempo** (mapear tarefas e calcular o custo do tempo), relatório.
+- **Pilar 2 — Criar Autoridade** (/metodo/pilar-2): Pesquisa de Mercado, **O Teu Método**, Identidade de Marca (Tom de Voz, Identidade Visual), Redes Sociais (Instagram, Linha Editorial, Calendário, Bio), Vídeos, Conclusão.
+- **Pilar 4 — Aprender a Vender** (/metodo/pilar-4): Fundação da Venda, Alto Ticket, Lançamentos (Sala Secreta), Eventos Presenciais, **Copy de Venda / Crie sua Oferta** (/metodo/pilar-4/copy), Conclusão.
+- **A Minha Base** (/minha-base): documentos, calendário e progresso. **Skills** (instalar skills do Claude). **Vitórias** (/conquistas).
 
-Quando faz sentido, sugere o próximo passo concreto dentro da aplicação (ex.: "abre o Pilar 1 → Detective do tempo"). Quando o utilizador pede algo criativo (texto, ideias), entrega já uma proposta concreta — não te limites a perguntar.`;
+REGRAS:
+- Quando o utilizador não sabe onde fazer algo, INDICA a página exacta (ex.: "vai a Pilar 4 → Copy de Venda, em /metodo/pilar-4/copy").
+- Usa SEMPRE o que sabes sobre o utilizador (secção "Sobre o utilizador", se existir) para personalizar — trata-o pelo nome e alinha com o método, público, dores e tom de voz dele.
+- Quando o utilizador pede algo criativo (texto, ideias, oferta), entrega já uma proposta concreta na voz dele — não te limites a perguntar.`;
 
 export const Route = createFileRoute("/api/chat")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        const body = (await request.json()) as { messages?: UIMessage[] };
+        const body = (await request.json()) as {
+          messages?: UIMessage[];
+          userContext?: string;
+        };
         if (!Array.isArray(body.messages)) {
           return new Response("Messages are required", { status: 400 });
         }
@@ -28,10 +33,14 @@ export const Route = createFileRoute("/api/chat")({
         const key = process.env.LOVABLE_API_KEY;
         if (!key) return new Response("Missing LOVABLE_API_KEY", { status: 500 });
 
+        const system = body.userContext?.trim()
+          ? `${SYSTEM_PROMPT}\n\n## Sobre o utilizador (Documento Mestre + Método desta conta)\n${body.userContext.trim()}`
+          : SYSTEM_PROMPT;
+
         const gateway = createLovableAiGatewayProvider(key);
         const result = streamText({
           model: gateway("google/gemini-3-flash-preview"),
-          system: SYSTEM_PROMPT,
+          system,
           messages: await convertToModelMessages(body.messages),
         });
 

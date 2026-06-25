@@ -1,9 +1,11 @@
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, type UIMessage } from "ai";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Bot, Send, Sparkles, Trash2 } from "lucide-react";
 import Layout from "@/components/Layout";
 import { supabase } from "@/integrations/supabase/client";
+import { usePilar2 } from "@/lib/pilar2-hooks";
+import { perfilContexto, readDocMestre, type DocMestre } from "@/lib/pilar4-prompts";
 
 const SESSION_KEY = "leveza.assistant.session";
 
@@ -102,10 +104,33 @@ function ChatWindow({
   inputRef: React.RefObject<HTMLTextAreaElement | null>;
   onClear: () => void;
 }) {
+  // Contexto do utilizador (Documento Mestre + Método) — enviado a cada mensagem
+  const { state: metodo } = usePilar2();
+  const [doc, setDoc] = useState<DocMestre>({});
+  useEffect(() => {
+    setDoc(readDocMestre());
+    const onChange = () => setDoc(readDocMestre());
+    window.addEventListener("leveza:hydrated", onChange);
+    return () => window.removeEventListener("leveza:hydrated", onChange);
+  }, []);
+  const userContextRef = useRef("");
+  userContextRef.current = perfilContexto(doc, metodo);
+
+  const transport = useMemo(
+    () =>
+      new DefaultChatTransport({
+        api: "/api/chat",
+        prepareSendMessagesRequest: ({ messages }) => ({
+          body: { messages, userContext: userContextRef.current },
+        }),
+      }),
+    [],
+  );
+
   const { messages, sendMessage, status, error } = useChat({
     id: sessionId,
     messages: initialMessages,
-    transport: new DefaultChatTransport({ api: "/api/chat" }),
+    transport,
     onFinish: async ({ message }) => {
       const text = textOf(message);
       if (text) {
