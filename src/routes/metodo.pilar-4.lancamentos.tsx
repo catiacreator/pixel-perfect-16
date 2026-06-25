@@ -1,6 +1,10 @@
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Pilar4Page } from "@/page-views/pilar4/Pilar4Page";
 import { Lock, Download, Sparkles } from "lucide-react";
+import { usePilar2 } from "@/lib/pilar2-hooks";
+import { readDocMestre, type DocMestre } from "@/lib/pilar4-prompts";
+import { buildSkillSalaSecreta, downloadMarkdown } from "@/lib/pilar4-skills";
 
 const COMO_FUNCIONA = [
   "Anuncia a sala como espaço limitado e exclusivo (vagas e tempo definidos)",
@@ -10,6 +14,20 @@ const COMO_FUNCIONA = [
 ];
 
 function Lancamentos() {
+  const { state } = usePilar2();
+  const [doc, setDoc] = useState<DocMestre>({});
+
+  useEffect(() => {
+    setDoc(readDocMestre());
+    const onChange = () => setDoc(readDocMestre());
+    window.addEventListener("leveza:hydrated", onChange);
+    return () => window.removeEventListener("leveza:hydrated", onChange);
+  }, []);
+
+  function baixar() {
+    downloadMarkdown("skill-sala-secreta.md", buildSkillSalaSecreta(doc, state));
+  }
+
   return (
     <Pilar4Page
       etapa="Etapa 4 · Lançamento"
@@ -45,10 +63,14 @@ function Lancamentos() {
             <p className="font-serif text-lg text-ink">Skill: Monte sua versão da Sala Secreta</p>
           </div>
           <p className="text-sm text-ink/60 mb-4">
-            Sessão guiada que leva do zero ao mecanismo completo: nome, tema, captação, cadência de
-            aquecimento, roteiro de 7 blocos e pitch.
+            Ficheiro <code className="text-terracotta">.md</code> personalizado com o teu Documento
+            Mestre. Sessão guiada que leva do zero ao mecanismo completo: nome, tema, captação, cadência
+            de aquecimento, roteiro de 7 blocos e pitch.
           </p>
-          <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta text-cream text-sm font-medium hover:bg-terracotta-dark transition-colors">
+          <button
+            onClick={baixar}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta text-cream text-sm font-medium hover:bg-terracotta-dark transition-colors"
+          >
             <Download size={15} /> Baixar a skill (.md)
           </button>
         </div>

@@ -1,7 +1,11 @@
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@/lib/router-compat";
 import { Pilar4Page } from "@/page-views/pilar4/Pilar4Page";
 import { Download, Check, ArrowRight, Sparkles } from "lucide-react";
+import { usePilar2 } from "@/lib/pilar2-hooks";
+import { readDocMestre, type DocMestre } from "@/lib/pilar4-prompts";
+import { buildSkillOferta, downloadMarkdown } from "@/lib/pilar4-skills";
 
 const ENTREGAVEIS = [
   "Oferta completa pronta para apresentar",
@@ -18,6 +22,20 @@ const PASSOS = [
 ];
 
 function AtalhoSkill() {
+  const { state } = usePilar2();
+  const [doc, setDoc] = useState<DocMestre>({});
+
+  useEffect(() => {
+    setDoc(readDocMestre());
+    const onChange = () => setDoc(readDocMestre());
+    window.addEventListener("leveza:hydrated", onChange);
+    return () => window.removeEventListener("leveza:hydrated", onChange);
+  }, []);
+
+  function baixar() {
+    downloadMarkdown("skill-oferta-metodo-proposta.md", buildSkillOferta(doc, state));
+  }
+
   return (
     <Pilar4Page
       etapa="Etapa 1 · Caminho A"
@@ -30,10 +48,14 @@ function AtalhoSkill() {
           <p className="font-serif text-lg text-ink">Skill: Oferta + Método + Proposta</p>
         </div>
         <p className="text-sm text-ink/60 mb-4">
-          Um ficheiro <code className="text-terracotta">.md</code> para importar no teu Claude Project.
-          Em 60 minutos guiados, sais com a oferta, o método e a proposta prontos.
+          Um ficheiro <code className="text-terracotta">.md</code> já personalizado com o teu Documento
+          Mestre, para importares no teu Claude Project. Em 60 minutos guiados, sais com a oferta, o
+          método e a proposta prontos.
         </p>
-        <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta text-cream text-sm font-medium hover:bg-terracotta-dark transition-colors">
+        <button
+          onClick={baixar}
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta text-cream text-sm font-medium hover:bg-terracotta-dark transition-colors"
+        >
           <Download size={15} /> Baixar a skill (.md)
         </button>
       </div>
