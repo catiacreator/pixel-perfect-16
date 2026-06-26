@@ -549,7 +549,7 @@ export default function RedesSociais() {
   td { font-size: 13px; padding: 11px 12px; border-bottom: 1px solid #E7DBC9; vertical-align: top; }
   tr:nth-child(even) td { background: #FBF7F0; }
   td.dia { font-weight: bold; color: #7C3D29; white-space: nowrap; width: 90px; }
-  td.fmt { font-family: Arial, sans-serif; font-size: 12px; color: #6F8477; white-space: nowrap; width: 120px; }
+  td.fmt { font-family: Arial, sans-serif; font-size: 12px; color: #5E89A0; white-space: nowrap; width: 120px; }
   .foot { font-family: Arial, sans-serif; font-size: 10px; color: #B7A88F; margin-top: 18px; }
 </style></head>
 <body>
