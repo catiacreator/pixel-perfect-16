@@ -1,13 +1,19 @@
-import { createFileRoute, Outlet } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
 import PilarSidebar from "@/components/PilarSidebar";
 
-export const Route = createFileRoute("/metodo/pilar-1")({
-  component: () => (
+function Pilar1Layout() {
+  const { pathname } = useLocation();
+  const academia = pathname.startsWith("/metodo/pilar-1/aprenda-ia");
+  return (
     <>
-      <PilarSidebar pilar={1} />
+      <PilarSidebar pilar={academia ? "academia" : 1} />
       <div className="lg:pl-[280px]">
         <Outlet />
       </div>
     </>
-  ),
+  );
+}
+
+export const Route = createFileRoute("/metodo/pilar-1")({
+  component: Pilar1Layout,
 });

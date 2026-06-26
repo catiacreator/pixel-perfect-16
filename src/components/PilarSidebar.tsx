@@ -63,14 +63,31 @@ type Item = {
   children?: SubItem[];
 };
 
+type SidebarKey = 1 | 2 | 3 | 4 | "academia";
+
 type PilarDef = {
-  pilar: 1 | 2 | 3 | 4;
+  pilar: SidebarKey;
   title: string;
   items: Item[];
   enabled: boolean;
 };
 
-const PILARES: Record<number, PilarDef> = {
+const PILARES: Record<string | number, PilarDef> = {
+  academia: {
+    pilar: "academia",
+    title: "Domine as principais IAs",
+    enabled: true,
+    items: [
+      { num: 1, label: "ChatGPT", to: "/metodo/pilar-1/aprenda-ia/chatgpt", icon: CircleDot },
+      { num: 2, label: "Claude", to: "/metodo/pilar-1/aprenda-ia/claude", icon: Sparkle },
+      { num: 3, label: "Gemini", to: "/metodo/pilar-1/aprenda-ia/gemini", icon: Sparkles },
+      { num: 4, label: "Grok", to: "/metodo/pilar-1/aprenda-ia/grok", icon: Zap },
+      { num: 5, label: "NotebookLM", to: "/metodo/pilar-1/aprenda-ia/notebooklm", icon: Book },
+      { num: 6, label: "Lovable", to: "/metodo/pilar-1/aprenda-ia/lovable", icon: Heart },
+      { num: 7, label: "Tella", to: "/metodo/pilar-1/aprenda-ia/tella", icon: Video },
+      { num: 8, label: "Vídeos com IA", to: "/metodo/pilar-1/aprenda-ia/videos", icon: Video },
+    ],
+  },
   1: {
     pilar: 1,
     title: "Crie com Leveza sem roubar o seu tempo",
@@ -147,7 +164,7 @@ const PILAR_SHORT: Record<number, string> = {
   4: "Aprender a Vender",
 };
 
-function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2 | 3 | 4; onNavigate?: () => void }) {
+function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: () => void }) {
   const def = PILARES[pilar];
   const location = useLocation();
   const pathname = location.pathname;
@@ -177,7 +194,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2 | 3 | 4; onNavigate?:
       {/* Header */}
       <div className="px-6 pt-7 pb-5 border-b border-[var(--color-border)]">
         <div className="text-[10px] tracking-[0.32em] uppercase text-terracotta font-medium">
-          Pilar {def.pilar}
+          {def.pilar === "academia" ? "Academia de IA" : `Pilar ${def.pilar}`}
         </div>
         <div className="mt-2 font-display text-xl tracking-[0.04em] uppercase text-ink">
           {def.title}
@@ -333,7 +350,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2 | 3 | 4; onNavigate?:
   );
 }
 
-export default function PilarSidebar({ pilar }: { pilar: 1 | 2 | 3 | 4 }) {
+export default function PilarSidebar({ pilar }: { pilar: SidebarKey }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
