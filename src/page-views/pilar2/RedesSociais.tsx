@@ -539,16 +539,16 @@ export default function RedesSociais() {
 <style>
   @page { size: A4 landscape; margin: 16mm; }
   * { box-sizing: border-box; }
-  body { font-family: Georgia, "Times New Roman", serif; color: #4A3A30; margin: 0; }
-  .top { border-bottom: 3px solid #A8533A; padding-bottom: 12px; margin-bottom: 22px; }
-  .kicker { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: .28em; text-transform: uppercase; color: #A8533A; margin: 0 0 4px; }
-  h1 { font-size: 26px; margin: 0; color: #4A3A30; }
+  body { font-family: Georgia, "Times New Roman", serif; color: #3A2419; margin: 0; }
+  .top { border-bottom: 3px solid #97462B; padding-bottom: 12px; margin-bottom: 22px; }
+  .kicker { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: .28em; text-transform: uppercase; color: #97462B; margin: 0 0 4px; }
+  h1 { font-size: 26px; margin: 0; color: #3A2419; }
   .sub { font-family: Arial, sans-serif; font-size: 12px; color: #8E7B64; margin: 4px 0 0; }
   table { width: 100%; border-collapse: collapse; }
-  th { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #fff; background: #A8533A; text-align: left; padding: 9px 12px; }
+  th { font-family: Arial, sans-serif; font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: #fff; background: #97462B; text-align: left; padding: 9px 12px; }
   td { font-size: 13px; padding: 11px 12px; border-bottom: 1px solid #E7DBC9; vertical-align: top; }
   tr:nth-child(even) td { background: #FBF7F0; }
-  td.dia { font-weight: bold; color: #A8533A; white-space: nowrap; width: 90px; }
+  td.dia { font-weight: bold; color: #97462B; white-space: nowrap; width: 90px; }
   td.fmt { font-family: Arial, sans-serif; font-size: 12px; color: #5E89A0; white-space: nowrap; width: 120px; }
   .foot { font-family: Arial, sans-serif; font-size: 10px; color: #B7A88F; margin-top: 18px; }
 </style></head>

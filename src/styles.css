@@ -6,24 +6,24 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  /* Paleta "Suave & clara": primária = terracota clara; 'gold' = ouro suave;
-     'sage'/'success'/'blue' = azul-pó (acento frio); fundo creme. */
-  --color-cream: #F7F1E6;
-  --color-cream-warm: #FBF5EA;
-  --color-ink: #4A3A30;
-  --color-muted: #8C8072;
-  --color-terracotta: #A8533A;
-  --color-terracotta-dark: #8C4329;
-  --color-gold: #DCA94A;
-  --color-sage: #8FB0BE;
-  --color-blue: #8FB0BE;
+  /* Paleta "Argila quente": primária = terracota profunda; 'gold' = ouro;
+     'sage'/'success'/'blue' = azul-petróleo (acento frio); fundo bege quente. */
+  --color-cream: #F0E6D2;
+  --color-cream-warm: #F6EDD9;
+  --color-ink: #3A2419;
+  --color-muted: #8A7A66;
+  --color-terracotta: #97462B;
+  --color-terracotta-dark: #7E3A22;
+  --color-gold: #DCA53F;
+  --color-sage: #34505C;
+  --color-blue: #34505C;
   --color-beige: #E3D5BE;
   --color-navy: #3F4A5A;
   --color-forest: #14110F;
   --color-forest-soft: #221E1A;
-  --color-border: #EADFCB;
+  --color-border: #E6D8BD;
   --color-border-soft: #F1E8DA;
-  --color-success: #8FB0BE;
+  --color-success: #34505C;
   --font-serif: "Archivo", "Archivo Black", system-ui, sans-serif;
   --font-sans: "DM Sans", "Inter Tight", system-ui, sans-serif;
   --font-mono: "DM Sans", "Inter Tight", system-ui, sans-serif;
@@ -161,23 +161,23 @@
 
 /* Restore custom brand palette tokens (override shadcn @theme inline above) */
 @theme {
-  --color-cream: #F7F1E6;
-  --color-cream-warm: #FBF5EA;
-  --color-ink: #4A3A30;
-  --color-ink-soft: #6E5C4E;
-  --color-muted: #8C8072;
-  --color-terracotta: #A8533A;
-  --color-terracotta-dark: #8C4329;
-  --color-gold: #DCA94A;
-  --color-sage: #8FB0BE;
-  --color-blue: #8FB0BE;
+  --color-cream: #F0E6D2;
+  --color-cream-warm: #F6EDD9;
+  --color-ink: #3A2419;
+  --color-ink-soft: #6B5443;
+  --color-muted: #8A7A66;
+  --color-terracotta: #97462B;
+  --color-terracotta-dark: #7E3A22;
+  --color-gold: #DCA53F;
+  --color-sage: #34505C;
+  --color-blue: #34505C;
   --color-beige: #E3D5BE;
   --color-navy: #3F4A5A;
   --color-forest: #14110F;
   --color-forest-soft: #221E1A;
-  --color-border: #EADFCB;
+  --color-border: #E6D8BD;
   --color-border-soft: #F1E8DA;
-  --color-success: #8FB0BE;
+  --color-success: #34505C;
 
   /* Modern dark palette (Arounda-inspired) */
   --color-coal: #0E0C0D;
@@ -203,6 +203,7 @@
 
   html, body, #root {
     margin: 0;
+    min-height: 100vh;
     background-color: var(--color-cream);
     color: var(--color-ink);
     font-family: var(--font-sans);
@@ -238,7 +239,7 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--color-terracotta) !important;
-  box-shadow: 0 0 0 3px rgb(168 83 58 / 0.22);
+  box-shadow: 0 0 0 3px rgb(151 70 43 / 0.22);
 }
 
 /* Sombra subtil em todos os cards */
