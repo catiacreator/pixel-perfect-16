@@ -1,6 +1,6 @@
 import { Link } from "@/lib/router-compat";
 import { useLocation, useRouter } from "@tanstack/react-router";
-import { FileText, Mail, Map, Bot, Database, Award, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, LogOut } from "lucide-react";
+import { FileText, Mail, Map, Bot, Database, Award, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, LogOut, CalendarDays } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { initMasterDocSync, resetMasterDocSync } from "@/lib/master-doc-sync";
@@ -10,6 +10,7 @@ const NAV = [
   { to: "/assistente", label: "Assistente IA", icon: Bot },
   { to: "/metodo/pilar-1/aprenda-ia/claude/instalar-skills", label: "Skills", icon: Award },
   { to: "/minha-base", label: "A minha jornada", icon: Database },
+  { to: "/agenda", label: "A minha Agenda", icon: CalendarDays },
   { to: "/conquistas", label: "Vitórias", icon: Trophy },
 ];
 

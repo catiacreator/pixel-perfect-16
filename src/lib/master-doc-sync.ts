@@ -24,6 +24,7 @@ const SYNC_KEYS = [
   "leveza.bio.v1",
   "leveza.bio.conquista.v1",
   "leveza.aulas-concluidas.v1",
+  "leveza.agenda.v1",
 ];
 
 // Disparado depois de o localStorage ser hidratado a partir do Supabase.

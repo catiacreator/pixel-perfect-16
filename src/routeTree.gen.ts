@@ -18,6 +18,7 @@ import { Route as DocMestreRouteImport } from './routes/doc-mestre'
 import { Route as ConquistasRouteImport } from './routes/conquistas'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AssistenteRouteImport } from './routes/assistente'
+import { Route as AgendaRouteImport } from './routes/agenda'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MetodoIndexRouteImport } from './routes/metodo.index'
@@ -118,6 +119,11 @@ const AuthRoute = AuthRouteImport.update({
 const AssistenteRoute = AssistenteRouteImport.update({
   id: '/assistente',
   path: '/assistente',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgendaRoute = AgendaRouteImport.update({
+  id: '/agenda',
+  path: '/agenda',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -430,6 +436,7 @@ const MetodoPilar1AprendaIaToolLessonSlugRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/agenda': typeof AgendaRoute
   '/assistente': typeof AssistenteRoute
   '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
@@ -496,6 +503,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/agenda': typeof AgendaRoute
   '/assistente': typeof AssistenteRoute
   '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
@@ -553,6 +561,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/agenda': typeof AgendaRoute
   '/assistente': typeof AssistenteRoute
   '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
@@ -621,6 +630,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/agenda'
     | '/assistente'
     | '/auth'
     | '/conquistas'
@@ -687,6 +697,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/agenda'
     | '/assistente'
     | '/auth'
     | '/conquistas'
@@ -743,6 +754,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/agenda'
     | '/assistente'
     | '/auth'
     | '/conquistas'
@@ -811,6 +823,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AgendaRoute: typeof AgendaRoute
   AssistenteRoute: typeof AssistenteRoute
   AuthRoute: typeof AuthRoute
   ConquistasRoute: typeof ConquistasRoute
@@ -886,6 +899,13 @@ declare module '@tanstack/react-router' {
       path: '/assistente'
       fullPath: '/assistente'
       preLoaderRoute: typeof AssistenteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agenda': {
+      id: '/agenda'
+      path: '/agenda'
+      fullPath: '/agenda'
+      preLoaderRoute: typeof AgendaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -1544,6 +1564,7 @@ const MetodoRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AgendaRoute: AgendaRoute,
   AssistenteRoute: AssistenteRoute,
   AuthRoute: AuthRoute,
   ConquistasRoute: ConquistasRoute,
