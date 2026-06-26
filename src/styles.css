@@ -12,9 +12,9 @@
   --color-cream-warm: #FBF5EA;
   --color-ink: #4A3A30;
   --color-muted: #8C8072;
-  --color-terracotta: #B96A4A;
-  --color-terracotta-dark: #A35A3D;
-  --color-gold: #E6BE6B;
+  --color-terracotta: #A8533A;
+  --color-terracotta-dark: #8C4329;
+  --color-gold: #DCA94A;
   --color-sage: #8FB0BE;
   --color-blue: #8FB0BE;
   --color-beige: #E3D5BE;
@@ -166,9 +166,9 @@
   --color-ink: #4A3A30;
   --color-ink-soft: #6E5C4E;
   --color-muted: #8C8072;
-  --color-terracotta: #B96A4A;
-  --color-terracotta-dark: #A35A3D;
-  --color-gold: #E6BE6B;
+  --color-terracotta: #A8533A;
+  --color-terracotta-dark: #8C4329;
+  --color-gold: #DCA94A;
   --color-sage: #8FB0BE;
   --color-blue: #8FB0BE;
   --color-beige: #E3D5BE;
@@ -238,7 +238,7 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--color-terracotta) !important;
-  box-shadow: 0 0 0 3px rgb(185 106 74 / 0.22);
+  box-shadow: 0 0 0 3px rgb(168 83 58 / 0.22);
 }
 
 /* Sombra subtil em todos os cards */
