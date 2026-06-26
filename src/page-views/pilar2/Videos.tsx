@@ -45,7 +45,7 @@ export default function Videos() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar={1} pilarLabel="Academia de IA" backTo="/metodo/pilar-1/aprenda-ia" backLabel="Voltar para a Academia de IA" />
+      <PilarBreadcrumb pilar="academia" pilarLabel="Academia de IA" backTo="/metodo/pilar-1/aprenda-ia" backLabel="Voltar para a Academia de IA" />
       <TodoBanner texto="Etapa 5 — Vídeos: conteúdo pendente. Aguardando documentação detalhada (estrutura definitiva das aulas, prompts e fluxo)." />
       <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
         <h1 className="font-serif text-3xl text-ink mb-2">Vídeos profissionais sem gravar 50 vezes</h1>

@@ -145,10 +145,10 @@ export default function AulaPage() {
   return (
     <Layout>
       <PilarBreadcrumb
-        pilar={1}
-        pilarLabel="Crie com Leveza sem roubar o seu tempo"
-        backTo="/metodo/pilar-1"
-        backLabel="Voltar para o Pilar 1"
+        pilar="academia"
+        pilarLabel="Academia de IA"
+        backTo="/metodo/pilar-1/aprenda-ia"
+        backLabel="Voltar para a Academia de IA"
       />
 
       <PillarHeader

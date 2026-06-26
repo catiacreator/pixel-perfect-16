@@ -298,6 +298,8 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
           <span className="text-terracotta text-xs">✦</span>
           <span className="h-px flex-1 bg-[var(--color-border)]" />
         </div>
+        {pilar !== "academia" && (
+        <>
         <div className="text-[10px] tracking-[0.3em] uppercase text-ink/45 mb-3">
           Ir para outro pilar
         </div>
@@ -337,13 +339,15 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
             );
           })}
         </ul>
+        </>
+        )}
 
         <Link
-          to="/metodo"
+          to={pilar === "academia" ? "/" : "/metodo"}
           onClick={onNavigate}
-          className="mt-4 inline-flex items-center gap-2 text-[12px] text-ink/60 hover:text-ink transition-colors"
+          className="inline-flex items-center gap-2 text-[12px] text-ink/60 hover:text-ink transition-colors"
         >
-          <ArrowLeft size={13} /> Voltar para Jornada
+          <ArrowLeft size={13} /> {pilar === "academia" ? "Voltar para Início" : "Voltar para Jornada"}
         </Link>
       </div>
     </div>
