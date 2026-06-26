@@ -2,35 +2,21 @@ import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import PillarHeader from "../../components/PillarHeader";
 import { Link } from "@/lib/router-compat";
-import { Wrench, Video, Monitor, FileText, ArrowUpRight } from "lucide-react";
+import { Wrench, ImagePlus } from "lucide-react";
 
 type Ferramenta = {
   nome: string;
-  desc: string;
-  icon: typeof Video;
+  cor: string;
   to?: string;
+  foto?: string;
   emBreve?: boolean;
 };
 
+// Substitui `foto` pelos URLs reais depois do upload (ex.: "/fotos/tella.jpg").
 const FERRAMENTAS: Ferramenta[] = [
-  {
-    nome: "Tella",
-    desc: "Grava ecrã e câmara ao mesmo tempo, com edição automática — ideal para aulas e demos.",
-    icon: Video,
-    to: "/metodo/pilar-1/aprenda-ia/tella",
-  },
-  {
-    nome: "OBS",
-    desc: "Gravação e transmissão profissional, gratuita e flexível — para lives e captura de ecrã.",
-    icon: Monitor,
-    emBreve: true,
-  },
-  {
-    nome: "Notion",
-    desc: "Organize ideias, conteúdos e calendário num só lugar — a sua central de produtividade.",
-    icon: FileText,
-    emBreve: true,
-  },
+  { nome: "Tella", cor: "from-rose-500/20 to-red-700/10", to: "/metodo/pilar-1/aprenda-ia/tella" },
+  { nome: "OBS", cor: "from-slate-500/20 to-slate-800/10", emBreve: true },
+  { nome: "Notion", cor: "from-stone-500/20 to-neutral-800/10", emBreve: true },
 ];
 
 export default function Produtividade() {
@@ -54,9 +40,8 @@ export default function Produtividade() {
           As ferramentas que tornam a sua produção mais rápida e profissional.
         </p>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-5">
           {FERRAMENTAS.map((f) => {
-            const Icon = f.icon;
             const disponivel = !f.emBreve && f.to;
             const Wrapper: any = disponivel ? Link : "div";
             const props = disponivel ? { to: f.to } : {};
@@ -64,45 +49,38 @@ export default function Produtividade() {
               <Wrapper
                 key={f.nome}
                 {...props}
-                className={`group relative overflow-hidden rounded-3xl border p-6 md:p-7 flex flex-col transition-all duration-300 ease-out ${
-                  disponivel
-                    ? "bg-white border-[var(--color-border)] hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:border-terracotta/45 cursor-pointer"
-                    : "bg-cream-warm/40 border-dashed border-[var(--color-border)]"
+                className={`group relative aspect-[3/4] rounded-2xl overflow-hidden border border-border bg-ink shadow-sm transition-all duration-300 ${
+                  disponivel ? "hover:shadow-xl hover:-translate-y-1" : ""
                 }`}
               >
-                <div className="mb-6">
-                  <span
-                    className={`w-[52px] h-[52px] rounded-2xl flex items-center justify-center transition-transform group-hover:scale-105 ${
-                      disponivel ? "bg-terracotta text-cream shadow-[0_8px_20px_-8px_rgba(124,61,41,0.6)]" : "bg-ink/5 text-ink/30"
-                    }`}
-                  >
-                    <Icon size={22} strokeWidth={1.75} />
-                  </span>
-                </div>
+                {f.foto ? (
+                  <img
+                    src={f.foto}
+                    alt={f.nome}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className={`absolute inset-0 bg-gradient-to-br ${f.cor} flex items-center justify-center`} aria-hidden>
+                    <div className="text-center px-3">
+                      <ImagePlus size={28} className="mx-auto text-cream/40 mb-1.5" />
+                      <p className="text-[10px] tracking-[0.2em] uppercase text-cream/55 font-medium">Adiciona foto</p>
+                    </div>
+                  </div>
+                )}
 
-                <h3 className={`font-display text-2xl leading-[1.1] tracking-[-0.02em] ${disponivel ? "text-ink" : "text-ink/50"}`}>
-                  {f.nome}
-                </h3>
-                <p className={`text-sm mt-2.5 leading-relaxed flex-1 ${disponivel ? "text-ink/55" : "text-ink/40"}`}>
-                  {f.desc}
-                </p>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
-                <div className="mt-6 flex items-center justify-between gap-3">
-                  {disponivel ? (
-                    <span className="inline-flex items-center gap-2.5 text-sm font-semibold text-terracotta">
-                      Abrir
-                      <span className="w-9 h-9 rounded-full border border-terracotta/30 flex items-center justify-center transition-all duration-300 group-hover:bg-terracotta group-hover:text-cream group-hover:border-terracotta group-hover:translate-x-0.5">
-                        <ArrowUpRight size={15} strokeWidth={2.25} />
-                      </span>
-                    </span>
-                  ) : (
-                    <span />
-                  )}
-                  {f.emBreve && (
-                    <span className="text-[10px] font-medium tracking-[0.18em] uppercase px-3 py-1.5 rounded-full bg-ink/5 text-ink/40">
-                      Em breve
-                    </span>
-                  )}
+                <div className="relative h-full flex flex-col justify-end p-3.5 md:p-4 text-cream">
+                  <h3 className="font-tool text-lg md:text-xl uppercase tracking-tight leading-none drop-shadow-md">
+                    {f.nome}
+                  </h3>
+                  <div className="mt-3 text-[11px] font-medium">
+                    {f.emBreve ? (
+                      <span className="text-cream/70">Em breve</span>
+                    ) : (
+                      <span className="text-cream/85">Ver aulas →</span>
+                    )}
+                  </div>
                 </div>
               </Wrapper>
             );

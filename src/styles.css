@@ -250,4 +250,23 @@ select:focus {
   box-shadow: 0 1px 3px 0 rgb(45 42 38 / 0.05);
 }
 
+/* Tema próprio da Academia de IA: azul · terracota · amarelo · areia.
+   Sobrepõe os tokens da paleta só dentro deste scope (e subpáginas). */
+.theme-academia {
+  --color-cream: #EDE6D6;
+  --color-cream-warm: #F6F0E4;
+  --color-ink: #28323A;
+  --color-ink-soft: #566069;
+  --color-muted: #7E8A8F;
+  --color-terracotta: #557588;   /* azul = primária */
+  --color-terracotta-dark: #45606E;
+  --color-gold: #E0A94E;          /* amarelo */
+  --color-sage: #B0613A;          /* terracota = acento */
+  --color-success: #B0613A;
+  --color-blue: #557588;
+  --color-border: #E1D7C4;
+  --color-border-soft: #EFE7D8;
+  background-color: var(--color-cream);
+}
+
 
