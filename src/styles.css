@@ -6,22 +6,24 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-cream: #F5F2EC;
-  --color-cream-warm: #FBF7F0;
-  --color-ink: #2A1A10;
-  --color-muted: #8E7B64;
-  --color-terracotta: #7C3D29;
-  --color-terracotta-dark: #5C2A1A;
-  --color-gold: #D9A23C;
-  --color-sage: #5E89A0;
-  --color-blue: #5E89A0;
+  /* Paleta "Suave & clara": primária = terracota clara; 'gold' = ouro suave;
+     'sage'/'success'/'blue' = azul-pó (acento frio); fundo creme. */
+  --color-cream: #F7F1E6;
+  --color-cream-warm: #FBF5EA;
+  --color-ink: #4A3A30;
+  --color-muted: #8C8072;
+  --color-terracotta: #B96A4A;
+  --color-terracotta-dark: #A35A3D;
+  --color-gold: #E6BE6B;
+  --color-sage: #8FB0BE;
+  --color-blue: #8FB0BE;
   --color-beige: #E3D5BE;
   --color-navy: #3F4A5A;
   --color-forest: #14110F;
   --color-forest-soft: #221E1A;
-  --color-border: #E7DBC9;
+  --color-border: #EADFCB;
   --color-border-soft: #F1E8DA;
-  --color-success: #5E89A0;
+  --color-success: #8FB0BE;
   --font-serif: "Archivo", "Archivo Black", system-ui, sans-serif;
   --font-sans: "DM Sans", "Inter Tight", system-ui, sans-serif;
   --font-mono: "DM Sans", "Inter Tight", system-ui, sans-serif;
@@ -159,23 +161,23 @@
 
 /* Restore custom brand palette tokens (override shadcn @theme inline above) */
 @theme {
-  --color-cream: #F5F2EC;
-  --color-cream-warm: #FBF7F0;
-  --color-ink: #2A1A10;
-  --color-ink-soft: #6B5443;
-  --color-muted: #8E7B64;
-  --color-terracotta: #7C3D29;
-  --color-terracotta-dark: #5C2A1A;
-  --color-gold: #D9A23C;
-  --color-sage: #5E89A0;
-  --color-blue: #5E89A0;
+  --color-cream: #F7F1E6;
+  --color-cream-warm: #FBF5EA;
+  --color-ink: #4A3A30;
+  --color-ink-soft: #6E5C4E;
+  --color-muted: #8C8072;
+  --color-terracotta: #B96A4A;
+  --color-terracotta-dark: #A35A3D;
+  --color-gold: #E6BE6B;
+  --color-sage: #8FB0BE;
+  --color-blue: #8FB0BE;
   --color-beige: #E3D5BE;
   --color-navy: #3F4A5A;
   --color-forest: #14110F;
   --color-forest-soft: #221E1A;
-  --color-border: #E7DBC9;
+  --color-border: #EADFCB;
   --color-border-soft: #F1E8DA;
-  --color-success: #5E89A0;
+  --color-success: #8FB0BE;
 
   /* Modern dark palette (Arounda-inspired) */
   --color-coal: #0E0C0D;
@@ -236,7 +238,7 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--color-terracotta) !important;
-  box-shadow: 0 0 0 3px rgb(124 61 41 / 0.16);
+  box-shadow: 0 0 0 3px rgb(185 106 74 / 0.22);
 }
 
 /* Sombra subtil em todos os cards */
