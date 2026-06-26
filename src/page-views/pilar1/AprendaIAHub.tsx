@@ -4,7 +4,7 @@ import PillarHeader from "../../components/PillarHeader";
 import { Link } from "@/lib/router-compat";
 import { TOOLS } from "@/data/aulas";
 import { useAulaProgress } from "@/lib/use-aula-progress";
-import { ArrowRight, Check, Hourglass, ImagePlus } from "lucide-react";
+import { ArrowRight, Check, Hourglass, ImagePlus, Video, ArrowUpRight } from "lucide-react";
 
 // Mapeia foto por slug — substitui pelos URLs reais depois do upload.
 // Ex.: chatgpt: "/fotos/chatgpt.jpg"
@@ -103,6 +103,37 @@ export default function AprendaIAHub() {
             );
           })}
         </div>
+
+        {/* Card — Vídeos com IA */}
+        <Link
+          to="/metodo/pilar-1/aprenda-ia/videos"
+          className="group relative overflow-hidden rounded-3xl border border-[var(--color-border)] bg-white p-6 md:p-8 mt-6 grid grid-cols-1 md:grid-cols-[auto_1fr_auto] items-center gap-5 md:gap-8 transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:border-terracotta/45"
+        >
+          <span className="w-[60px] h-[60px] rounded-2xl bg-terracotta text-cream flex items-center justify-center shadow-[0_8px_20px_-8px_rgba(124,61,41,0.6)] transition-transform group-hover:scale-105">
+            <Video size={26} strokeWidth={1.75} />
+          </span>
+          <div className="min-w-0">
+            <h3 className="font-display text-2xl md:text-[1.7rem] leading-[1.1] tracking-[-0.02em] text-ink">
+              Vídeos profissionais com IA
+            </h3>
+            <p className="text-sm text-ink/55 mt-2 max-w-xl leading-relaxed">
+              Clones falantes, personagens animados e edição — aulas práticas com HeyGen, Kling, Hedra e mais.
+            </p>
+            <div className="flex flex-wrap gap-1.5 mt-4">
+              {["HeyGen", "Kling", "Hedra", "Flow", "CapCut"].map((t) => (
+                <span
+                  key={t}
+                  className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-terracotta/[0.08] text-terracotta"
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+          <span className="hidden md:flex w-11 h-11 rounded-full border border-terracotta/30 items-center justify-center text-terracotta transition-all group-hover:bg-terracotta group-hover:text-cream group-hover:border-terracotta shrink-0">
+            <ArrowUpRight size={18} strokeWidth={2} />
+          </span>
+        </Link>
 
         {/* CTA próximo passo */}
         <div className="mt-10 flex justify-end">

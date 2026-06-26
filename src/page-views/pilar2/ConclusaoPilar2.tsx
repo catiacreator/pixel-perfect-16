@@ -13,7 +13,6 @@ const CONCLUIDOS = [
 const PENDENTES = [
   { titulo: "Página Profissional", to: "/metodo/pilar-2/pagina-profissional" },
   { titulo: "Redes Sociais", to: "/metodo/pilar-2/redes-sociais" },
-  { titulo: "Vídeos", to: "/metodo/pilar-2/videos" },
 ];
 
 export default function ConclusaoPilar2() {

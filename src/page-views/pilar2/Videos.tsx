@@ -45,7 +45,7 @@ export default function Videos() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar={2} pilarLabel="Criar Autoridade" backTo="/metodo/pilar-2" backLabel="Voltar para o Pilar 2" />
+      <PilarBreadcrumb pilar={1} pilarLabel="Academia de IA" backTo="/metodo/pilar-1/aprenda-ia" backLabel="Voltar para a Academia de IA" />
       <TodoBanner texto="Etapa 5 — Vídeos: conteúdo pendente. Aguardando documentação detalhada (estrutura definitiva das aulas, prompts e fluxo)." />
       <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
         <h1 className="font-serif text-3xl text-ink mb-2">Vídeos profissionais sem gravar 50 vezes</h1>
@@ -93,8 +93,8 @@ export default function Videos() {
           </div>
         ))}
 
-        <Link to="/metodo/pilar-2" className="flex items-center gap-1.5 text-sm text-muted mt-4">
-          <ArrowLeft size={14} /> Voltar para o Pilar 2
+        <Link to="/metodo/pilar-1/aprenda-ia" className="flex items-center gap-1.5 text-sm text-muted mt-4">
+          <ArrowLeft size={14} /> Voltar para a Academia de IA
         </Link>
       </div>
     </Layout>
