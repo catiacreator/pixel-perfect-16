@@ -29,6 +29,8 @@ import {
   FolderOpen,
   CalendarClock,
   Instagram,
+  Wrench,
+  Monitor,
   type LucideIcon,
 } from "lucide-react";
 
@@ -47,6 +49,8 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   "Projeto de Postagens": FolderOpen,
   "Como agendar": CalendarClock,
   "Instagram": Instagram,
+  "OBS": Monitor,
+  "Notion": FileText,
   "↳ Carrossel": LayoutGrid,
   "↳ Stories": CircleDot,
   "↳ Reels": Video,
@@ -63,7 +67,7 @@ type Item = {
   children?: SubItem[];
 };
 
-type SidebarKey = 1 | 2 | 3 | 4 | "academia";
+type SidebarKey = 1 | 2 | 3 | 4 | "academia" | "redes";
 
 type PilarDef = {
   pilar: SidebarKey;
@@ -78,14 +82,56 @@ const PILARES: Record<string | number, PilarDef> = {
     title: "Domine as principais IAs",
     enabled: true,
     items: [
-      { num: 1, label: "ChatGPT", to: "/metodo/pilar-1/aprenda-ia/chatgpt", icon: CircleDot },
-      { num: 2, label: "Claude", to: "/metodo/pilar-1/aprenda-ia/claude", icon: Sparkle },
-      { num: 3, label: "Gemini", to: "/metodo/pilar-1/aprenda-ia/gemini", icon: Sparkles },
-      { num: 4, label: "Grok", to: "/metodo/pilar-1/aprenda-ia/grok", icon: Zap },
-      { num: 5, label: "NotebookLM", to: "/metodo/pilar-1/aprenda-ia/notebooklm", icon: Book },
-      { num: 6, label: "Lovable", to: "/metodo/pilar-1/aprenda-ia/lovable", icon: Heart },
-      { num: 7, label: "Tella", to: "/metodo/pilar-1/aprenda-ia/tella", icon: Video },
-      { num: 8, label: "Vídeos com IA", to: "/metodo/pilar-1/aprenda-ia/videos", icon: Video },
+      {
+        num: 1,
+        label: "Principais IAs",
+        to: "/metodo/pilar-1/aprenda-ia/principais-ias",
+        icon: Sparkles,
+        children: [
+          { label: "ChatGPT", to: "/metodo/pilar-1/aprenda-ia/chatgpt" },
+          { label: "Claude", to: "/metodo/pilar-1/aprenda-ia/claude" },
+          { label: "Gemini", to: "/metodo/pilar-1/aprenda-ia/gemini" },
+          { label: "Grok", to: "/metodo/pilar-1/aprenda-ia/grok" },
+          { label: "NotebookLM", to: "/metodo/pilar-1/aprenda-ia/notebooklm" },
+          { label: "Lovable", to: "/metodo/pilar-1/aprenda-ia/lovable" },
+        ],
+      },
+      { num: 2, label: "Vídeos profissionais com IA", to: "/metodo/pilar-1/aprenda-ia/videos", icon: Video },
+      {
+        num: 3,
+        label: "Ferramentas de produtividade",
+        to: "/metodo/pilar-1/aprenda-ia/produtividade",
+        icon: Wrench,
+        children: [
+          { label: "Tella", to: "/metodo/pilar-1/aprenda-ia/tella" },
+          { label: "OBS", to: "/metodo/pilar-1/aprenda-ia/produtividade" },
+          { label: "Notion", to: "/metodo/pilar-1/aprenda-ia/produtividade" },
+        ],
+      },
+    ],
+  },
+  redes: {
+    pilar: "redes",
+    title: "Criando para as Redes Sociais",
+    enabled: true,
+    items: [
+      { num: 1, label: "Modelos de Posts", to: "/metodo/pilar-2/redes-sociais?aba=modelos", icon: LayoutGrid },
+      { num: 2, label: "Linha Editorial", to: "/metodo/pilar-2/redes-sociais?aba=linha", icon: AlignLeft },
+      { num: 3, label: "Calendário Editorial", to: "/metodo/pilar-2/redes-sociais?aba=calendario", icon: CalendarDays },
+      { num: 4, label: "Bio", to: "/metodo/pilar-2/redes-sociais?aba=bio", icon: UserCircle2 },
+      { num: 5, label: "Projeto de Postagens", to: "/metodo/pilar-2/redes-sociais?aba=projeto", icon: FolderOpen },
+      { num: 6, label: "Como agendar", to: "/metodo/pilar-2/redes-sociais?aba=agendar", icon: CalendarClock },
+      {
+        num: 7,
+        label: "Instagram",
+        to: "/metodo/pilar-2/redes-sociais/instagram",
+        icon: Instagram,
+        children: [
+          { label: "↳ Carrossel", to: "/metodo/pilar-2/redes-sociais/instagram/carrossel" },
+          { label: "↳ Stories", to: "/metodo/pilar-2/redes-sociais/instagram/stories" },
+          { label: "↳ Reels", to: "/metodo/pilar-2/redes-sociais/instagram/reels" },
+        ],
+      },
     ],
   },
   1: {
@@ -117,25 +163,7 @@ const PILARES: Record<string | number, PilarDef> = {
           { label: "Consultoria de Imagem", to: "/metodo/pilar-2/consultoria-imagem" },
         ],
       },
-      {
-        num: 4,
-        label: "Redes Sociais",
-        to: "/metodo/pilar-2/redes-sociais",
-        icon: MessageSquare,
-        children: [
-          { label: "Modelos de Posts", to: "/metodo/pilar-2/redes-sociais?aba=modelos" },
-          { label: "Linha Editorial", to: "/metodo/pilar-2/redes-sociais?aba=linha" },
-          { label: "Calendário Editorial", to: "/metodo/pilar-2/redes-sociais?aba=calendario" },
-          { label: "Bio", to: "/metodo/pilar-2/redes-sociais?aba=bio" },
-          { label: "Projeto de Postagens", to: "/metodo/pilar-2/redes-sociais?aba=projeto" },
-          { label: "Como agendar", to: "/metodo/pilar-2/redes-sociais?aba=agendar" },
-          { label: "Instagram", to: "/metodo/pilar-2/redes-sociais/instagram" },
-          { label: "↳ Carrossel", to: "/metodo/pilar-2/redes-sociais/instagram/carrossel" },
-          { label: "↳ Stories", to: "/metodo/pilar-2/redes-sociais/instagram/stories" },
-          { label: "↳ Reels", to: "/metodo/pilar-2/redes-sociais/instagram/reels" },
-        ],
-      },
-      { num: 5, label: "Conclusão Pilar 2", to: "/metodo/pilar-2/conclusao", icon: Trophy },
+      { num: 4, label: "Conclusão Pilar 2", to: "/metodo/pilar-2/conclusao", icon: Trophy },
     ],
   },
   3: { pilar: 3, title: "Crie o seu Produto", enabled: false, items: [] },
@@ -194,7 +222,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
       {/* Header */}
       <div className="px-6 pt-7 pb-5 border-b border-[var(--color-border)]">
         <div className="text-[10px] tracking-[0.32em] uppercase text-terracotta font-medium">
-          {def.pilar === "academia" ? "Academia de IA" : `Pilar ${def.pilar}`}
+          {def.pilar === "academia" ? "Academia de IA" : def.pilar === "redes" ? "Redes Sociais" : `Pilar ${def.pilar}`}
         </div>
         <div className="mt-2 font-display text-xl tracking-[0.04em] uppercase text-ink">
           {def.title}
@@ -258,7 +286,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                     {item.children!.map((c) => {
                       const cActive = isActive(c.to);
                       return (
-                        <li key={c.to}>
+                        <li key={c.label}>
                           <Link
                             to={c.to}
                             onClick={onNavigate}
@@ -298,7 +326,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
           <span className="text-terracotta text-xs">✦</span>
           <span className="h-px flex-1 bg-[var(--color-border)]" />
         </div>
-        {pilar !== "academia" && (
+        {typeof pilar === "number" && (
         <>
         <div className="text-[10px] tracking-[0.3em] uppercase text-ink/45 mb-3">
           Ir para outro pilar
@@ -343,11 +371,11 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
         )}
 
         <Link
-          to={pilar === "academia" ? "/" : "/metodo"}
+          to={typeof pilar === "number" ? "/metodo" : "/"}
           onClick={onNavigate}
           className="inline-flex items-center gap-2 text-[12px] text-ink/60 hover:text-ink transition-colors"
         >
-          <ArrowLeft size={13} /> {pilar === "academia" ? "Voltar para Início" : "Voltar para Jornada"}
+          <ArrowLeft size={13} /> {typeof pilar === "number" ? "Voltar para Jornada" : "Voltar para Início"}
         </Link>
       </div>
     </div>

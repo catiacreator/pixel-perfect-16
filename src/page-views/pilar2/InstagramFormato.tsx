@@ -64,7 +64,7 @@ export default function InstagramFormato() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar={2} pilarLabel="Criar Autoridade" backTo="/metodo/pilar-2/redes-sociais/instagram" backLabel="Voltar para Instagram" />
+      <PilarBreadcrumb pilar="redes" pilarLabel="Criando para as Redes Sociais" backTo="/metodo/pilar-2/redes-sociais/instagram" backLabel="Voltar para Instagram" />
       <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
         <h1 className="font-serif text-3xl text-ink mb-2">{formato.titulo}</h1>
         <p className="italic text-muted mb-6">{formato.subtitulo}</p>

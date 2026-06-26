@@ -576,7 +576,7 @@ export default function RedesSociais() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar={2} pilarLabel="Criar Autoridade" backTo="/metodo/pilar-2" backLabel="Voltar para o Pilar 2" />
+      <PilarBreadcrumb pilar="redes" pilarLabel="Criando para as Redes Sociais" backTo="/" backLabel="Voltar para Início" />
       <TodoBanner texto="Etapa 4 — conteúdo pendente. Aguardando documentação detalhada de Redes Sociais (prompts, calendário, modelos)." />
       <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
         <h1 className="font-serif text-3xl text-ink mb-2">Redes Sociais</h1>
