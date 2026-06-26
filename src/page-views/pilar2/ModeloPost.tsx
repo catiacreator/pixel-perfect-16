@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Upload, Download, ImageOff } from "lucide-react";
 
-type CorFaixa = "terracota" | "sage" | "mostarda";
+type CorFaixa = "terracota" | "amarelo" | "azul" | "bege";
 
 const CORES: Record<CorFaixa, { label: string; band: string; titulo: string; rodape: string; swatch: string }> = {
-  terracota: { label: "Terracota", band: "#7C3D29", titulo: "#F5EFE3", rodape: "#E0A94E", swatch: "#7C3D29" },
-  sage: { label: "Sage", band: "#6F8477", titulo: "#F5EFE3", rodape: "#E7D8B5", swatch: "#6F8477" },
-  mostarda: { label: "Mostarda", band: "#D9A23C", titulo: "#2A1A10", rodape: "#5C2A1A", swatch: "#D9A23C" },
+  terracota: { label: "Terracota", band: "#7C3D29", titulo: "#F5EFE3", rodape: "#D9A23C", swatch: "#7C3D29" },
+  amarelo: { label: "Amarelo", band: "#D9A23C", titulo: "#2A1A10", rodape: "#5C2A1A", swatch: "#D9A23C" },
+  azul: { label: "Azul", band: "#5E89A0", titulo: "#F5EFE3", rodape: "#E3D5BE", swatch: "#5E89A0" },
+  bege: { label: "Bege", band: "#E3D5BE", titulo: "#2A1A10", rodape: "#7C3D29", swatch: "#E3D5BE" },
 };
 
 const FOTO_RATIO = 0.58; // fração da altura ocupada pela foto (resto é a faixa)
