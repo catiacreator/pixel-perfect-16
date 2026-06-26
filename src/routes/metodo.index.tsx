@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import Home from "@/page-views/Home";
+import Jornada from "@/page-views/Jornada";
 
 export const Route = createFileRoute("/metodo/")({
-  head: () => ({ meta: [{ title: "Jornada Rápida — Leveza no Digital" }] }),
-  component: Home,
+  head: () => ({ meta: [{ title: "A sua jornada — Leveza no Digital" }] }),
+  component: Jornada,
 });
