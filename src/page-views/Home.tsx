@@ -123,7 +123,7 @@ export default function Home() {
                 <Link
                   key={c.titulo}
                   to={c.to}
-                  className="group relative overflow-hidden rounded-3xl border border-[var(--color-border)] bg-white p-6 md:p-7 flex flex-col transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:border-terracotta/45"
+                  className="group relative overflow-hidden rounded-3xl border border-white/60 bg-white/55 backdrop-blur-xl p-6 md:p-7 flex flex-col transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:bg-white/70 hover:border-terracotta/40"
                 >
                   <div className="mb-6">
                     <span className="w-[52px] h-[52px] rounded-2xl bg-terracotta text-cream flex items-center justify-center shadow-[0_8px_20px_-8px_rgba(124,61,41,0.6)] transition-transform group-hover:scale-105">
