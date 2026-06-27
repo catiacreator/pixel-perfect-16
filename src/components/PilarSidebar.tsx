@@ -248,16 +248,16 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                 <div
                   className={`flex items-stretch rounded-full transition-colors ${
                     active || open
-                      ? "bg-[#f3e4d0]"
+                      ? "bg-terracotta/15"
                       : "hover:bg-ink/5"
                   }`}
                 >
                   <Link
                     to={item.to}
                     onClick={onNavigate}
-                    className="flex-1 flex items-center gap-2.5 pl-3 pr-2 py-2 text-[13px] text-ink min-w-0"
+                    className={`flex-1 flex items-center gap-2.5 pl-3 pr-2 py-2 text-[13px] min-w-0 ${active || open ? "text-terracotta" : "text-ink"}`}
                   >
-                    <Icon size={15} strokeWidth={1.75} className="text-ink/70 shrink-0" />
+                    <Icon size={15} strokeWidth={1.75} className={`shrink-0 ${active || open ? "text-terracotta" : "text-ink/70"}`} />
                     <span className="truncate flex-1 font-medium">
                       {item.num}. {item.label}
                     </span>
@@ -292,7 +292,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                             onClick={onNavigate}
                             className={`flex items-center gap-2 pl-3 pr-3 py-2 rounded-full text-[12.5px] transition-colors ${
                               cActive
-                                ? "bg-[#f3e4d0] text-ink font-medium"
+                                ? "bg-terracotta/15 text-terracotta font-medium"
                                 : "text-ink/70 hover:bg-ink/5 hover:text-ink"
                             }`}
                           >
