@@ -246,6 +246,19 @@ select:focus {
   box-shadow: 0 0 0 3px rgb(107 63 42 / 0.22);
 }
 
+/* Glassmorphism — vidro fosco reutilizável */
+.glass {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+.glass-dark {
+  background: rgba(17, 17, 17, 0.6);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+}
+
 /* Sombra subtil em todos os cards */
 .rounded-2xl.border {
   box-shadow: 0 1px 4px 0 rgb(45 42 38 / 0.06), 0 0 0 0 transparent;

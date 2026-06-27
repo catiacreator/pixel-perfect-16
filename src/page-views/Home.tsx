@@ -41,8 +41,10 @@ export default function Home() {
       {/* HERO — banda terracotta editorial */}
       <section className="relative overflow-hidden bg-ink text-cream">
         <div className="pointer-events-none absolute inset-0">
+          {/* orbs de luz quente (glass / gradiente) */}
+          <div className="absolute top-10 -right-16 w-[420px] h-[420px] rounded-full bg-[radial-gradient(circle_at_center,#E8743A_0%,transparent_60%)] opacity-50 blur-3xl" />
           <div className="absolute -top-40 -right-40 w-[700px] h-[700px] rounded-full bg-[radial-gradient(circle_at_center,var(--color-terracotta-dark)_0%,transparent_60%)] opacity-70 blur-2xl" />
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle_at_center,var(--color-gold)_0%,transparent_65%)] opacity-25 blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle_at_center,var(--color-gold)_0%,transparent_65%)] opacity-30 blur-3xl" />
           <div
             className="absolute inset-0 opacity-[0.06]"
             style={{
