@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import {
@@ -7,7 +7,6 @@ import {
   Compass,
   GraduationCap,
   MessageSquare,
-  ImagePlus,
 } from "lucide-react";
 
 const CARDS = [
@@ -41,34 +40,34 @@ const CARDS = [
 ];
 
 export default function Home() {
-  const heroRef = useRef<HTMLElement>(null);
   const orbRef = useRef<HTMLDivElement>(null);
-  const onMove = (e: { clientX: number; clientY: number }) => {
-    const r = heroRef.current?.getBoundingClientRect();
-    if (!r || !orbRef.current) return;
-    orbRef.current.style.transform = `translate(${e.clientX - r.left - 260}px, ${e.clientY - r.top - 260}px)`;
-  };
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      if (!orbRef.current) return;
+      orbRef.current.style.transform = `translate(${e.clientX - 280}px, ${e.clientY - 280}px)`;
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+
   return (
     <Layout>
-      {/* HERO — editorial moderno com fundo interativo */}
-      <section
-        ref={heroRef}
-        onMouseMove={onMove}
-        className="hero-grad relative overflow-hidden text-ink"
-      >
-        {/* orb que segue o cursor */}
-        <div
-          ref={orbRef}
-          aria-hidden
-          className="pointer-events-none absolute left-0 top-0 w-[520px] h-[520px] rounded-full blur-3xl opacity-50 transition-transform duration-500 ease-out"
-          style={{ background: "radial-gradient(circle at center, #F0A766 0%, transparent 60%)", transform: "translate(45%, 5%)" }}
-        />
+      {/* orb de luz que segue o cursor — em toda a página */}
+      <div
+        ref={orbRef}
+        aria-hidden
+        className="pointer-events-none fixed left-0 top-0 -z-10 w-[560px] h-[560px] rounded-full blur-3xl opacity-40 transition-transform duration-500 ease-out"
+        style={{ background: "radial-gradient(circle at center, #F0A766 0%, transparent 60%)" }}
+      />
+
+      {/* HERO — mesmo fundo da página */}
+      <section className="relative overflow-hidden text-ink">
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.05]"
           style={{ backgroundImage: "radial-gradient(circle at 1px 1px, var(--color-ink) 1px, transparent 0)", backgroundSize: "22px 22px" }}
         />
 
-        <div className="relative max-w-[1400px] mx-auto px-5 md:px-10 pt-10 md:pt-16 pb-14 md:pb-24 grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-12 items-center">
+        <div className="relative max-w-[1400px] mx-auto px-5 md:px-10 pt-10 md:pt-14 pb-2 md:pb-4 grid lg:grid-cols-[1.05fr_0.95fr] gap-4 lg:gap-12 items-center">
           {/* Texto */}
           <div className="fade-up">
             <div className="flex items-center gap-2 mb-7">
@@ -93,7 +92,7 @@ export default function Home() {
               Transforme o que sabe em conteúdo, autoridade e liberdade — com Inteligência Artificial.
             </p>
 
-            <div className="flex flex-wrap items-center gap-5 mt-8">
+            <div className="mt-8">
               <Link
                 to="/metodo"
                 className="group inline-flex items-center gap-2 bg-ink text-cream pl-6 pr-2 py-2.5 rounded-full text-sm font-medium transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_-12px_rgba(0,0,0,0.5)] active:scale-[0.97]"
@@ -103,47 +102,23 @@ export default function Home() {
                   <ArrowUpRight size={15} strokeWidth={2.5} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </span>
               </Link>
-              <div className="text-sm">
-                <p className="font-semibold text-ink">+220K seguidores</p>
-                <p className="text-ink/50 text-xs">em 14 meses · método validado</p>
-              </div>
             </div>
           </div>
 
-          {/* Imagem + stats flutuantes */}
-          <div className="relative fade-up" style={{ animationDelay: "140ms" }}>
-            <div
-              className="relative aspect-[4/5] max-w-[420px] mx-auto rounded-[32px] overflow-hidden border border-white/60 shadow-[0_30px_70px_-30px_rgba(0,0,0,0.4)]"
-              style={{ background: "linear-gradient(160deg, #F0A766 0%, #C8487E 55%, #2E7CB8 100%)" }}
-            >
-              <div className="absolute inset-0 flex items-center justify-center text-center text-white/80">
-                <div>
-                  <ImagePlus size={30} className="mx-auto mb-2 opacity-80" />
-                  <p className="text-[11px] tracking-[0.2em] uppercase">A tua foto aqui</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="absolute -left-3 md:-left-6 top-12 glass rounded-2xl px-4 py-3 shadow-[0_18px_40px_-20px_rgba(0,0,0,0.35)] animate-[float_7s_ease-in-out_infinite]">
-              <p className="font-display text-2xl text-ink leading-none">220K<span className="text-gold">+</span></p>
-              <p className="text-[11px] text-ink/55 mt-1">seguidores</p>
-            </div>
-            <div
-              className="absolute -right-2 bottom-14 glass rounded-2xl px-4 py-3 shadow-[0_18px_40px_-20px_rgba(0,0,0,0.35)] animate-[float_8s_ease-in-out_infinite]"
-              style={{ animationDelay: "1s" }}
-            >
-              <p className="font-display text-2xl text-ink leading-none">14<span className="text-gold"> m</span></p>
-              <p className="text-[11px] text-ink/55 mt-1">do zero ao topo</p>
-            </div>
+          {/* Robot IA */}
+          <div className="relative fade-up flex justify-center" style={{ animationDelay: "140ms" }}>
+            <img
+              src="/robot.png"
+              alt="Assistente de IA"
+              className="w-[300px] md:w-[380px] max-w-full drop-shadow-[0_30px_55px_-25px_rgba(0,0,0,0.35)] animate-[float_7s_ease-in-out_infinite]"
+            />
           </div>
         </div>
-
-        <div className="h-6 md:h-10 bg-cream rounded-t-[40px] md:rounded-t-[60px] -mb-px relative" />
       </section>
 
       {/* HUB — 3 caminhos */}
       <section className="relative">
-        <div className="max-w-[1400px] mx-auto px-5 md:px-10 pt-10 md:pt-14 pb-20 md:pb-28">
+        <div className="max-w-[1400px] mx-auto px-5 md:px-10 pt-2 md:pt-4 pb-20 md:pb-28">
           <div className="mb-8">
             <p className="text-[11px] tracking-[0.3em] uppercase text-terracotta mb-3">/ Por onde começar</p>
             <h2 className="font-display text-4xl md:text-6xl tracking-[-0.025em] text-ink max-w-3xl leading-[1.02]">
