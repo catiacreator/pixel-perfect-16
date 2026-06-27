@@ -60,13 +60,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen w-full flex flex-col bg-cream text-ink font-display">
       {/* Cabeçalho */}
-      <header className="w-full sticky top-0 z-40 glass-dark text-cream border-b border-white/10">
+      <header className="w-full sticky top-0 z-40 glass text-ink border-b border-[var(--color-border)]">
         <div className="max-w-[1400px] mx-auto px-5 md:px-10 h-16 md:h-18 grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8">
           {/* Logótipo */}
           <Link to="/" className="flex items-center gap-2.5 leading-none shrink-0 group">
-            <span className="w-2 h-2 rounded-full bg-cream shadow-[0_0_18px_2px_rgba(245,242,236,0.6)]" />
-            <span className="font-sans font-semibold text-[16px] tracking-tight text-cream leading-none">Leveza</span>
-            <span className="hidden sm:inline font-sans font-semibold text-[16px] tracking-tight text-cream leading-none">
+            <span className="w-2 h-2 rounded-full bg-gold shadow-[0_0_14px_2px_rgba(184,121,74,0.45)]" />
+            <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none">Leveza</span>
+            <span className="hidden sm:inline font-sans font-semibold text-[16px] tracking-tight text-ink leading-none">
               no Digital
             </span>
           </Link>
@@ -81,8 +81,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   to={item.to}
                   className={`relative px-3.5 py-2 rounded-full text-[13px] transition-all ${
                     active
-                      ? "bg-cream/20 text-cream"
-                      : "text-cream/70 hover:text-cream hover:bg-cream/10"
+                      ? "bg-ink/10 text-ink"
+                      : "text-ink/55 hover:text-ink hover:bg-ink/5"
                   }`}
                 >
                   {item.label}
@@ -95,7 +95,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-2 justify-end">
             <Link
               to="/doc-mestre"
-              className="hidden md:inline-flex items-center gap-1.5 text-[13px] pl-4 pr-3 py-2 bg-cream text-ink rounded-full font-medium hover:bg-cream-warm transition-colors"
+              className="hidden md:inline-flex items-center gap-1.5 text-[13px] pl-4 pr-3 py-2 bg-ink text-cream rounded-full font-medium transition-all hover:-translate-y-0.5 active:scale-[0.97]"
             >
               <FileText size={13} strokeWidth={2.25} /> Documento
               <ArrowUpRight size={13} strokeWidth={2.25} />
@@ -103,7 +103,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {isAdmin && (
               <Link
                 to="/admin"
-                className="hidden md:inline-flex items-center gap-1.5 text-[13px] px-3 py-2 border border-cream/30 rounded-full text-cream/90 hover:bg-cream/10"
+                className="hidden md:inline-flex items-center gap-1.5 text-[13px] px-3 py-2 border border-ink/15 rounded-full text-ink/70 hover:bg-ink/5 transition-colors"
                 aria-label="Admin"
               >
                 <Shield size={13} strokeWidth={2.25} /> Admin
@@ -111,7 +111,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             )}
             <Link
               to="/mensagens"
-              className="w-10 h-10 rounded-full border border-cream/30 flex items-center justify-center text-cream/80 hover:bg-cream/10 hover:text-cream transition-colors"
+              className="w-10 h-10 rounded-full border border-ink/15 flex items-center justify-center text-ink/60 hover:bg-ink/5 hover:text-ink transition-colors"
               aria-label="Mensagens"
             >
               <Mail size={15} strokeWidth={1.75} />
@@ -119,7 +119,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {signedIn ? (
               <button
                 onClick={handleLogout}
-                className="hidden md:inline-flex w-10 h-10 rounded-full border border-cream/30 items-center justify-center text-cream/80 hover:bg-cream/10 hover:text-cream"
+                className="hidden md:inline-flex w-10 h-10 rounded-full border border-ink/15 items-center justify-center text-ink/60 hover:bg-ink/5 hover:text-ink transition-colors"
                 aria-label="Sair"
               >
                 <LogOut size={15} strokeWidth={1.75} />
@@ -127,14 +127,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             ) : (
               <Link
                 to="/auth"
-                className="hidden md:inline-flex text-[13px] px-4 py-2 border border-cream/30 text-cream rounded-full hover:bg-cream/10"
+                className="hidden md:inline-flex text-[13px] px-4 py-2 border border-ink/20 text-ink rounded-full hover:bg-ink/5 transition-colors"
               >
                 Entrar
               </Link>
             )}
             <button
               onClick={() => setOpen((v) => !v)}
-              className="lg:hidden w-10 h-10 rounded-full border border-cream/30 flex items-center justify-center text-cream"
+              className="lg:hidden w-10 h-10 rounded-full border border-ink/15 flex items-center justify-center text-ink"
               aria-label="Menu"
             >
               {open ? <X size={18} /> : <Menu size={18} />}

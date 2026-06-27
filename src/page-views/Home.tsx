@@ -41,61 +41,62 @@ const CARDS = [
 export default function Home() {
   return (
     <Layout>
-      {/* HERO — banda terracotta editorial */}
-      <section className="relative overflow-hidden bg-ink text-cream">
+      {/* HERO — claro, quente e moderno */}
+      <section
+        className="relative overflow-hidden text-ink"
+        style={{ background: "radial-gradient(135% 85% at 82% 0%, #F8E6D1 0%, #FBF7EF 48%, #F7F2EC 100%)" }}
+      >
         <div className="pointer-events-none absolute inset-0">
-          {/* orbs de luz quente (glass / gradiente) */}
-          <div className="absolute top-10 -right-16 w-[420px] h-[420px] rounded-full bg-[radial-gradient(circle_at_center,#E8743A_0%,transparent_60%)] opacity-50 blur-3xl" />
-          <div className="absolute -top-40 -right-40 w-[700px] h-[700px] rounded-full bg-[radial-gradient(circle_at_center,var(--color-terracotta-dark)_0%,transparent_60%)] opacity-70 blur-2xl" />
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle_at_center,var(--color-gold)_0%,transparent_65%)] opacity-30 blur-3xl" />
+          {/* orbs de luz quente suaves */}
+          <div className="absolute -top-10 -right-20 w-[460px] h-[460px] rounded-full bg-[radial-gradient(circle_at_center,#F0A766_0%,transparent_62%)] opacity-45 blur-3xl animate-[float_9s_ease-in-out_infinite]" />
+          <div className="absolute -bottom-28 -left-16 w-[420px] h-[420px] rounded-full bg-[radial-gradient(circle_at_center,#E8743A_0%,transparent_65%)] opacity-[0.14] blur-3xl" />
           <div
-            className="absolute inset-0 opacity-[0.06]"
+            className="absolute inset-0 opacity-[0.05]"
             style={{
-              backgroundImage:
-                "radial-gradient(circle at 1px 1px, var(--color-cream) 1px, transparent 0)",
+              backgroundImage: "radial-gradient(circle at 1px 1px, var(--color-ink) 1px, transparent 0)",
               backgroundSize: "22px 22px",
             }}
           />
         </div>
 
-        <div className="relative max-w-[1400px] mx-auto px-5 md:px-10 pt-6 md:pt-8 pb-8 md:pb-10">
-          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-6 mb-5 md:mb-7">
+        <div className="relative max-w-[1400px] mx-auto px-5 md:px-10 pt-8 md:pt-10 pb-10 md:pb-14 fade-up">
+          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-6 mb-6 md:mb-8">
             <div className="flex items-center gap-2.5">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse" />
-              <span className="text-[11px] tracking-[0.3em] uppercase text-cream/70">
+              <span className="text-[11px] tracking-[0.3em] uppercase text-ink/50">
                 Jornada · Edição 2026
               </span>
             </div>
-            <div className="hidden md:block h-px bg-cream/20" />
+            <div className="hidden md:block h-px bg-ink/10" />
           </div>
 
-          <h1 className="font-editorial font-normal text-[28px] md:text-[42px] lg:text-[52px] leading-[1] tracking-[-0.02em] text-cream max-w-5xl">
+          <h1 className="font-editorial font-normal text-[30px] md:text-[46px] lg:text-[56px] leading-[1] tracking-[-0.02em] text-ink max-w-5xl">
             Crie no digital
             <br />
-            com <span className="italic text-cream/95">leveza</span>
+            com <span className="italic text-gold">leveza</span>
             <span className="text-gold">.</span>
             <br />
-            <span className="text-cream/40">E com método.</span>
+            <span className="text-ink/30">E com método.</span>
           </h1>
 
-          <div className="mt-5 md:mt-6 grid grid-cols-1 md:grid-cols-[1.2fr_auto] items-end gap-4">
-            <p className="font-editorial text-base md:text-lg text-cream/80 max-w-xl leading-snug">
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-[1.2fr_auto] items-end gap-4">
+            <p className="font-editorial text-base md:text-lg text-ink/60 max-w-xl leading-snug">
               Uma jornada simples para transformar o que sabe em conteúdo,
               autoridade e liberdade — com recurso a Inteligência Artificial.
             </p>
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 to="/metodo"
-                className="group inline-flex items-center gap-2 bg-cream text-ink pl-5 pr-2 py-2 rounded-full text-sm font-medium hover:bg-white transition-all shadow-[0_8px_24px_-10px_rgba(0,0,0,0.35)]"
+                className="group inline-flex items-center gap-2 bg-ink text-cream pl-5 pr-2 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_32px_-12px_rgba(0,0,0,0.45)] active:scale-[0.97]"
               >
                 Começar agora
-                <span className="w-8 h-8 rounded-full bg-ink text-cream flex items-center justify-center">
+                <span className="w-8 h-8 rounded-full bg-cream text-ink flex items-center justify-center">
                   <ArrowUpRight size={14} strokeWidth={2.5} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </span>
               </Link>
               <Link
                 to="/assistente"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-sm font-medium text-cream border border-cream/30 hover:border-cream/70 hover:bg-cream/5 transition-colors"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-sm font-medium text-ink border border-ink/15 transition-all duration-300 hover:border-ink/40 hover:bg-ink/[0.04] hover:-translate-y-0.5 active:scale-[0.97]"
               >
                 <Sparkles size={14} />
                 Falar com o assistente
@@ -120,14 +121,14 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-4 md:gap-5">
-            {CARDS.map((c) => {
+            {CARDS.map((c, i) => {
               const Icon = c.icon;
               return (
                 <Link
                   key={c.titulo}
                   to={c.to}
-                  style={{ "--mc": c.cor } as Record<string, string>}
-                  className="group relative overflow-hidden rounded-3xl border border-white/60 bg-white/55 backdrop-blur-xl p-6 md:p-7 flex flex-col transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:bg-white/70"
+                  style={{ "--mc": c.cor, animationDelay: `${i * 90}ms` } as Record<string, string>}
+                  className="fade-up group relative overflow-hidden rounded-3xl border border-white/60 bg-white/55 backdrop-blur-xl p-6 md:p-7 flex flex-col transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:bg-white/70"
                 >
                   <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5" style={{ background: c.cor }} />
                   <div className="mb-6">
