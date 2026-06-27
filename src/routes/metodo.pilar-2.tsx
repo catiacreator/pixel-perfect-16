@@ -5,12 +5,12 @@ function Pilar2Layout() {
   const { pathname } = useLocation();
   const redes = pathname.startsWith("/metodo/pilar-2/redes-sociais");
   return (
-    <>
+    <div className={redes ? "theme-redes" : undefined}>
       <PilarSidebar pilar={redes ? "redes" : 2} />
       <div className="lg:pl-[280px]">
         <Outlet />
       </div>
-    </>
+    </div>
   );
 }
 

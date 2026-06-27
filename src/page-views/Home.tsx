@@ -16,6 +16,7 @@ const CARDS = [
     to: "/metodo",
     cta: "Ver a jornada",
     tags: ["Pilar 1", "Pilar 2", "Pilar 3", "Pilar 4"],
+    cor: "#C0653A",
   },
   {
     icon: GraduationCap,
@@ -24,6 +25,7 @@ const CARDS = [
     to: "/metodo/pilar-1/aprenda-ia",
     cta: "Entrar",
     tags: ["ChatGPT", "Claude", "Gemini", "Grok", "NotebookLM", "Lovable", "Tella"],
+    cor: "#2E7CB8",
   },
   {
     icon: MessageSquare,
@@ -32,6 +34,7 @@ const CARDS = [
     to: "/metodo/pilar-2/redes-sociais",
     cta: "Explorar",
     tags: ["Modelos", "Linha editorial", "Calendário", "Bio"],
+    cor: "#C8487E",
   },
 ];
 
@@ -123,10 +126,15 @@ export default function Home() {
                 <Link
                   key={c.titulo}
                   to={c.to}
-                  className="group relative overflow-hidden rounded-3xl border border-white/60 bg-white/55 backdrop-blur-xl p-6 md:p-7 flex flex-col transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:bg-white/70 hover:border-terracotta/40"
+                  style={{ "--mc": c.cor } as Record<string, string>}
+                  className="group relative overflow-hidden rounded-3xl border border-white/60 bg-white/55 backdrop-blur-xl p-6 md:p-7 flex flex-col transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:bg-white/70"
                 >
+                  <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5" style={{ background: c.cor }} />
                   <div className="mb-6">
-                    <span className="w-[52px] h-[52px] rounded-2xl bg-terracotta text-cream flex items-center justify-center shadow-[0_8px_20px_-8px_rgba(124,61,41,0.6)] transition-transform group-hover:scale-105">
+                    <span
+                      className="w-[52px] h-[52px] rounded-2xl text-cream flex items-center justify-center shadow-[0_8px_20px_-8px_rgba(0,0,0,0.35)] transition-transform group-hover:scale-105"
+                      style={{ background: c.cor }}
+                    >
                       <Icon size={22} strokeWidth={1.75} />
                     </span>
                   </div>
@@ -140,16 +148,20 @@ export default function Home() {
                     {c.tags.map((t) => (
                       <span
                         key={t}
-                        className="text-[11px] font-medium px-2.5 py-1 rounded-full bg-terracotta/[0.08] text-terracotta"
+                        className="text-[11px] font-medium px-2.5 py-1 rounded-full border"
+                        style={{ color: c.cor, borderColor: c.cor + "55" }}
                       >
                         {t}
                       </span>
                     ))}
                   </div>
 
-                  <span className="mt-6 inline-flex items-center gap-2.5 text-sm font-semibold text-terracotta">
+                  <span className="mt-6 inline-flex items-center gap-2.5 text-sm font-semibold" style={{ color: c.cor }}>
                     {c.cta}
-                    <span className="w-9 h-9 rounded-full border border-terracotta/30 flex items-center justify-center transition-all duration-300 group-hover:bg-terracotta group-hover:text-cream group-hover:border-terracotta group-hover:translate-x-0.5">
+                    <span
+                      className="w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-300 group-hover:text-cream group-hover:translate-x-0.5 group-hover:bg-[var(--mc)] group-hover:border-[var(--mc)]"
+                      style={{ borderColor: c.cor }}
+                    >
                       <ArrowUpRight size={15} strokeWidth={2.25} />
                     </span>
                   </span>

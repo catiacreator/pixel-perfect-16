@@ -246,6 +246,24 @@ select:focus {
   box-shadow: 0 0 0 3px rgb(107 63 42 / 0.22);
 }
 
+/* Tema de cor por módulo — sobrepõe a cor de acento (primária/gold) no scope.
+   Mantém fundo/preto/branco quente globais; muda só os acentos do módulo. */
+.theme-jornada {
+  --color-terracotta: #C0653A;
+  --color-terracotta-dark: #9C4E2B;
+  --color-gold: #E8923F;
+}
+.theme-academia {
+  --color-terracotta: #2E7CB8;
+  --color-terracotta-dark: #235E8C;
+  --color-gold: #4FA3CE;
+}
+.theme-redes {
+  --color-terracotta: #C8487E;
+  --color-terracotta-dark: #9C3360;
+  --color-gold: #E06A9A;
+}
+
 /* Glassmorphism — vidro fosco reutilizável */
 .glass {
   background: rgba(255, 255, 255, 0.5);
