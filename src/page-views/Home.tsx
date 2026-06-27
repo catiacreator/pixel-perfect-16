@@ -60,58 +60,78 @@ export default function Home() {
         style={{ background: "radial-gradient(circle at center, #F0A766 0%, transparent 60%)" }}
       />
 
-      {/* HERO — mesmo fundo da página */}
-      <section className="relative overflow-hidden text-ink">
+      {/* HERO — faixa colorida (gradiente da marca) */}
+      <section className="relative px-4 md:px-10 pt-5 md:pt-7 pb-2 md:pb-4">
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.05]"
-          style={{ backgroundImage: "radial-gradient(circle at 1px 1px, var(--color-ink) 1px, transparent 0)", backgroundSize: "22px 22px" }}
-        />
+          className="relative max-w-[1400px] mx-auto overflow-hidden rounded-[28px] md:rounded-[36px]"
+          style={{ background: "radial-gradient(130% 130% at 82% 16%, #F0A766 0%, #C8487E 55%, #2E7CB8 100%)" }}
+        >
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[0.08]"
+            style={{ backgroundImage: "radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)", backgroundSize: "24px 24px" }}
+          />
 
-        <div className="relative max-w-[1400px] mx-auto px-5 md:px-10 pt-10 md:pt-14 pb-2 md:pb-4 grid lg:grid-cols-[1.05fr_0.95fr] gap-4 lg:gap-12 items-center">
-          {/* Texto */}
-          <div className="fade-up">
-            <div className="flex items-center gap-2 mb-7">
-              <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#C0653A" }} />
-              <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#2E7CB8" }} />
-              <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#C8487E" }} />
-              <span className="text-[11px] tracking-[0.3em] uppercase text-ink/50 ml-2">Jornada · 2026</span>
+          <div className="relative grid lg:grid-cols-[1.1fr_0.9fr] gap-4 lg:gap-10 items-center px-6 md:px-12 py-9 md:py-14">
+            {/* Texto */}
+            <div className="fade-up">
+              <div className="flex items-center gap-2 mb-6">
+                <span className="w-2 h-2 rounded-full bg-white/90" />
+                <span className="w-2 h-2 rounded-full bg-white/60" />
+                <span className="w-2 h-2 rounded-full bg-white/40" />
+                <span className="text-[11px] tracking-[0.3em] uppercase text-white/80 ml-1">Jornada · 2026</span>
+              </div>
+
+              <h1 className="font-editorial font-normal uppercase text-[34px] md:text-[50px] lg:text-[58px] leading-[0.95] tracking-[-0.02em] text-white">
+                Crie no digital{" "}
+                <Sparkles className="inline-block align-middle text-white/90" size={32} strokeWidth={1.5} />{" "}
+                <span className="normal-case italic text-white/95">com leveza</span>{" "}
+                e método.
+              </h1>
+
+              <p className="text-white/80 max-w-md mt-5 leading-relaxed">
+                Transforme o que sabe em conteúdo, autoridade e liberdade — com Inteligência Artificial.
+              </p>
+
+              <div className="mt-7 flex flex-wrap items-center gap-3">
+                <Link
+                  to="/metodo"
+                  className="group inline-flex items-center gap-2 bg-white text-[#141414] pl-6 pr-2 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_-12px_rgba(0,0,0,0.5)] active:scale-[0.97]"
+                >
+                  Começar agora
+                  <span className="w-9 h-9 rounded-full bg-[#141414] text-white flex items-center justify-center">
+                    <ArrowUpRight size={15} strokeWidth={2.5} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </span>
+                </Link>
+                <Link
+                  to="/assistente"
+                  className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-sm font-medium text-white border border-white/40 hover:bg-white/10 transition-colors active:scale-[0.97]"
+                >
+                  <Sparkles size={14} />
+                  Assistente
+                </Link>
+              </div>
             </div>
 
-            <h1 className="font-editorial font-normal uppercase text-[38px] md:text-[54px] lg:text-[66px] leading-[0.95] tracking-[-0.02em] text-ink">
-              Crie no
-              <br />
-              digital{" "}
-              <Sparkles className="inline-block align-middle text-[#E8743A]" size={36} strokeWidth={1.5} />{" "}
-              com
-              <span className="normal-case italic text-[#E8743A]"> leveza</span>
-              <br />
-              e método.
-            </h1>
-
-            <p className="text-base md:text-lg text-ink/60 max-w-md mt-6 leading-relaxed">
-              Transforme o que sabe em conteúdo, autoridade e liberdade — com Inteligência Artificial.
-            </p>
-
-            <div className="mt-8">
-              <Link
-                to="/metodo"
-                className="group inline-flex items-center gap-2 bg-ink text-cream pl-6 pr-2 py-2.5 rounded-full text-sm font-medium transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_-12px_rgba(0,0,0,0.5)] active:scale-[0.97]"
+            {/* Robot + cards de vidro */}
+            <div className="relative fade-up flex justify-center items-end min-h-[240px] md:min-h-[300px]" style={{ animationDelay: "120ms" }}>
+              <div className="absolute inset-x-8 top-4 bottom-0 rounded-[28px] bg-white/15 border border-white/20 backdrop-blur-sm" />
+              <img
+                src="/robot.png"
+                alt="Assistente de IA"
+                className="relative w-[230px] md:w-[300px] max-w-full drop-shadow-[0_26px_50px_-22px_rgba(0,0,0,0.55)] animate-[float_7s_ease-in-out_infinite]"
+              />
+              <div className="glass absolute left-0 top-6 rounded-2xl px-4 py-3 shadow-[0_18px_40px_-20px_rgba(0,0,0,0.4)]">
+                <p className="font-display text-xl text-ink leading-none">4</p>
+                <p className="text-[11px] text-ink/55 mt-1">pilares</p>
+              </div>
+              <div
+                className="glass absolute right-0 bottom-8 rounded-2xl px-4 py-3 shadow-[0_18px_40px_-20px_rgba(0,0,0,0.4)] animate-[float_8s_ease-in-out_infinite]"
+                style={{ animationDelay: "1s" }}
               >
-                Começar agora
-                <span className="w-9 h-9 rounded-full bg-cream text-ink flex items-center justify-center">
-                  <ArrowUpRight size={15} strokeWidth={2.5} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                </span>
-              </Link>
+                <p className="font-display text-xl text-ink leading-none">7</p>
+                <p className="text-[11px] text-ink/55 mt-1">IAs</p>
+              </div>
             </div>
-          </div>
-
-          {/* Robot IA */}
-          <div className="relative fade-up flex justify-center" style={{ animationDelay: "140ms" }}>
-            <img
-              src="/robot.png"
-              alt="Assistente de IA"
-              className="w-[300px] md:w-[380px] max-w-full drop-shadow-[0_30px_55px_-25px_rgba(0,0,0,0.35)] animate-[float_7s_ease-in-out_infinite]"
-            />
           </div>
         </div>
       </section>
