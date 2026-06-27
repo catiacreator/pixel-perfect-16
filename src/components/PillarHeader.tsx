@@ -58,7 +58,7 @@ export default function PillarHeader({
             {pilarLabel}
           </p>
 
-          <h1 className="font-display uppercase text-[2rem] md:text-[3.5rem] lg:text-[4rem] leading-[0.95] tracking-[-0.015em]">
+          <h1 className="font-editorial uppercase text-[2.2rem] md:text-[3.75rem] lg:text-[4.5rem] leading-[0.92] tracking-[-0.02em]">
             {titleLead && (
               <>
                 <span className="text-ink/35">{titleLead}</span>{" "}

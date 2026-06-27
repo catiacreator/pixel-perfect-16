@@ -9,7 +9,7 @@
   /* Paleta de MARCA (Cátia Creator): preto + castanho + caramelo + branco quente.
      'ink' = preto/superfícies escuras; 'terracotta' = castanho (primária/acentos);
      'gold' = caramelo; 'sage'/'success' = verde discreto; 'emerald' = destaque. */
-  --color-cream: #F7F2EC;
+  --color-cream: #FBFAF7;
   --color-cream-warm: #FBF7EF;
   --color-ink: #111111;
   --color-ink-soft: #6E6256;
@@ -164,7 +164,7 @@
 
 /* Restore custom brand palette tokens (override shadcn @theme inline above) */
 @theme {
-  --color-cream: #F7F2EC;
+  --color-cream: #FBFAF7;
   --color-cream-warm: #FBF7EF;
   --color-ink: #111111;
   --color-ink-soft: #6E6256;
