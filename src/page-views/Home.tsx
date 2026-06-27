@@ -128,7 +128,7 @@ export default function Home() {
                 className="glass absolute right-0 bottom-8 rounded-2xl px-4 py-3 shadow-[0_18px_40px_-20px_rgba(0,0,0,0.4)] animate-[float_8s_ease-in-out_infinite]"
                 style={{ animationDelay: "1s" }}
               >
-                <p className="font-display text-xl text-ink leading-none">7</p>
+                <p className="font-display text-2xl text-ink leading-none">∞</p>
                 <p className="text-[11px] text-ink/55 mt-1">IAs</p>
               </div>
             </div>
