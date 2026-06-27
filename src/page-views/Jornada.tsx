@@ -1,8 +1,9 @@
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
+import PillarHeader from "../components/PillarHeader";
 import {
   ArrowUpRight,
-  ArrowLeft,
+  Compass,
   Hourglass,
   Crown,
   Lightbulb,
@@ -53,25 +54,17 @@ const PILARES = [
 export default function Jornada() {
   return (
     <Layout>
-      <div className="max-w-[1400px] mx-auto px-5 md:px-10 pt-10 md:pt-14 pb-20 md:pb-28">
-        <Link
-          to="/"
-          className="inline-flex items-center gap-1.5 text-sm text-ink/60 hover:text-terracotta transition-colors mb-8"
-        >
-          <ArrowLeft size={14} /> Início
-        </Link>
-
-        {/* Cabeçalho */}
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4 mb-8">
-          <div className="min-w-0">
-            <p className="text-[11px] tracking-[0.3em] uppercase text-terracotta mb-3">/ Os 4 pilares</p>
-            <h1 className="font-display text-4xl md:text-6xl tracking-[-0.025em] text-ink max-w-3xl leading-[1.02]">
-              A sua jornada,
-              <br />
-              <span className="text-ink/35">passo a passo.</span>
-            </h1>
-          </div>
-          <p className="text-xs text-ink/40 shrink-0">3 disponíveis · 1 em breve</p>
+      <PillarHeader
+        numeral="✦"
+        icon={<Compass size={18} />}
+        pilarLabel="A sua jornada"
+        titulo="A sua jornada"
+        tituloHighlight="passo a passo"
+        subtitulo="Os 4 pilares do método — do tempo recuperado à venda."
+      />
+      <div className="max-w-[1400px] mx-auto px-5 md:px-10 pt-8 md:pt-10 pb-20 md:pb-28">
+        <div className="flex justify-end mb-6">
+          <p className="text-xs text-ink/40">3 disponíveis · 1 em breve</p>
         </div>
 
         {/* Pilares */}

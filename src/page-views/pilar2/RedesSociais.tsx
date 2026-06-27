@@ -5,9 +5,10 @@ import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import VideoPlaceholder from "../../components/VideoPlaceholder";
 import ColarResultado from "../../components/ColarResultado";
 import TodoBanner from "../../components/TodoBanner";
-import { ArrowRight, Smartphone, Copy, Check, ChevronDown, ClipboardPaste, Play, FileText, Eye, EyeOff } from "lucide-react";
+import { ArrowRight, Smartphone, Copy, Check, ChevronDown, ClipboardPaste, Play, FileText, Eye, EyeOff, MessageSquare } from "lucide-react";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import ModeloPost from "./ModeloPost";
+import PillarHeader from "../../components/PillarHeader";
 
 const BIO_STORAGE_KEY = "leveza.bio.v1";
 const BIO_CONQUISTA_KEY = "leveza.bio.conquista.v1";
@@ -578,10 +579,14 @@ export default function RedesSociais() {
     <Layout>
       <PilarBreadcrumb pilar="redes" pilarLabel="Criando para as Redes Sociais" backTo="/" backLabel="Voltar para Início" />
       <TodoBanner texto="Etapa 4 — conteúdo pendente. Aguardando documentação detalhada de Redes Sociais (prompts, calendário, modelos)." />
+      <PillarHeader
+        numeral="✦"
+        icon={<MessageSquare size={18} />}
+        pilarLabel="Criando para as Redes Sociais"
+        titulo="Redes Sociais"
+        subtitulo="Comece pelos modelos de posts e depois entre nas redes."
+      />
       <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
-        <h1 className="font-serif text-3xl text-ink mb-2">Redes Sociais</h1>
-        <p className="italic text-muted mb-6">Comece pelos modelos de posts e depois entre nas redes.</p>
-
         <div className="flex gap-2 mb-6 flex-wrap">
           {TABS.map((t) => (
             <button
