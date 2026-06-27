@@ -305,6 +305,40 @@ select:focus {
   box-shadow: 0 1px 3px 0 rgb(45 42 38 / 0.05);
 }
 
-/* (A paleta azul/areia é agora global — a Academia usa a mesma; sem override.) */
+/* ===== Modo escuro (toggle light/dark) ===== */
+.dark {
+  --color-cream: #14110E;
+  --color-cream-warm: #1E1A15;
+  --color-ink: #F4EEE4;
+  --color-ink-soft: #C2B6A4;
+  --color-muted: #998D7C;
+  --color-terracotta: #C9824F;
+  --color-terracotta-dark: #A9683C;
+  --color-gold: #E0A86A;
+  --color-sage: #2FA98A;
+  --color-success: #2FA98A;
+  --color-emerald: #2FD0A0;
+  --color-border: #2E2820;
+  --color-border-soft: #241F19;
+  --color-beige: #2A241E;
+}
+/* superfícies com cor literal (branco) — invertem no escuro */
+.dark .bg-white { background-color: #1C1813 !important; }
+.dark .bg-white\/55 { background-color: rgba(28, 24, 19, 0.55) !important; }
+.dark .bg-white\/70 { background-color: rgba(28, 24, 19, 0.7) !important; }
+.dark .bg-white\/85 { background-color: rgba(22, 19, 15, 0.92) !important; }
+.dark .border-white\/60 { border-color: rgba(255, 255, 255, 0.1) !important; }
+.dark .glass {
+  background: rgba(28, 24, 19, 0.6);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Fundo do hero — claro e escuro */
+.hero-grad {
+  background: radial-gradient(140% 90% at 78% -10%, #F8E6D1 0%, #FBF7EF 45%, #F7F2EC 100%);
+}
+.dark .hero-grad {
+  background: radial-gradient(140% 90% at 78% -10%, #2A2018 0%, #1A1612 45%, #14110E 100%);
+}
 
 

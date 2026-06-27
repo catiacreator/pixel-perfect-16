@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import {
@@ -6,6 +7,7 @@ import {
   Compass,
   GraduationCap,
   MessageSquare,
+  ImagePlus,
 } from "lucide-react";
 
 const CARDS = [
@@ -39,73 +41,104 @@ const CARDS = [
 ];
 
 export default function Home() {
+  const heroRef = useRef<HTMLElement>(null);
+  const orbRef = useRef<HTMLDivElement>(null);
+  const onMove = (e: { clientX: number; clientY: number }) => {
+    const r = heroRef.current?.getBoundingClientRect();
+    if (!r || !orbRef.current) return;
+    orbRef.current.style.transform = `translate(${e.clientX - r.left - 260}px, ${e.clientY - r.top - 260}px)`;
+  };
   return (
     <Layout>
-      {/* HERO — claro, quente e moderno */}
+      {/* HERO — editorial moderno com fundo interativo */}
       <section
-        className="relative overflow-hidden text-ink"
-        style={{ background: "radial-gradient(135% 85% at 82% 0%, #F8E6D1 0%, #FBF7EF 48%, #F7F2EC 100%)" }}
+        ref={heroRef}
+        onMouseMove={onMove}
+        className="hero-grad relative overflow-hidden text-ink"
       >
-        <div className="pointer-events-none absolute inset-0">
-          {/* orbs de luz quente suaves */}
-          <div className="absolute -top-10 -right-20 w-[460px] h-[460px] rounded-full bg-[radial-gradient(circle_at_center,#F0A766_0%,transparent_62%)] opacity-45 blur-3xl animate-[float_9s_ease-in-out_infinite]" />
-          <div className="absolute -bottom-28 -left-16 w-[420px] h-[420px] rounded-full bg-[radial-gradient(circle_at_center,#E8743A_0%,transparent_65%)] opacity-[0.14] blur-3xl" />
-          <div
-            className="absolute inset-0 opacity-[0.05]"
-            style={{
-              backgroundImage: "radial-gradient(circle at 1px 1px, var(--color-ink) 1px, transparent 0)",
-              backgroundSize: "22px 22px",
-            }}
-          />
-        </div>
+        {/* orb que segue o cursor */}
+        <div
+          ref={orbRef}
+          aria-hidden
+          className="pointer-events-none absolute left-0 top-0 w-[520px] h-[520px] rounded-full blur-3xl opacity-50 transition-transform duration-500 ease-out"
+          style={{ background: "radial-gradient(circle at center, #F0A766 0%, transparent 60%)", transform: "translate(45%, 5%)" }}
+        />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.05]"
+          style={{ backgroundImage: "radial-gradient(circle at 1px 1px, var(--color-ink) 1px, transparent 0)", backgroundSize: "22px 22px" }}
+        />
 
-        <div className="relative max-w-[1400px] mx-auto px-5 md:px-10 pt-8 md:pt-10 pb-10 md:pb-14 fade-up">
-          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-6 mb-6 md:mb-8">
-            <div className="flex items-center gap-2.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse" />
-              <span className="text-[11px] tracking-[0.3em] uppercase text-ink/50">
-                Jornada · Edição 2026
-              </span>
+        <div className="relative max-w-[1400px] mx-auto px-5 md:px-10 pt-10 md:pt-16 pb-14 md:pb-24 grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-12 items-center">
+          {/* Texto */}
+          <div className="fade-up">
+            <div className="flex items-center gap-2 mb-7">
+              <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#C0653A" }} />
+              <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#2E7CB8" }} />
+              <span className="w-2.5 h-2.5 rounded-full" style={{ background: "#C8487E" }} />
+              <span className="text-[11px] tracking-[0.3em] uppercase text-ink/50 ml-2">Jornada · 2026</span>
             </div>
-            <div className="hidden md:block h-px bg-ink/10" />
-          </div>
 
-          <h1 className="font-editorial font-normal text-[30px] md:text-[46px] lg:text-[56px] leading-[1] tracking-[-0.02em] text-ink max-w-5xl">
-            Crie no digital
-            <br />
-            com <span className="italic text-gold">leveza</span>
-            <span className="text-gold">.</span>
-            <br />
-            <span className="text-ink/30">E com método.</span>
-          </h1>
+            <h1 className="font-editorial font-normal uppercase text-[38px] md:text-[54px] lg:text-[66px] leading-[0.95] tracking-[-0.02em] text-ink">
+              Crie no
+              <br />
+              digital{" "}
+              <Sparkles className="inline-block align-middle text-gold" size={36} strokeWidth={1.5} />{" "}
+              com
+              <span className="normal-case italic text-gold"> leveza</span>
+              <br />
+              e método.
+            </h1>
 
-          <div className="mt-6 grid grid-cols-1 md:grid-cols-[1.2fr_auto] items-end gap-4">
-            <p className="font-editorial text-base md:text-lg text-ink/60 max-w-xl leading-snug">
-              Uma jornada simples para transformar o que sabe em conteúdo,
-              autoridade e liberdade — com recurso a Inteligência Artificial.
+            <p className="text-base md:text-lg text-ink/60 max-w-md mt-6 leading-relaxed">
+              Transforme o que sabe em conteúdo, autoridade e liberdade — com Inteligência Artificial.
             </p>
-            <div className="flex flex-wrap items-center gap-3">
+
+            <div className="flex flex-wrap items-center gap-5 mt-8">
               <Link
                 to="/metodo"
-                className="group inline-flex items-center gap-2 bg-ink text-cream pl-5 pr-2 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_32px_-12px_rgba(0,0,0,0.45)] active:scale-[0.97]"
+                className="group inline-flex items-center gap-2 bg-ink text-cream pl-6 pr-2 py-2.5 rounded-full text-sm font-medium transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_-12px_rgba(0,0,0,0.5)] active:scale-[0.97]"
               >
                 Começar agora
-                <span className="w-8 h-8 rounded-full bg-cream text-ink flex items-center justify-center">
-                  <ArrowUpRight size={14} strokeWidth={2.5} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <span className="w-9 h-9 rounded-full bg-cream text-ink flex items-center justify-center">
+                  <ArrowUpRight size={15} strokeWidth={2.5} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </span>
               </Link>
-              <Link
-                to="/assistente"
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-sm font-medium text-ink border border-ink/15 transition-all duration-300 hover:border-ink/40 hover:bg-ink/[0.04] hover:-translate-y-0.5 active:scale-[0.97]"
-              >
-                <Sparkles size={14} />
-                Falar com o assistente
-              </Link>
+              <div className="text-sm">
+                <p className="font-semibold text-ink">+220K seguidores</p>
+                <p className="text-ink/50 text-xs">em 14 meses · método validado</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Imagem + stats flutuantes */}
+          <div className="relative fade-up" style={{ animationDelay: "140ms" }}>
+            <div
+              className="relative aspect-[4/5] max-w-[420px] mx-auto rounded-[32px] overflow-hidden border border-white/60 shadow-[0_30px_70px_-30px_rgba(0,0,0,0.4)]"
+              style={{ background: "linear-gradient(160deg, #F0A766 0%, #C8487E 55%, #2E7CB8 100%)" }}
+            >
+              <div className="absolute inset-0 flex items-center justify-center text-center text-white/80">
+                <div>
+                  <ImagePlus size={30} className="mx-auto mb-2 opacity-80" />
+                  <p className="text-[11px] tracking-[0.2em] uppercase">A tua foto aqui</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="absolute -left-3 md:-left-6 top-12 glass rounded-2xl px-4 py-3 shadow-[0_18px_40px_-20px_rgba(0,0,0,0.35)] animate-[float_7s_ease-in-out_infinite]">
+              <p className="font-display text-2xl text-ink leading-none">220K<span className="text-gold">+</span></p>
+              <p className="text-[11px] text-ink/55 mt-1">seguidores</p>
+            </div>
+            <div
+              className="absolute -right-2 bottom-14 glass rounded-2xl px-4 py-3 shadow-[0_18px_40px_-20px_rgba(0,0,0,0.35)] animate-[float_8s_ease-in-out_infinite]"
+              style={{ animationDelay: "1s" }}
+            >
+              <p className="font-display text-2xl text-ink leading-none">14<span className="text-gold"> m</span></p>
+              <p className="text-[11px] text-ink/55 mt-1">do zero ao topo</p>
             </div>
           </div>
         </div>
 
-        <div className="h-6 md:h-10 bg-cream rounded-t-[40px] md:rounded-t-[60px] -mb-px" />
+        <div className="h-6 md:h-10 bg-cream rounded-t-[40px] md:rounded-t-[60px] -mb-px relative" />
       </section>
 
       {/* HUB — 3 caminhos */}

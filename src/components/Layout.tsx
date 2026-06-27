@@ -4,6 +4,7 @@ import { FileText, Mail, Map, Bot, Database, Award, Menu, X, ArrowUpRight, Arrow
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { initMasterDocSync, resetMasterDocSync } from "@/lib/master-doc-sync";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const NAV = [
   { to: "/", label: "Início", icon: Map },
@@ -109,6 +110,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <Shield size={13} strokeWidth={2.25} /> Admin
               </Link>
             )}
+            <ThemeToggle />
             <Link
               to="/mensagens"
               className="w-10 h-10 rounded-full border border-ink/15 flex items-center justify-center text-ink/60 hover:bg-ink/5 hover:text-ink transition-colors"

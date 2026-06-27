@@ -60,8 +60,8 @@ export default function PrincipaisIAs() {
                     aria-hidden
                   >
                     <div className="text-center px-3">
-                      <ImagePlus size={28} className="mx-auto text-cream/40 mb-1.5" />
-                      <p className="text-[10px] tracking-[0.2em] uppercase text-cream/55 font-medium">
+                      <ImagePlus size={28} className="mx-auto text-white/40 mb-1.5" />
+                      <p className="text-[10px] tracking-[0.2em] uppercase text-white/55 font-medium">
                         Adiciona foto
                       </p>
                     </div>
@@ -70,13 +70,13 @@ export default function PrincipaisIAs() {
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
 
-                <div className="relative h-full flex flex-col justify-end p-3.5 md:p-4 text-cream">
+                <div className="relative h-full flex flex-col justify-end p-3.5 md:p-4 text-white">
                   <h3 className="font-tool text-lg md:text-xl uppercase tracking-tight leading-none drop-shadow-md">
                     {tool.nome}
                   </h3>
 
                   <div className="mt-3 flex items-center justify-between text-[11px] font-medium">
-                    <span className="text-cream/85">
+                    <span className="text-white/85">
                       {pct === 100 ? (
                         <span className="inline-flex items-center gap-1 text-sage">
                           <Check size={11} /> 100% visto
@@ -85,7 +85,7 @@ export default function PrincipaisIAs() {
                         <>{pct}% visto</>
                       )}
                     </span>
-                    <span className="text-cream/75 tabular-nums">
+                    <span className="text-white/75 tabular-nums">
                       {done}/{total}
                     </span>
                   </div>
