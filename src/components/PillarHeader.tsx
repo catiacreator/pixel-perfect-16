@@ -85,12 +85,6 @@ export default function PillarHeader({
                 )}
               </div>
             )}
-
-            <div className="mt-8 md:mt-10 flex items-center gap-3 max-w-md">
-              <span className="h-px flex-1 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-              <span className="text-white/70 text-xs rotate-45 inline-block">◆</span>
-              <span className="h-px flex-1 bg-gradient-to-r from-transparent via-white/40 to-transparent" />
-            </div>
           </div>
         </div>
       </header>

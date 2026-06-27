@@ -42,22 +42,48 @@ const CARDS = [
 export default function Home() {
   const orbRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      if (!orbRef.current) return;
-      orbRef.current.style.transform = `translate(${e.clientX - 280}px, ${e.clientY - 280}px)`;
+    let x = window.innerWidth / 2;
+    let y = window.innerHeight / 2;
+    let scale = 1;
+    let target = 1;
+    let raf = 0;
+    let idle: ReturnType<typeof setTimeout>;
+
+    const render = () => {
+      // a bola persegue o cursor com inércia e "cresce" ao mover-se (empurra o fundo)
+      scale += (target - scale) * 0.12;
+      if (orbRef.current) {
+        orbRef.current.style.transform = `translate(${x - 320}px, ${y - 320}px) scale(${scale.toFixed(3)})`;
+        orbRef.current.style.opacity = String(0.32 + (scale - 1) * 0.55);
+      }
+      raf = requestAnimationFrame(render);
     };
+
+    const onMove = (e: MouseEvent) => {
+      x = e.clientX;
+      y = e.clientY;
+      target = 1.45; // incha enquanto se move
+      clearTimeout(idle);
+      idle = setTimeout(() => { target = 1; }, 140); // relaxa quando para
+    };
+
     window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
+    raf = requestAnimationFrame(render);
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(raf);
+      clearTimeout(idle);
+    };
   }, []);
 
   return (
     <Layout>
-      {/* orb de luz que segue o cursor — em toda a página */}
+      {/* bola de luz que segue o cursor e cresce — empurra o fundo */}
       <div
         ref={orbRef}
         aria-hidden
-        className="pointer-events-none fixed left-0 top-0 -z-10 w-[560px] h-[560px] rounded-full blur-3xl opacity-40 transition-transform duration-500 ease-out"
-        style={{ background: "radial-gradient(circle at center, #F0A766 0%, transparent 60%)" }}
+        className="pointer-events-none fixed left-0 top-0 -z-10 w-[640px] h-[640px] rounded-full blur-3xl opacity-40 will-change-transform"
+        style={{ background: "radial-gradient(circle at center, #F0A766 0%, #C8487E 35%, transparent 62%)" }}
       />
 
       {/* HERO — faixa colorida (gradiente da marca) */}
@@ -141,10 +167,8 @@ export default function Home() {
         <div className="max-w-[1400px] mx-auto px-5 md:px-10 pt-2 md:pt-4 pb-20 md:pb-28">
           <div className="mb-8">
             <p className="text-[11px] tracking-[0.3em] uppercase text-terracotta mb-3">/ Por onde começar</p>
-            <h2 className="font-display text-4xl md:text-6xl tracking-[-0.025em] text-ink max-w-3xl leading-[1.02]">
-              Escolha o seu
-              <br />
-              <span className="text-ink/35">caminho.</span>
+            <h2 className="font-display text-4xl md:text-6xl tracking-[-0.025em] text-ink max-w-3xl leading-[1.05]">
+              Escolha o seu <span className="text-ink/35">caminho.</span>
             </h2>
           </div>
 

@@ -227,11 +227,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
         <div className="mt-2 font-display text-xl tracking-[0.04em] uppercase text-ink">
           {def.title}
         </div>
-        <div className="mt-4 flex items-center gap-2">
-          <span className="h-px flex-1 bg-[var(--color-border)]" />
-          <span className="text-terracotta text-xs">✦</span>
-          <span className="h-px flex-1 bg-[var(--color-border)]" />
-        </div>
+        <div className="mt-4 h-px bg-[var(--color-border)]" />
       </div>
 
       {/* Items */}
@@ -321,11 +317,6 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
 
       {/* Footer: switch pilar */}
       <div className="border-t border-[var(--color-border)] px-5 py-5">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="h-px flex-1 bg-[var(--color-border)]" />
-          <span className="text-terracotta text-xs">✦</span>
-          <span className="h-px flex-1 bg-[var(--color-border)]" />
-        </div>
         {typeof pilar === "number" && (
         <>
         <div className="text-[10px] tracking-[0.3em] uppercase text-ink/45 mb-3">

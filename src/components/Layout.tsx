@@ -61,7 +61,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen w-full flex flex-col bg-cream text-ink font-display">
       {/* Cabeçalho */}
-      <header className="w-full sticky top-0 z-40 glass text-ink border-b border-[var(--color-border)]">
+      <header
+        className="w-full sticky top-0 z-40 glass text-ink border-b border-white/25"
+        style={{ background: "linear-gradient(90deg, rgba(240,167,102,0.24) 0%, rgba(200,72,126,0.18) 50%, rgba(46,124,184,0.22) 100%)" }}
+      >
         <div className="max-w-[1400px] mx-auto px-5 md:px-10 h-16 md:h-18 grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8">
           {/* Logótipo */}
           <Link to="/" className="flex items-center gap-2.5 leading-none shrink-0 group">

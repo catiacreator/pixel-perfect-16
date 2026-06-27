@@ -173,30 +173,40 @@ function ChatWindow({
 
   return (
     <div className="px-5 md:px-10 py-8 max-w-5xl mx-auto">
-      {/* Cabeçalho */}
-      <div className="flex items-start justify-between gap-4 mb-6">
-        <div className="flex items-start gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-forest text-cream flex items-center justify-center shrink-0">
-            <Bot size={20} strokeWidth={1.75} />
+      {/* Cabeçalho — faixa colorida com o robot */}
+      <header
+        className="relative overflow-hidden rounded-[28px] md:rounded-[32px] text-white mb-6"
+        style={{ background: "radial-gradient(130% 130% at 85% 14%, #F0A766 0%, #C8487E 52%, #2E7CB8 100%)" }}
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.09]"
+          style={{ backgroundImage: "radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)", backgroundSize: "24px 24px" }}
+        />
+        <div className="relative flex items-center justify-between gap-4 px-6 md:px-9 py-7 md:py-8">
+          <div className="flex items-center gap-4 md:gap-5 min-w-0">
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/15 border border-white/25 backdrop-blur-sm flex items-center justify-center shrink-0 overflow-hidden">
+              <img src="/robot.png" alt="Assistente Leveza" className="w-[88%] h-[88%] object-contain drop-shadow" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] tracking-[0.28em] uppercase text-white/80 font-medium">Assistente</p>
+              <h1 className="font-editorial text-2xl md:text-4xl text-white leading-tight tracking-[-0.01em]">Leveza no Digital</h1>
+              <p className="text-sm text-white/85 mt-1.5 max-w-md leading-relaxed">
+                Pergunta o que quiser sobre o método, conteúdo, vendas e IA.
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-[11px] tracking-[0.2em] uppercase text-ink/40">Assistente</p>
-            <h1 className="font-serif text-2xl md:text-3xl text-ink leading-tight">Leveza no Digital</h1>
-            <p className="text-sm text-ink/60 mt-1">
-              Pergunta o que quiser sobre o método, conteúdo, vendas e IA.
-            </p>
-          </div>
+          {messages.length > 0 && (
+            <button
+              onClick={onClear}
+              className="text-[12px] text-white/90 hover:text-white inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/30 hover:bg-white/15 transition-colors shrink-0 backdrop-blur-sm"
+              aria-label="Nova conversa"
+            >
+              <Trash2 size={13} /> Nova conversa
+            </button>
+          )}
         </div>
-        {messages.length > 0 && (
-          <button
-            onClick={onClear}
-            className="text-[12px] text-ink/50 hover:text-ink inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--color-border)] hover:bg-ink/5 transition-colors"
-            aria-label="Nova conversa"
-          >
-            <Trash2 size={13} /> Nova conversa
-          </button>
-        )}
-      </div>
+      </header>
 
       {/* Conversa */}
       <div
