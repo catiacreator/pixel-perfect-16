@@ -40,7 +40,7 @@ export default function InfoButton({
           <span className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div
             role="dialog"
-            className="absolute z-50 left-0 top-9 w-[min(92vw,380px)] rounded-2xl border border-border bg-white shadow-[0_24px_60px_-24px_rgba(90,40,25,0.35)] p-5 text-left"
+            className="absolute z-50 left-0 top-9 w-[min(92vw,380px)] rounded-2xl border border-border glass shadow-[0_24px_60px_-24px_rgba(90,40,25,0.35)] p-5 text-left"
           >
             <div className="flex items-start justify-between gap-3 mb-2">
               <p className="font-serif text-base text-ink leading-tight">{titulo}</p>

@@ -170,8 +170,8 @@ function EditModal({
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center p-4 md:p-8 overflow-y-auto">
-      <div className="absolute inset-0 bg-ink/40" onClick={onClose} />
-      <div className="relative w-full max-w-lg bg-white rounded-2xl border border-[var(--color-border)] shadow-xl p-6 mt-10">
+      <div className="absolute inset-0 bg-ink/40 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative w-full max-w-lg bg-white/85 backdrop-blur-xl rounded-2xl border border-white/60 shadow-xl p-6 mt-10">
         <div className="flex items-start justify-between gap-3 mb-4">
           <p className="text-[11px] tracking-[0.2em] uppercase text-terracotta">Editar tarefa</p>
           <button onClick={onClose} className="text-ink/50 hover:text-ink" aria-label="Fechar">

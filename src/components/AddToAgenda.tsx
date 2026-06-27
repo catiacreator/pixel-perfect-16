@@ -46,7 +46,7 @@ export default function AddToAgenda({ aula }: { aula: AgendaAula }) {
       {open && (
         <>
           <span className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute z-50 left-0 top-11 w-[min(92vw,340px)] rounded-2xl border border-[var(--color-border)] bg-white shadow-[0_24px_60px_-24px_rgba(90,40,25,0.35)] p-4 text-left">
+          <div className="absolute z-50 left-0 top-11 w-[min(92vw,340px)] rounded-2xl border border-[var(--color-border)] glass shadow-[0_24px_60px_-24px_rgba(90,40,25,0.35)] p-4 text-left">
             <div className="flex items-start justify-between gap-3 mb-3">
               <p className="text-[11px] tracking-[0.18em] uppercase text-terracotta">Anexar esta aula</p>
               <button onClick={() => setOpen(false)} className="text-ink/40 hover:text-ink" aria-label="Fechar">

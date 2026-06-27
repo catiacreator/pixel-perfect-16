@@ -218,7 +218,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
   const [openId, setOpenId] = useState<string | null>(activeParent?.to ?? null);
 
   return (
-    <div className="h-full flex flex-col bg-cream-warm/60 border-r border-[var(--color-border)]">
+    <div className="h-full flex flex-col bg-cream-warm/55 backdrop-blur-xl border-r border-[var(--color-border)]">
       {/* Header */}
       <div className="px-6 pt-7 pb-5 border-b border-[var(--color-border)]">
         <div className="text-[10px] tracking-[0.32em] uppercase text-terracotta font-medium">
