@@ -81,9 +81,9 @@ export default function Home() {
               Crie no
               <br />
               digital{" "}
-              <Sparkles className="inline-block align-middle text-gold" size={36} strokeWidth={1.5} />{" "}
+              <Sparkles className="inline-block align-middle text-[#E8743A]" size={36} strokeWidth={1.5} />{" "}
               com
-              <span className="normal-case italic text-gold"> leveza</span>
+              <span className="normal-case italic text-[#E8743A]"> leveza</span>
               <br />
               e método.
             </h1>
