@@ -39,7 +39,7 @@ export default function Home() {
   return (
     <Layout>
       {/* HERO — banda terracotta editorial */}
-      <section className="relative overflow-hidden bg-terracotta text-cream">
+      <section className="relative overflow-hidden bg-ink text-cream">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -top-40 -right-40 w-[700px] h-[700px] rounded-full bg-[radial-gradient(circle_at_center,var(--color-terracotta-dark)_0%,transparent_60%)] opacity-70 blur-2xl" />
           <div className="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle_at_center,var(--color-gold)_0%,transparent_65%)] opacity-25 blur-3xl" />
@@ -56,7 +56,7 @@ export default function Home() {
         <div className="relative max-w-[1400px] mx-auto px-5 md:px-10 pt-6 md:pt-8 pb-8 md:pb-10">
           <div className="grid grid-cols-[auto_1fr_auto] items-center gap-6 mb-5 md:mb-7">
             <div className="flex items-center gap-2.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-cream animate-pulse" />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald animate-pulse" />
               <span className="text-[11px] tracking-[0.3em] uppercase text-cream/70">
                 Jornada · Edição 2026
               </span>

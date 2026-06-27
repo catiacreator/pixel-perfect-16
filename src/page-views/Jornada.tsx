@@ -151,7 +151,7 @@ export default function Jornada() {
         </div>
 
         {/* Caminho especial — Consultoria */}
-        <div className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-terracotta to-terracotta-dark border border-terracotta-dark/50 p-8 md:p-14 mt-5 md:mt-6">
+        <div className="relative overflow-hidden rounded-[28px] bg-gradient-to-br from-ink to-terracotta-dark border border-white/10 p-8 md:p-14 mt-5 md:mt-6">
           <div className="pointer-events-none absolute -top-32 -right-20 w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle_at_center,var(--color-gold)_0%,transparent_60%)] opacity-25 blur-3xl" />
           <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] items-end gap-8">
             <div className="min-w-0">

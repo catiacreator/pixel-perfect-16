@@ -6,24 +6,27 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  /* Paleta "Areia & azul" (global): azul = primária ('terracotta');
-     'sage'/'success' = terracota (acento); 'gold' = amarelo; fundo areia. */
-  --color-cream: #EDE6D6;
-  --color-cream-warm: #F6F0E4;
-  --color-ink: #28323A;
-  --color-muted: #7E8A8F;
-  --color-terracotta: #557588;
-  --color-terracotta-dark: #45606E;
-  --color-gold: #E0A94E;
-  --color-sage: #B0613A;
-  --color-blue: #557588;
+  /* Paleta de MARCA (Cátia Creator): preto + castanho + caramelo + branco quente.
+     'ink' = preto/superfícies escuras; 'terracotta' = castanho (primária/acentos);
+     'gold' = caramelo; 'sage'/'success' = verde discreto; 'emerald' = destaque. */
+  --color-cream: #F7F2EC;
+  --color-cream-warm: #FBF7EF;
+  --color-ink: #111111;
+  --color-ink-soft: #6E6256;
+  --color-muted: #8A7C6C;
+  --color-terracotta: #6B3F2A;
+  --color-terracotta-dark: #532F1F;
+  --color-gold: #B8794A;
+  --color-sage: #0F5C4D;
+  --color-blue: #B8794A;
+  --color-emerald: #14B88A;
   --color-beige: #E3D5BE;
   --color-navy: #3F4A5A;
-  --color-forest: #14110F;
-  --color-forest-soft: #221E1A;
-  --color-border: #E1D7C4;
-  --color-border-soft: #EFE7D8;
-  --color-success: #B0613A;
+  --color-forest: #0F5C4D;
+  --color-forest-soft: #143F36;
+  --color-border: #E6DCCB;
+  --color-border-soft: #F0E8DA;
+  --color-success: #0F5C4D;
   --font-serif: "Archivo", "Archivo Black", system-ui, sans-serif;
   --font-sans: "DM Sans", "Inter Tight", system-ui, sans-serif;
   --font-mono: "DM Sans", "Inter Tight", system-ui, sans-serif;
@@ -161,23 +164,24 @@
 
 /* Restore custom brand palette tokens (override shadcn @theme inline above) */
 @theme {
-  --color-cream: #EDE6D6;
-  --color-cream-warm: #F6F0E4;
-  --color-ink: #28323A;
-  --color-ink-soft: #566069;
-  --color-muted: #7E8A8F;
-  --color-terracotta: #557588;
-  --color-terracotta-dark: #45606E;
-  --color-gold: #E0A94E;
-  --color-sage: #B0613A;
-  --color-blue: #557588;
+  --color-cream: #F7F2EC;
+  --color-cream-warm: #FBF7EF;
+  --color-ink: #111111;
+  --color-ink-soft: #6E6256;
+  --color-muted: #8A7C6C;
+  --color-terracotta: #6B3F2A;
+  --color-terracotta-dark: #532F1F;
+  --color-gold: #B8794A;
+  --color-sage: #0F5C4D;
+  --color-blue: #B8794A;
+  --color-emerald: #14B88A;
   --color-beige: #E3D5BE;
   --color-navy: #3F4A5A;
-  --color-forest: #14110F;
-  --color-forest-soft: #221E1A;
-  --color-border: #E1D7C4;
-  --color-border-soft: #EFE7D8;
-  --color-success: #B0613A;
+  --color-forest: #0F5C4D;
+  --color-forest-soft: #143F36;
+  --color-border: #E6DCCB;
+  --color-border-soft: #F0E8DA;
+  --color-success: #0F5C4D;
 
   /* Modern dark palette (Arounda-inspired) */
   --color-coal: #0E0C0D;
@@ -239,7 +243,7 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--color-terracotta) !important;
-  box-shadow: 0 0 0 3px rgb(85 117 136 / 0.22);
+  box-shadow: 0 0 0 3px rgb(107 63 42 / 0.22);
 }
 
 /* Sombra subtil em todos os cards */
