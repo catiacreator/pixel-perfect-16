@@ -1,19 +1,23 @@
 import { useState } from "react";
 import { Save, Check } from "lucide-react";
+import { notifySaved } from "@/lib/toast";
 
 export default function SaveBar({
   onSave,
   label = "Salvar",
+  savedMsg = "Guardado ✓",
   extra,
 }: {
   onSave: () => void;
   label?: string;
+  savedMsg?: string;
   extra?: React.ReactNode;
 }) {
   const [saved, setSaved] = useState(false);
   const handle = () => {
     onSave();
     setSaved(true);
+    notifySaved(savedMsg);
     setTimeout(() => setSaved(false), 1800);
   };
   return (

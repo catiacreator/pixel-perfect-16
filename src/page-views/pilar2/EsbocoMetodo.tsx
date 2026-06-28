@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { notifySaved } from "@/lib/toast";
 import { Link } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
@@ -480,7 +481,7 @@ export default function EsbocoMetodo() {
 
               <div className="flex justify-end">
                 <button
-                  onClick={() => {/* state auto-saves */}}
+                  onClick={() => notifySaved("Método guardado ✓")}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta text-cream text-sm font-semibold hover:bg-terracotta/90 transition-colors"
                 >
                   <Save size={14} /> Salvar método
