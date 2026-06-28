@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
+import HeroRobot from "../components/HeroRobot";
 import {
   ArrowUpRight,
   Sparkles,
@@ -141,20 +142,15 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Robot + cards de vidro */}
-            <div className="relative fade-up flex justify-center items-end min-h-[240px] md:min-h-[300px]" style={{ animationDelay: "120ms" }}>
-              <div className="absolute inset-x-8 top-4 bottom-0 rounded-[28px] bg-white/15 border border-white/20 backdrop-blur-sm" />
-              <img
-                src="/robot.png"
-                alt="Assistente de IA"
-                className="relative w-[230px] md:w-[300px] max-w-full drop-shadow-[0_26px_50px_-22px_rgba(0,0,0,0.55)] animate-[float_7s_ease-in-out_infinite]"
-              />
-              <div className="glass absolute left-0 top-6 rounded-2xl px-4 py-3 shadow-[0_18px_40px_-20px_rgba(0,0,0,0.4)]">
+            {/* Robô animado */}
+            <div className="relative fade-up flex justify-center items-center min-h-[400px] md:min-h-[440px]" style={{ animationDelay: "120ms" }}>
+              <HeroRobot />
+              <div className="glass absolute left-0 top-2 rounded-2xl px-4 py-3 shadow-[0_18px_40px_-20px_rgba(0,0,0,0.4)] z-20">
                 <p className="font-display text-xl text-ink leading-none">4</p>
                 <p className="text-[11px] text-ink/55 mt-1">pilares</p>
               </div>
               <div
-                className="glass absolute right-0 bottom-8 rounded-2xl px-4 py-3 shadow-[0_18px_40px_-20px_rgba(0,0,0,0.4)] animate-[float_8s_ease-in-out_infinite]"
+                className="glass absolute right-0 bottom-4 rounded-2xl px-4 py-3 shadow-[0_18px_40px_-20px_rgba(0,0,0,0.4)] z-20 animate-[float_8s_ease-in-out_infinite]"
                 style={{ animationDelay: "1s" }}
               >
                 <p className="font-display text-2xl text-ink leading-none">∞</p>
