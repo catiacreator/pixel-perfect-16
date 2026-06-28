@@ -44,13 +44,15 @@
   box-shadow:0 0 16px var(--eye),0 0 30px rgba(94,240,143,.6); animation:hrBlink 5s infinite; }
 @keyframes hrBlink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
 
-/* sunglasses */
-.hero-robot .shades{ position:absolute; top:34%; left:50%; transform:translateX(-50%) translateY(-14px);
-  width:64%; height:20%; opacity:0; z-index:7; transition:opacity .4s ease, transform .5s cubic-bezier(.2,1.4,.4,1); }
-.hero-robot .shades .lens{ position:absolute; top:0; width:44%; height:100%; background:linear-gradient(160deg,#23232b,#000);
-  border:2px solid #15151b; border-radius:50% 50% 46% 46%; box-shadow:inset 0 2px 6px rgba(255,255,255,.15); }
-.hero-robot .shades .lens.l{ left:0; } .hero-robot .shades .lens.r{ right:0; }
-.hero-robot .shades .bridge{ position:absolute; top:38%; left:44%; width:12%; height:10%; background:#15151b; border-radius:3px; }
+/* sunglasses — redondos, amarelo torrado translúcido (vêem-se os olhos) */
+.hero-robot .shades{ position:absolute; top:33%; left:50%; transform:translateX(-50%) translateY(-14px);
+  width:72%; height:26%; opacity:0; z-index:7; transition:opacity .4s ease, transform .5s cubic-bezier(.2,1.4,.4,1); }
+.hero-robot .shades .lens{ position:absolute; top:50%; transform:translateY(-50%); width:42%; aspect-ratio:1;
+  background:radial-gradient(circle at 38% 30%, rgba(255,206,110,.45), rgba(198,138,46,.5) 70%, rgba(170,112,30,.55));
+  border:2px solid rgba(150,104,30,.7); border-radius:50%;
+  box-shadow:inset 0 2px 8px rgba(255,255,255,.35), 0 3px 7px rgba(0,0,0,.2); }
+.hero-robot .shades .lens.l{ left:1%; } .hero-robot .shades .lens.r{ right:1%; }
+.hero-robot .shades .bridge{ position:absolute; top:46%; left:44%; width:12%; height:7%; background:rgba(150,104,30,.85); border-radius:3px; z-index:1; }
 
 /* thinking dots */
 .hero-robot .think{ position:absolute; top:-6%; right:6%; display:flex; gap:5px; opacity:0; z-index:8; }
@@ -131,15 +133,16 @@
 .hero-robot .stage.intro .eye{ animation:hrBlink 5s infinite, hrIntroEye 8s ease-in-out forwards; }
 @keyframes hrIntroArmL{
   0%{transform:rotate(24deg)}
-  6%{transform:rotate(-44deg) translate(-30px,-26px)}
-  12%{transform:rotate(-26deg) translate(-34px,-30px)}
-  18%{transform:rotate(-44deg) translate(-30px,-26px)}
-  24%{transform:rotate(-26deg) translate(-34px,-30px)}
-  30%{transform:rotate(24deg)}
+  6%{transform:rotate(150deg) translate(-6px,-34px)}
+  12%{transform:rotate(124deg) translate(-4px,-30px)}
+  18%{transform:rotate(150deg) translate(-6px,-34px)}
+  24%{transform:rotate(124deg) translate(-4px,-30px)}
+  30%{transform:rotate(150deg) translate(-6px,-34px)}
+  36%{transform:rotate(24deg)}
   66%{transform:rotate(24deg)}
-  72%{transform:translate(76px,-148px) rotate(-30deg)}
-  78%{transform:translate(76px,-154px) rotate(-30deg)}
-  84%{transform:translate(76px,-148px) rotate(-30deg)}
+  72%{transform:rotate(150deg) translate(-6px,-40px)}
+  78%{transform:rotate(150deg) translate(-6px,-46px)}
+  84%{transform:rotate(150deg) translate(-6px,-40px)}
   90%{transform:rotate(24deg)}
   100%{transform:rotate(24deg)}
 }

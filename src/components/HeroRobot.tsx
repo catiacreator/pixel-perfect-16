@@ -3,19 +3,22 @@ import "./hero-robot.css";
 import { conteudoRobot } from "@/data/robot-conteudo";
 
 const SCENES = ["s-laptop", "s-butterfly", "s-rain", "s-sun", "s-love"];
+const ACTS = ["intro", ...SCENES];
 const INTRO_MS = 8000; // acena + roda + ri
 const SCENE_MS = 6000; // cada cena
+const AUTO_EVERY_MS = 30000; // uma animação automática a cada 30s
 
 export default function HeroRobot() {
   const stageRef = useRef<HTMLDivElement>(null);
   const bubbleRef = useRef<HTMLDivElement>(null);
   const rainRef = useRef<HTMLDivElement>(null);
+  const playRef = useRef<(() => void) | null>(null);
 
   // Balão ao clicar
   const lastPhrase = useRef(-1);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  function handleClick() {
+  function showBubble() {
     const bubble = bubbleRef.current;
     if (!bubble) return;
     let i: number;
@@ -27,6 +30,15 @@ export default function HeroRobot() {
     bubble.classList.add("show");
     if (hideTimer.current) clearTimeout(hideTimer.current);
     hideTimer.current = setTimeout(() => bubble.classList.remove("show"), 4500);
+  }
+
+  function handleClick() {
+    // ao clicar, tanto pode dar uma animação como uma frase
+    if (Math.random() < 0.5 && playRef.current) {
+      playRef.current();
+    } else {
+      showBubble();
+    }
   }
 
   // Gerar gotas de chuva (uma vez)
@@ -44,42 +56,44 @@ export default function HeroRobot() {
     }
   }, []);
 
-  // Agendador de cenas
+  // Agendador de cenas: intro ao carregar, depois uma animação a cada 30s
   useEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
-    let lastScene = -1;
-    const timers: ReturnType<typeof setTimeout>[] = [];
-    const clearScenes = () => SCENES.forEach((s) => stage.classList.remove(s));
+    let last = -1;
+    let clearTimer: ReturnType<typeof setTimeout> | undefined;
 
-    const runCycle = () => {
-      stage.classList.add("intro");
-      clearScenes();
-      void stage.offsetWidth; // reinicia animações do intro
+    const clearAll = () => stage.classList.remove("intro", ...SCENES);
 
-      timers.push(
-        setTimeout(() => {
-          stage.classList.remove("intro");
-          let s: number;
-          do {
-            s = Math.floor(Math.random() * SCENES.length);
-          } while (s === lastScene && SCENES.length > 1);
-          lastScene = s;
-          stage.classList.add(SCENES[s]);
-
-          timers.push(
-            setTimeout(() => {
-              clearScenes();
-              timers.push(setTimeout(runCycle, 1200));
-            }, SCENE_MS),
-          );
-        }, INTRO_MS),
-      );
+    const playAct = () => {
+      clearAll();
+      if (clearTimer) clearTimeout(clearTimer);
+      let a: number;
+      do {
+        a = Math.floor(Math.random() * ACTS.length);
+      } while (a === last && ACTS.length > 1);
+      last = a;
+      const cls = ACTS[a];
+      void stage.offsetWidth; // reinicia a animação
+      stage.classList.add(cls);
+      clearTimer = setTimeout(() => stage.classList.remove(cls), cls === "intro" ? INTRO_MS : SCENE_MS);
     };
+    playRef.current = playAct;
 
-    runCycle();
+    // intro ao carregar
+    clearAll();
+    void stage.offsetWidth;
+    stage.classList.add("intro");
+    last = 0;
+    const introClear = setTimeout(() => stage.classList.remove("intro"), INTRO_MS);
+
+    // uma animação automática a cada 30s
+    const interval = setInterval(playAct, AUTO_EVERY_MS);
+
     return () => {
-      timers.forEach(clearTimeout);
+      clearInterval(interval);
+      clearTimeout(introClear);
+      if (clearTimer) clearTimeout(clearTimer);
       stage.classList.remove("intro", ...SCENES);
     };
   }, []);
