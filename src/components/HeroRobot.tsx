@@ -132,9 +132,11 @@ export default function HeroRobot() {
               <div className="shades"><span className="lens l" /><span className="lens r" /><span className="bridge" /></div>
             </div>
 
-            <div className="butterfly"><span className="wing l" /><span className="wing r" /><span className="bf-body" /></div>
+            {/* gabardina amarela de chuva */}
+            <div className="raincoat" />
+            <div className="rainhood" />
 
-            <div className="umbrella"><div className="canopy" /><div className="pole" /><div className="handle-u" /></div>
+            <div className="butterfly"><span className="wing l" /><span className="wing r" /><span className="bf-body" /></div>
           </div>
         </div>
 
