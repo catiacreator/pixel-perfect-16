@@ -52,18 +52,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const isActive = (to: string) =>
     to === "/" ? location.pathname === "/" : location.pathname.startsWith(to);
 
-  // Degradê da barra começa na cor do módulo atual e flui para as outras cores da marca
+  // A barra começa na cor do módulo atual e faz degradê para as outras (variantes claras/escuras em styles.css)
   const path = location.pathname;
   const academia = path.startsWith("/metodo/pilar-1/aprenda-ia");
   const redes = path.startsWith("/metodo/pilar-2/redes-sociais");
   const jornada = !academia && !redes && (path.startsWith("/metodo") || path.startsWith("/doc-mestre"));
-  const headerGradient = academia
-    ? "linear-gradient(90deg, #9CC4E8 0%, #EBC0D2 52%, #F4D2B6 100%)"   // azul → rosa → caramelo
-    : redes
-      ? "linear-gradient(90deg, #E79BC0 0%, #F4D2B6 52%, #9CC4E8 100%)" // rosa → caramelo → azul
-      : jornada
-        ? "linear-gradient(90deg, #F3C7A4 0%, #EBC0D2 52%, #9CC4E8 100%)" // laranja → rosa → azul
-        : "linear-gradient(90deg, #F7DCC4 0%, #F1CCD8 50%, #CFE0F0 100%)"; // neutro (Início, etc.)
+  const headerMod = academia ? "academia" : redes ? "redes" : jornada ? "jornada" : "default";
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -75,8 +69,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen w-full flex flex-col bg-cream text-ink font-display">
       {/* Cabeçalho */}
       <header
-        className="w-full sticky top-0 z-40 text-ink border-b border-black/5 shadow-[0_4px_24px_-16px_rgba(0,0,0,0.35)]"
-        style={{ background: headerGradient }}
+        className={`app-header app-header--${headerMod} w-full sticky top-0 z-40 text-ink border-b border-black/5 dark:border-white/10 shadow-[0_4px_24px_-16px_rgba(0,0,0,0.35)]`}
       >
         <div className="max-w-[1400px] mx-auto px-5 md:px-10 h-16 md:h-18 grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8">
           {/* Logótipo */}
