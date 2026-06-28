@@ -104,12 +104,11 @@ export default function EsbocoMetodo() {
 
   const moverPar = (i: number, dir: -1 | 1) => {
     const j = i + dir;
-    if (j < 0 || j >= state.pares.length) return;
-    update((prev) => {
-      const pares = [...prev.pares];
-      [pares[i], pares[j]] = [pares[j], pares[i]];
-      return { ...prev, pares };
-    });
+    if (j < 0 || j >= pares.length) return;
+    // usa os pares EFETIVOS (com a dor já preenchida pelo fallback) para que o conteúdo visível se mova
+    const eff = pares.map((p) => ({ ...p }));
+    [eff[i], eff[j]] = [eff[j], eff[i]];
+    update((prev) => ({ ...prev, pares: eff }));
   };
 
   const doc = typeof window !== "undefined" ? readDoc() : {};
@@ -308,20 +307,22 @@ export default function EsbocoMetodo() {
                         <p className="text-xs text-ink/55 mt-0.5">O que a pessoa sente hoje</p>
                       </div>
                       {/* Reorder buttons */}
-                      <div className="flex flex-col gap-0.5 shrink-0">
+                      <div className="flex flex-col gap-1 shrink-0">
                         <button
                           onClick={() => moverPar(i, -1)}
                           disabled={i === 0}
-                          className="p-1 rounded text-ink/40 hover:text-ink hover:bg-ink/5 disabled:opacity-20 transition-colors"
+                          aria-label="Mover para cima"
+                          className="w-7 h-7 flex items-center justify-center rounded-lg border border-terracotta/40 text-terracotta hover:bg-terracotta hover:text-cream disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-terracotta transition-colors"
                         >
-                          <ChevronUp size={14} />
+                          <ChevronUp size={16} strokeWidth={2.5} />
                         </button>
                         <button
                           onClick={() => moverPar(i, 1)}
                           disabled={i === pares.length - 1}
-                          className="p-1 rounded text-ink/40 hover:text-ink hover:bg-ink/5 disabled:opacity-20 transition-colors"
+                          aria-label="Mover para baixo"
+                          className="w-7 h-7 flex items-center justify-center rounded-lg border border-terracotta/40 text-terracotta hover:bg-terracotta hover:text-cream disabled:opacity-25 disabled:hover:bg-transparent disabled:hover:text-terracotta transition-colors"
                         >
-                          <ChevronDown size={14} />
+                          <ChevronDown size={16} strokeWidth={2.5} />
                         </button>
                       </div>
                     </div>

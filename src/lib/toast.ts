@@ -1,10 +1,18 @@
 // Toast simples e auto-contido (sem dependências externas).
-type Listener = (msg: string) => void;
+export type ToastType = "success" | "warning" | "error";
+export type ToastPayload = { msg: string; type: ToastType };
+
+type Listener = (p: ToastPayload) => void;
 const listeners = new Set<Listener>();
 
-/** Mostra um toast de confirmação (ex.: "Guardado ✓"). */
+/** Mostra um toast com o tipo dado (cor de sucesso/aviso/erro). */
+export function notify(msg: string, type: ToastType = "success") {
+  listeners.forEach((l) => l({ msg, type }));
+}
+
+/** Atalho para confirmação de gravação. */
 export function notifySaved(msg = "Guardado ✓") {
-  listeners.forEach((l) => l(msg));
+  notify(msg, "success");
 }
 
 export function subscribeToast(l: Listener) {
