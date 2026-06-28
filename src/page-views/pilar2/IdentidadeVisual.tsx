@@ -1,6 +1,7 @@
 import { Link } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
+import PillarHeader from "../../components/PillarHeader";
 import PromptCard from "../../components/PromptCard";
 import SaveBar from "../../components/SaveBar";
 import { ArrowRight, ExternalLink, Wand2, Printer } from "lucide-react";
@@ -88,15 +89,14 @@ export default function IdentidadeVisual() {
         backTo="/metodo/pilar-2/identidade"
         backLabel="Voltar para Identidade de Marca"
       />
-      <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
-        <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">
-          Etapa 3.3 · Identidade Visual
-        </p>
-        <h1 className="font-serif text-3xl text-ink mb-2">Identidade Visual</h1>
-        <p className="italic text-muted mb-8">
-          Anexa até 3 imagens do Pinterest no ChatGPT e ele te devolve paleta, tipografia, elementos
-          visuais e mood — direto da sua referência.
-        </p>
+      <PillarHeader
+        numeral="✦"
+        icon={null}
+        pilarLabel="Etapa 3.3 · Identidade Visual"
+        titulo="Identidade Visual"
+        subtitulo="Anexa até 3 imagens do Pinterest no ChatGPT e ele te devolve paleta, tipografia, elementos visuais e mood — direto da sua referência."
+      />
+      <div className="px-5 md:px-10 pt-8 pb-10 max-w-4xl mx-auto">
 
         <div className="rounded-2xl border border-border bg-white p-5 mb-6">
           <ol className="text-sm text-ink space-y-2 list-decimal pl-4">

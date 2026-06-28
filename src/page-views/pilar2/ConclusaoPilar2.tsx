@@ -1,6 +1,7 @@
 import { Link } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
+import PillarHeader from "../../components/PillarHeader";
 import ProgressBar from "../../components/ProgressBar";
 import TodoBanner from "../../components/TodoBanner";
 import { Check, AlertTriangle, Trophy } from "lucide-react";
@@ -22,9 +23,14 @@ export default function ConclusaoPilar2() {
     <Layout>
       <PilarBreadcrumb pilar={2} pilarLabel="Criar Autoridade" backTo="/metodo/pilar-2" backLabel="Voltar para o Pilar 2" />
       <TodoBanner texto="Etapa 6 — Conclusão: checklist definitivo pendente. Aguardando documentação." />
-      <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
-        <h1 className="font-serif text-3xl text-ink mb-2">Revise e celebre</h1>
-        <p className="italic text-muted mb-1">Checklist do Pilar 2 — CRIAR AUTORIDADE</p>
+      <PillarHeader
+        numeral="✦"
+        icon={null}
+        pilarLabel="Criar Autoridade"
+        titulo="Revise e celebre"
+        subtitulo="Checklist do Pilar 2 — CRIAR AUTORIDADE"
+      />
+      <div className="px-5 md:px-10 pt-8 pb-10 max-w-4xl mx-auto">
         <p className="text-sm text-muted mb-6">
           Marque o que você concluiu. Não precisa estar perfeito — feito é melhor que perfeito.
         </p>

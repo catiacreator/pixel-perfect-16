@@ -1,6 +1,7 @@
 import { Link } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
+import PillarHeader from "../../components/PillarHeader";
 import PromptCard from "../../components/PromptCard";
 import SaveBar from "../../components/SaveBar";
 import { ArrowRight, Wand2, Printer } from "lucide-react";
@@ -57,14 +58,14 @@ export default function TomDeVoz() {
         backTo="/metodo/pilar-2/identidade"
         backLabel="Voltar para Identidade de Marca"
       />
-      <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
-        <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">
-          Etapa 3.2 · Tom de Voz
-        </p>
-        <h1 className="font-serif text-3xl text-ink mb-2">Tom de Voz da Marca</h1>
-        <p className="italic text-muted mb-8">
-          Use seus arquétipos, palavras a usar/evitar e ajustes da ponte para entregar 4 campos prontos.
-        </p>
+      <PillarHeader
+        numeral="✦"
+        icon={null}
+        pilarLabel="Etapa 3.2 · Tom de Voz"
+        titulo="Tom de Voz da Marca"
+        subtitulo="Use seus arquétipos, palavras a usar/evitar e ajustes da ponte para entregar 4 campos prontos."
+      />
+      <div className="px-5 md:px-10 pt-8 pb-10 max-w-4xl mx-auto">
 
         <PromptCard
           numero={4}

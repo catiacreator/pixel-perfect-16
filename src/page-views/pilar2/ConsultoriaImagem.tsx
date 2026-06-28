@@ -1,6 +1,7 @@
 import { Link } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
+import PillarHeader from "../../components/PillarHeader";
 import PromptCard from "../../components/PromptCard";
 import { ArrowRight, Shirt, Scissors, AlertCircle } from "lucide-react";
 import {
@@ -17,14 +18,14 @@ export default function ConsultoriaImagem() {
         backTo="/metodo/pilar-2/identidade"
         backLabel="Voltar para Identidade de Marca"
       />
-      <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
-        <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">
-          Etapa 3.4 · Consultoria de Imagem
-        </p>
-        <h1 className="font-serif text-3xl text-ink mb-2">Consultoria de Imagem</h1>
-        <p className="italic text-muted mb-6">
-          Estudo Visual completo: seu estilo pessoal e o cabelo que valoriza sua presença nos vídeos.
-        </p>
+      <PillarHeader
+        numeral="✦"
+        icon={null}
+        pilarLabel="Etapa 3.4 · Consultoria de Imagem"
+        titulo="Consultoria de Imagem"
+        subtitulo="Estudo Visual completo: seu estilo pessoal e o cabelo que valoriza sua presença nos vídeos."
+      />
+      <div className="px-5 md:px-10 pt-8 pb-10 max-w-4xl mx-auto">
         <p className="text-sm text-muted mb-8">
           O que você veste e como está seu cabelo comunicam antes de você falar. Aqui você tem dois
           estudos especializados: um focado no seu estilo pessoal (roupas, cores, acessórios) e outro

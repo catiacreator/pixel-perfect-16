@@ -1,6 +1,7 @@
 import { Link } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
+import PillarHeader from "../../components/PillarHeader";
 import VideoPlaceholder from "../../components/VideoPlaceholder";
 import SaveBar from "../../components/SaveBar";
 import { ArrowRight, ExternalLink, Check } from "lucide-react";
@@ -21,16 +22,14 @@ export default function PesquisaMercado() {
   return (
     <Layout>
       <PilarBreadcrumb pilar={2} pilarLabel="Criar Autoridade" backTo="/metodo/pilar-2" backLabel="Voltar para o Pilar 2" />
-      <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
-        <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">
-          Etapa 1 · Público
-        </p>
-        <h1 className="font-serif text-3xl text-ink mb-2">
-          Pesquisa de Mercado · Pesquisa de Dores do Público
-        </h1>
-        <p className="italic text-muted mb-8">
-          Descubra o que seu público realmente quer e onde dói.
-        </p>
+      <PillarHeader
+        numeral="✦"
+        icon={null}
+        pilarLabel="Etapa 1 · Público"
+        titulo="Pesquisa de Mercado · Pesquisa de Dores do Público"
+        subtitulo="Descubra o que seu público realmente quer e onde dói."
+      />
+      <div className="px-5 md:px-10 pt-8 pb-10 max-w-4xl mx-auto">
 
         {/* PASSO 1 */}
         <p className="text-xs tracking-[0.15em] uppercase text-muted mb-2">Passo 1</p>
