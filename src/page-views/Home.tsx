@@ -107,11 +107,13 @@ export default function Home() {
                 <span className="text-[11px] tracking-[0.3em] uppercase text-white/80 ml-1">Jornada · 2026</span>
               </div>
 
-              <h1 className="font-editorial font-normal uppercase text-[34px] md:text-[50px] lg:text-[58px] leading-[0.95] tracking-[-0.02em] text-white">
-                Crie no digital{" "}
-                <Sparkles className="inline-block align-middle text-white/90" size={32} strokeWidth={1.5} />{" "}
-                <span className="normal-case italic text-white/95">com leveza</span>{" "}
-                e método.
+              <h1 className="font-editorial font-normal uppercase text-[34px] md:text-[50px] lg:text-[58px] leading-[0.98] tracking-[-0.02em] text-white">
+                <span className="block">
+                  Crie no digital{" "}
+                  <Sparkles className="inline-block align-middle text-white/90" size={32} strokeWidth={1.5} />
+                </span>
+                <span className="block normal-case italic text-white/95">com leveza</span>
+                <span className="block">e método.</span>
               </h1>
 
               <p className="text-white/80 max-w-md mt-5 leading-relaxed">

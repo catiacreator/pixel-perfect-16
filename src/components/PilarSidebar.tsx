@@ -217,22 +217,33 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
   );
   const [openId, setOpenId] = useState<string | null>(activeParent?.to ?? null);
 
+  const kicker =
+    def.pilar === "academia" ? "Academia de IA" : def.pilar === "redes" ? "Redes Sociais" : `Pilar ${def.pilar}`;
+
   return (
-    <div className="h-full flex flex-col bg-cream-warm/55 backdrop-blur-xl border-r border-[var(--color-border)]">
+    <div className="h-full flex flex-col bg-cream-warm/60 backdrop-blur-xl border-r border-[var(--color-border)]">
       {/* Header */}
-      <div className="px-6 pt-7 pb-5 border-b border-[var(--color-border)]">
-        <div className="text-[10px] tracking-[0.32em] uppercase text-terracotta font-medium">
-          {def.pilar === "academia" ? "Academia de IA" : def.pilar === "redes" ? "Redes Sociais" : `Pilar ${def.pilar}`}
+      <div className="relative px-5 pt-7 pb-5">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-terracotta/12 to-transparent"
+        />
+        <div className="relative flex items-start gap-3">
+          <span className="mt-0.5 w-1.5 h-9 rounded-full bg-terracotta shrink-0" />
+          <div className="min-w-0">
+            <div className="text-[10px] tracking-[0.32em] uppercase text-terracotta font-semibold">
+              {kicker}
+            </div>
+            <div className="mt-1.5 font-display text-[1.05rem] leading-[1.15] tracking-[0.02em] uppercase text-ink">
+              {def.title}
+            </div>
+          </div>
         </div>
-        <div className="mt-2 font-display text-xl tracking-[0.04em] uppercase text-ink">
-          {def.title}
-        </div>
-        <div className="mt-4 h-px bg-[var(--color-border)]" />
       </div>
 
       {/* Items */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4">
-        <ul className="space-y-0.5">
+      <nav className="flex-1 overflow-y-auto px-3 pb-4">
+        <ul className="space-y-1">
           {def.items.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.to);
@@ -242,23 +253,29 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
             return (
               <li key={item.to}>
                 <div
-                  className={`flex items-stretch rounded-full transition-colors ${
-                    active || open
-                      ? "bg-terracotta/15"
-                      : "hover:bg-ink/5"
+                  className={`group flex items-stretch rounded-2xl transition-all duration-200 ${
+                    active
+                      ? "bg-terracotta text-cream shadow-[0_10px_24px_-12px_var(--color-terracotta)]"
+                      : "hover:bg-ink/[0.05]"
                   }`}
                 >
                   <Link
                     to={item.to}
                     onClick={onNavigate}
-                    className={`flex-1 flex items-center gap-2.5 pl-3 pr-2 py-2 text-[13px] min-w-0 ${active || open ? "text-terracotta" : "text-ink"}`}
+                    className={`flex-1 flex items-center gap-3 pl-2 pr-2 py-2 text-[13px] min-w-0 ${active ? "text-cream" : "text-ink"}`}
                   >
-                    <Icon size={15} strokeWidth={1.75} className={`shrink-0 ${active || open ? "text-terracotta" : "text-ink/70"}`} />
-                    <span className="truncate flex-1 font-medium">
-                      {item.num}. {item.label}
+                    <span
+                      className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                        active ? "bg-white/20 text-cream" : "bg-ink/[0.06] text-ink/65 group-hover:text-terracotta"
+                      }`}
+                    >
+                      <Icon size={15} strokeWidth={1.9} />
+                    </span>
+                    <span className="truncate flex-1 font-medium leading-tight">
+                      <span className={active ? "text-cream/70" : "text-ink/40"}>{item.num}.</span> {item.label}
                     </span>
                     {item.badge && (
-                      <span className="ml-1 text-[9px] tracking-[0.18em] uppercase px-2 py-0.5 rounded-full bg-terracotta text-cream font-semibold">
+                      <span className={`ml-1 text-[9px] tracking-[0.18em] uppercase px-2 py-0.5 rounded-full font-semibold ${active ? "bg-white/25 text-cream" : "bg-terracotta text-cream"}`}>
                         {item.badge}
                       </span>
                     )}
@@ -266,19 +283,19 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                   {hasChildren && (
                     <button
                       onClick={() => setOpenId(open ? null : item.to)}
-                      className="px-2.5 text-ink/55 hover:text-ink transition-colors"
+                      className={`px-2.5 transition-colors ${active ? "text-cream/80 hover:text-cream" : "text-ink/45 hover:text-ink"}`}
                       aria-label="Expandir"
                     >
                       <ChevronDown
                         size={14}
-                        className={`transition-transform ${open ? "rotate-180" : ""}`}
+                        className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
                       />
                     </button>
                   )}
                 </div>
 
                 {hasChildren && open && (
-                  <ul className="mt-1 mb-1 space-y-0.5 pl-3">
+                  <ul className="mt-1 mb-1.5 ml-[1.4rem] pl-3 border-l border-[var(--color-border)] space-y-0.5">
                     {item.children!.map((c) => {
                       const cActive = isActive(c.to);
                       return (
@@ -286,18 +303,19 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                           <Link
                             to={c.to}
                             onClick={onNavigate}
-                            className={`flex items-center gap-2 pl-3 pr-3 py-2 rounded-full text-[12.5px] transition-colors ${
+                            className={`flex items-center gap-2 pl-2.5 pr-3 py-1.5 rounded-lg text-[12.5px] transition-colors ${
                               cActive
-                                ? "bg-terracotta/15 text-terracotta font-medium"
-                                : "text-ink/70 hover:bg-ink/5 hover:text-ink"
+                                ? "bg-terracotta/12 text-terracotta font-semibold"
+                                : "text-ink/65 hover:bg-ink/[0.05] hover:text-ink"
                             }`}
                           >
                             {(() => {
                               const ToolIcon = TOOL_ICONS[c.label];
-                              if (ToolIcon) return <ToolIcon size={13} className="text-terracotta shrink-0" />;
-                              if (c.label === "Tom de Voz") return <Mic size={12} className="text-terracotta shrink-0" />;
-                              if (c.label === "Identidade Visual") return <Palette size={12} className="text-terracotta shrink-0" />;
-                              return <Shirt size={12} className="text-terracotta shrink-0" />;
+                              const cls = `shrink-0 ${cActive ? "text-terracotta" : "text-ink/45"}`;
+                              if (ToolIcon) return <ToolIcon size={13} className={cls} />;
+                              if (c.label === "Tom de Voz") return <Mic size={12} className={cls} />;
+                              if (c.label === "Identidade Visual") return <Palette size={12} className={cls} />;
+                              return <Shirt size={12} className={cls} />;
                             })()}
                             <span className="flex-1 truncate">{c.label}</span>
                             {cActive && (
@@ -316,36 +334,36 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
       </nav>
 
       {/* Footer: switch pilar */}
-      <div className="border-t border-[var(--color-border)] px-5 py-5">
+      <div className="border-t border-[var(--color-border)] px-4 py-4">
         {typeof pilar === "number" && (
         <>
-        <div className="text-[10px] tracking-[0.3em] uppercase text-ink/45 mb-3">
+        <div className="text-[10px] tracking-[0.3em] uppercase text-ink/45 mb-2.5 px-1">
           Ir para outro pilar
         </div>
-        <ul className="space-y-1.5">
+        <ul className="space-y-1 mb-4">
           {[1, 2, 3, 4].map((n) => {
             const def = PILARES[n];
             const active = n === pilar;
             const disabled = !def.enabled;
             const content = (
               <div
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg border text-[11px] tracking-[0.18em] uppercase ${
+                className={`flex items-center gap-2.5 px-2 py-1.5 rounded-xl text-[11px] tracking-[0.16em] uppercase transition-all ${
                   active
-                    ? "border-terracotta/60 bg-terracotta/10 text-terracotta"
+                    ? "bg-terracotta text-cream shadow-[0_8px_20px_-12px_var(--color-terracotta)]"
                     : disabled
-                      ? "border-[var(--color-border)] text-ink/30"
-                      : "border-[var(--color-border)] text-ink/70 hover:border-ink/30 hover:text-ink"
+                      ? "text-ink/30"
+                      : "text-ink/70 hover:bg-ink/[0.05] hover:text-ink"
                 }`}
               >
                 <span
-                  className={`w-6 h-6 rounded-md flex items-center justify-center text-[12px] tabular-nums ${
-                    active ? "bg-terracotta text-cream" : "bg-cream border border-[var(--color-border)] text-ink/60"
+                  className={`w-6 h-6 rounded-lg flex items-center justify-center text-[12px] tabular-nums shrink-0 ${
+                    active ? "bg-white/20 text-cream" : "bg-ink/[0.06] text-ink/55"
                   }`}
                 >
                   {n}
                 </span>
                 <span className="flex-1 truncate">{PILAR_SHORT[n]}</span>
-                {disabled && <span className="text-[9px] text-ink/35">Em breve</span>}
+                {disabled && <span className="text-[9px] text-ink/35 normal-case tracking-normal">Em breve</span>}
               </div>
             );
             if (disabled || active) return <li key={n}>{content}</li>;
@@ -364,7 +382,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
         <Link
           to={typeof pilar === "number" ? "/metodo" : "/"}
           onClick={onNavigate}
-          className="inline-flex items-center gap-2 text-[12px] text-ink/60 hover:text-ink transition-colors"
+          className="inline-flex items-center gap-2 text-[12px] text-ink/60 hover:text-terracotta transition-colors px-1"
         >
           <ArrowLeft size={13} /> {typeof pilar === "number" ? "Voltar para Jornada" : "Voltar para Início"}
         </Link>
