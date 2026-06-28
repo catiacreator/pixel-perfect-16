@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Bot, Send, Sparkles, Trash2 } from "lucide-react";
 import Layout from "@/components/Layout";
 import Markdown from "@/components/Markdown";
+import MascotRobot from "@/components/MascotRobot";
 import { supabase } from "@/integrations/supabase/client";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import { perfilContexto, readDocMestre, type DocMestre } from "@/lib/pilar4-prompts";
@@ -186,8 +187,8 @@ function ChatWindow({
         />
         <div className="relative flex items-center justify-between gap-4 px-6 md:px-9 py-7 md:py-8">
           <div className="flex items-center gap-4 md:gap-5 min-w-0">
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-white/15 border border-white/25 backdrop-blur-sm flex items-center justify-center shrink-0 overflow-hidden">
-              <img src="/robot.png" alt="Assistente Leveza" className="w-[88%] h-[88%] object-contain drop-shadow" />
+            <div className="shrink-0 flex items-center justify-center self-center">
+              <MascotRobot scale={0.2} />
             </div>
             <div className="min-w-0">
               <p className="text-[11px] tracking-[0.28em] uppercase text-white/80 font-medium">Assistente</p>
