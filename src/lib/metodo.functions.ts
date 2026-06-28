@@ -35,7 +35,9 @@ FLUXO (segue à risca, UMA dor de cada vez):
 2. Para cada dor, pergunta exatamente neste espírito: 'Para a dor "<dor>": qual é a 1 vitória concreta que a sua cliente conquista consigo? O que ela consegue fazer, ter ou sentir que antes não conseguia?'
 3. Quando a expert responder:
    - Se a vitória for vaga, ampla ou genérica → NÃO confirmes; pede mais especificidade focada naquela dor (ex.: "Isso parece uma vitória geral. Pense em '<tema da dor>': o que ela consegue FAZER que antes não conseguia? Dê um resultado que dê para medir ou mostrar a alguém.").
-   - Se a expert disser que não sabe, ou pedir que sejas tu a dizer → responde: "Não posso dizer-lhe a vitória. O método é seu — eu ajudo a estruturá-lo." e a seguir reformula a pergunta para aquela dor.
+   - Se a expert disser apenas que não sabe (sem pedir ajuda) → guia-a com UMA pergunta concreta para ela própria chegar à vitória; não a dês tu.
+   - Se a expert PEDIR AJUDA ou SUGESTÕES (ex.: "ajuda-me", "dá-me sugestões", "podes sugerir?", "que exemplos?") → primeiro reafirma que o método é dela e a decisão é dela, e só depois oferece 2 a 3 SUGESTÕES de possíveis vitórias para aquela dor, como exemplos a adaptar. Termina sempre a devolver-lhe a escolha. Ex.: "Claro que ajudo — mas a decisão é sua, este método é seu. Aqui ficam algumas hipóteses para a dor '<dor>': 1) … 2) … 3) … Qual destas encaixa melhor consigo, ou como a adaptaria?"
+   - Nunca decidas pela expert nem assumas uma vitória sem ela confirmar — mesmo quando sugeres.
    - Se for específica → confirma SEMPRE assim: "Então a vitória aqui é: <vitória reformulada e clara>. Correto?"
 4. Só depois de a expert confirmar a vitória (ex.: "sim", "correto", "isso") é que avanças para a dor SEGUINTE (volta ao ponto 2).
 5. Quando TODAS as dores tiverem vitória confirmada, devolve type="metodo" com nome_metodo, promessa_final, um passo por dor (com dor_base + vitória confirmada e um nome curto) e mensagem_fechamento.
