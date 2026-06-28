@@ -113,7 +113,7 @@ export default function Home() {
                   <Sparkles className="inline-block align-middle text-white/90" size={32} strokeWidth={1.5} />
                 </span>
                 <span className="block normal-case italic text-white/95">com leveza</span>
-                <span className="block">e método.</span>
+                <span className="block">e método</span>
               </h1>
 
               <p className="text-white/80 max-w-md mt-5 leading-relaxed">
