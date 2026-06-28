@@ -96,7 +96,7 @@ export default function PlanoAutomatizacao() {
         subtitulo="A IA olha para as suas tarefas mais caras e diz exatamente por onde começar"
       />
 
-      <div className="px-5 md:px-10 pb-16 max-w-4xl mx-auto">
+      <div className="px-5 md:px-10 pt-8 md:pt-10 pb-16 max-w-4xl mx-auto">
         {!rel.preenchido ? (
           <div className="rounded-2xl border border-dashed border-border bg-white p-8 text-center text-muted">
             Faltam dados. Preencha o Mapa do Tempo primeiro.
