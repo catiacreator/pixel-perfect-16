@@ -50,7 +50,7 @@ function buildLinhaEditorialPrompt(
   const nPilares = pilaresList.length || 5;
   const pilaresTexto = pilaresList.length
     ? pilaresList.map((p, i) => `${i + 1}. ${p}`).join("\n")
-    : "[preenche os pilares do seu método no O Seu Método]";
+    : "[preenche os pilares do seu método em Crie o seu método]";
 
   const reels = formato === "reels";
   const formatoLinha = reels
@@ -385,7 +385,7 @@ function LinhaEditorial({ formato }: { formato: "reels" | "estatico" | null }) {
 
       {semMetodo && (
         <p className="text-xs text-terracotta mb-3">
-          ⚠️ Preencha o seu Método (nome, promessa e pilares) no O Seu Método para o prompt ficar completo.
+          ⚠️ Preencha o seu Método (nome, promessa e pilares) em Crie o seu método para o prompt ficar completo.
         </p>
       )}
 

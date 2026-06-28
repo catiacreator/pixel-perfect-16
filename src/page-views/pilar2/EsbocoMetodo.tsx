@@ -150,7 +150,7 @@ export default function EsbocoMetodo() {
           <div>
             <p className="text-[11px] tracking-[0.25em] uppercase text-terracotta mb-2">Pilar 2</p>
             <h1 className="font-serif text-3xl md:text-5xl text-ink tracking-tight">
-              Definindo Seu Método
+              Crie o seu método
             </h1>
             <p className="italic text-ink/60 mt-3 max-w-2xl">
               Da dor à vitória: a IA transforma as dores do público no seu método.

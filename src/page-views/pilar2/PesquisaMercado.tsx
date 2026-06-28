@@ -105,7 +105,7 @@ export default function PesquisaMercado() {
 
         <div className="rounded-2xl border border-terracotta bg-white p-5 text-center">
           <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">Próxima aula</p>
-          <p className="font-serif text-lg text-ink mb-3">Definindo Seu Método</p>
+          <p className="font-serif text-lg text-ink mb-3">Crie o seu método</p>
           <Link
             to="/metodo/pilar-2/metodo"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-semibold"

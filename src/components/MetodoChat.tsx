@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { Wand2, Loader2, RotateCcw, Send, Mic } from "lucide-react";
 import { usePilar2 } from "@/lib/pilar2-hooks";
-
-const ENDPOINT = "https://mekzmmliixsxgtnbfgiy.supabase.co/functions/v1/construir-metodo";
+import { construirMetodo } from "@/lib/metodo.functions";
 
 type ChatMsg = { role: "user" | "assistant"; content: string };
 
@@ -22,6 +22,7 @@ function buildInitialMessage(nome: string, dores: string[]) {
 
 export default function MetodoChat({ open, onClose }: { open: boolean; onClose: () => void }) {
   const { state, update } = usePilar2();
+  const construir = useServerFn(construirMetodo);
   const [messages, setMessages] = useState<ChatMsg[]>(state.metodoChat);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -80,13 +81,7 @@ export default function MetodoChat({ open, onClose }: { open: boolean; onClose: 
     };
 
     try {
-      const res = await fetch(ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
+      const data = await construir({ data: payload });
 
       // Método pronto: a IA devolve a estrutura final — grava no Pilar 2
       // (alimenta o O Seu Método e a secção "Seu Método" do Doc Mestre).
@@ -120,12 +115,7 @@ export default function MetodoChat({ open, onClose }: { open: boolean; onClose: 
       }
 
       // Ainda a conversar (faz mais perguntas)
-      const reply: string =
-        data && data.type === "mensagem"
-          ? data.content
-          : typeof data === "string"
-            ? data
-            : data.reply || data.message || data.content || JSON.stringify(data);
+      const reply = data.type === "mensagem" ? data.content : "Pode contar-me um pouco mais?";
       const final: ChatMsg[] = [...novas, { role: "assistant", content: reply }];
       setMessages(final);
       update({ metodoChat: final });
