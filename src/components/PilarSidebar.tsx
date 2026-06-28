@@ -251,7 +251,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                 <div
                   className={`group flex items-stretch rounded-2xl transition-all duration-200 ${
                     active
-                      ? "bg-white shadow-[0_10px_24px_-12px_rgba(0,0,0,0.5)]"
+                      ? "bg-[#ffffff] shadow-[0_10px_24px_-12px_rgba(0,0,0,0.5)]"
                       : "hover:bg-white/10"
                   }`}
                 >
@@ -301,7 +301,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                             onClick={onNavigate}
                             className={`flex items-center gap-2 pl-2.5 pr-3 py-1.5 rounded-lg text-[12.5px] transition-colors ${
                               cActive
-                                ? "bg-white text-terracotta font-semibold"
+                                ? "bg-[#ffffff] text-terracotta font-semibold"
                                 : "text-white/75 hover:bg-white/10 hover:text-white"
                             }`}
                           >
@@ -345,7 +345,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
               <div
                 className={`flex items-center gap-2.5 px-2 py-1.5 rounded-xl text-[11px] tracking-[0.16em] uppercase transition-all ${
                   active
-                    ? "bg-white text-terracotta shadow-[0_8px_20px_-12px_rgba(0,0,0,0.5)]"
+                    ? "bg-[#ffffff] text-terracotta shadow-[0_8px_20px_-12px_rgba(0,0,0,0.5)]"
                     : disabled
                       ? "text-white/35"
                       : "text-white/80 hover:bg-white/10 hover:text-white"
