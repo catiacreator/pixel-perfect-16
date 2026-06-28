@@ -5,32 +5,46 @@ import { withAiModel } from "@/lib/ai-gateway.server";
 
 const PassoSchema = z.object({
   nome: z.string().describe("Nome curto e memorável do passo/pilar do método"),
-  vitoria: z.string().describe("A vitória/transformação concreta que este passo entrega ao público"),
-  dor_base: z.string().describe("A dor do público que este passo resolve"),
+  dor_base: z.string().describe("A dor do público (texto da dor) que este passo resolve"),
+  vitoria: z.string().describe("A vitória concreta e confirmada para esta dor (o ponto B: específica, mensurável, algo que a cliente consegue FAZER, TER ou SENTIR)"),
 });
 
 const OutSchema = z.object({
   type: z
-    .enum(["pergunta", "metodo"])
-    .describe("'pergunta' para fazer UMA pergunta de seguimento; 'metodo' quando já há informação suficiente para montar o método."),
-  pergunta: z.string().describe("Quando type='pergunta': uma única pergunta curta e clara. Caso contrário, string vazia."),
+    .enum(["mensagem", "metodo"])
+    .describe("'mensagem' enquanto ainda recolhes/confirmas vitórias (uma dor de cada vez); 'metodo' apenas quando TODAS as dores já têm vitória confirmada."),
+  mensagem: z
+    .string()
+    .describe("Quando type='mensagem': a tua próxima fala — perguntar a vitória de UMA dor, pedir mais especificidade, recusar dar a vitória, ou confirmar ('Então a vitória aqui é: X. Correto?'). Vazio quando type='metodo'."),
   nome_metodo: z.string().describe("Quando type='metodo': nome do método. Caso contrário, vazio."),
-  promessa_final: z.string().describe("Quando type='metodo': a promessa principal do método numa frase. Caso contrário, vazio."),
-  passos: z.array(PassoSchema).describe("Quando type='metodo': um passo por cada dor principal (3 a 6 passos). Caso contrário, lista vazia."),
+  promessa_final: z.string().describe("Quando type='metodo': promessa principal numa frase. Caso contrário, vazio."),
+  passos: z.array(PassoSchema).describe("Quando type='metodo': UM passo por cada dor, com dor_base e a vitória confirmada. Caso contrário, lista vazia."),
   mensagem_fechamento: z.string().describe("Quando type='metodo': mensagem final breve e calorosa. Caso contrário, vazio."),
 });
 
-const SYSTEM = `És a assistente da plataforma "Leveza no Digital", criada pela Cátia Creator. Ajudas a expert a transformar as dores do seu público num MÉTODO próprio (nome + promessa + passos).
+const SYSTEM = `És a assistente da plataforma "Leveza no Digital", criada pela Cátia Creator. O teu papel é ajudar a expert a estruturar o MÉTODO dela, definindo UMA vitória concreta para cada dor do público.
 
-Escreve SEMPRE em português de Portugal, tratando a expert por "você" de forma próxima e leve.
+Escreve SEMPRE em português, tratando a expert por "você" de forma próxima e leve.
 
-Regras:
-- Recebes o perfil da expert (quem é, o que faz, público) e as DORES do público.
-- Se faltar UMA informação essencial para montar o método, devolve type="pergunta" com uma única pergunta curta.
-- Assim que a expert confirmar as dores (por exemplo responde "sim") ou já houver informação suficiente, devolve type="metodo".
-- No método: cria um PASSO por cada dor principal (entre 3 e 6 passos). Cada passo tem um nome curto e memorável, a vitória concreta que entrega e a dor_base que resolve.
-- Os passos devem seguir uma ordem lógica de transformação (do início ao resultado).
-- Não inventes dados pessoais que não foram dados. Sê concreto, prático e específico do negócio da expert.`;
+O QUE É UMA VITÓRIA:
+- Cada dor do público tem exatamente UMA vitória (o ponto B): específica, mensurável, algo que a cliente consegue FAZER, TER ou SENTIR e que antes não conseguia.
+- A vitória tem de ser específica para AQUELA dor — não vale uma vitória genérica que serviria para todas.
+
+FLUXO (segue à risca, UMA dor de cada vez):
+1. A conversa abre com a lista de dores e uma pergunta de confirmação. Quando a expert confirmar (ex.: "sim"), começa pela 1.ª dor.
+2. Para cada dor, pergunta exatamente neste espírito: 'Para a dor "<dor>": qual é a 1 vitória concreta que a sua cliente conquista consigo? O que ela consegue fazer, ter ou sentir que antes não conseguia?'
+3. Quando a expert responder:
+   - Se a vitória for vaga, ampla ou genérica → NÃO confirmes; pede mais especificidade focada naquela dor (ex.: "Isso parece uma vitória geral. Pense em '<tema da dor>': o que ela consegue FAZER que antes não conseguia? Dê um resultado que dê para medir ou mostrar a alguém.").
+   - Se a expert disser que não sabe, ou pedir que sejas tu a dizer → responde: "Não posso dizer-lhe a vitória. O método é seu — eu ajudo a estruturá-lo." e a seguir reformula a pergunta para aquela dor.
+   - Se for específica → confirma SEMPRE assim: "Então a vitória aqui é: <vitória reformulada e clara>. Correto?"
+4. Só depois de a expert confirmar a vitória (ex.: "sim", "correto", "isso") é que avanças para a dor SEGUINTE (volta ao ponto 2).
+5. Quando TODAS as dores tiverem vitória confirmada, devolve type="metodo" com nome_metodo, promessa_final, um passo por dor (com dor_base + vitória confirmada e um nome curto) e mensagem_fechamento.
+
+REGRAS:
+- Uma pergunta de cada vez. Nunca peças duas vitórias ao mesmo tempo nem avances sem confirmação.
+- Não inventes a vitória pela expert — guia-a com perguntas.
+- Enquanto não tiveres TODAS as vitórias confirmadas, devolve sempre type="mensagem".
+- Olha para o histórico da conversa para saber em que dor estás e quais já foram confirmadas.`;
 
 export const construirMetodo = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) =>
@@ -52,12 +66,17 @@ export const construirMetodo = createServerFn({ method: "POST" })
       .parse(input),
   )
   .handler(async ({ data }) => {
+    const doresNumeradas =
+      data.dores_array.length > 0
+        ? data.dores_array.map((d, i) => `${i + 1}. ${d}`).join("\n")
+        : data.dores_publico;
+
     const perfil = [
       `Expert: ${data.nome || "(sem nome)"} — ${data.profissao || ""}`,
       data.o_que_faz && `O que faz: ${data.o_que_faz}`,
       data.como_resolve && `Como resolve: ${data.como_resolve}`,
       data.publico && `Público: ${data.publico}`,
-      data.dores_publico && `Dores do público:\n${data.dores_publico}`,
+      doresNumeradas && `DORES A MAPEAR (uma vitória por dor):\n${doresNumeradas}`,
       data.desejos_publico && `Desejos do público:\n${data.desejos_publico}`,
     ]
       .filter(Boolean)
@@ -72,7 +91,7 @@ export const construirMetodo = createServerFn({ method: "POST" })
         model,
         schema: OutSchema,
         system: SYSTEM,
-        prompt: `PERFIL E DADOS:\n${perfil}\n\nCONVERSA ATÉ AGORA:\n${conversa || "(ainda sem conversa)"}\n\nDecide: fazer uma pergunta de seguimento ou montar o método final.`,
+        prompt: `CONTEXTO DO ESPECIALISTA:\n${perfil}\n\nCONVERSA ATÉ AGORA:\n${conversa || "(ainda sem conversa)"}\n\nDecide a tua próxima fala segundo o fluxo (uma dor de cada vez) ou, se todas as vitórias já estiverem confirmadas, monta o método.`,
       }),
     );
 
@@ -91,6 +110,6 @@ export const construirMetodo = createServerFn({ method: "POST" })
 
     return {
       type: "mensagem" as const,
-      content: object.pergunta || "Pode contar-me um pouco mais sobre o que entrega ao seu público?",
+      content: object.mensagem || "Pode contar-me um pouco mais?",
     };
   });
