@@ -179,7 +179,7 @@ export default function Home() {
           <Link
             to="/doc-mestre"
             className="fade-up group relative overflow-hidden rounded-3xl mb-4 md:mb-5 flex flex-wrap items-center gap-4 md:gap-5 p-5 md:p-7 text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_24px_55px_-22px_rgba(0,0,0,0.55)]"
-            style={{ background: "radial-gradient(130% 160% at 0% 0%, #C0653A 0%, #1A1A1A 62%)" }}
+            style={{ background: "linear-gradient(120deg, #A9572E 0%, #C0653A 48%, #C98A50 100%)" }}
           >
             <span
               aria-hidden
