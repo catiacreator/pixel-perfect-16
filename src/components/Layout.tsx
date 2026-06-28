@@ -62,8 +62,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen w-full flex flex-col bg-cream text-ink font-display">
       {/* Cabeçalho */}
       <header
-        className="w-full sticky top-0 z-40 glass text-ink border-b border-white/25"
-        style={{ background: "linear-gradient(90deg, rgba(240,167,102,0.24) 0%, rgba(200,72,126,0.18) 50%, rgba(46,124,184,0.22) 100%)" }}
+        className="w-full sticky top-0 z-40 text-ink border-b border-black/5 shadow-[0_4px_24px_-16px_rgba(0,0,0,0.35)]"
+        style={{ background: "linear-gradient(90deg, #F7DCC4 0%, #F1CCD8 50%, #CFE0F0 100%)" }}
       >
         <div className="max-w-[1400px] mx-auto px-5 md:px-10 h-16 md:h-18 grid grid-cols-[auto_1fr_auto] items-center gap-4 md:gap-8">
           {/* Logótipo */}
@@ -85,8 +85,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   to={item.to}
                   className={`relative px-3.5 py-2 rounded-full text-[13px] transition-all ${
                     active
-                      ? "bg-ink/10 text-ink"
-                      : "text-ink/55 hover:text-ink hover:bg-ink/5"
+                      ? "bg-ink/10 text-ink font-medium"
+                      : "text-ink/70 hover:text-ink hover:bg-ink/10"
                   }`}
                 >
                   {item.label}
