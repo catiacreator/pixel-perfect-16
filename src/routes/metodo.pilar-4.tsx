@@ -3,11 +3,11 @@ import PilarSidebar from "@/components/PilarSidebar";
 
 export const Route = createFileRoute("/metodo/pilar-4")({
   component: () => (
-    <>
+    <div className="theme-jornada">
       <PilarSidebar pilar={4} />
       <div className="lg:pl-[280px]">
         <Outlet />
       </div>
-    </>
+    </div>
   ),
 });

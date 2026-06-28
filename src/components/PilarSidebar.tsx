@@ -221,20 +221,16 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
     def.pilar === "academia" ? "Academia de IA" : def.pilar === "redes" ? "Redes Sociais" : `Pilar ${def.pilar}`;
 
   return (
-    <div className="h-full flex flex-col bg-cream-warm/60 backdrop-blur-xl border-r border-[var(--color-border)]">
+    <div className="h-full flex flex-col bg-gradient-to-b from-terracotta to-terracotta-dark text-white border-r border-black/10">
       {/* Header */}
-      <div className="relative px-5 pt-7 pb-5">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-terracotta/12 to-transparent"
-        />
-        <div className="relative flex items-start gap-3">
-          <span className="mt-0.5 w-1.5 h-9 rounded-full bg-terracotta shrink-0" />
+      <div className="px-5 pt-7 pb-5 border-b border-white/15">
+        <div className="flex items-start gap-3">
+          <span className="mt-0.5 w-1.5 h-9 rounded-full bg-white/55 shrink-0" />
           <div className="min-w-0">
-            <div className="text-[10px] tracking-[0.32em] uppercase text-terracotta font-semibold">
+            <div className="text-[10px] tracking-[0.32em] uppercase text-white/70 font-semibold">
               {kicker}
             </div>
-            <div className="mt-1.5 font-display text-[1.05rem] leading-[1.15] tracking-[0.02em] uppercase text-ink">
+            <div className="mt-1.5 font-display text-[1.05rem] leading-[1.15] tracking-[0.02em] uppercase text-white">
               {def.title}
             </div>
           </div>
@@ -242,7 +238,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
       </div>
 
       {/* Items */}
-      <nav className="flex-1 overflow-y-auto px-3 pb-4">
+      <nav className="flex-1 overflow-y-auto px-3 py-4">
         <ul className="space-y-1">
           {def.items.map((item) => {
             const Icon = item.icon;
@@ -255,27 +251,27 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                 <div
                   className={`group flex items-stretch rounded-2xl transition-all duration-200 ${
                     active
-                      ? "bg-terracotta text-cream shadow-[0_10px_24px_-12px_var(--color-terracotta)]"
-                      : "hover:bg-ink/[0.05]"
+                      ? "bg-white shadow-[0_10px_24px_-12px_rgba(0,0,0,0.5)]"
+                      : "hover:bg-white/10"
                   }`}
                 >
                   <Link
                     to={item.to}
                     onClick={onNavigate}
-                    className={`flex-1 flex items-center gap-3 pl-2 pr-2 py-2 text-[13px] min-w-0 ${active ? "text-cream" : "text-ink"}`}
+                    className={`flex-1 flex items-center gap-3 pl-2 pr-2 py-2 text-[13px] min-w-0 ${active ? "text-terracotta" : "text-white"}`}
                   >
                     <span
                       className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
-                        active ? "bg-white/20 text-cream" : "bg-ink/[0.06] text-ink/65 group-hover:text-terracotta"
+                        active ? "bg-terracotta/10 text-terracotta" : "bg-white/15 text-white"
                       }`}
                     >
                       <Icon size={15} strokeWidth={1.9} />
                     </span>
                     <span className="truncate flex-1 font-medium leading-tight">
-                      <span className={active ? "text-cream/70" : "text-ink/40"}>{item.num}.</span> {item.label}
+                      <span className={active ? "text-terracotta/55" : "text-white/55"}>{item.num}.</span> {item.label}
                     </span>
                     {item.badge && (
-                      <span className={`ml-1 text-[9px] tracking-[0.18em] uppercase px-2 py-0.5 rounded-full font-semibold ${active ? "bg-white/25 text-cream" : "bg-terracotta text-cream"}`}>
+                      <span className={`ml-1 text-[9px] tracking-[0.18em] uppercase px-2 py-0.5 rounded-full font-semibold ${active ? "bg-terracotta/10 text-terracotta" : "bg-white/20 text-white"}`}>
                         {item.badge}
                       </span>
                     )}
@@ -283,7 +279,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                   {hasChildren && (
                     <button
                       onClick={() => setOpenId(open ? null : item.to)}
-                      className={`px-2.5 transition-colors ${active ? "text-cream/80 hover:text-cream" : "text-ink/45 hover:text-ink"}`}
+                      className={`px-2.5 transition-colors ${active ? "text-terracotta/70 hover:text-terracotta" : "text-white/70 hover:text-white"}`}
                       aria-label="Expandir"
                     >
                       <ChevronDown
@@ -295,7 +291,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                 </div>
 
                 {hasChildren && open && (
-                  <ul className="mt-1 mb-1.5 ml-[1.4rem] pl-3 border-l border-[var(--color-border)] space-y-0.5">
+                  <ul className="mt-1 mb-1.5 ml-[1.4rem] pl-3 border-l border-white/25 space-y-0.5">
                     {item.children!.map((c) => {
                       const cActive = isActive(c.to);
                       return (
@@ -305,13 +301,13 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                             onClick={onNavigate}
                             className={`flex items-center gap-2 pl-2.5 pr-3 py-1.5 rounded-lg text-[12.5px] transition-colors ${
                               cActive
-                                ? "bg-terracotta/12 text-terracotta font-semibold"
-                                : "text-ink/65 hover:bg-ink/[0.05] hover:text-ink"
+                                ? "bg-white text-terracotta font-semibold"
+                                : "text-white/75 hover:bg-white/10 hover:text-white"
                             }`}
                           >
                             {(() => {
                               const ToolIcon = TOOL_ICONS[c.label];
-                              const cls = `shrink-0 ${cActive ? "text-terracotta" : "text-ink/45"}`;
+                              const cls = `shrink-0 ${cActive ? "text-terracotta" : "text-white/60"}`;
                               if (ToolIcon) return <ToolIcon size={13} className={cls} />;
                               if (c.label === "Tom de Voz") return <Mic size={12} className={cls} />;
                               if (c.label === "Identidade Visual") return <Palette size={12} className={cls} />;
@@ -334,10 +330,10 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
       </nav>
 
       {/* Footer: switch pilar */}
-      <div className="border-t border-[var(--color-border)] px-4 py-4">
+      <div className="border-t border-white/15 px-4 py-4">
         {typeof pilar === "number" && (
         <>
-        <div className="text-[10px] tracking-[0.3em] uppercase text-ink/45 mb-2.5 px-1">
+        <div className="text-[10px] tracking-[0.3em] uppercase text-white/55 mb-2.5 px-1">
           Ir para outro pilar
         </div>
         <ul className="space-y-1 mb-4">
@@ -349,21 +345,21 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
               <div
                 className={`flex items-center gap-2.5 px-2 py-1.5 rounded-xl text-[11px] tracking-[0.16em] uppercase transition-all ${
                   active
-                    ? "bg-terracotta text-cream shadow-[0_8px_20px_-12px_var(--color-terracotta)]"
+                    ? "bg-white text-terracotta shadow-[0_8px_20px_-12px_rgba(0,0,0,0.5)]"
                     : disabled
-                      ? "text-ink/30"
-                      : "text-ink/70 hover:bg-ink/[0.05] hover:text-ink"
+                      ? "text-white/35"
+                      : "text-white/80 hover:bg-white/10 hover:text-white"
                 }`}
               >
                 <span
                   className={`w-6 h-6 rounded-lg flex items-center justify-center text-[12px] tabular-nums shrink-0 ${
-                    active ? "bg-white/20 text-cream" : "bg-ink/[0.06] text-ink/55"
+                    active ? "bg-terracotta/10 text-terracotta" : "bg-white/15 text-white"
                   }`}
                 >
                   {n}
                 </span>
                 <span className="flex-1 truncate">{PILAR_SHORT[n]}</span>
-                {disabled && <span className="text-[9px] text-ink/35 normal-case tracking-normal">Em breve</span>}
+                {disabled && <span className="text-[9px] text-white/40 normal-case tracking-normal">Em breve</span>}
               </div>
             );
             if (disabled || active) return <li key={n}>{content}</li>;
@@ -382,7 +378,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
         <Link
           to={typeof pilar === "number" ? "/metodo" : "/"}
           onClick={onNavigate}
-          className="inline-flex items-center gap-2 text-[12px] text-ink/60 hover:text-terracotta transition-colors px-1"
+          className="inline-flex items-center gap-2 text-[12px] text-white/75 hover:text-white transition-colors px-1"
         >
           <ArrowLeft size={13} /> {typeof pilar === "number" ? "Voltar para Jornada" : "Voltar para Início"}
         </Link>
@@ -420,10 +416,10 @@ export default function PilarSidebar({ pilar }: { pilar: SidebarKey }) {
             className="absolute inset-0 bg-ink/40"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="relative w-[280px] max-w-[85vw] h-full bg-cream">
+          <div className="relative w-[280px] max-w-[85vw] h-full">
             <button
               onClick={() => setMobileOpen(false)}
-              className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full border border-[var(--color-border)] flex items-center justify-center text-ink"
+              className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full border border-white/30 flex items-center justify-center text-white"
               aria-label="Fechar"
             >
               <X size={16} />
