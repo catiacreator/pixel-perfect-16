@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
+import PillarHeader from "../../components/PillarHeader";
 import { Download, Check } from "lucide-react";
 import { SKILLS_GERAIS, SKILLS_NICHO } from "../../lib/skills";
 
@@ -17,14 +18,14 @@ export default function InstalarSkills() {
   return (
     <Layout>
       <PilarBreadcrumb pilar="academia" pilarLabel="Academia de IA" backTo="/metodo/pilar-1/aprenda-ia/claude" backLabel="Voltar para Claude" />
-      <div className="px-5 md:px-10 py-10 max-w-5xl mx-auto">
-        <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">Aula 1.5 · Claude</p>
-        <h1 className="font-serif text-3xl text-ink mb-3">Instalando Skills no seu Claude</h1>
-        <p className="text-muted mb-8">
-          As 15 Skills gerais da Mentoria + as 6 Skills de mercado por nicho. Cada skill é um ficheiro .md instalado
-          no Project Knowledge do Claude.
-        </p>
-
+      <PillarHeader
+        numeral="IA"
+        icon={null}
+        pilarLabel="Aula 1.5 · Claude"
+        titulo="Instalando Skills no seu Claude"
+        subtitulo="As 15 Skills gerais da Mentoria + as 6 Skills de mercado por nicho. Cada skill é um ficheiro .md instalado no Project Knowledge do Claude."
+      />
+      <div className="px-5 md:px-10 pt-8 pb-10 max-w-5xl mx-auto">
         <h2 className="font-serif text-xl text-ink mb-1">15 Skills gerais</h2>
         <p className="text-xs text-muted mb-4">{instaladas.size}/15 instaladas</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 mb-10">

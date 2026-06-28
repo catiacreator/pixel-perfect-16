@@ -1,12 +1,18 @@
 import { Link } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
+import PillarHeader from "../../components/PillarHeader";
 import { Wrench, ArrowLeft } from "lucide-react";
 
 export default function ComoUsar() {
   return (
     <Layout>
-      <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
-        <h1 className="font-serif text-3xl text-ink mb-4">Como instalar a skill</h1>
+      <PillarHeader
+        numeral="✦"
+        icon={null}
+        pilarLabel="Consultoria de IA"
+        titulo="Como instalar a skill"
+      />
+      <div className="px-5 md:px-10 pt-8 pb-10 max-w-4xl mx-auto">
         <div className="rounded-2xl border border-dashed border-border bg-white p-8 text-center text-muted mb-6">
           <Wrench size={26} className="mx-auto mb-3 opacity-50" />
           Esta página está em construção.
