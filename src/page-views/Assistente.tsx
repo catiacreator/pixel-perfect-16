@@ -3,6 +3,7 @@ import { DefaultChatTransport, type UIMessage } from "ai";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Bot, Send, Sparkles, Trash2 } from "lucide-react";
 import Layout from "@/components/Layout";
+import Markdown from "@/components/Markdown";
 import { supabase } from "@/integrations/supabase/client";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import { perfilContexto, readDocMestre, type DocMestre } from "@/lib/pilar4-prompts";
@@ -253,8 +254,8 @@ function ChatWindow({
               <div className="w-8 h-8 rounded-full bg-gold/20 text-gold flex items-center justify-center shrink-0 mt-1">
                 <Bot size={15} strokeWidth={1.75} />
               </div>
-              <div className="text-ink text-[14.5px] leading-relaxed whitespace-pre-wrap pt-0.5">
-                {text || <span className="text-ink/40 italic">a pensar…</span>}
+              <div className="text-ink text-[14.5px] leading-relaxed pt-0.5">
+                {text ? <Markdown text={text} /> : <span className="text-ink/40 italic">a pensar…</span>}
               </div>
             </div>
           );

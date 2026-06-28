@@ -284,4 +284,5 @@ export const dicas = [
 ];
 
 // Conjunto combinado usado pelos balões do robô.
-export const conteudoRobot = [...frases, ...curiosidades, ...ia, ...dicas];
+// (curiosidades de cultura geral excluídas a pedido)
+export const conteudoRobot = [...frases, ...ia, ...dicas];

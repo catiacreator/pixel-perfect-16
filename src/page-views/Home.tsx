@@ -124,7 +124,7 @@ export default function Home() {
 
               <div className="mt-7 flex flex-wrap items-center gap-3">
                 <Link
-                  to="/metodo"
+                  to="/doc-mestre"
                   className="group inline-flex items-center gap-2 bg-white text-[#141414] pl-6 pr-2 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_-12px_rgba(0,0,0,0.5)] active:scale-[0.97]"
                 >
                   Começar agora
