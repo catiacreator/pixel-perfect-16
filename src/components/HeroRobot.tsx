@@ -33,12 +33,8 @@ export default function HeroRobot() {
   }
 
   function handleClick() {
-    // ao clicar, tanto pode dar uma animação como uma frase
-    if (Math.random() < 0.5 && playRef.current) {
-      playRef.current();
-    } else {
-      showBubble();
-    }
+    // ao clicar, mostra sempre uma frase (as animações são só no automático)
+    showBubble();
   }
 
   // Gerar gotas de chuva (uma vez)
