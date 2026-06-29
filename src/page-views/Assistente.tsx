@@ -5,6 +5,7 @@ import { Bot, Send, Sparkles, Trash2 } from "lucide-react";
 import Layout from "@/components/Layout";
 import Markdown from "@/components/Markdown";
 import MascotRobot from "@/components/MascotRobot";
+import MicButton from "@/components/MicButton";
 import { supabase } from "@/integrations/supabase/client";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import { perfilContexto, readDocMestre, type DocMestre } from "@/lib/pilar4-prompts";
@@ -304,6 +305,10 @@ function ChatWindow({
           placeholder="Escreve a sua pergunta…"
           className="flex-1 resize-none bg-transparent outline-none text-[14.5px] text-ink placeholder:text-ink/35 py-2 max-h-40"
           disabled={isLoading}
+        />
+        <MicButton
+          disabled={isLoading}
+          onText={(t) => setInput(input.trim() ? `${input.trim()} ${t}` : t)}
         />
         <button
           type="submit"
