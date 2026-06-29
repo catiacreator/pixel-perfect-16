@@ -22,10 +22,10 @@ function getSessionId(): string {
 }
 
 const SUGESTOES = [
-  "Dá-me 5 ideias de posts para Instagram esta semana",
-  "Como começo o Pilar 1?",
-  "Ajuda-me a estruturar um workshop de IA para empresas",
-  "Escreve uma legenda leve para apresentar o meu método",
+  "Por onde começo na mentoria?",
+  "Onde crio o meu método?",
+  "Dá-me 5 ideias de posts para esta semana",
+  "Qual IA uso para resumir um vídeo longo?",
 ];
 
 export default function Assistente() {
@@ -191,10 +191,10 @@ function ChatWindow({
               <MascotRobot scale={0.2} />
             </div>
             <div className="min-w-0">
-              <p className="text-[11px] tracking-[0.28em] uppercase text-white/80 font-medium">Assistente</p>
-              <h1 className="font-editorial text-2xl md:text-4xl text-white leading-tight tracking-[-0.01em]">Leveza no Digital</h1>
+              <p className="text-[11px] tracking-[0.28em] uppercase text-white/80 font-medium">Assistente · Leveza no Digital</p>
+              <h1 className="font-editorial text-2xl md:text-4xl text-white leading-tight tracking-[-0.01em]">Liv.IA</h1>
               <p className="text-sm text-white/85 mt-1.5 max-w-md leading-relaxed">
-                Pergunta o que quiser sobre o método, conteúdo, vendas e IA.
+                A sua colega de mentoria — pergunte sobre o método, conteúdo, ferramentas e vendas.
               </p>
             </div>
           </div>
