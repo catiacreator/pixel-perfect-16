@@ -27,6 +27,7 @@ import { Route as MetodoPilar3RouteImport } from './routes/metodo.pilar-3'
 import { Route as MetodoPilar2RouteImport } from './routes/metodo.pilar-2'
 import { Route as MetodoPilar1RouteImport } from './routes/metodo.pilar-1'
 import { Route as MetodoConsultoriaIaRouteImport } from './routes/metodo.consultoria-ia'
+import { Route as ApiHotmartWebhookRouteImport } from './routes/api/hotmart-webhook'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as MetodoPilar4IndexRouteImport } from './routes/metodo.pilar-4.index'
@@ -176,6 +177,11 @@ const MetodoConsultoriaIaRoute = MetodoConsultoriaIaRouteImport.update({
   id: '/consultoria-ia',
   path: '/consultoria-ia',
   getParentRoute: () => MetodoRoute,
+} as any)
+const ApiHotmartWebhookRoute = ApiHotmartWebhookRouteImport.update({
+  id: '/api/hotmart-webhook',
+  path: '/api/hotmart-webhook',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ApiChatRoute = ApiChatRouteImport.update({
   id: '/api/chat',
@@ -528,6 +534,7 @@ export interface FileRoutesByFullPath {
   '/pending': typeof PendingRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/api/hotmart-webhook': typeof ApiHotmartWebhookRoute
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
   '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
@@ -605,6 +612,7 @@ export interface FileRoutesByTo {
   '/minha-base': typeof MinhaBaseRoute
   '/pending': typeof PendingRoute
   '/api/chat': typeof ApiChatRoute
+  '/api/hotmart-webhook': typeof ApiHotmartWebhookRoute
   '/metodo': typeof MetodoIndexRoute
   '/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
   '/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
@@ -676,6 +684,7 @@ export interface FileRoutesById {
   '/pending': typeof PendingRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/api/chat': typeof ApiChatRoute
+  '/api/hotmart-webhook': typeof ApiHotmartWebhookRoute
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
   '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
@@ -757,6 +766,7 @@ export interface FileRouteTypes {
     | '/pending'
     | '/admin'
     | '/api/chat'
+    | '/api/hotmart-webhook'
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
@@ -834,6 +844,7 @@ export interface FileRouteTypes {
     | '/minha-base'
     | '/pending'
     | '/api/chat'
+    | '/api/hotmart-webhook'
     | '/metodo'
     | '/admin/conteudo'
     | '/admin/mentoradas'
@@ -904,6 +915,7 @@ export interface FileRouteTypes {
     | '/pending'
     | '/_authenticated/admin'
     | '/api/chat'
+    | '/api/hotmart-webhook'
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
@@ -984,6 +996,7 @@ export interface RootRouteChildren {
   MinhaBaseRoute: typeof MinhaBaseRoute
   PendingRoute: typeof PendingRoute
   ApiChatRoute: typeof ApiChatRoute
+  ApiHotmartWebhookRoute: typeof ApiHotmartWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -1113,6 +1126,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/metodo/consultoria-ia'
       preLoaderRoute: typeof MetodoConsultoriaIaRouteImport
       parentRoute: typeof MetodoRoute
+    }
+    '/api/hotmart-webhook': {
+      id: '/api/hotmart-webhook'
+      path: '/api/hotmart-webhook'
+      fullPath: '/api/hotmart-webhook'
+      preLoaderRoute: typeof ApiHotmartWebhookRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/api/chat': {
       id: '/api/chat'
@@ -1843,6 +1863,7 @@ const rootRouteChildren: RootRouteChildren = {
   MinhaBaseRoute: MinhaBaseRoute,
   PendingRoute: PendingRoute,
   ApiChatRoute: ApiChatRoute,
+  ApiHotmartWebhookRoute: ApiHotmartWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

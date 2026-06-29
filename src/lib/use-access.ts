@@ -34,13 +34,14 @@ export function useAccess() {
           return;
         }
 
-        // Compras por módulo (webhook da Hotmart preenche esta tabela)
+        // Compras por módulo (webhook da Hotmart preenche esta tabela).
+        // Procura pelo email do utilizador (a compra fica ligada ao email do comprador).
         try {
           const { data: rows } = await (supabase as any)
             .from("module_purchases")
             .select("module_key")
-            .eq("user_id", user.id)
-            .eq("status", "active");
+            .eq("status", "active")
+            .ilike("email", user.email ?? "");
           if (active) {
             setUnlocked(new Set((rows ?? []).map((r: { module_key: ModuleKey }) => r.module_key)));
           }
