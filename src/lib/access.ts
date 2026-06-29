@@ -4,6 +4,16 @@
 // Preenche `checkoutUrl` (link de checkout da Hotmart) e `hotmartProductId`
 // (id do produto, usado pelo webhook para mapear a compra ao módulo).
 
+// Emails de administração — vêem SEMPRE tudo desbloqueado (sem paywall).
+export const ADMIN_EMAILS = [
+  "catiacreator.oficial@gmail.com",
+  "catiasmgon@gmail.com",
+];
+
+export function isAdminEmail(email?: string | null): boolean {
+  return !!email && ADMIN_EMAILS.includes(email.trim().toLowerCase());
+}
+
 export type ModuleKey = "jornada" | "academia" | "redes";
 
 export type ModuleInfo = {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import type { ModuleKey } from "@/lib/access";
+import { isAdminEmail, type ModuleKey } from "@/lib/access";
 
 const ALL: ModuleKey[] = ["jornada", "academia", "redes"];
 
@@ -27,7 +27,13 @@ export function useAccess() {
         }
         if (active) setSignedIn(true);
 
-        // Admin vê tudo
+        // Admin por email — vê SEMPRE tudo (não depende do papel na BD)
+        if (isAdminEmail(user.email)) {
+          if (active) { setIsAdmin(true); setUnlocked(new Set(ALL)); setLoading(false); }
+          return;
+        }
+
+        // Admin por papel na base de dados
         const { data: adm } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
         if (adm) {
           if (active) { setIsAdmin(true); setUnlocked(new Set(ALL)); setLoading(false); }
