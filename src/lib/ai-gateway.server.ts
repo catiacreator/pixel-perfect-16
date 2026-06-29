@@ -92,9 +92,19 @@ function aiModelCandidates(runId?: string): AiModel[] {
   );
 }
 
-/** Modelo principal (1.º candidato). Usado onde não há fallback (ex.: streaming do chat). */
+/** Modelo principal (1.º candidato). Usado onde não há fallback. */
 export function resolveAiModel(runId?: string): AiModel {
   return aiModelCandidates(runId)[0];
+}
+
+/**
+ * Modelo para o chat em streaming — prioriza BAIXA LATÊNCIA.
+ * Usa o candidato mais leve (ex.: gemini-2.5-flash-lite), que responde mais
+ * depressa (menos "thinking") do que o flash normal.
+ */
+export function resolveChatModel(runId?: string): AiModel {
+  const models = aiModelCandidates(runId);
+  return models[models.length - 1];
 }
 
 function isRetryableAiError(e: unknown): boolean {

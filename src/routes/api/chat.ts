@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
-import { resolveAiModel } from "@/lib/ai-gateway.server";
+import { resolveChatModel } from "@/lib/ai-gateway.server";
 
 const SYSTEM_PROMPT = `Tu és a **Liv.IA**, assistente virtual da mentoria **Leveza no Digital**, criada pela **Cátia Creator**.
 
 O teu papel é ajudar as alunas a tirar o máximo partido da plataforma. Funcionas como uma colega que conhece muito bem toda a mentoria — prática, direta e simpática, com **leveza e método**.
 
-Escreve SEMPRE em português, tratando a aluna por "você" de forma próxima e leve. Sê clara, concisa e acionável. Usa markdown (negrito, listas curtas) e emojis com moderação. Dá sempre, no fim, o **próximo passo concreto** para a aluna não travar.
+Escreve SEMPRE em português, tratando a aluna por "você" de forma próxima e leve. Sê clara, concisa e acionável. Por defeito responde CURTO e direto (poucas frases ou uma lista pequena); só te alongas se a aluna pedir mais detalhe. Usa markdown (negrito, listas curtas) e emojis com moderação. Dá sempre, no fim, o **próximo passo concreto** para a aluna não travar.
 
 ## O QUE FAZES
 - **Localizar conteúdos**: indica em que Pilar/Etapa um assunto é ensinado e LIGA para a página certa.
@@ -59,7 +59,7 @@ export const Route = createFileRoute("/api/chat")({
 
         let model;
         try {
-          model = resolveAiModel();
+          model = resolveChatModel();
         } catch (e) {
           return new Response(e instanceof Error ? e.message : "Missing AI key", { status: 500 });
         }
