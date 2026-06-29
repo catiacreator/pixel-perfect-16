@@ -202,7 +202,7 @@ export default function Home() {
               const Icon = c.icon;
               const locked = !accessLoading && !has(c.modulo);
               const checkout = MODULES[c.modulo].checkoutUrl;
-              const cls = "fade-up group relative overflow-hidden rounded-3xl border border-white/60 bg-white/55 backdrop-blur-xl p-6 md:p-7 flex flex-col transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:bg-white/70";
+              const cls = "fade-up group relative overflow-hidden rounded-3xl border border-white/60 bg-white/55 backdrop-blur-xl p-6 md:p-7 flex flex-col aspect-[9/16] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:bg-white/70";
               const style = { "--mc": c.cor, animationDelay: `${i * 90}ms` } as Record<string, string>;
 
               const inner = (
