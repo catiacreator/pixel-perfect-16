@@ -361,4 +361,26 @@ select:focus {
 .dark .app-header--jornada  { background: linear-gradient(90deg, #3A2616 0%, #2E2436 52%, #15334C 100%); }
 .dark .app-header--roxo     { background: linear-gradient(90deg, #2E2150 0%, #3A2440 52%, #20304A 100%); }
 
+/* Impressão do preview do Documento Mestre — só a "folha" sai no PDF */
+@media print {
+  body.pdf-printing > *:not(.pdf-portal) { display: none !important; }
+  body.pdf-printing .pdf-portal {
+    position: static !important;
+    inset: auto !important;
+    display: block !important;
+    background: #fff !important;
+    height: auto !important;
+  }
+  body.pdf-printing .pdf-portal,
+  body.pdf-printing .pdf-portal * { overflow: visible !important; }
+  body.pdf-printing .pdf-chrome { display: none !important; }
+  body.pdf-printing .pdf-sheet {
+    box-shadow: none !important;
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}
+
 

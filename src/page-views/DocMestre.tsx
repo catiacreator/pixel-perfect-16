@@ -26,6 +26,7 @@ import { useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { extractDocMestre } from "@/lib/doc-mestre.functions";
 import { usePilar2 } from "@/lib/pilar2-hooks";
+import DocMestrePreview from "@/components/DocMestrePreview";
 import { HYDRATED_EVENT } from "@/lib/master-doc-sync";
 
 // ------------------------------------------------------------------
@@ -440,9 +441,8 @@ export default function DocMestre() {
     setDoc(EMPTY);
   };
 
-  const printPDF = () => {
-    if (typeof window !== "undefined") window.print();
-  };
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const printPDF = () => setPreviewOpen(true);
 
   // Produtos
   const addProduto = () =>
@@ -1036,6 +1036,10 @@ export default function DocMestre() {
             </div>
           </div>
         </div>
+      )}
+
+      {previewOpen && (
+        <DocMestrePreview doc={doc} metodo={metodo} onClose={() => setPreviewOpen(false)} />
       )}
     </Layout>
   );
