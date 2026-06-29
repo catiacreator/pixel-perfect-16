@@ -283,6 +283,11 @@ select:focus {
   --color-terracotta-dark: #9C3360;
   --color-gold: #E06A9A;
 }
+.theme-roxo {
+  --color-terracotta: #7C56C9;
+  --color-terracotta-dark: #5B3FA0;
+  --color-gold: #A78BE8;
+}
 
 /* Glassmorphism — vidro fosco reutilizável */
 .glass {
@@ -346,6 +351,7 @@ select:focus {
 .app-header--academia { background: linear-gradient(90deg, #9CC4E8 0%, #EBC0D2 52%, #F4D2B6 100%); }
 .app-header--redes    { background: linear-gradient(90deg, #E79BC0 0%, #F4D2B6 52%, #9CC4E8 100%); }
 .app-header--jornada  { background: linear-gradient(90deg, #F3C7A4 0%, #EBC0D2 52%, #9CC4E8 100%); }
+.app-header--roxo     { background: linear-gradient(90deg, #C3AEEA 0%, #E2C2DE 52%, #C9DAF0 100%); }
 
 /* Dark mode — mantém o tom do módulo mas escuro, para o texto se ler */
 .dark .app-header,
@@ -353,5 +359,6 @@ select:focus {
 .dark .app-header--academia { background: linear-gradient(90deg, #15334C 0%, #2E2436 52%, #33271A 100%); }
 .dark .app-header--redes    { background: linear-gradient(90deg, #4A1F38 0%, #3A2A1C 52%, #15334C 100%); }
 .dark .app-header--jornada  { background: linear-gradient(90deg, #3A2616 0%, #2E2436 52%, #15334C 100%); }
+.dark .app-header--roxo     { background: linear-gradient(90deg, #2E2150 0%, #3A2440 52%, #20304A 100%); }
 
 

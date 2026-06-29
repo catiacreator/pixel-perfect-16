@@ -57,7 +57,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const academia = path.startsWith("/metodo/pilar-1/aprenda-ia");
   const redes = path.startsWith("/metodo/pilar-2/redes-sociais");
   const jornada = !academia && !redes && (path.startsWith("/metodo") || path.startsWith("/doc-mestre"));
-  const headerMod = academia ? "academia" : redes ? "redes" : jornada ? "jornada" : "default";
+  const roxo = path.startsWith("/minha-base") || path.startsWith("/agenda") || path.startsWith("/conquistas");
+  const headerMod = academia ? "academia" : redes ? "redes" : jornada ? "jornada" : roxo ? "roxo" : "default";
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -66,7 +67,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-cream text-ink font-display">
+    <div className={`min-h-screen w-full flex flex-col bg-cream text-ink font-display${roxo ? " theme-roxo" : ""}`}>
       {/* Cabeçalho */}
       <header
         className={`app-header app-header--${headerMod} w-full sticky top-0 z-40 text-ink border-b border-black/5 dark:border-white/10 shadow-[0_4px_24px_-16px_rgba(0,0,0,0.35)]`}
