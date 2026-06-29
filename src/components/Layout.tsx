@@ -1,6 +1,6 @@
 import { Link } from "@/lib/router-compat";
 import { useLocation, useRouter } from "@tanstack/react-router";
-import { FileText, Mail, Map, Bot, Database, Award, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, CalendarDays, Lock } from "lucide-react";
+import { FileText, Mail, Map, Bot, Database, Award, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, CalendarDays } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { initMasterDocSync } from "@/lib/master-doc-sync";
@@ -74,10 +74,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   // Paywall por módulo: bloqueia o acesso direto às rotas dos produtos.
   const gateModule: ModuleKey | null = academia ? "academia" : redes ? "redes" : jornada ? "jornada" : null;
-  const { has, hasAny, loading: accessLoading, signedIn: hasAccessSignedIn } = useAccess();
+  const { has, loading: accessLoading, signedIn: hasAccessSignedIn } = useAccess();
   const blocked = !!gateModule && !accessLoading && !has(gateModule);
-  // Itens de navegação só ficam disponíveis com pelo menos 1 módulo comprado.
-  const navLocked = !accessLoading && !hasAny;
 
   return (
     <div className={`min-h-screen w-full flex flex-col bg-cream text-ink font-display${roxo ? " theme-roxo" : ""}`}>
@@ -98,14 +96,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <nav className="hidden lg:flex items-center justify-center gap-1">
             {NAV.map((item) => {
               const active = isActive(item.to);
-              if (item.gated && navLocked) {
+              // Sem login: itens visíveis mas desativados.
+              if (!signedIn) {
                 return (
                   <span
                     key={item.to}
-                    title="Disponível depois da primeira compra"
-                    className="relative px-3.5 py-2 rounded-full text-[13px] text-ink/30 cursor-not-allowed inline-flex items-center gap-1.5"
+                    title="Entra para aceder"
+                    className="relative px-3.5 py-2 rounded-full text-[13px] text-ink/30 cursor-not-allowed"
                   >
-                    <Lock size={12} /> {item.label}
+                    {item.label}
                   </span>
                 );
               }
@@ -127,13 +126,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
           {/* Direita */}
           <div className="flex items-center gap-2 justify-end">
-            <Link
-              to="/doc-mestre"
-              className="hidden md:inline-flex items-center gap-1.5 text-[13px] pl-4 pr-3 py-2 bg-ink text-cream rounded-full font-medium transition-all hover:-translate-y-0.5 active:scale-[0.97]"
-            >
-              <FileText size={13} strokeWidth={2.25} /> Documento
-              <ArrowUpRight size={13} strokeWidth={2.25} />
-            </Link>
+            {signedIn && (
+              <Link
+                to="/doc-mestre"
+                className="hidden md:inline-flex items-center gap-1.5 text-[13px] pl-4 pr-3 py-2 bg-ink text-cream rounded-full font-medium transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+              >
+                <FileText size={13} strokeWidth={2.25} /> Documento
+                <ArrowUpRight size={13} strokeWidth={2.25} />
+              </Link>
+            )}
             {isAdmin && (
               <Link
                 to="/admin"
@@ -144,13 +145,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </Link>
             )}
             <ThemeToggle />
-            <Link
-              to="/mensagens"
-              className="w-10 h-10 rounded-full border border-ink/15 flex items-center justify-center text-ink/60 hover:bg-ink/5 hover:text-ink transition-colors"
-              aria-label="Mensagens"
-            >
-              <Mail size={15} strokeWidth={1.75} />
-            </Link>
+            {signedIn && (
+              <Link
+                to="/mensagens"
+                className="w-10 h-10 rounded-full border border-ink/15 flex items-center justify-center text-ink/60 hover:bg-ink/5 hover:text-ink transition-colors"
+                aria-label="Mensagens"
+              >
+                <Mail size={15} strokeWidth={1.75} />
+              </Link>
+            )}
             {signedIn ? (
               <UserMenu />
             ) : (
@@ -177,13 +180,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {NAV.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.to);
-              if (item.gated && navLocked) {
+              if (!signedIn) {
                 return (
                   <span
                     key={item.to}
                     className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm text-ink/30 cursor-not-allowed"
                   >
-                    <Lock size={16} strokeWidth={1.75} />
+                    <Icon size={18} strokeWidth={1.75} />
                     {item.label}
                   </span>
                 );
