@@ -24,7 +24,7 @@ const CARDS = [
     cta: "Ver a jornada",
     tags: [] as string[],
     cor: "#C0653A",
-    img: "/card-jornada.png",
+    img: "/card-jornada.jpg",
   },
   {
     modulo: "academia" as const,
