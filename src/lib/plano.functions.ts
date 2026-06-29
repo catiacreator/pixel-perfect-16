@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { generateObject } from "ai";
 import { z } from "zod";
-import { resolveAiModel } from "@/lib/ai-gateway.server";
+import { withAiModel } from "@/lib/ai-gateway.server";
 
 const FERRAMENTAS = ["chatgpt", "claude", "gemini", "notebooklm", "grok", "lovable", "tella"] as const;
 
@@ -54,11 +54,13 @@ export const gerarPlanoAutomatizacao = createServerFn({ method: "POST" })
     const lista = data.tarefas
       .map((t, i) => `${i + 1}. [${t.categoria}] ${t.nome} — ${t.horasMes.toFixed(1)}h/mês · R$${Math.round(t.custoMes)}`)
       .join("\n");
-    const { object } = await generateObject({
-      model: resolveAiModel(),
-      schema: PlanoSchema,
-      system: SYSTEM,
-      prompt: `Tarefas do utilizador (ordenadas por custo):\n${lista}\n\nGera o plano.`,
-    });
+    const { object } = await withAiModel((model) =>
+      generateObject({
+        model,
+        schema: PlanoSchema,
+        system: SYSTEM,
+        prompt: `Tarefas do utilizador (ordenadas por custo):\n${lista}\n\nGera o plano.`,
+      }),
+    );
     return object;
   });

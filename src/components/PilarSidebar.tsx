@@ -17,7 +17,6 @@ import {
   Video,
   Trophy,
   Clock,
-  BookOpen,
   Book,
   Heart,
   CircleDot,
@@ -30,6 +29,8 @@ import {
   FolderOpen,
   CalendarClock,
   Instagram,
+  Wrench,
+  Monitor,
   type LucideIcon,
 } from "lucide-react";
 
@@ -48,6 +49,8 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   "Projeto de Postagens": FolderOpen,
   "Como agendar": CalendarClock,
   "Instagram": Instagram,
+  "OBS": Monitor,
+  "Notion": FileText,
   "↳ Carrossel": LayoutGrid,
   "↳ Stories": CircleDot,
   "↳ Reels": Video,
@@ -64,26 +67,26 @@ type Item = {
   children?: SubItem[];
 };
 
+type SidebarKey = 1 | 2 | 3 | 4 | "academia" | "redes";
+
 type PilarDef = {
-  pilar: 1 | 2 | 3 | 4;
+  pilar: SidebarKey;
   title: string;
   items: Item[];
   enabled: boolean;
 };
 
-const PILARES: Record<number, PilarDef> = {
-  1: {
-    pilar: 1,
-    title: "Crie com Leveza sem roubar o seu tempo",
+const PILARES: Record<string | number, PilarDef> = {
+  academia: {
+    pilar: "academia",
+    title: "Domine as principais IAs",
     enabled: true,
     items: [
-      { num: 1, label: "Preencha seu Documento Mestre", to: "/doc-mestre", icon: FileText },
       {
-        num: 2,
-        label: "Domine as Práticas",
-        to: "/metodo/pilar-1/aprenda-ia",
-        icon: BookOpen,
-        badge: "AULAS",
+        num: 1,
+        label: "Principais IAs",
+        to: "/metodo/pilar-1/aprenda-ia/principais-ias",
+        icon: Sparkles,
         children: [
           { label: "ChatGPT", to: "/metodo/pilar-1/aprenda-ia/chatgpt" },
           { label: "Claude", to: "/metodo/pilar-1/aprenda-ia/claude" },
@@ -91,12 +94,55 @@ const PILARES: Record<number, PilarDef> = {
           { label: "Grok", to: "/metodo/pilar-1/aprenda-ia/grok" },
           { label: "NotebookLM", to: "/metodo/pilar-1/aprenda-ia/notebooklm" },
           { label: "Lovable", to: "/metodo/pilar-1/aprenda-ia/lovable" },
-          { label: "Tella", to: "/metodo/pilar-1/aprenda-ia/tella" },
         ],
       },
-      { num: 3, label: "Mapa do Tempo", to: "/metodo/pilar-1/detetive-do-tempo", icon: Clock },
-      { num: 4, label: "Relatório do tempo", to: "/metodo/pilar-1/detetive-do-tempo/relatorio", icon: FileText },
-      { num: 5, label: "Revise e celebre", to: "/metodo/pilar-1/conclusao", icon: Trophy },
+      { num: 2, label: "Vídeos profissionais com IA", to: "/metodo/pilar-1/aprenda-ia/videos", icon: Video },
+      {
+        num: 3,
+        label: "Ferramentas de produtividade",
+        to: "/metodo/pilar-1/aprenda-ia/produtividade",
+        icon: Wrench,
+        children: [
+          { label: "Tella", to: "/metodo/pilar-1/aprenda-ia/tella" },
+          { label: "OBS", to: "/metodo/pilar-1/aprenda-ia/produtividade" },
+          { label: "Notion", to: "/metodo/pilar-1/aprenda-ia/produtividade" },
+        ],
+      },
+    ],
+  },
+  redes: {
+    pilar: "redes",
+    title: "Criando para as Redes Sociais",
+    enabled: true,
+    items: [
+      { num: 1, label: "Modelos de Posts", to: "/metodo/pilar-2/redes-sociais?aba=modelos", icon: LayoutGrid },
+      { num: 2, label: "Linha Editorial", to: "/metodo/pilar-2/redes-sociais?aba=linha", icon: AlignLeft },
+      { num: 3, label: "Calendário Editorial", to: "/metodo/pilar-2/redes-sociais?aba=calendario", icon: CalendarDays },
+      { num: 4, label: "Bio", to: "/metodo/pilar-2/redes-sociais?aba=bio", icon: UserCircle2 },
+      { num: 5, label: "Projeto de Postagens", to: "/metodo/pilar-2/redes-sociais?aba=projeto", icon: FolderOpen },
+      { num: 6, label: "Como agendar", to: "/metodo/pilar-2/redes-sociais?aba=agendar", icon: CalendarClock },
+      {
+        num: 7,
+        label: "Instagram",
+        to: "/metodo/pilar-2/redes-sociais/instagram",
+        icon: Instagram,
+        children: [
+          { label: "↳ Carrossel", to: "/metodo/pilar-2/redes-sociais/instagram/carrossel" },
+          { label: "↳ Stories", to: "/metodo/pilar-2/redes-sociais/instagram/stories" },
+          { label: "↳ Reels", to: "/metodo/pilar-2/redes-sociais/instagram/reels" },
+        ],
+      },
+    ],
+  },
+  1: {
+    pilar: 1,
+    title: "Crie com Leveza sem roubar o seu tempo",
+    enabled: true,
+    items: [
+      { num: 1, label: "Preencha seu Documento Mestre", to: "/doc-mestre", icon: FileText },
+      { num: 2, label: "Mapa do Tempo", to: "/metodo/pilar-1/detetive-do-tempo", icon: Clock },
+      { num: 3, label: "Relatório do tempo", to: "/metodo/pilar-1/detetive-do-tempo/relatorio", icon: FileText },
+      { num: 4, label: "Revise e celebre", to: "/metodo/pilar-1/conclusao", icon: Trophy },
     ],
   },
   2: {
@@ -105,7 +151,7 @@ const PILARES: Record<number, PilarDef> = {
     enabled: true,
     items: [
       { num: 1, label: "Pesquisa de Mercado", to: "/metodo/pilar-2/pesquisa-mercado", icon: Search },
-      { num: 2, label: "O Seu Método", to: "/metodo/pilar-2/metodo", icon: Compass },
+      { num: 2, label: "Crie o seu método", to: "/metodo/pilar-2/metodo", icon: Compass },
       {
         num: 3,
         label: "Identidade de Marca",
@@ -117,29 +163,22 @@ const PILARES: Record<number, PilarDef> = {
           { label: "Consultoria de Imagem", to: "/metodo/pilar-2/consultoria-imagem" },
         ],
       },
-      {
-        num: 4,
-        label: "Redes Sociais",
-        to: "/metodo/pilar-2/redes-sociais",
-        icon: MessageSquare,
-        children: [
-          { label: "Modelos de Posts", to: "/metodo/pilar-2/redes-sociais?aba=modelos" },
-          { label: "Linha Editorial", to: "/metodo/pilar-2/redes-sociais?aba=linha" },
-          { label: "Calendário Editorial", to: "/metodo/pilar-2/redes-sociais?aba=calendario" },
-          { label: "Bio", to: "/metodo/pilar-2/redes-sociais?aba=bio" },
-          { label: "Projeto de Postagens", to: "/metodo/pilar-2/redes-sociais?aba=projeto" },
-          { label: "Como agendar", to: "/metodo/pilar-2/redes-sociais?aba=agendar" },
-          { label: "Instagram", to: "/metodo/pilar-2/redes-sociais/instagram" },
-          { label: "↳ Carrossel", to: "/metodo/pilar-2/redes-sociais/instagram/carrossel" },
-          { label: "↳ Stories", to: "/metodo/pilar-2/redes-sociais/instagram/stories" },
-          { label: "↳ Reels", to: "/metodo/pilar-2/redes-sociais/instagram/reels" },
-        ],
-      },
-      { num: 5, label: "Vídeos", to: "/metodo/pilar-2/videos", icon: Video },
-      { num: 6, label: "Conclusão Pilar 2", to: "/metodo/pilar-2/conclusao", icon: Trophy },
+      { num: 4, label: "Conclusão Pilar 2", to: "/metodo/pilar-2/conclusao", icon: Trophy },
     ],
   },
-  3: { pilar: 3, title: "Crie o seu Produto", enabled: false, items: [] },
+  3: {
+    pilar: 3,
+    title: "Criar Soluções Digitais",
+    enabled: true,
+    items: [
+      { num: 1, label: "Descobrir soluções", to: "/metodo/pilar-3/descobrir", icon: Search },
+      { num: 2, label: "Como entregar", to: "/metodo/pilar-3/como-entregar", icon: Compass },
+      { num: 3, label: "Criar o produto", to: "/metodo/pilar-3/criar-produto", icon: Wrench },
+      { num: 4, label: "Validar o produto", to: "/metodo/pilar-3/validar-produto", icon: CircleDot },
+      { num: 5, label: "Página de vendas", to: "/metodo/pilar-3/pagina-vendas", icon: FileText },
+      { num: 6, label: "Revise e celebre", to: "/metodo/pilar-3/conclusao", icon: Trophy },
+    ],
+  },
   4: {
     pilar: 4,
     title: "Aprender a Vender",
@@ -161,11 +200,11 @@ const PILARES: Record<number, PilarDef> = {
 const PILAR_SHORT: Record<number, string> = {
   1: "Crie com Leveza sem roubar o seu tempo",
   2: "Criar Autoridade",
-  3: "Crie o seu Produto",
+  3: "Criar Soluções Digitais",
   4: "Aprender a Vender",
 };
 
-function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2 | 3 | 4; onNavigate?: () => void }) {
+function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: () => void }) {
   const def = PILARES[pilar];
   const location = useLocation();
   const pathname = location.pathname;
@@ -190,52 +229,63 @@ function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2 | 3 | 4; onNavigate?:
   );
   const [openId, setOpenId] = useState<string | null>(activeParent?.to ?? null);
 
+  const kicker =
+    def.pilar === "academia" ? "Academia de IA" : def.pilar === "redes" ? "Redes Sociais" : `Pilar ${def.pilar}`;
+
   return (
-    <div className="h-full flex flex-col bg-cream-warm/60 border-r border-[var(--color-border)]">
+    <div className="h-full flex flex-col bg-gradient-to-b from-terracotta to-terracotta-dark text-white border-r border-black/10">
       {/* Header */}
-      <div className="px-6 pt-7 pb-5 border-b border-[var(--color-border)]">
-        <div className="text-[10px] tracking-[0.32em] uppercase text-terracotta font-medium">
-          Pilar {def.pilar}
-        </div>
-        <div className="mt-2 font-display text-xl tracking-[0.04em] uppercase text-ink">
-          {def.title}
-        </div>
-        <div className="mt-4 flex items-center gap-2">
-          <span className="h-px flex-1 bg-[var(--color-border)]" />
-          <span className="text-terracotta text-xs">✦</span>
-          <span className="h-px flex-1 bg-[var(--color-border)]" />
+      <div className="px-5 pt-7 pb-5 border-b border-white/15">
+        <div className="flex items-start gap-3">
+          <span className="mt-0.5 w-1.5 h-9 rounded-full bg-white/55 shrink-0" />
+          <div className="min-w-0">
+            <div className="text-[10px] tracking-[0.32em] uppercase text-white/70 font-semibold">
+              {kicker}
+            </div>
+            <div className="mt-1.5 font-display text-[1.05rem] leading-[1.15] tracking-[0.02em] uppercase text-white">
+              {def.title}
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Items */}
       <nav className="flex-1 overflow-y-auto px-3 py-4">
-        <ul className="space-y-0.5">
+        <ul className="space-y-1">
           {def.items.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.to);
             const hasChildren = !!item.children?.length;
-            const open = openId === item.to || (hasChildren && active);
+            // Abre se for o pai ativo OU se uma filha for a página atual (reativo à rota).
+            const childActive = hasChildren && item.children!.some((c) => isActive(c.to));
+            const open = openId === item.to || active || childActive;
 
             return (
               <li key={item.to}>
                 <div
-                  className={`flex items-stretch rounded-full transition-colors ${
-                    active || open
-                      ? "bg-[#f3e4d0]"
-                      : "hover:bg-ink/5"
+                  className={`group flex items-stretch rounded-2xl transition-all duration-200 ${
+                    active
+                      ? "bg-[#ffffff] shadow-[0_10px_24px_-12px_rgba(0,0,0,0.5)]"
+                      : "hover:bg-white/10"
                   }`}
                 >
                   <Link
                     to={item.to}
                     onClick={onNavigate}
-                    className="flex-1 flex items-center gap-2.5 pl-3 pr-2 py-2 text-[13px] text-ink min-w-0"
+                    className={`flex-1 flex items-center gap-3 pl-2 pr-2 py-2 text-[13px] min-w-0 ${active ? "text-terracotta" : "text-white"}`}
                   >
-                    <Icon size={15} strokeWidth={1.75} className="text-ink/70 shrink-0" />
-                    <span className="truncate flex-1 font-medium">
-                      {item.num}. {item.label}
+                    <span
+                      className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors ${
+                        active ? "bg-terracotta/10 text-terracotta" : "bg-white/15 text-white"
+                      }`}
+                    >
+                      <Icon size={15} strokeWidth={1.9} />
+                    </span>
+                    <span className="truncate flex-1 font-medium leading-tight">
+                      <span className={active ? "text-terracotta/55" : "text-white/55"}>{item.num}.</span> {item.label}
                     </span>
                     {item.badge && (
-                      <span className="ml-1 text-[9px] tracking-[0.18em] uppercase px-2 py-0.5 rounded-full bg-terracotta text-cream font-semibold">
+                      <span className={`ml-1 text-[9px] tracking-[0.18em] uppercase px-2 py-0.5 rounded-full font-semibold ${active ? "bg-terracotta/10 text-terracotta" : "bg-white/20 text-white"}`}>
                         {item.badge}
                       </span>
                     )}
@@ -243,38 +293,39 @@ function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2 | 3 | 4; onNavigate?:
                   {hasChildren && (
                     <button
                       onClick={() => setOpenId(open ? null : item.to)}
-                      className="px-2.5 text-ink/55 hover:text-ink transition-colors"
+                      className={`px-2.5 transition-colors ${active ? "text-terracotta/70 hover:text-terracotta" : "text-white/70 hover:text-white"}`}
                       aria-label="Expandir"
                     >
                       <ChevronDown
                         size={14}
-                        className={`transition-transform ${open ? "rotate-180" : ""}`}
+                        className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
                       />
                     </button>
                   )}
                 </div>
 
                 {hasChildren && open && (
-                  <ul className="mt-1 mb-1 space-y-0.5 pl-3">
+                  <ul className="mt-1 mb-1.5 ml-[1.4rem] pl-3 border-l border-white/25 space-y-0.5">
                     {item.children!.map((c) => {
                       const cActive = isActive(c.to);
                       return (
-                        <li key={c.to}>
+                        <li key={c.label}>
                           <Link
                             to={c.to}
                             onClick={onNavigate}
-                            className={`flex items-center gap-2 pl-3 pr-3 py-2 rounded-full text-[12.5px] transition-colors ${
+                            className={`flex items-center gap-2 pl-2.5 pr-3 py-1.5 rounded-lg text-[12.5px] transition-colors ${
                               cActive
-                                ? "bg-[#f3e4d0] text-ink font-medium"
-                                : "text-ink/70 hover:bg-ink/5 hover:text-ink"
+                                ? "bg-[#ffffff] text-terracotta font-semibold"
+                                : "text-white/75 hover:bg-white/10 hover:text-white"
                             }`}
                           >
                             {(() => {
                               const ToolIcon = TOOL_ICONS[c.label];
-                              if (ToolIcon) return <ToolIcon size={13} className="text-terracotta shrink-0" />;
-                              if (c.label === "Tom de Voz") return <Mic size={12} className="text-terracotta shrink-0" />;
-                              if (c.label === "Identidade Visual") return <Palette size={12} className="text-terracotta shrink-0" />;
-                              return <Shirt size={12} className="text-terracotta shrink-0" />;
+                              const cls = `shrink-0 ${cActive ? "text-terracotta" : "text-white/60"}`;
+                              if (ToolIcon) return <ToolIcon size={13} className={cls} />;
+                              if (c.label === "Tom de Voz") return <Mic size={12} className={cls} />;
+                              if (c.label === "Identidade Visual") return <Palette size={12} className={cls} />;
+                              return <Shirt size={12} className={cls} />;
                             })()}
                             <span className="flex-1 truncate">{c.label}</span>
                             {cActive && (
@@ -293,39 +344,36 @@ function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2 | 3 | 4; onNavigate?:
       </nav>
 
       {/* Footer: switch pilar */}
-      <div className="border-t border-[var(--color-border)] px-5 py-5">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="h-px flex-1 bg-[var(--color-border)]" />
-          <span className="text-terracotta text-xs">✦</span>
-          <span className="h-px flex-1 bg-[var(--color-border)]" />
-        </div>
-        <div className="text-[10px] tracking-[0.3em] uppercase text-ink/45 mb-3">
+      <div className="border-t border-white/15 px-4 py-4">
+        {typeof pilar === "number" && (
+        <>
+        <div className="text-[10px] tracking-[0.3em] uppercase text-white/55 mb-2.5 px-1">
           Ir para outro pilar
         </div>
-        <ul className="space-y-1.5">
+        <ul className="space-y-1 mb-4">
           {[1, 2, 3, 4].map((n) => {
             const def = PILARES[n];
             const active = n === pilar;
             const disabled = !def.enabled;
             const content = (
               <div
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg border text-[11px] tracking-[0.18em] uppercase ${
+                className={`flex items-center gap-2.5 px-2 py-1.5 rounded-xl text-[11px] tracking-[0.16em] uppercase transition-all ${
                   active
-                    ? "border-terracotta/60 bg-terracotta/10 text-terracotta"
+                    ? "bg-[#ffffff] text-terracotta shadow-[0_8px_20px_-12px_rgba(0,0,0,0.5)]"
                     : disabled
-                      ? "border-[var(--color-border)] text-ink/30"
-                      : "border-[var(--color-border)] text-ink/70 hover:border-ink/30 hover:text-ink"
+                      ? "text-white/35"
+                      : "text-white/80 hover:bg-white/10 hover:text-white"
                 }`}
               >
                 <span
-                  className={`w-6 h-6 rounded-md flex items-center justify-center text-[12px] tabular-nums ${
-                    active ? "bg-terracotta text-cream" : "bg-cream border border-[var(--color-border)] text-ink/60"
+                  className={`w-6 h-6 rounded-lg flex items-center justify-center text-[12px] tabular-nums shrink-0 ${
+                    active ? "bg-terracotta/10 text-terracotta" : "bg-white/15 text-white"
                   }`}
                 >
                   {n}
                 </span>
                 <span className="flex-1 truncate">{PILAR_SHORT[n]}</span>
-                {disabled && <span className="text-[9px] text-ink/35">Em breve</span>}
+                {disabled && <span className="text-[9px] text-white/40 normal-case tracking-normal">Em breve</span>}
               </div>
             );
             if (disabled || active) return <li key={n}>{content}</li>;
@@ -338,20 +386,22 @@ function SidebarBody({ pilar, onNavigate }: { pilar: 1 | 2 | 3 | 4; onNavigate?:
             );
           })}
         </ul>
+        </>
+        )}
 
         <Link
-          to="/metodo"
+          to={typeof pilar === "number" ? "/metodo" : "/"}
           onClick={onNavigate}
-          className="mt-4 inline-flex items-center gap-2 text-[12px] text-ink/60 hover:text-ink transition-colors"
+          className="inline-flex items-center gap-2 text-[12px] text-white/75 hover:text-white transition-colors px-1"
         >
-          <ArrowLeft size={13} /> Voltar para Jornada
+          <ArrowLeft size={13} /> {typeof pilar === "number" ? "Voltar para Jornada" : "Voltar para Início"}
         </Link>
       </div>
     </div>
   );
 }
 
-export default function PilarSidebar({ pilar }: { pilar: 1 | 2 | 3 | 4 }) {
+export default function PilarSidebar({ pilar }: { pilar: SidebarKey }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
@@ -380,10 +430,10 @@ export default function PilarSidebar({ pilar }: { pilar: 1 | 2 | 3 | 4 }) {
             className="absolute inset-0 bg-ink/40"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="relative w-[280px] max-w-[85vw] h-full bg-cream">
+          <div className="relative w-[280px] max-w-[85vw] h-full">
             <button
               onClick={() => setMobileOpen(false)}
-              className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full border border-[var(--color-border)] flex items-center justify-center text-ink"
+              className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full border border-white/30 flex items-center justify-center text-white"
               aria-label="Fechar"
             >
               <X size={16} />

@@ -51,6 +51,9 @@ function createSupabaseClient() {
       storage: typeof window !== 'undefined' ? localStorage : undefined,
       persistSession: true,
       autoRefreshToken: true,
+      // NÃO passar `lock`: nesta versão o cliente é lockless por defeito (sem
+      // navigator.locks). Fornecer um lock ativa o caminho legado que pendura
+      // getSession()/getUser() em iframes/preview.
     }
   });
 }

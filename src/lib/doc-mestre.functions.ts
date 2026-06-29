@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { generateObject } from "ai";
 import { z } from "zod";
-import { resolveAiModel } from "@/lib/ai-gateway.server";
+import { withAiModel } from "@/lib/ai-gateway.server";
 
 const DocMestreSchema = z.object({
   nome: z.string().optional().default(""),
@@ -38,11 +38,13 @@ a no máximo 5 itens cada, ordenados por urgência/relevância.`;
 export const extractDocMestre = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => z.object({ text: z.string().min(1).max(60000) }).parse(input))
   .handler(async ({ data }) => {
-    const { object } = await generateObject({
-      model: resolveAiModel(),
-      schema: DocMestreSchema,
-      system: SYSTEM,
-      prompt: `Texto fornecido pelo utilizador:\n\n${data.text}\n\nExtrai os campos do Documento Mestre.`,
-    });
+    const { object } = await withAiModel((model) =>
+      generateObject({
+        model,
+        schema: DocMestreSchema,
+        system: SYSTEM,
+        prompt: `Texto fornecido pelo utilizador:\n\n${data.text}\n\nExtrai os campos do Documento Mestre.`,
+      }),
+    );
     return object;
   });

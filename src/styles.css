@@ -6,20 +6,27 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-cream: #F5F2EC;
-  --color-cream-warm: #FBF7F0;
-  --color-ink: #2A1A10;
-  --color-muted: #8E7B64;
-  --color-terracotta: #7C3D29;
-  --color-terracotta-dark: #5C2A1A;
-  --color-gold: #C99A6A;
-  --color-sage: #6F8477;
+  /* Paleta de MARCA (Cátia Creator): preto + castanho + caramelo + branco quente.
+     'ink' = preto/superfícies escuras; 'terracotta' = castanho (primária/acentos);
+     'gold' = caramelo; 'sage'/'success' = verde discreto; 'emerald' = destaque. */
+  --color-cream: #FBFAF7;
+  --color-cream-warm: #FBF7EF;
+  --color-ink: #111111;
+  --color-ink-soft: #6E6256;
+  --color-muted: #8A7C6C;
+  --color-terracotta: #6B3F2A;
+  --color-terracotta-dark: #532F1F;
+  --color-gold: #B8794A;
+  --color-sage: #0F5C4D;
+  --color-blue: #B8794A;
+  --color-emerald: #14B88A;
+  --color-beige: #E3D5BE;
   --color-navy: #3F4A5A;
-  --color-forest: #14110F;
-  --color-forest-soft: #221E1A;
-  --color-border: #E7DBC9;
-  --color-border-soft: #F1E8DA;
-  --color-success: #6F8477;
+  --color-forest: #0F5C4D;
+  --color-forest-soft: #143F36;
+  --color-border: #E6DCCB;
+  --color-border-soft: #F0E8DA;
+  --color-success: #0F5C4D;
   --font-serif: "Archivo", "Archivo Black", system-ui, sans-serif;
   --font-sans: "DM Sans", "Inter Tight", system-ui, sans-serif;
   --font-mono: "DM Sans", "Inter Tight", system-ui, sans-serif;
@@ -157,21 +164,24 @@
 
 /* Restore custom brand palette tokens (override shadcn @theme inline above) */
 @theme {
-  --color-cream: #F5F2EC;
-  --color-cream-warm: #FBF7F0;
-  --color-ink: #2A1A10;
-  --color-ink-soft: #6B5443;
-  --color-muted: #8E7B64;
-  --color-terracotta: #7C3D29;
-  --color-terracotta-dark: #5C2A1A;
-  --color-gold: #C99A6A;
-  --color-sage: #6F8477;
+  --color-cream: #FBFAF7;
+  --color-cream-warm: #FBF7EF;
+  --color-ink: #111111;
+  --color-ink-soft: #6E6256;
+  --color-muted: #8A7C6C;
+  --color-terracotta: #6B3F2A;
+  --color-terracotta-dark: #532F1F;
+  --color-gold: #B8794A;
+  --color-sage: #0F5C4D;
+  --color-blue: #B8794A;
+  --color-emerald: #14B88A;
+  --color-beige: #E3D5BE;
   --color-navy: #3F4A5A;
-  --color-forest: #14110F;
-  --color-forest-soft: #221E1A;
-  --color-border: #E7DBC9;
-  --color-border-soft: #F1E8DA;
-  --color-success: #6F8477;
+  --color-forest: #0F5C4D;
+  --color-forest-soft: #143F36;
+  --color-border: #E6DCCB;
+  --color-border-soft: #F0E8DA;
+  --color-success: #0F5C4D;
 
   /* Modern dark palette (Arounda-inspired) */
   --color-coal: #0E0C0D;
@@ -197,6 +207,7 @@
 
   html, body, #root {
     margin: 0;
+    min-height: 100vh;
     background-color: var(--color-cream);
     color: var(--color-ink);
     font-family: var(--font-sans);
@@ -219,6 +230,26 @@
   to { transform: translateX(-33.3333%); }
 }
 
+/* Animações modernas */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-18px); }
+}
+
+/* Botões modernos — feedback tátil em toda a app */
+button { -webkit-tap-highlight-color: transparent; }
+button:active { transform: scale(0.97); }
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-up, [class*="animate-"] { animation: none !important; }
+}
+
 /* Inputs: fundo cream, borda terracotta */
 input,
 textarea,
@@ -232,7 +263,43 @@ textarea:focus,
 select:focus {
   outline: none;
   border-color: var(--color-terracotta) !important;
-  box-shadow: 0 0 0 3px rgb(124 61 41 / 0.16);
+  box-shadow: 0 0 0 3px rgb(107 63 42 / 0.22);
+}
+
+/* Tema de cor por módulo — sobrepõe a cor de acento (primária/gold) no scope.
+   Mantém fundo/preto/branco quente globais; muda só os acentos do módulo. */
+.theme-jornada {
+  --color-terracotta: #C0653A;
+  --color-terracotta-dark: #9C4E2B;
+  --color-gold: #E8923F;
+}
+.theme-academia {
+  --color-terracotta: #2E7CB8;
+  --color-terracotta-dark: #235E8C;
+  --color-gold: #4FA3CE;
+}
+.theme-redes {
+  --color-terracotta: #C8487E;
+  --color-terracotta-dark: #9C3360;
+  --color-gold: #E06A9A;
+}
+.theme-roxo {
+  --color-terracotta: #7C56C9;
+  --color-terracotta-dark: #5B3FA0;
+  --color-gold: #A78BE8;
+}
+
+/* Glassmorphism — vidro fosco reutilizável */
+.glass {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+.glass-dark {
+  background: rgba(17, 17, 17, 0.6);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
 }
 
 /* Sombra subtil em todos os cards */
@@ -241,6 +308,79 @@ select:focus {
 }
 .rounded-xl.border {
   box-shadow: 0 1px 3px 0 rgb(45 42 38 / 0.05);
+}
+
+/* ===== Modo escuro (toggle light/dark) ===== */
+.dark {
+  --color-cream: #14110E;
+  --color-cream-warm: #1E1A15;
+  --color-ink: #F4EEE4;
+  --color-ink-soft: #C2B6A4;
+  --color-muted: #998D7C;
+  --color-terracotta: #C9824F;
+  --color-terracotta-dark: #A9683C;
+  --color-gold: #E0A86A;
+  --color-sage: #2FA98A;
+  --color-success: #2FA98A;
+  --color-emerald: #2FD0A0;
+  --color-border: #2E2820;
+  --color-border-soft: #241F19;
+  --color-beige: #2A241E;
+}
+/* superfícies com cor literal (branco) — invertem no escuro */
+.dark .bg-white { background-color: #1C1813 !important; }
+.dark .bg-white\/55 { background-color: rgba(28, 24, 19, 0.55) !important; }
+.dark .bg-white\/70 { background-color: rgba(28, 24, 19, 0.7) !important; }
+.dark .bg-white\/85 { background-color: rgba(22, 19, 15, 0.92) !important; }
+.dark .border-white\/60 { border-color: rgba(255, 255, 255, 0.1) !important; }
+.dark .glass {
+  background: rgba(28, 24, 19, 0.6);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Fundo do hero — claro e escuro */
+.hero-grad {
+  background: radial-gradient(140% 90% at 78% -10%, #F8E6D1 0%, #FBF7EF 45%, #F7F2EC 100%);
+}
+.dark .hero-grad {
+  background: radial-gradient(140% 90% at 78% -10%, #2A2018 0%, #1A1612 45%, #14110E 100%);
+}
+
+/* Barra de topo — começa na cor do módulo e faz degradê (claro/escuro) */
+.app-header { background: linear-gradient(90deg, #F7DCC4 0%, #F1CCD8 50%, #CFE0F0 100%); }
+.app-header--academia { background: linear-gradient(90deg, #9CC4E8 0%, #EBC0D2 52%, #F4D2B6 100%); }
+.app-header--redes    { background: linear-gradient(90deg, #E79BC0 0%, #F4D2B6 52%, #9CC4E8 100%); }
+.app-header--jornada  { background: linear-gradient(90deg, #F3C7A4 0%, #EBC0D2 52%, #9CC4E8 100%); }
+.app-header--roxo     { background: linear-gradient(90deg, #C3AEEA 0%, #E2C2DE 52%, #C9DAF0 100%); }
+
+/* Dark mode — mantém o tom do módulo mas escuro, para o texto se ler */
+.dark .app-header,
+.dark .app-header--default { background: linear-gradient(90deg, #2A2440 0%, #3A2335 50%, #21324A 100%); }
+.dark .app-header--academia { background: linear-gradient(90deg, #15334C 0%, #2E2436 52%, #33271A 100%); }
+.dark .app-header--redes    { background: linear-gradient(90deg, #4A1F38 0%, #3A2A1C 52%, #15334C 100%); }
+.dark .app-header--jornada  { background: linear-gradient(90deg, #3A2616 0%, #2E2436 52%, #15334C 100%); }
+.dark .app-header--roxo     { background: linear-gradient(90deg, #2E2150 0%, #3A2440 52%, #20304A 100%); }
+
+/* Impressão do preview do Documento Mestre — só a "folha" sai no PDF */
+@media print {
+  body.pdf-printing > *:not(.pdf-portal) { display: none !important; }
+  body.pdf-printing .pdf-portal {
+    position: static !important;
+    inset: auto !important;
+    display: block !important;
+    background: #fff !important;
+    height: auto !important;
+  }
+  body.pdf-printing .pdf-portal,
+  body.pdf-printing .pdf-portal * { overflow: visible !important; }
+  body.pdf-printing .pdf-chrome { display: none !important; }
+  body.pdf-printing .pdf-sheet {
+    box-shadow: none !important;
+    max-width: none !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
 }
 
 

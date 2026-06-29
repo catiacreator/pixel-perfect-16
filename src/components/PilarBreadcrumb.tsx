@@ -7,7 +7,7 @@ export default function PilarBreadcrumb({
   backTo,
   backLabel,
 }: {
-  pilar: 1 | 2 | 3 | 4;
+  pilar: 1 | 2 | 3 | 4 | "academia" | "redes";
   pilarLabel: string;
   backTo: string;
   backLabel: string;
@@ -22,6 +22,7 @@ export default function PilarBreadcrumb({
           <ArrowLeft size={13} strokeWidth={2} /> {backLabel}
         </Link>
 
+        {typeof pilar === "number" && (
         <div className="flex items-center gap-3 text-[11px] tracking-[0.25em] uppercase">
           <span className="text-ink/45 font-medium hidden sm:inline">
             Ir para pilar
@@ -58,6 +59,7 @@ export default function PilarBreadcrumb({
             })}
           </div>
         </div>
+        )}
       </div>
     </div>
   );

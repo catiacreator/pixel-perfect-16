@@ -1,6 +1,7 @@
 import { Link } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
+import PillarHeader from "../../components/PillarHeader";
 import PromptStep from "../../components/PromptStep";
 import ColarResultado from "../../components/ColarResultado";
 import { ArrowRight, ExternalLink } from "lucide-react";
@@ -9,11 +10,14 @@ export default function PaginaProfissional() {
   return (
     <Layout>
       <PilarBreadcrumb pilar={2} pilarLabel="Criar Autoridade" backTo="/metodo/pilar-2/redes-sociais/instagram" backLabel="Voltar para Instagram" />
-      <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
-        <h1 className="font-serif text-3xl text-ink mb-2">Página Profissional</h1>
-        <p className="italic text-muted mb-6">
-          Transforme tudo o que preencheu até aqui numa página que apresenta o seu trabalho.
-        </p>
+      <PillarHeader
+        numeral="✦"
+        icon={null}
+        pilarLabel="Criar Autoridade"
+        titulo="Página Profissional"
+        subtitulo="Transforme tudo o que preencheu até aqui numa página que apresenta o seu trabalho."
+      />
+      <div className="px-5 md:px-10 pt-8 pb-10 max-w-4xl mx-auto">
 
         <PromptStep
           numero={8}

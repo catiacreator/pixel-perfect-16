@@ -7,6 +7,7 @@ import { getTool, TOOLS, type Aula } from "@/data/aulas";
 import { useAulaProgress } from "@/lib/use-aula-progress";
 import { fillPrompt } from "@/lib/fill-prompt";
 import { getAulaOverride } from "./aulas/registry";
+import AddToAgenda from "@/components/AddToAgenda";
 import {
   ArrowLeft,
   ArrowRight,
@@ -145,10 +146,10 @@ export default function AulaPage() {
   return (
     <Layout>
       <PilarBreadcrumb
-        pilar={1}
-        pilarLabel="Crie com Leveza sem roubar o seu tempo"
-        backTo="/metodo/pilar-1"
-        backLabel="Voltar para o Pilar 1"
+        pilar="academia"
+        pilarLabel="Academia de IA"
+        backTo="/metodo/pilar-1/aprenda-ia"
+        backLabel="Voltar para a Academia de IA"
       />
 
       <PillarHeader
@@ -182,17 +183,25 @@ export default function AulaPage() {
             )}
           </div>
 
-          <button
-            onClick={() => toggle(tool.slug, aula.id)}
-            className={`shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold border transition-colors ${
-              done
-                ? "bg-sage/10 text-sage border-sage/40"
-                : "bg-white text-ink border-border hover:border-terracotta hover:text-terracotta"
-            }`}
-          >
-            {done ? <Check size={15} /> : <Circle size={15} />}
-            {done ? "Aula concluída" : "Marcar como concluída"}
-          </button>
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <AddToAgenda
+              aula={{
+                titulo: `${tool.nome} · ${aula.titulo}`,
+                url: `/metodo/pilar-1/aprenda-ia/${tool.slug}/${aula.id}`,
+              }}
+            />
+            <button
+              onClick={() => toggle(tool.slug, aula.id)}
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold border transition-colors ${
+                done
+                  ? "bg-sage/10 text-sage border-sage/40"
+                  : "bg-white text-ink border-border hover:border-terracotta hover:text-terracotta"
+              }`}
+            >
+              {done ? <Check size={15} /> : <Circle size={15} />}
+              {done ? "Aula concluída" : "Marcar como concluída"}
+            </button>
+          </div>
         </div>
 
         {aula.resumo && (

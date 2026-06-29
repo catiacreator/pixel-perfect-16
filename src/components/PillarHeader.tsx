@@ -36,78 +36,58 @@ export default function PillarHeader({
   const titleRest = parts.length > 1 ? parts.slice(1).join(" — ") : titulo;
 
   return (
-    <header className="relative overflow-hidden bg-gradient-to-br from-cream-warm via-cream-warm to-terracotta/15 border-b border-terracotta/15">
-      {/* Decorative blobs */}
-      <div aria-hidden className="pointer-events-none absolute -top-24 -right-16 w-[26rem] h-[26rem] rounded-full bg-terracotta/15 blur-3xl" />
-      <div aria-hidden className="pointer-events-none absolute -bottom-32 left-1/3 w-[22rem] h-[22rem] rounded-full bg-gold/15 blur-3xl" />
-      <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "radial-gradient(var(--color-ink) 1px, transparent 1px)", backgroundSize: "22px 22px" }} />
-
-      <div className="relative px-5 md:px-10 pt-10 md:pt-16 pb-8 md:pb-12 max-w-[1280px] mx-auto">
-      <div className="grid grid-cols-[4rem_1fr] md:grid-cols-[7rem_1fr] gap-5 md:gap-10 items-start">
-        {/* Roman numeral */}
+    <div className="px-4 md:px-10 pt-5 md:pt-7">
+      <header className="relative overflow-hidden rounded-[28px] md:rounded-[34px] text-white bg-gradient-to-br from-terracotta to-terracotta-dark max-w-[1280px] mx-auto">
+        {/* padrão de pontos */}
         <div
-          className="font-display text-[3.5rem] md:text-[6rem] leading-[0.85] text-terracotta/80 tabular-nums select-none -mt-2"
           aria-hidden
-        >
-          {roman}
-        </div>
+          className="pointer-events-none absolute inset-0 opacity-[0.09]"
+          style={{ backgroundImage: "radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)", backgroundSize: "24px 24px" }}
+        />
 
-        {/* Title block */}
-        <div className="min-w-0">
-          <p className="text-[11px] tracking-[0.28em] uppercase text-terracotta font-medium mb-3 md:mb-4">
-            {pilarLabel}
-          </p>
+        <div className="relative px-6 md:px-12 py-9 md:py-12 grid grid-cols-[3.2rem_1fr] md:grid-cols-[5.5rem_1fr] gap-5 md:gap-9 items-start">
+          {/* Numeral */}
+          <div className="font-editorial text-[3.2rem] md:text-[5.5rem] leading-[0.85] text-white/25 tabular-nums select-none -mt-1" aria-hidden>
+            {roman}
+          </div>
 
-          <h1 className="font-display uppercase text-[2rem] md:text-[3.5rem] lg:text-[4rem] leading-[0.95] tracking-[-0.015em]">
-            {titleLead && (
-              <>
-                <span className="text-ink/35">{titleLead}</span>{" "}
-              </>
-            )}
-            <span className="text-terracotta">{titleRest}</span>
-            {tituloHighlight && (
-              <>
-                {" "}
-                <span
-                  className="italic font-normal text-terracotta normal-case"
-                  style={{ fontFamily: "var(--font-editorial)" }}
-                >
-                  {tituloHighlight}
-                </span>
-                <span className="text-gold">.</span>
-              </>
-            )}
-          </h1>
+          {/* Bloco de título */}
+          <div className="min-w-0">
+            <p className="text-[11px] tracking-[0.28em] uppercase text-white/80 font-medium mb-3 md:mb-4">
+              {pilarLabel}
+            </p>
 
-          {(subtitulo || icon) && (
-            <div className="mt-6 md:mt-8 flex items-center gap-4">
-              {icon && (
-                <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-white border border-[var(--color-border)] flex items-center justify-center text-terracotta shrink-0">
-                  {icon}
-                </div>
+            <h1 className="font-editorial uppercase text-[2.2rem] md:text-[3.75rem] lg:text-[4.4rem] leading-[0.92] tracking-[-0.02em] text-white">
+              {titleLead && <><span className="text-white/55">{titleLead}</span>{" "}</>}
+              <span>{titleRest}</span>
+              {tituloHighlight && (
+                <>
+                  {" "}
+                  <span className="italic font-normal normal-case text-white/95" style={{ fontFamily: "var(--font-editorial)" }}>
+                    {tituloHighlight}
+                  </span>
+                  <span className="text-white/70">.</span>
+                </>
               )}
-              {subtitulo && (
-                <p
-                  className="text-ink/55 text-sm md:text-base italic leading-relaxed"
-                  style={{ fontFamily: "var(--font-editorial)" }}
-                >
-                  {subtitulo}
-                </p>
-              )}
-            </div>
-          )}
+            </h1>
 
-          {/* Ornament divider */}
-          <div className="mt-8 md:mt-10 flex items-center gap-3 max-w-md">
-            <span className="h-px flex-1 bg-gradient-to-r from-transparent via-terracotta/40 to-transparent" />
-            <span className="text-terracotta/70 text-xs rotate-45 inline-block">
-              ◆
-            </span>
-            <span className="h-px flex-1 bg-gradient-to-r from-transparent via-terracotta/40 to-transparent" />
+            {(subtitulo || icon) && (
+              <div className="mt-6 md:mt-8 flex items-center gap-4">
+                {icon && (
+                  <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-white/15 border border-white/25 backdrop-blur-sm flex items-center justify-center text-white shrink-0">
+                    {icon}
+                  </div>
+                )}
+                {subtitulo && (
+                  <p className="text-white/85 text-sm md:text-base italic leading-relaxed" style={{ fontFamily: "var(--font-editorial)" }}>
+                    {subtitulo}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
         </div>
-      </div>
-      </div>
-    </header>
+      </header>
+    </div>
   );
 }

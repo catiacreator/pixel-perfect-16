@@ -26,6 +26,7 @@ import { useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { extractDocMestre } from "@/lib/doc-mestre.functions";
 import { usePilar2 } from "@/lib/pilar2-hooks";
+import DocMestrePreview from "@/components/DocMestrePreview";
 import { HYDRATED_EVENT } from "@/lib/master-doc-sync";
 
 // ------------------------------------------------------------------
@@ -113,6 +114,7 @@ function padArray(arr: string[], n: number): string[] {
 
 function mergeExtracted(prev: DocState, extracted: Partial<DocState>): DocState {
   return {
+    ...prev,
     nome: extracted.nome || prev.nome,
     profissao: extracted.profissao || prev.profissao,
     tempoAtuacao: extracted.tempoAtuacao || prev.tempoAtuacao,
@@ -384,9 +386,8 @@ export default function DocMestre() {
     setDoc(EMPTY);
   };
 
-  const printPDF = () => {
-    if (typeof window !== "undefined") window.print();
-  };
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const printPDF = () => setPreviewOpen(true);
 
   // Produtos
   const addProduto = () =>
@@ -461,7 +462,7 @@ export default function DocMestre() {
   const [refineResult, setRefineResult] = useState("");
   const prompt = useMemo(() => buildRefinePrompt(doc), [doc]);
 
-  // Secção 4 — dados do método (vêm do O Seu Método, Pilar 2).
+  // Secção 4 — dados do método (vêm do Crie o seu método, Pilar 2).
   // As dores herdam do Documento Mestre quando o par ainda não foi editado.
   const paresMetodo = metodo.pares
     .map((par, i) => ({ ...par, dor: par.dor || doc.dores[i] || "" }))
@@ -714,7 +715,7 @@ export default function DocMestre() {
           />
         </section>
 
-        {/* SECÇÃO 4 — Seu Método (vem do O Seu Método, Pilar 2) */}
+        {/* SECÇÃO 4 — Seu Método (vem do Crie o seu método, Pilar 2) */}
         <section className="rounded-2xl border border-border bg-white p-5 md:p-6 mb-8 print:border-0 print:p-0 print:mb-8">
           <div className="flex items-center gap-3 mb-4">
             <span className="w-8 h-8 rounded-full bg-gold/25 text-ink/70 text-sm font-semibold flex items-center justify-center shrink-0">
@@ -726,7 +727,7 @@ export default function DocMestre() {
           <div className="flex items-center justify-between gap-3 flex-wrap rounded-xl border border-border bg-cream-warm/50 px-4 py-3 mb-6 print:hidden">
             <p className="text-sm text-muted">
               Estes campos vêm do{" "}
-              <strong className="font-semibold text-ink/70">O Seu Método</strong> (Pilar 2). Para
+              <strong className="font-semibold text-ink/70">Crie o seu método</strong> (Pilar 2). Para
               editar, abra a página do método.
             </p>
             <Link
@@ -798,12 +799,14 @@ export default function DocMestre() {
             </div>
           ) : (
             <p className="text-sm text-muted">
-              Ainda não preencheu o O Seu Método. Abra a página do método para definir nome,
+              Ainda não preencheu o Crie o seu método. Abra a página do método para definir nome,
               promessa, pilares, posicionamento e o mapa Partida → Chegada — depois aparecem aqui
               automaticamente.
             </p>
           )}
         </section>
+
+        {/* Secções Arquétipos, Tom de voz, Identidade visual e Bio vêm do Pilar 2 e aparecem só no PDF (Visualizar PDF). */}
 
         {/* Refinar com IA */}
         <div className="print:hidden rounded-2xl border border-border bg-white mb-8 overflow-hidden">
@@ -868,15 +871,15 @@ export default function DocMestre() {
 
         {/* CTA */}
         <div className="print:hidden rounded-2xl border border-terracotta bg-gradient-to-br from-white to-cream-warm/60 p-6 text-center">
-          <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">Próxima fase</p>
+          <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">Próximo passo</p>
           <p className="font-serif text-xl md:text-2xl text-ink mb-4">
-            Agora aprende a usar Inteligência Artificial
+            Crie o seu método
           </p>
           <Link
-            to="/metodo/pilar-1/aprenda-ia"
+            to="/metodo/pilar-2/metodo"
             className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-ink text-cream text-sm font-semibold hover:bg-terracotta transition-colors"
           >
-            Domina as principais IAs para o seu negócio <ArrowRight size={15} />
+            Ir para Crie o seu método <ArrowRight size={15} />
           </Link>
         </div>
       </div>
@@ -924,6 +927,10 @@ export default function DocMestre() {
             </div>
           </div>
         </div>
+      )}
+
+      {previewOpen && (
+        <DocMestrePreview doc={doc} metodo={metodo} onClose={() => setPreviewOpen(false)} />
       )}
     </Layout>
   );

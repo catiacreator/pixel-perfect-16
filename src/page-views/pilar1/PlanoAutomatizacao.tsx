@@ -19,7 +19,7 @@ import {
   INITIAL_STATE,
   loadDetetive,
   calcularRelatorio,
-  brl,
+  fmtMoeda,
 } from "@/lib/detetive-storage";
 import { gerarPlanoAutomatizacao } from "@/lib/plano.functions";
 import { TOOLS } from "@/data/aulas";
@@ -96,7 +96,7 @@ export default function PlanoAutomatizacao() {
         subtitulo="A IA olha para as suas tarefas mais caras e diz exatamente por onde começar"
       />
 
-      <div className="px-5 md:px-10 pb-16 max-w-4xl mx-auto">
+      <div className="px-5 md:px-10 pt-8 md:pt-10 pb-16 max-w-4xl mx-auto">
         {!rel.preenchido ? (
           <div className="rounded-2xl border border-dashed border-border bg-white p-8 text-center text-muted">
             Faltam dados. Preencha o Mapa do Tempo primeiro.
@@ -117,7 +117,7 @@ export default function PlanoAutomatizacao() {
                 <h2 className="font-serif text-xl text-ink mb-1">Vamos gerar o seu plano</h2>
                 <p className="text-sm text-muted">
                   A IA vai analisar as suas <span className="font-semibold text-ink">{Math.min(rel.tarefas.length, 8)}</span> tarefas
-                  mais caras (total <span className="font-semibold text-ink">{brl(rel.totalCusto)}/mês</span>) e
+                  mais caras (total <span className="font-semibold text-ink">{fmtMoeda(rel.totalCusto, state.moeda)}/mês</span>) e
                   recomendar qual ferramenta usar para cada uma.
                 </p>
               </div>
@@ -152,7 +152,7 @@ export default function PlanoAutomatizacao() {
                   <TrendingUp size={13} className="text-terracotta" /> Valor estimado
                 </div>
                 <p className="font-serif text-2xl text-ink">
-                  {brl(plano.ganhoTotalHoras * rel.horaVale)}
+                  {fmtMoeda(plano.ganhoTotalHoras * rel.horaVale, state.moeda)}
                 </p>
               </div>
             </div>

@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
+import PillarHeader from "../../components/PillarHeader";
 import PromptCard from "../../components/PromptCard";
 import SaveBar from "../../components/SaveBar";
-import { ArrowRight, ExternalLink, Wand2, Printer } from "lucide-react";
+import { ArrowRight, ExternalLink, Wand2, Printer, Copy, Check } from "lucide-react";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import { PROMPT_IDENTIDADE_VISUAL } from "@/data/prompts/pilar2-tom-visual";
 import { parseIdentidadeVisual } from "@/lib/pilar2-parsers";
@@ -14,13 +16,25 @@ function Area({
   label,
   placeholder,
   rows = 3,
+  copy = false,
 }: {
   value: string;
   onChange: (v: string) => void;
   label: string;
   placeholder?: string;
   rows?: number;
+  copy?: boolean;
 }) {
+  const [copied, setCopied] = useState(false);
+  const doCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      /* ignore */
+    }
+  };
   return (
     <div className="mb-4">
       <label className="text-xs tracking-[0.1em] uppercase text-muted mb-1.5 block">{label}</label>
@@ -31,6 +45,33 @@ function Area({
         placeholder={placeholder}
         className="w-full rounded-xl border border-border p-3 text-sm outline-none focus:border-terracotta resize-none"
       />
+      {copy && (
+        <div className="flex flex-wrap gap-2 mt-2">
+          <button
+            onClick={doCopy}
+            disabled={!value.trim()}
+            className="text-xs font-semibold px-3 py-1.5 rounded-full bg-terracotta text-cream inline-flex items-center gap-1.5 hover:bg-terracotta/90 disabled:opacity-40 transition-colors"
+          >
+            {copied ? <Check size={12} /> : <Copy size={12} />} {copied ? "Copiado" : "Copiar prompt"}
+          </button>
+          <a
+            href="https://gemini.google.com/app"
+            target="_blank"
+            rel="noreferrer"
+            className="text-xs font-semibold px-3 py-1.5 rounded-full border border-border inline-flex items-center gap-1.5 text-ink/70 hover:text-ink hover:border-terracotta transition-colors"
+          >
+            Abrir Gemini <ExternalLink size={11} />
+          </a>
+          <a
+            href="https://chat.openai.com"
+            target="_blank"
+            rel="noreferrer"
+            className="text-xs font-semibold px-3 py-1.5 rounded-full border border-border inline-flex items-center gap-1.5 text-ink/70 hover:text-ink hover:border-terracotta transition-colors"
+          >
+            Abrir ChatGPT <ExternalLink size={11} />
+          </a>
+        </div>
+      )}
     </div>
   );
 }
@@ -59,8 +100,35 @@ function Input({
   );
 }
 
+const PROMPT_KIT_FORMATADO = `A tua resposta anterior não veio no formato que eu preciso. Reescreve a análise de identidade visual EXATAMENTE neste formato, com as secções numeradas e os títulos em maiúsculas (mantém o conteúdo, só corrige o formato):
+
+1. VIBE DA MARCA
+2. PALETA (5 cores — para cada: Nome #HEX (função))
+3. TIPOGRAFIA — Título (nome + link Google Fonts)
+4. TIPOGRAFIA — Corpo (nome + link Google Fonts)
+5. TIPOGRAFIA — Manuscrita (nome + link Google Fonts)
+6. ESTILO DE IMAGEM
+7. ELEMENTOS VISUAIS
+8. ANTIPADRÕES VISUAIS
+9. PROMPT — CAPA DE CARROSSEL
+10. PROMPT — CAPA DE REELS
+11. PROMPT — IMAGEM LIFESTYLE/BASTIDOR
+
+Devolve só estas secções, numeradas, sem texto extra.`;
+
 export default function IdentidadeVisual() {
   const { state, update } = usePilar2();
+  const [copiedKit, setCopiedKit] = useState(false);
+
+  const pedirKit = async () => {
+    try {
+      await navigator.clipboard.writeText(PROMPT_KIT_FORMATADO);
+      setCopiedKit(true);
+      setTimeout(() => setCopiedKit(false), 1800);
+    } catch {
+      /* ignore */
+    }
+  };
 
   const parsear = () => {
     if (!state.identidadeVisualCola.trim()) return;
@@ -88,15 +156,14 @@ export default function IdentidadeVisual() {
         backTo="/metodo/pilar-2/identidade"
         backLabel="Voltar para Identidade de Marca"
       />
-      <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
-        <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">
-          Etapa 3.3 · Identidade Visual
-        </p>
-        <h1 className="font-serif text-3xl text-ink mb-2">Identidade Visual</h1>
-        <p className="italic text-muted mb-8">
-          Anexa até 3 imagens do Pinterest no ChatGPT e ele te devolve paleta, tipografia, elementos
-          visuais e mood — direto da sua referência.
-        </p>
+      <PillarHeader
+        numeral="✦"
+        icon={null}
+        pilarLabel="Etapa 3.3 · Identidade Visual"
+        titulo="Identidade Visual"
+        subtitulo="Anexa até 3 imagens do Pinterest no ChatGPT e ele te devolve paleta, tipografia, elementos visuais e mood — direto da sua referência."
+      />
+      <div className="px-5 md:px-10 pt-8 pb-10 max-w-4xl mx-auto">
 
         <div className="rounded-2xl border border-border bg-white p-5 mb-6">
           <ol className="text-sm text-ink space-y-2 list-decimal pl-4">
@@ -137,12 +204,23 @@ export default function IdentidadeVisual() {
             rows={8}
             placeholder="Cole as 10 seções numeradas que o ChatGPT entregou…"
           />
-          <button
-            onClick={parsear}
-            className="text-xs font-semibold text-terracotta flex items-center gap-1.5"
-          >
-            <Wand2 size={13} /> Preencher campos automaticamente
-          </button>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <button
+              onClick={parsear}
+              className="text-xs font-semibold text-terracotta flex items-center gap-1.5"
+            >
+              <Wand2 size={13} /> Preencher campos automaticamente
+            </button>
+            <button
+              onClick={pedirKit}
+              className="text-xs font-semibold px-3 py-1.5 rounded-full border border-border inline-flex items-center gap-1.5 text-ink/70 hover:text-ink hover:border-terracotta transition-colors"
+            >
+              {copiedKit ? <Check size={13} /> : <Copy size={13} />} {copiedKit ? "Copiado" : "Pedir kit formatado"}
+            </button>
+          </div>
+          <p className="text-xs text-muted mt-2">
+            Se o ChatGPT não entregou no formato esperado, clica em <strong className="text-ink/70">"Pedir kit formatado"</strong>, cola a mensagem de volta no ChatGPT e ele refaz no formato certo.
+          </p>
         </div>
 
         <div className="rounded-2xl border border-border bg-white p-5 mb-6">
@@ -196,16 +274,19 @@ export default function IdentidadeVisual() {
             label="✍️ Prompt — Capa de Carrossel"
             value={state.promptCarrossel}
             onChange={(v) => update({ promptCarrossel: v })}
+            copy
           />
           <Area
             label="🎬 Prompt — Capa de Reels"
             value={state.promptReels}
             onChange={(v) => update({ promptReels: v })}
+            copy
           />
           <Area
             label="📸 Prompt — Imagem Lifestyle/Bastidor"
             value={state.promptLifestyle}
             onChange={(v) => update({ promptLifestyle: v })}
+            copy
           />
           <SaveBar
             onSave={() => {}}

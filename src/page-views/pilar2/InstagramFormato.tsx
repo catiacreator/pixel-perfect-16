@@ -1,6 +1,7 @@
 import { Link, useParams, Navigate } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
+import PillarHeader from "../../components/PillarHeader";
 import { PlayCircle, FileText, Lock, Download, ArrowLeft } from "lucide-react";
 
 type FormatoData = {
@@ -64,11 +65,15 @@ export default function InstagramFormato() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar={2} pilarLabel="Criar Autoridade" backTo="/metodo/pilar-2/redes-sociais/instagram" backLabel="Voltar para Instagram" />
-      <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
-        <h1 className="font-serif text-3xl text-ink mb-2">{formato.titulo}</h1>
-        <p className="italic text-muted mb-6">{formato.subtitulo}</p>
-
+      <PilarBreadcrumb pilar="redes" pilarLabel="Criando para as Redes Sociais" backTo="/metodo/pilar-2/redes-sociais/instagram" backLabel="Voltar para Instagram" />
+      <PillarHeader
+        numeral="✦"
+        icon={null}
+        pilarLabel="Criando para as Redes Sociais"
+        titulo={formato.titulo}
+        subtitulo={formato.subtitulo}
+      />
+      <div className="px-5 md:px-10 pt-8 pb-10 max-w-4xl mx-auto">
         {formato.dependencia && (
           <div className="rounded-xl border border-gold bg-white p-4 mb-6 flex items-start gap-2">
             <Lock size={15} className="text-gold flex-shrink-0 mt-0.5" />

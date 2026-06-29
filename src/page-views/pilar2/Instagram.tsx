@@ -1,6 +1,7 @@
 import { Link } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
+import PillarHeader from "../../components/PillarHeader";
 
 const FORMATOS = [
   { slug: "posts-unicos", titulo: "Posts Únicos", desc: "Imagem única que comunica uma ideia forte de uma vez só." },
@@ -12,10 +13,15 @@ const FORMATOS = [
 export default function Instagram() {
   return (
     <Layout>
-      <PilarBreadcrumb pilar={2} pilarLabel="Criar Autoridade" backTo="/metodo/pilar-2/redes-sociais" backLabel="Voltar para Redes Sociais" />
-      <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
-        <h1 className="font-serif text-3xl text-ink mb-2">Instagram</h1>
-        <p className="italic text-muted mb-6">Trabalhe os formatos do Instagram.</p>
+      <PilarBreadcrumb pilar="redes" pilarLabel="Criando para as Redes Sociais" backTo="/metodo/pilar-2/redes-sociais" backLabel="Voltar para Redes Sociais" />
+      <PillarHeader
+        numeral="✦"
+        icon={null}
+        pilarLabel="Criando para as Redes Sociais"
+        titulo="Instagram"
+        subtitulo="Trabalhe os formatos do Instagram."
+      />
+      <div className="px-5 md:px-10 pt-8 pb-10 max-w-4xl mx-auto">
 
         <div className="flex items-center justify-between mb-4">
           <p className="font-serif text-lg text-ink">Formatos</p>

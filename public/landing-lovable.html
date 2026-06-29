@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Landing Pages no Lovable — Guia para quem começa do zero</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,900&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&family=Playfair+Display:wght@600;800&family=Poppins:wght@400;600;700&family=Lora:wght@400;600&family=Bebas+Neue&family=Montserrat:wght@400;600;800&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#FBF7F0;
+    --ink:#1A1714;
+    --ink-soft:#5A524A;
+    --coral:#FF5C39;
+    --coral-deep:#D9431F;
+    --sky:#2E5EAA;
+    --mint:#0E8C6A;
+    --line:#E2D9CC;
+    --card:#FFFFFF;
+    --shadow:0 1px 0 rgba(26,23,20,.04), 0 12px 28px -16px rgba(26,23,20,.18);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',system-ui,sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px}
+
+  /* ---------- HERO ---------- */
+  header.hero{
+    position:relative;
+    padding:96px 0 64px;
+    overflow:hidden;
+    border-bottom:2px solid var(--ink);
+  }
+  .hero-grid{
+    position:absolute;inset:0;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:32px 32px;
+    opacity:.5;
+    mask-image:linear-gradient(180deg,transparent,#000 30%,#000 70%,transparent);
+  }
+  .hero-inner{position:relative}
+  .eyebrow{
+    font-family:'Space Mono',monospace;
+    font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--coral-deep);
+    display:inline-block;
+    border:1.5px solid var(--coral);
+    padding:6px 12px;border-radius:999px;
+    background:var(--paper);
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:900;
+    font-size:clamp(2.6rem,7vw,4.6rem);
+    line-height:.98;
+    letter-spacing:-.02em;
+    margin:24px 0 18px;
+  }
+  h1 .pop{color:var(--coral);font-style:italic}
+  .lede{font-size:1.18rem;color:var(--ink-soft);max-width:560px}
+  .hero-note{
+    margin-top:28px;
+    font-family:'Space Mono',monospace;
+    font-size:.82rem;color:var(--ink-soft);
+    display:flex;gap:8px;align-items:center;
+  }
+  .hero-note b{color:var(--ink)}
+
+  /* ---------- SECTION SHELL ---------- */
+  section{padding:64px 0;border-bottom:1px solid var(--line)}
+  .sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:36px}
+  .sec-num{
+    font-family:'Space Mono',monospace;font-weight:700;
+    font-size:.9rem;color:var(--coral-deep);
+    border:1.5px solid var(--coral);border-radius:8px;
+    padding:4px 9px;flex-shrink:0;
+  }
+  h2{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(1.7rem,4vw,2.4rem);letter-spacing:-.01em;line-height:1.08}
+  .sec-sub{color:var(--ink-soft);margin-top:8px;font-size:1.02rem}
+
+  /* ---------- UX CARDS ---------- */
+  .ux-list{display:grid;gap:14px}
+  .ux{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    box-shadow:var(--shadow);overflow:hidden;
+  }
+  .ux summary{
+    list-style:none;cursor:pointer;
+    padding:20px 22px;display:flex;gap:16px;align-items:flex-start;
+    font-weight:600;font-size:1.08rem;
+  }
+  .ux summary::-webkit-details-marker{display:none}
+  .ux .badge{
+    font-family:'Space Mono',monospace;font-weight:700;font-size:.8rem;
+    background:var(--ink);color:var(--paper);border-radius:7px;
+    width:30px;height:30px;display:grid;place-items:center;flex-shrink:0;
+  }
+  .ux summary .chev{margin-left:auto;color:var(--ink-soft);transition:transform .25s;flex-shrink:0;font-family:'Space Mono',monospace}
+  .ux[open] summary .chev{transform:rotate(45deg)}
+  .ux .body{padding:0 22px 22px 68px;color:var(--ink-soft)}
+  .ux .body p{margin-bottom:10px}
+  .ux .body .ex{
+    background:var(--paper);border-left:3px solid var(--mint);
+    padding:10px 14px;border-radius:0 8px 8px 0;font-size:.95rem;color:var(--ink);
+  }
+  .ux .body .ex b{color:var(--mint)}
+
+  /* ---------- UI GLOSSARY ---------- */
+  .ui-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+  .ui-card{
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:18px;box-shadow:var(--shadow);
+  }
+  .ui-card .term{font-family:'Fraunces',serif;font-weight:600;font-size:1.15rem;margin-bottom:4px}
+  .ui-card .pt{font-family:'Space Mono',monospace;font-size:.74rem;color:var(--coral-deep);text-transform:uppercase;letter-spacing:.08em;display:block;margin-bottom:8px}
+  .ui-card p{font-size:.92rem;color:var(--ink-soft)}
+
+  /* ---------- PROMPTS ---------- */
+  .prompt{
+    background:var(--ink);color:var(--paper);
+    border-radius:14px;padding:0;margin-bottom:16px;overflow:hidden;
+    box-shadow:var(--shadow);
+  }
+  .prompt .top{
+    display:flex;align-items:center;gap:10px;
+    padding:14px 18px;border-bottom:1px solid rgba(251,247,240,.14);
+  }
+  .prompt .tag{
+    font-family:'Space Mono',monospace;font-size:.72rem;text-transform:uppercase;
+    letter-spacing:.1em;color:var(--coral);
+  }
+  .prompt .what{font-size:.86rem;color:rgba(251,247,240,.7)}
+  .prompt .copy{
+    margin-left:auto;background:transparent;color:var(--paper);
+    border:1px solid rgba(251,247,240,.3);border-radius:7px;
+    font-family:'Space Mono',monospace;font-size:.74rem;
+    padding:5px 11px;cursor:pointer;transition:.18s;
+  }
+  .prompt .copy:hover{background:var(--coral);border-color:var(--coral)}
+  .prompt .copy.done{background:var(--mint);border-color:var(--mint)}
+  .prompt pre{
+    font-family:'Space Mono',monospace;font-size:.86rem;line-height:1.7;
+    padding:18px;white-space:pre-wrap;word-break:break-word;color:#F0E9DC;
+  }
+
+  /* ---------- WIREFRAME EXAMPLE ---------- */
+  .frame{
+    border:2px solid var(--ink);border-radius:16px;overflow:hidden;
+    box-shadow:var(--shadow);background:var(--card);
+  }
+  .frame-bar{
+    background:var(--ink);padding:10px 14px;display:flex;gap:7px;align-items:center;
+  }
+  .frame-bar i{width:11px;height:11px;border-radius:50%;background:rgba(251,247,240,.4);display:block}
+  .frame-bar .url{
+    margin-left:12px;font-family:'Space Mono',monospace;font-size:.74rem;
+    color:rgba(251,247,240,.7);
+  }
+  .block{padding:20px;border-bottom:1px dashed var(--line);position:relative}
+  .block:last-child{border-bottom:none}
+  .block .lbl{
+    position:absolute;top:10px;right:12px;
+    font-family:'Space Mono',monospace;font-size:.66rem;text-transform:uppercase;
+    letter-spacing:.08em;color:var(--coral-deep);
+    background:var(--paper);padding:2px 7px;border-radius:5px;border:1px solid var(--line);
+  }
+  .b-hero{text-align:center;padding:40px 24px;background:linear-gradient(160deg,#FFF3EE,#FBF7F0)}
+  .b-hero .h{font-family:'Fraunces',serif;font-weight:900;font-size:1.7rem;line-height:1.05;margin-bottom:10px}
+  .b-hero .s{color:var(--ink-soft);font-size:.95rem;max-width:380px;margin:0 auto 18px}
+  .cta{
+    display:inline-block;background:var(--coral);color:#fff;font-weight:600;
+    padding:12px 26px;border-radius:999px;text-decoration:none;font-size:.95rem;
+    box-shadow:0 8px 18px -8px var(--coral);
+  }
+  .bullets{display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+  .bullet{flex:1;min-width:140px;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:14px;font-size:.86rem}
+  .bullet .ic{font-size:1.3rem;display:block;margin-bottom:6px}
+  .b-form{background:var(--paper)}
+  .field{background:#fff;border:1px solid var(--line);border-radius:8px;padding:11px 13px;font-size:.85rem;color:var(--ink-soft);margin-bottom:9px}
+  .gated{text-align:center;font-family:'Space Mono',monospace;font-size:.74rem;color:var(--mint);margin-top:6px}
+
+  /* ---------- ANIMATIONS DEMO ---------- */
+  .anim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+  .anim-card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:0;overflow:hidden;box-shadow:var(--shadow);
+  }
+  .anim-stage{
+    height:120px;display:grid;place-items:center;background:linear-gradient(160deg,#FFF3EE,#FBF7F0);
+    border-bottom:1px solid var(--line);position:relative;overflow:hidden;cursor:pointer;
+  }
+  .anim-box{width:54px;height:54px;border-radius:14px;background:var(--coral);box-shadow:0 10px 20px -8px var(--coral)}
+  .anim-stage .hint{position:absolute;bottom:8px;font-family:'Space Mono',monospace;font-size:.66rem;color:var(--ink-soft)}
+  .anim-meta{padding:14px 16px}
+  .anim-meta .nm{font-family:'Fraunces',serif;font-weight:600;font-size:1.05rem}
+  .anim-meta .ds{font-size:.86rem;color:var(--ink-soft);margin:3px 0 8px}
+  .anim-meta code{font-family:'Space Mono',monospace;font-size:.74rem;background:var(--ink);color:#F0E9DC;padding:3px 7px;border-radius:5px;display:inline-block;word-break:break-word}
+  .play .anim-box{animation-duration:.7s;animation-fill-mode:both}
+  .play.fade .anim-box{animation-name:aFade}
+  .play.slide .anim-box{animation-name:aSlide}
+  .play.pop .anim-box{animation-name:aPop}
+  .play.float .anim-box{animation-name:aFloat;animation-duration:2s;animation-iteration-count:infinite;animation-direction:alternate}
+  .play.spin .anim-box{animation-name:aSpin;animation-duration:1.1s}
+  .play.pulse .anim-box{animation-name:aPulse;animation-duration:1.2s;animation-iteration-count:infinite}
+  @keyframes aFade{from{opacity:0}to{opacity:1}}
+  @keyframes aSlide{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+  @keyframes aPop{0%{transform:scale(.4);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+  @keyframes aFloat{from{transform:translateY(-8px)}to{transform:translateY(8px)}}
+  @keyframes aSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+  @keyframes aPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+
+  /* ---------- COLOR PICKER ---------- */
+  .tool{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:24px;box-shadow:var(--shadow);
+  }
+  .swatches{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:20px}
+  .sw{
+    width:46px;height:46px;border-radius:10px;cursor:pointer;border:2px solid transparent;
+    position:relative;transition:transform .15s;
+  }
+  .sw:hover{transform:scale(1.08)}
+  .sw.active{border-color:var(--ink);box-shadow:0 0 0 3px var(--paper),0 0 0 5px var(--ink)}
+  .color-readout{display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+  .color-readout .chip{width:60px;height:60px;border-radius:12px;border:1px solid var(--line);flex-shrink:0}
+  .color-readout .info{flex:1;min-width:200px}
+  .color-readout .hex{font-family:'Space Mono',monospace;font-weight:700;font-size:1.2rem}
+  .color-readout .nm{color:var(--ink-soft);font-size:.9rem}
+  .mini-prompt{
+    margin-top:16px;background:var(--ink);color:#F0E9DC;border-radius:10px;
+    padding:13px 15px;font-family:'Space Mono',monospace;font-size:.82rem;line-height:1.6;
+    display:flex;gap:12px;align-items:flex-start;
+  }
+  .mini-prompt .copy2{margin-left:auto;flex-shrink:0;background:transparent;color:#F0E9DC;border:1px solid rgba(251,247,240,.3);border-radius:6px;font-family:'Space Mono',monospace;font-size:.72rem;padding:4px 9px;cursor:pointer}
+  .mini-prompt .copy2:hover{background:var(--coral);border-color:var(--coral)}
+  .mini-prompt .copy2.done{background:var(--mint);border-color:var(--mint)}
+
+  /* ---------- FONT PICKER ---------- */
+  .font-list{display:grid;gap:12px}
+  .font-row{
+    background:var(--card);border:1px solid var(--line);border-radius:12px;
+    padding:16px 18px;box-shadow:var(--shadow);display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  }
+  .font-sample{flex:1;min-width:200px;font-size:1.6rem;line-height:1.1;color:var(--ink)}
+  .font-tag{display:flex;flex-direction:column;gap:3px;min-width:150px}
+  .font-tag .fn{font-family:'Space Mono',monospace;font-weight:700;font-size:.92rem;color:var(--ink)}
+  .font-tag .fk{font-size:.78rem;color:var(--ink-soft)}
+  .font-tag .fu{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--coral-deep);text-transform:uppercase;letter-spacing:.06em}
+
+  /* ---------- FONT SIZE SCALE ---------- */
+  .scale{display:grid;gap:4px}
+  .scale-row{
+    display:flex;align-items:baseline;gap:16px;
+    border-bottom:1px dashed var(--line);padding:10px 0;
+  }
+  .scale-row .px{font-family:'Space Mono',monospace;font-weight:700;color:var(--coral-deep);width:64px;flex-shrink:0;font-size:.85rem}
+  .scale-row .txt{color:var(--ink);line-height:1.1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .scale-row .use{margin-left:auto;font-size:.78rem;color:var(--ink-soft);flex-shrink:0;font-family:'Space Mono',monospace}
+
+  /* ---------- PIXEL EXPLAINER ---------- */
+  .px-demo{display:grid;gap:20px}
+  .px-track{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:var(--shadow)}
+  .px-track label{font-weight:600;display:flex;justify-content:space-between;margin-bottom:12px}
+  .px-track label b{font-family:'Space Mono',monospace;color:var(--coral-deep)}
+  .px-track input[type=range]{width:100%;accent-color:var(--coral);height:6px}
+  .px-preview{margin-top:18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+  #pxBox{background:var(--coral);border-radius:14px;transition:width .1s,height .1s;flex-shrink:0;box-shadow:0 10px 22px -10px var(--coral)}
+  .px-preview .ruler{font-family:'Space Mono',monospace;font-size:.82rem;color:var(--ink-soft)}
+  .px-facts{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+  .px-fact{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;box-shadow:var(--shadow)}
+  .px-fact .pf{font-family:'Space Mono',monospace;font-weight:700;color:var(--coral-deep);font-size:.9rem;margin-bottom:5px}
+  .px-fact p{font-size:.88rem;color:var(--ink-soft)}
+
+  /* ---------- CHECKLIST ---------- */
+  .check{display:grid;gap:10px}
+  .check label{
+    display:flex;gap:13px;align-items:flex-start;
+    background:var(--card);border:1px solid var(--line);border-radius:11px;
+    padding:15px 18px;cursor:pointer;transition:.15s;box-shadow:var(--shadow);
+  }
+  .check label:hover{border-color:var(--coral)}
+  .check input{appearance:none;width:22px;height:22px;border:2px solid var(--ink);border-radius:6px;flex-shrink:0;margin-top:1px;cursor:pointer;position:relative;transition:.15s}
+  .check input:checked{background:var(--mint);border-color:var(--mint)}
+  .check input:checked::after{content:"✓";position:absolute;color:#fff;font-size:14px;font-weight:700;inset:0;display:grid;place-items:center}
+  .check label span{font-size:.98rem}
+  .check input:checked + span{color:var(--ink-soft);text-decoration:line-through}
+  .progress{
+    margin-top:20px;font-family:'Space Mono',monospace;font-size:.85rem;
+    color:var(--ink-soft);display:flex;align-items:center;gap:12px;
+  }
+  .bar{flex:1;height:8px;background:var(--line);border-radius:999px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--coral);transition:width .35s ease}
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:56px 0 80px;text-align:center}
+  footer .mark{font-family:'Fraunces',serif;font-style:italic;font-size:1.5rem;font-weight:600}
+  footer p{color:var(--ink-soft);margin-top:8px;font-size:.95rem}
+
+  @media (max-width:600px){
+    .ux .body{padding-left:22px}
+    section{padding:48px 0}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+  :focus-visible{outline:3px solid var(--sky);outline-offset:2px;border-radius:4px}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-grid" aria-hidden="true"></div>
+  <div class="wrap hero-inner">
+    <span class="eyebrow">Guia prático · zero experiência</span>
+    <h1>Landing pages no Lovable<br><span class="pop">sem saber nada</span> de design.</h1>
+    <p class="lede">Aprende os princípios de UX que importam, conhece os elementos de UI pelos nomes certos, e leva prompts prontos para pedir ao Lovable exatamente o que precisas.</p>
+    <div class="hero-note">
+      <span>↓</span><span>Lê de cima a baixo, ou salta direto para os <b>prompts</b>.</span>
+    </div>
+  </div>
+</header>
+
+<!-- 1. O QUE É -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">00</span>
+      <div>
+        <h2>Primeiro: o que é uma landing page?</h2>
+        <p class="sec-sub">Uma página com <b>um único objetivo</b>. Não é um site. É uma porta.</p>
+      </div>
+    </div>
+    <p style="color:var(--ink-soft);max-width:640px;font-size:1.05rem">
+      Um site tem menu, várias páginas e deixa a pessoa passear. Uma landing page faz o contrário: tira tudo o que distrai e guia a pessoa para <b style="color:var(--ink)">uma só ação</b> — subscrever, comprar, inscrever-se. Se um elemento não ajuda a chegar a essa ação, não pertence à página. Guarda esta ideia: vais usá-la em todas as decisões abaixo.
+    </p>
+  </div>
+</section>
+
+<!-- 2. PRINCÍPIOS UX -->
+<section id="ux">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <div>
+        <h2>7 princípios de UX, em português simples</h2>
+        <p class="sec-sub">UX = experiência de quem usa. Clica em cada um para abrir.</p>
+      </div>
+    </div>
+
+    <div class="ux-list">
+      <details class="ux" open>
+        <summary><span class="badge">1</span> Um objetivo, um botão <span class="chev">+</span></summary>
+        <div class="body">
+          <p>A página deve ter <b>uma ação principal</b> e repeti-la quando faz sentido. Vários botões a competir confundem e ninguém clica.</p>
+          <div class="ex"><b>Faz assim:</b> decide a ação (ex.: "Inscrever no workshop") antes de escrever qualquer texto. Tudo na página serve esse botão.</div>
+        </div>
+      </details>
+
+      <details class="ux">
+        <summary><span class="badge">2</span> A pessoa decide em 5 segundos <span class="chev">+</span></summary>
+        <div class="body">
+          <p>No topo, sem rolar, tem de ficar claro: <b>o que é</b>, <b>para quem</b> e <b>o que ganho</b>. Se isso não estiver visível logo, a pessoa sai.</p>
+          <div class="ex"><b>Teste rápido:</b> mostra o topo a alguém durante 5 segundos. Se não souber dizer o que ofereces, reescreve o título.</div>
+        </div>
+      </details>
+
+      <details class="ux">
+        <summary><span class="badge">3</span> Hierarquia visual: o olho segue o tamanho <span class="chev">+</span></summary>
+        <div class="body">
+          <p>O que é mais importante deve ser <b>maior, mais escuro ou mais colorido</b>. O título grande, o subtítulo médio, o resto pequeno. É assim que se guia o olhar sem a pessoa pensar.</p>
+          <div class="ex"><b>Regra prática:</b> no máximo um elemento "grita" por secção. Se tudo grita, nada se ouve.</div>
+        </div>
+      </details>
+
+      <details class="ux">
+        <summary><span class="badge">4</span> Espaço em branco é teu amigo <span class="chev">+</span></summary>
+        <div class="body">
+          <p>O espaço vazio à volta dos elementos não é desperdício — dá descanso aos olhos e faz o que importa <b>destacar-se</b>. Páginas apinhadas parecem amadoras e cansam.</p>
+          <div class="ex"><b>Faz assim:</b> pede "mais respiro entre as secções" ao Lovable quando algo parecer apertado.</div>
+        </div>
+      </details>
+
+      <details class="ux">
+        <summary><span class="badge">5</span> Consistência tranquiliza <span class="chev">+</span></summary>
+        <div class="body">
+          <p>Mesmas cores, mesmos cantos arredondados, mesmo estilo de botão em toda a página. A repetição faz a pessoa sentir que está num sítio sério e cuidado.</p>
+          <div class="ex"><b>Faz assim:</b> escolhe 1 cor de destaque + preto/cinza para texto. Resiste à tentação de juntar 4 cores.</div>
+        </div>
+      </details>
+
+      <details class="ux">
+        <summary><span class="badge">6</span> Telemóvel primeiro <span class="chev">+</span></summary>
+        <div class="body">
+          <p>A maioria vai abrir a tua página no telemóvel. Textos curtos, botões grandes (fáceis de tocar com o dedo) e nada de imagens minúsculas com letra pequena.</p>
+          <div class="ex"><b>Faz assim:</b> vê sempre a pré-visualização do Lovable em modo telemóvel antes de publicar.</div>
+        </div>
+      </details>
+
+      <details class="ux">
+        <summary><span class="badge">7</span> Reduz o atrito do formulário <span class="chev">+</span></summary>
+        <div class="body">
+          <p>Cada campo que pedes faz alguém desistir. Pede só o <b>essencial</b>. Para captar leads, normalmente chega nome + email (ou WhatsApp).</p>
+          <div class="ex"><b>Faz assim:</b> se não vais usar o dado já, não o peças. Menos campos = mais inscrições.</div>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- 3. GLOSSÁRIO UI -->
+<section id="ui">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <div>
+        <h2>Os elementos de UI — sabe o nome, pede certo</h2>
+        <p class="sec-sub">UI = a parte visível. Saber o nome de cada peça faz o Lovable entender-te à primeira.</p>
+      </div>
+    </div>
+
+    <div class="ui-grid">
+      <div class="ui-card"><span class="pt">Topo</span><div class="term">Hero</div><p>A primeira secção, no topo. Título grande, frase de apoio e o botão principal. É o que a pessoa vê sem rolar.</p></div>
+      <div class="ui-card"><span class="pt">Título grande</span><div class="term">Headline</div><p>A frase principal que diz o que ofereces. Curta, clara, virada para o benefício.</p></div>
+      <div class="ui-card"><span class="pt">Subtítulo</span><div class="term">Subheadline</div><p>Uma linha abaixo do headline que explica melhor ou acrescenta o "para quem".</p></div>
+      <div class="ui-card"><span class="pt">Botão de ação</span><div class="term">CTA</div><p>"Call to action". O botão que faz a pessoa agir: "Quero inscrever-me". Deve saltar à vista.</p></div>
+      <div class="ui-card"><span class="pt">Barra de topo</span><div class="term">Navbar</div><p>A barra fininha no topo com logo e talvez um link. Numa landing page, mantém-na mínima.</p></div>
+      <div class="ui-card"><span class="pt">Secção</span><div class="term">Section</div><p>Cada bloco horizontal da página. Pensa na página como uma pilha de secções empilhadas.</p></div>
+      <div class="ui-card"><span class="pt">Cartão</span><div class="term">Card</div><p>Uma caixa com cantos arredondados que agrupa informação (ex.: um benefício, um depoimento).</p></div>
+      <div class="ui-card"><span class="pt">Campo</span><div class="term">Input field</div><p>A caixinha onde a pessoa escreve (nome, email). Cada campo é um "input".</p></div>
+      <div class="ui-card"><span class="pt">Formulário</span><div class="term">Form</div><p>O conjunto de campos + botão de envio. É onde captas os contactos.</p></div>
+      <div class="ui-card"><span class="pt">Prova social</span><div class="term">Testimonials</div><p>Depoimentos, números ou logos que mostram que outros confiam em ti.</p></div>
+      <div class="ui-card"><span class="pt">Perguntas</span><div class="term">FAQ</div><p>Lista de perguntas frequentes que tira dúvidas e objeções antes da inscrição.</p></div>
+      <div class="ui-card"><span class="pt">Rodapé</span><div class="term">Footer</div><p>A faixa no fundo com contactos, links legais e redes sociais.</p></div>
+      <div class="ui-card"><span class="pt">Menu sanduíche</span><div class="term">Hamburger menu</div><p>O ícone de 3 traços (☰) no telemóvel que abre o menu. Pede-o quando a navbar não cabe.</p></div>
+      <div class="ui-card"><span class="pt">Imagem de fundo</span><div class="term">Background / Hero image</div><p>A imagem grande atrás do texto do topo. Pede sempre que o texto continue legível por cima.</p></div>
+      <div class="ui-card"><span class="pt">Ícone</span><div class="term">Icon</div><p>Pequeno símbolo (⚡ 📱 ✓) que acompanha um título e ajuda a ler de relance.</p></div>
+      <div class="ui-card"><span class="pt">Distintivo</span><div class="term">Badge / Pill</div><p>Etiqueta arredondada pequena tipo "Novo" ou "Vagas limitadas". Cria urgência ou contexto.</p></div>
+      <div class="ui-card"><span class="pt">Acordeão</span><div class="term">Accordion</div><p>Lista que abre e fecha ao clicar. Perfeito para FAQ sem ocupar espaço.</p></div>
+      <div class="ui-card"><span class="pt">Janela flutuante</span><div class="term">Modal / Popup</div><p>Caixa que aparece por cima da página. Útil para captar email à saída, mas usa com moderação.</p></div>
+      <div class="ui-card"><span class="pt">Barra fixa</span><div class="term">Sticky bar</div><p>Barra que fica colada ao topo ou fundo enquanto rolas. Boa para manter o CTA sempre visível.</p></div>
+      <div class="ui-card"><span class="pt">Linha divisória</span><div class="term">Divider</div><p>Linha fina que separa secções. Ajuda a organizar sem adicionar peso visual.</p></div>
+      <div class="ui-card"><span class="pt">Contagem decrescente</span><div class="term">Countdown</div><p>Relógio a contar até ao fecho das inscrições. Cria urgência real.</p></div>
+      <div class="ui-card"><span class="pt">Texto de apoio</span><div class="term">Microcopy</div><p>Frases pequenas junto a botões/campos ("Sem spam, prometido"). Tiram medos de última hora.</p></div>
+      <div class="ui-card"><span class="pt">Galeria</span><div class="term">Carousel / Slider</div><p>Imagens que deslizam de lado. Bom para mostrar exemplos, mas no telemóvel mantém simples.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. PROMPTS -->
+<section id="prompts">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <div>
+        <h2>Prompts prontos para o Lovable</h2>
+        <p class="sec-sub">Copia, substitui o que está [entre parênteses] pelo teu, e cola no Lovable.</p>
+      </div>
+    </div>
+
+    <div class="prompt">
+      <div class="top"><span class="tag">Prompt 1</span><span class="what">Criar a página base</span><button class="copy">Copiar</button></div>
+      <pre>Cria uma landing page de uma única coluna para captar inscrições no workshop "[nome do workshop]".
+Objetivo único da página: levar a pessoa a deixar o nome e o email/WhatsApp.
+Estilo: limpo, moderno, com muito espaço em branco e cantos arredondados.
+Cor de destaque: [a tua cor]. Texto em tons de cinza escuro.
+Otimiza para telemóvel.
+Idioma: português de Portugal.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="top"><span class="tag">Prompt 2</span><span class="what">A secção Hero</span><button class="copy">Copiar</button></div>
+      <pre>No topo, cria uma secção hero com:
+- Headline grande: "[promessa principal em 6-8 palavras]"
+- Subheadline: "[para quem é + o que ganham]"
+- Um botão CTA bem visível com o texto "[Quero inscrever-me]" que leva ao formulário.
+Mantém a navbar mínima, só com o meu logo.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="top"><span class="tag">Prompt 3</span><span class="what">Benefícios e prova social</span><button class="copy">Copiar</button></div>
+      <pre>Abaixo do hero, adiciona uma secção com 3 cards lado a lado, cada um com um ícone, um título curto e uma frase. Conteúdo:
+1. [benefício 1]
+2. [benefício 2]
+3. [benefício 3]
+Depois, uma secção de testemunhos com 2 depoimentos curtos.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="top"><span class="tag">Prompt 4</span><span class="what">Formulário com link bloqueado</span><button class="copy">Copiar</button></div>
+      <pre>Cria um formulário simples com apenas 2 campos: Nome e Email (ou WhatsApp).
+Depois de a pessoa submeter, mostra uma mensagem de sucesso e revela o link do grupo: [o teu link].
+O link só deve aparecer depois do envio do formulário, nunca antes.</pre>
+    </div>
+
+    <div class="prompt">
+      <div class="top"><span class="tag">Prompt 5</span><span class="what">Ajustes finos (quando algo não está bem)</span><button class="copy">Copiar</button></div>
+      <pre>Ajusta a página:
+- Dá mais respiro entre as secções.
+- Aumenta o botão CTA e torna-o mais destacado.
+- Verifica que tudo fica bem alinhado no telemóvel.
+- Mantém só 1 cor de destaque em toda a página.</pre>
+    </div>
+  </div>
+</section>
+
+<!-- 5. EXEMPLO MONTADO -->
+<section id="exemplo">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <div>
+        <h2>Exemplo montado, peça a peça</h2>
+        <p class="sec-sub">É assim que as peças se encaixam numa landing page real. As etiquetas mostram o nome de cada elemento.</p>
+      </div>
+    </div>
+
+    <div class="frame">
+      <div class="frame-bar"><i></i><i></i><i></i><span class="url">conteudocomia.pt</span></div>
+
+      <div class="block b-hero">
+        <span class="lbl">Hero</span>
+        <div class="h">Cria conteúdo no Instagram com IA — sem perder horas</div>
+        <div class="s">Workshop prático para criadoras que querem usar ChatGPT, Claude e NotebookLM no dia a dia.</div>
+        <a class="cta" href="#exemplo" onclick="return false">Quero inscrever-me</a>
+      </div>
+
+      <div class="block">
+        <span class="lbl">Cards · Benefícios</span>
+        <div class="bullets">
+          <div class="bullet"><span class="ic">⚡</span>Posts em minutos, não em horas</div>
+          <div class="bullet"><span class="ic">🧠</span>Ideias que não secam</div>
+          <div class="bullet"><span class="ic">📱</span>Aplicas já no teu Instagram</div>
+        </div>
+      </div>
+
+      <div class="block">
+        <span class="lbl">Testimonials</span>
+        <div class="bullet" style="min-width:100%">"Em duas semanas tripliquei os meus posts. Mudou a minha rotina." — Ana M.</div>
+      </div>
+
+      <div class="block b-form">
+        <span class="lbl">Form</span>
+        <div class="field">Nome</div>
+        <div class="field">Email ou WhatsApp</div>
+        <a class="cta" href="#exemplo" onclick="return false" style="width:100%;text-align:center">Inscrever no workshop</a>
+        <div class="gated">🔒 O link do grupo aparece aqui depois de te inscreveres</div>
+      </div>
+
+      <div class="block" style="text-align:center;background:var(--ink);color:rgba(251,247,240,.6);font-size:.8rem;font-family:'Space Mono',monospace">
+        <span class="lbl">Footer</span>
+        © Conteúdo com IA · contacto · política de privacidade
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. ANIMAÇÕES -->
+<section id="animacoes">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <div>
+        <h2>Animações — passa o rato para ver</h2>
+        <p class="sec-sub">Conhece o nome de cada movimento. Clica numa caixa para repetir. Por baixo está o que dizer ao Lovable.</p>
+      </div>
+    </div>
+
+    <div class="anim-grid" id="animGrid">
+      <div class="anim-card" data-anim="fade">
+        <div class="anim-stage"><div class="anim-box"></div><span class="hint">clica para repetir</span></div>
+        <div class="anim-meta"><div class="nm">Fade in</div><div class="ds">Aparece suavemente, do invisível ao visível.</div><code>"faz a secção aparecer com fade in"</code></div>
+      </div>
+      <div class="anim-card" data-anim="slide">
+        <div class="anim-stage"><div class="anim-box"></div><span class="hint">clica para repetir</span></div>
+        <div class="anim-meta"><div class="nm">Slide up</div><div class="ds">Desliza de baixo para cima ao entrar.</div><code>"os elementos sobem ao entrar (slide up)"</code></div>
+      </div>
+      <div class="anim-card" data-anim="pop">
+        <div class="anim-stage"><div class="anim-box"></div><span class="hint">clica para repetir</span></div>
+        <div class="anim-meta"><div class="nm">Pop / Scale</div><div class="ds">Cresce do pequeno com um saltinho.</div><code>"o botão aparece com efeito pop"</code></div>
+      </div>
+      <div class="anim-card" data-anim="float">
+        <div class="anim-stage"><div class="anim-box"></div><span class="hint">clica para repetir</span></div>
+        <div class="anim-meta"><div class="nm">Float</div><div class="ds">Flutua de cima para baixo, em loop suave.</div><code>"deixa o ícone a flutuar suavemente"</code></div>
+      </div>
+      <div class="anim-card" data-anim="pulse">
+        <div class="anim-stage"><div class="anim-box"></div><span class="hint">clica para repetir</span></div>
+        <div class="anim-meta"><div class="nm">Pulse</div><div class="ds">Pulsa de tamanho para chamar atenção.</div><code>"o CTA pulsa de leve para se destacar"</code></div>
+      </div>
+      <div class="anim-card" data-anim="spin">
+        <div class="anim-stage"><div class="anim-box"></div><span class="hint">clica para repetir</span></div>
+        <div class="anim-meta"><div class="nm">Spin</div><div class="ds">Roda 360°. Bom para ícones de carregar.</div><code>"o ícone de loading roda (spin)"</code></div>
+      </div>
+    </div>
+
+    <p style="color:var(--ink-soft);margin-top:22px;font-size:.95rem;max-width:620px">
+      <b style="color:var(--ink)">Regra de ouro:</b> animação serve para guiar o olhar, não para encher. Uma entrada suave por secção e um botão que reage ao toque chegam. Em excesso, parece amador e distrai da inscrição. Também podes pedir <b style="color:var(--ink)">"animação ao passar o rato" (hover)</b> e <b style="color:var(--ink)">"animação ao rolar a página" (on scroll)</b>.
+    </p>
+  </div>
+</section>
+
+<!-- 7. CORES -->
+<section id="cores">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">06</span>
+      <div>
+        <h2>Cores — escolhe e copia o código</h2>
+        <p class="sec-sub">Cada cor tem um código <b>HEX</b> (ex.: #FF5C39). É esse código que dás ao Lovable para acertar à primeira.</p>
+      </div>
+    </div>
+
+    <div class="tool">
+      <p style="font-weight:600;margin-bottom:12px">Clica numa cor:</p>
+      <div class="swatches" id="swatches">
+        <div class="sw active" style="background:#FF5C39" data-hex="#FF5C39" data-nm="Coral · enérgico, criativo"></div>
+        <div class="sw" style="background:#2E5EAA" data-hex="#2E5EAA" data-nm="Azul · confiança, profissional"></div>
+        <div class="sw" style="background:#0E8C6A" data-hex="#0E8C6A" data-nm="Verde · calma, crescimento"></div>
+        <div class="sw" style="background:#7C3AED" data-hex="#7C3AED" data-nm="Roxo · criativo, premium"></div>
+        <div class="sw" style="background:#E11D74" data-hex="#E11D74" data-nm="Rosa · jovem, vibrante"></div>
+        <div class="sw" style="background:#F59E0B" data-hex="#F59E0B" data-nm="Âmbar · otimista, acessível"></div>
+        <div class="sw" style="background:#1A1714" data-hex="#1A1714" data-nm="Quase-preto · elegante, sóbrio"></div>
+        <div class="sw" style="background:#0EA5E9" data-hex="#0EA5E9" data-nm="Céu · fresco, tecnológico"></div>
+        <div class="sw" style="background:#DC2626" data-hex="#DC2626" data-nm="Vermelho · urgência, paixão"></div>
+        <div class="sw" style="background:#475569" data-hex="#475569" data-nm="Cinza-azulado · neutro, sério"></div>
+      </div>
+      <div class="color-readout">
+        <div class="chip" id="chip" style="background:#FF5C39"></div>
+        <div class="info">
+          <div class="hex" id="hex">#FF5C39</div>
+          <div class="nm" id="cnm">Coral · enérgico, criativo</div>
+        </div>
+      </div>
+      <div class="mini-prompt">
+        <span id="cprompt">Muda a cor de destaque da página para #FF5C39.</span>
+        <button class="copy2" id="ccopy">Copiar</button>
+      </div>
+      <p style="color:var(--ink-soft);font-size:.88rem;margin-top:14px">
+        <b style="color:var(--ink)">Dica:</b> usa <b>1 cor de destaque</b> + preto/cinza para o texto + branco/creme de fundo. Para mais contraste, pede "uma versão mais escura desta cor para o hover do botão".
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 8. FONTES -->
+<section id="fontes">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">07</span>
+      <div>
+        <h2>Fontes — sabe o nome para pedir</h2>
+        <p class="sec-sub">As fontes têm nomes próprios. Diz o nome ao Lovable e ele aplica. Aqui vês cada uma a sério.</p>
+      </div>
+    </div>
+
+    <div class="font-list">
+      <div class="font-row">
+        <div class="font-sample" style="font-family:'Playfair Display',serif;font-weight:800">Conteúdo com IA</div>
+        <div class="font-tag"><span class="fn">Playfair Display</span><span class="fk">Serifada · elegante, editorial</span><span class="fu">para títulos</span></div>
+      </div>
+      <div class="font-row">
+        <div class="font-sample" style="font-family:'Poppins',sans-serif;font-weight:700">Conteúdo com IA</div>
+        <div class="font-tag"><span class="fn">Poppins</span><span class="fk">Sem serifa · moderna, redondinha</span><span class="fu">títulos e texto</span></div>
+      </div>
+      <div class="font-row">
+        <div class="font-sample" style="font-family:'Montserrat',sans-serif;font-weight:800">Conteúdo com IA</div>
+        <div class="font-tag"><span class="fn">Montserrat</span><span class="fk">Sem serifa · limpa, versátil</span><span class="fu">títulos e texto</span></div>
+      </div>
+      <div class="font-row">
+        <div class="font-sample" style="font-family:'Lora',serif;font-weight:600">Conteúdo com IA</div>
+        <div class="font-tag"><span class="fn">Lora</span><span class="fk">Serifada · suave, fácil de ler</span><span class="fu">para texto longo</span></div>
+      </div>
+      <div class="font-row">
+        <div class="font-sample" style="font-family:'Bebas Neue',sans-serif;font-size:2.1rem;letter-spacing:.02em">CONTEÚDO COM IA</div>
+        <div class="font-tag"><span class="fn">Bebas Neue</span><span class="fk">Condensada · forte, impactante</span><span class="fu">só títulos curtos</span></div>
+      </div>
+      <div class="font-row">
+        <div class="font-sample" style="font-family:'Inter',sans-serif;font-weight:600">Conteúdo com IA</div>
+        <div class="font-tag"><span class="fn">Inter</span><span class="fk">Sem serifa · neutra, segura</span><span class="fu">texto / interfaces</span></div>
+      </div>
+      <div class="font-row">
+        <div class="font-sample" style="font-family:'Caveat',cursive;font-weight:600;font-size:2rem">Conteúdo com IA</div>
+        <div class="font-tag"><span class="fn">Caveat</span><span class="fk">Manuscrita · pessoal, próxima</span><span class="fu">detalhes / assinatura</span></div>
+      </div>
+    </div>
+
+    <p style="color:var(--ink-soft);margin-top:22px;font-size:.95rem;max-width:640px">
+      <b style="color:var(--ink)">Como pedir:</b> "Usa <b>Poppins</b> nos títulos e <b>Inter</b> no texto." Regra simples: <b style="color:var(--ink)">no máximo 2 fontes</b> — uma para títulos, outra para o corpo. <b>Serifada</b> = tem "pezinhos" nas letras (clássica). <b>Sem serifa</b> (sans-serif) = letras lisas (moderna).
+    </p>
+  </div>
+</section>
+
+<!-- 9. TAMANHO DA FONTE -->
+<section id="tamanhos">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">08</span>
+      <div>
+        <h2>Tamanho da letra — a escala</h2>
+        <p class="sec-sub">O tamanho mede-se em <b>píxeis (px)</b>. Quanto maior o número, maior a letra. Há uma escala típica:</p>
+      </div>
+    </div>
+
+    <div class="scale">
+      <div class="scale-row"><span class="px">48px</span><span class="txt" style="font-size:36px;font-family:'Fraunces',serif;font-weight:900">Título grande</span><span class="use">Headline (hero)</span></div>
+      <div class="scale-row"><span class="px">32px</span><span class="txt" style="font-size:30px;font-family:'Fraunces',serif;font-weight:600">Título de secção</span><span class="use">H2</span></div>
+      <div class="scale-row"><span class="px">24px</span><span class="txt" style="font-size:24px;font-weight:600">Subtítulo</span><span class="use">H3</span></div>
+      <div class="scale-row"><span class="px">18px</span><span class="txt" style="font-size:18px">Subheadline / destaque</span><span class="use">texto grande</span></div>
+      <div class="scale-row"><span class="px">16px</span><span class="txt" style="font-size:16px">Texto normal do parágrafo</span><span class="use">corpo (base)</span></div>
+      <div class="scale-row"><span class="px">14px</span><span class="txt" style="font-size:14px">Texto de apoio, legendas</span><span class="use">small</span></div>
+      <div class="scale-row"><span class="px">12px</span><span class="txt" style="font-size:12px">Avisos legais, rodapé</span><span class="use">caption</span></div>
+    </div>
+
+    <p style="color:var(--ink-soft);margin-top:22px;font-size:.95rem;max-width:640px">
+      <b style="color:var(--ink)">Nunca uses menos de 16px</b> no texto principal — abaixo disso é difícil de ler no telemóvel. Para pedir: "põe o headline a <b>48px</b>" ou, mais simples, "<b>aumenta o título</b>" / "<b>deixa o texto um pouco maior</b>". O Lovable percebe ambos.
+    </p>
+  </div>
+</section>
+
+<!-- 10. PÍXEIS -->
+<section id="pixeis">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">09</span>
+      <div>
+        <h2>O que são píxeis (px)?</h2>
+        <p class="sec-sub">É a unidade de medida do ecrã. Tudo — tamanho, espaço, cantos — se mede em px. Arrasta para ver.</p>
+      </div>
+    </div>
+
+    <div class="px-demo">
+      <div class="px-track">
+        <label>Tamanho da caixa <b><span id="pxVal">120</span> px</b></label>
+        <input type="range" id="pxRange" min="20" max="240" value="120">
+        <div class="px-preview">
+          <div id="pxBox" style="width:120px;height:120px"></div>
+          <span class="ruler" id="pxRuler">120px × 120px — uma caixa média</span>
+        </div>
+      </div>
+
+      <div class="px-facts">
+        <div class="px-fact"><div class="pf">Tamanho</div><p>Largura e altura de qualquer elemento. Um botão pode ter 200px de largo e 50px de alto.</p></div>
+        <div class="px-fact"><div class="pf">Espaçamento (padding)</div><p>O espaço <b>dentro</b> de uma caixa, entre a borda e o conteúdo. "24px de padding" = respiro confortável.</p></div>
+        <div class="px-fact"><div class="pf">Margem (margin)</div><p>O espaço <b>fora</b>, entre um elemento e o seguinte. Controla o "respiro" entre secções.</p></div>
+        <div class="px-fact"><div class="pf">Cantos (radius)</div><p>O arredondamento dos cantos. 0px = quadrado; 12px = suave; 999px = totalmente redondo (pílula).</p></div>
+        <div class="px-fact"><div class="pf">Referência</div><p>O texto que estás a ler tem ~16px. Um dedo no telemóvel toca bem em algo com 44px+ de altura.</p></div>
+        <div class="px-fact"><div class="pf">Como pedir</div><p>"Aumenta o padding dos cards para 24px" ou, em simples, "dá mais espaço dentro dos cartões".</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11. CHECKLIST -->
+<section id="checklist">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">10</span>
+      <div>
+        <h2>Checklist antes de publicar</h2>
+        <p class="sec-sub">Vai marcando. Quando estiver tudo verde, publica com confiança.</p>
+      </div>
+    </div>
+
+    <div class="check" id="checklist-box">
+      <label><input type="checkbox"><span>O topo deixa claro o quê, para quem e o benefício em 5 segundos</span></label>
+      <label><input type="checkbox"><span>Há um só botão principal, repetido onde faz sentido</span></label>
+      <label><input type="checkbox"><span>O título é o elemento maior e mais destacado da página</span></label>
+      <label><input type="checkbox"><span>Uso apenas 1 cor de destaque, de forma consistente</span></label>
+      <label><input type="checkbox"><span>Há espaço em branco suficiente entre as secções</span></label>
+      <label><input type="checkbox"><span>Vi a página em modo telemóvel e está tudo legível</span></label>
+      <label><input type="checkbox"><span>O formulário pede só nome + email/WhatsApp</span></label>
+      <label><input type="checkbox"><span>O link do grupo só aparece depois do envio do formulário</span></label>
+    </div>
+
+    <div class="progress">
+      <span id="count">0/8</span>
+      <span class="bar"><i id="fill"></i></span>
+      <span id="msg">Vamos lá!</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="mark">Agora é construir.</div>
+    <p>Abre o Lovable, começa pelo Prompt 1 e vai uma secção de cada vez.</p>
+  </div>
+</footer>
+
+<script>
+  // Copy buttons
+  document.querySelectorAll('.prompt').forEach(p=>{
+    const btn=p.querySelector('.copy');
+    const txt=p.querySelector('pre').innerText;
+    btn.addEventListener('click',()=>{
+      navigator.clipboard.writeText(txt).then(()=>{
+        const old=btn.textContent;
+        btn.textContent='Copiado ✓';btn.classList.add('done');
+        setTimeout(()=>{btn.textContent=old;btn.classList.remove('done')},1600);
+      });
+    });
+  });
+
+  // Checklist progress
+  const boxes=[...document.querySelectorAll('#checklist-box input')];
+  const count=document.getElementById('count');
+  const fill=document.getElementById('fill');
+  const msg=document.getElementById('msg');
+  const msgs=['Vamos lá!','Bom começo','A meio caminho','Quase lá','Falta pouco','Pronta a publicar! 🎉'];
+  function update(){
+    const done=boxes.filter(b=>b.checked).length;
+    count.textContent=done+'/'+boxes.length;
+    fill.style.width=(done/boxes.length*100)+'%';
+    if(done===boxes.length){msg.textContent=msgs[5];fill.style.background='var(--mint)';}
+    else{fill.style.background='var(--coral)';msg.textContent=msgs[Math.floor(done/boxes.length*4)];}
+  }
+  boxes.forEach(b=>b.addEventListener('change',update));
+
+  // Animations: replay on click + auto-play once
+  document.querySelectorAll('#animGrid .anim-card').forEach(card=>{
+    const anim=card.dataset.anim;
+    const stage=card.querySelector('.anim-stage');
+    function play(){
+      stage.classList.remove('play',anim);
+      void stage.offsetWidth; // reflow to restart
+      stage.classList.add('play',anim);
+    }
+    stage.addEventListener('click',play);
+    play();
+  });
+
+  // Color picker
+  const sws=[...document.querySelectorAll('#swatches .sw')];
+  const chip=document.getElementById('chip');
+  const hexEl=document.getElementById('hex');
+  const cnm=document.getElementById('cnm');
+  const cprompt=document.getElementById('cprompt');
+  function pickColor(sw){
+    sws.forEach(s=>s.classList.remove('active'));
+    sw.classList.add('active');
+    const hex=sw.dataset.hex;
+    chip.style.background=hex;hexEl.textContent=hex;cnm.textContent=sw.dataset.nm;
+    cprompt.textContent='Muda a cor de destaque da página para '+hex+'.';
+  }
+  sws.forEach(s=>s.addEventListener('click',()=>pickColor(s)));
+  const ccopy=document.getElementById('ccopy');
+  ccopy.addEventListener('click',()=>{
+    navigator.clipboard.writeText(cprompt.textContent).then(()=>{
+      ccopy.textContent='Copiado ✓';ccopy.classList.add('done');
+      setTimeout(()=>{ccopy.textContent='Copiar';ccopy.classList.remove('done')},1600);
+    });
+  });
+
+  // Pixel slider
+  const pxRange=document.getElementById('pxRange');
+  const pxBox=document.getElementById('pxBox');
+  const pxVal=document.getElementById('pxVal');
+  const pxRuler=document.getElementById('pxRuler');
+  pxRange.addEventListener('input',()=>{
+    const v=pxRange.value;
+    pxBox.style.width=v+'px';pxBox.style.height=v+'px';
+    pxVal.textContent=v;
+    let label= v<50?'pequena (ícone)': v<110?'média':'grande (destaque)';
+    pxRuler.textContent=v+'px × '+v+'px — uma caixa '+label;
+  });
+</script>
+</body>
+</html>

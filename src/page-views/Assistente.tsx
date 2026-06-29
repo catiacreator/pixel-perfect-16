@@ -3,6 +3,9 @@ import { DefaultChatTransport, type UIMessage } from "ai";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Bot, Send, Sparkles, Trash2 } from "lucide-react";
 import Layout from "@/components/Layout";
+import Markdown from "@/components/Markdown";
+import MascotRobot from "@/components/MascotRobot";
+import MicButton from "@/components/MicButton";
 import { supabase } from "@/integrations/supabase/client";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import { perfilContexto, readDocMestre, type DocMestre } from "@/lib/pilar4-prompts";
@@ -20,10 +23,10 @@ function getSessionId(): string {
 }
 
 const SUGESTOES = [
-  "Dá-me 5 ideias de posts para Instagram esta semana",
-  "Como começo o Pilar 1?",
-  "Ajuda-me a estruturar um workshop de IA para empresas",
-  "Escreve uma legenda leve para apresentar o meu método",
+  "Por onde começo na mentoria?",
+  "Onde crio o meu método?",
+  "Dá-me 5 ideias de posts para esta semana",
+  "Qual IA uso para resumir um vídeo longo?",
 ];
 
 export default function Assistente() {
@@ -173,30 +176,40 @@ function ChatWindow({
 
   return (
     <div className="px-5 md:px-10 py-8 max-w-5xl mx-auto">
-      {/* Cabeçalho */}
-      <div className="flex items-start justify-between gap-4 mb-6">
-        <div className="flex items-start gap-3">
-          <div className="w-11 h-11 rounded-2xl bg-forest text-cream flex items-center justify-center shrink-0">
-            <Bot size={20} strokeWidth={1.75} />
+      {/* Cabeçalho — faixa colorida com o robot */}
+      <header
+        className="relative overflow-hidden rounded-[28px] md:rounded-[32px] text-white mb-6"
+        style={{ background: "radial-gradient(130% 130% at 85% 14%, #F0A766 0%, #C8487E 52%, #2E7CB8 100%)" }}
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-[0.09]"
+          style={{ backgroundImage: "radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)", backgroundSize: "24px 24px" }}
+        />
+        <div className="relative flex items-center justify-between gap-4 px-6 md:px-9 py-7 md:py-8">
+          <div className="flex items-center gap-4 md:gap-5 min-w-0">
+            <div className="shrink-0 flex items-center justify-center self-center">
+              <MascotRobot scale={0.2} />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[11px] tracking-[0.28em] uppercase text-white/80 font-medium">Assistente · Leveza no Digital</p>
+              <h1 className="font-editorial text-2xl md:text-4xl text-white leading-tight tracking-[-0.01em]">Liv.IA</h1>
+              <p className="text-sm text-white/85 mt-1.5 max-w-md leading-relaxed">
+                A sua colega de mentoria — pergunte sobre o método, conteúdo, ferramentas e vendas.
+              </p>
+            </div>
           </div>
-          <div>
-            <p className="text-[11px] tracking-[0.2em] uppercase text-ink/40">Assistente</p>
-            <h1 className="font-serif text-2xl md:text-3xl text-ink leading-tight">Leveza no Digital</h1>
-            <p className="text-sm text-ink/60 mt-1">
-              Pergunta o que quiser sobre o método, conteúdo, vendas e IA.
-            </p>
-          </div>
+          {messages.length > 0 && (
+            <button
+              onClick={onClear}
+              className="text-[12px] text-white/90 hover:text-white inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-white/30 hover:bg-white/15 transition-colors shrink-0 backdrop-blur-sm"
+              aria-label="Nova conversa"
+            >
+              <Trash2 size={13} /> Nova conversa
+            </button>
+          )}
         </div>
-        {messages.length > 0 && (
-          <button
-            onClick={onClear}
-            className="text-[12px] text-ink/50 hover:text-ink inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-[var(--color-border)] hover:bg-ink/5 transition-colors"
-            aria-label="Nova conversa"
-          >
-            <Trash2 size={13} /> Nova conversa
-          </button>
-        )}
-      </div>
+      </header>
 
       {/* Conversa */}
       <div
@@ -243,8 +256,8 @@ function ChatWindow({
               <div className="w-8 h-8 rounded-full bg-gold/20 text-gold flex items-center justify-center shrink-0 mt-1">
                 <Bot size={15} strokeWidth={1.75} />
               </div>
-              <div className="text-ink text-[14.5px] leading-relaxed whitespace-pre-wrap pt-0.5">
-                {text || <span className="text-ink/40 italic">a pensar…</span>}
+              <div className="text-ink text-[14.5px] leading-relaxed pt-0.5">
+                {text ? <Markdown text={text} /> : <span className="text-ink/40 italic">a pensar…</span>}
               </div>
             </div>
           );
@@ -292,6 +305,10 @@ function ChatWindow({
           placeholder="Escreve a sua pergunta…"
           className="flex-1 resize-none bg-transparent outline-none text-[14.5px] text-ink placeholder:text-ink/35 py-2 max-h-40"
           disabled={isLoading}
+        />
+        <MicButton
+          disabled={isLoading}
+          onText={(t) => setInput(input.trim() ? `${input.trim()} ${t}` : t)}
         />
         <button
           type="submit"

@@ -21,13 +21,16 @@ import {
   DetetiveState,
   Freq,
   Unidade,
+  Moeda,
+  MOEDAS,
   INITIAL_STATE,
   loadDetetive,
   saveDetetive,
   clearDetetive,
   custoHora,
-  brl,
+  fmtMoeda,
 } from "@/lib/detetive-storage";
+import InfoButton from "@/components/InfoButton";
 
 export default function DetetiveDoTempo() {
   const [state, setState] = useState<DetetiveState>(INITIAL_STATE);
@@ -76,12 +79,13 @@ export default function DetetiveDoTempo() {
     }));
 
   const zerar = () => {
-    if (!confirm("Zerar todos os dados do Mapa do Tempo?")) return;
+    if (!confirm("Apagar todos os dados do Mapa do Tempo?")) return;
     clearDetetive();
     setState(INITIAL_STATE);
   };
 
   const hora = custoHora(state);
+  const moedaAtual = MOEDAS.find((m) => m.code === state.moeda) ?? MOEDAS[0];
 
   return (
     <Layout>
@@ -91,10 +95,27 @@ export default function DetetiveDoTempo() {
         icon={<Hourglass size={18} />}
         pilarLabel="Pilar 1"
         titulo="Mapa do Tempo"
-        subtitulo="Mapeie suas tarefas e descubra quanto custam em reais"
+        subtitulo="Mapeie suas tarefas e descubra quanto custam — em horas e em dinheiro"
       />
 
       <div className="px-5 md:px-10 pb-16 max-w-4xl mx-auto">
+        <div className="mt-8 mb-6 flex justify-start">
+          <InfoButton titulo="Para que serve o Mapa do Tempo?" label="Para que serve o Mapa do Tempo?">
+            <p>
+              Aqui você mapeia todas as suas tarefas (Produção, Marketing e Estratégia) com o tempo
+              gasto por dia/semana/mês e informa o seu faturamento. Se travar, a IA conversa consigo e
+              monta a lista para você aprovar.
+            </p>
+            <p>
+              É a <strong>porta de entrada do método</strong>: cria a consciência de quanto custa o seu
+              tempo. Estes dados alimentam o <strong>Documento Mestre</strong> — a base que personaliza
+              tudo, incluindo os prompts de oferta e preço do Pilar 4.
+            </p>
+            <p className="text-ink/55">
+              A seguir, o <strong>Relatório</strong> cruza tudo com o faturamento e mostra onde priorizar.
+            </p>
+          </InfoButton>
+        </div>
         <div className="rounded-2xl border border-border bg-white shadow-sm p-5 mb-6">
           <div className="flex items-start gap-3 mb-3">
             <PlayCircle size={22} className="text-terracotta flex-shrink-0 mt-0.5" />
@@ -113,11 +134,27 @@ export default function DetetiveDoTempo() {
               <h2 className="font-serif text-xl text-ink leading-tight mb-0.5">Vamos calcular o custo real do seu tempo</h2>
               <p className="text-xs text-muted">Leva 10 minutos. {savedAt && <span className="inline-flex items-center gap-1 ml-1"><Check size={11} /> Salvo às {savedAt}</span>}</p>
             </div>
-            <button onClick={zerar} className="text-xs font-semibold text-muted hover:text-terracotta flex items-center gap-1">↺ Zerar tudo</button>
+            <button onClick={zerar} className="text-xs font-semibold text-muted hover:text-terracotta flex items-center gap-1">↺ Apagar tudo</button>
+          </div>
+          <div className="mb-3 flex items-center gap-2">
+            <label className="text-[11px] tracking-[0.18em] uppercase text-muted">Moeda</label>
+            <select
+              value={state.moeda}
+              onChange={(e) => setTop({ moeda: e.target.value as Moeda })}
+              className="rounded-xl border border-border p-2 text-sm bg-white outline-none focus:border-terracotta"
+            >
+              {MOEDAS.map((m) => (
+                <option key={m.code} value={m.code}>
+                  {m.label}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="text-[11px] tracking-[0.18em] uppercase text-muted block mb-1">Faturamento mensal (R$)</label>
+              <label className="text-[11px] tracking-[0.18em] uppercase text-muted block mb-1">
+                Faturamento mensal ({moedaAtual.simbolo})
+              </label>
               <input
                 value={state.faturamento}
                 onChange={(e) => setTop({ faturamento: e.target.value })}
@@ -146,7 +183,7 @@ export default function DetetiveDoTempo() {
           </div>
           {hora > 0 && (
             <p className="mt-3 text-xs text-muted">
-              Sua hora vale <span className="font-semibold text-ink">{brl(hora)}</span>.
+              Sua hora vale <span className="font-semibold text-ink">{fmtMoeda(hora, state.moeda)}</span>.
             </p>
           )}
         </div>

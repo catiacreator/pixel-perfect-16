@@ -19,8 +19,9 @@ import {
   INITIAL_STATE,
   loadDetetive,
   calcularRelatorio,
-  brl,
+  fmtMoeda,
 } from "@/lib/detetive-storage";
+import InfoButton from "@/components/InfoButton";
 
 const CATEGORIA_COLOR: Record<string, string> = {
   "Produção": "bg-terracotta",
@@ -83,17 +84,30 @@ export default function RelatorioDoTempo() {
         icon={<Hourglass size={18} />}
         pilarLabel="Pilar 1"
         titulo="Relatório do Mapa do Tempo"
-        subtitulo="Onde o seu tempo está realmente indo — em horas e em reais"
+        subtitulo="Onde o seu tempo está realmente indo — em horas e em dinheiro"
       />
 
       <div className="px-5 md:px-10 pb-16 max-w-4xl mx-auto print:max-w-none">
+        <div className="mt-8 mb-6 flex justify-start">
+          <InfoButton titulo="Para que serve o Relatório do Tempo?" label="Para que serve o Relatório do Tempo?">
+            <p>
+              Cruza as suas tarefas com o faturamento e mostra: o <strong>valor da sua hora</strong>, o{" "}
+              <strong>custo de cada tarefa</strong>, quais <strong>priorizar para automatizar</strong> com IA
+              e a projeção de economia ao automatizar 70–80% do trabalho repetitivo.
+            </p>
+            <p>
+              É o que justifica a urgência de escalar receita:{" "}
+              <em>você sabe quanto custa o seu tempo → aprende a vender melhor (Pilar 4) para que esse tempo valha mais.</em>
+            </p>
+          </InfoButton>
+        </div>
         {/* hero cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
             <div className="flex items-center gap-2 text-muted text-[11px] tracking-[0.18em] uppercase mb-1">
               <Coins size={13} className="text-terracotta" /> Sua hora vale
             </div>
-            <p className="font-serif text-2xl text-ink">{brl(rel.horaVale)}</p>
+            <p className="font-serif text-2xl text-ink">{fmtMoeda(rel.horaVale, state.moeda)}</p>
           </div>
           <div className="rounded-2xl border border-border bg-white p-4 shadow-sm">
             <div className="flex items-center gap-2 text-muted text-[11px] tracking-[0.18em] uppercase mb-1">
@@ -105,7 +119,7 @@ export default function RelatorioDoTempo() {
             <div className="flex items-center gap-2 text-terracotta text-[11px] tracking-[0.18em] uppercase mb-1">
               <BarChart3 size={13} /> Custo / mês
             </div>
-            <p className="font-serif text-2xl text-ink">{brl(rel.totalCusto)}</p>
+            <p className="font-serif text-2xl text-ink">{fmtMoeda(rel.totalCusto, state.moeda)}</p>
           </div>
         </div>
 
@@ -121,7 +135,7 @@ export default function RelatorioDoTempo() {
                 <div key={c.titulo}>
                   <div className="flex justify-between text-sm mb-1">
                     <span className="text-ink font-semibold">{c.titulo}</span>
-                    <span className="text-muted">{fmtHoras(c.horas)} · <span className="text-ink font-semibold">{brl(c.custo)}</span></span>
+                    <span className="text-muted">{fmtHoras(c.horas)} · <span className="text-ink font-semibold">{fmtMoeda(c.custo, state.moeda)}</span></span>
                   </div>
                   <div className="h-2 rounded-full bg-cream overflow-hidden">
                     <div className={`h-full ${color} rounded-full transition-all`} style={{ width: `${pct}%` }} />
@@ -147,7 +161,7 @@ export default function RelatorioDoTempo() {
                   <p className="text-sm text-ink font-semibold leading-tight">{t.nome}</p>
                   <p className="text-xs text-muted">{t.categoria} · {fmtHoras(t.horasMes)} / mês</p>
                 </div>
-                <p className="font-serif text-lg text-ink">{brl(t.custoMes)}</p>
+                <p className="font-serif text-lg text-ink">{fmtMoeda(t.custoMes, state.moeda)}</p>
               </li>
             ))}
           </ol>
@@ -163,7 +177,7 @@ export default function RelatorioDoTempo() {
                   <p className="text-sm text-ink leading-tight">{t.nome}</p>
                   <p className="text-[11px] text-muted">{t.categoria} · {fmtHoras(t.horasMes)} / mês</p>
                 </div>
-                <p className="text-sm font-semibold text-ink">{brl(t.custoMes)}</p>
+                <p className="text-sm font-semibold text-ink">{fmtMoeda(t.custoMes, state.moeda)}</p>
               </div>
             ))}
           </div>
@@ -176,9 +190,9 @@ export default function RelatorioDoTempo() {
             <div>
               <p className="font-serif text-base text-ink mb-1">A leveza começa aqui</p>
               <p className="text-sm text-muted">
-                Você está gastando <span className="font-semibold text-ink">{brl(rel.totalCusto)}</span> por mês — e{" "}
+                Você está gastando <span className="font-semibold text-ink">{fmtMoeda(rel.totalCusto, state.moeda)}</span> por mês — e{" "}
                 <span className="font-semibold text-ink">{fmtHoras(rel.totalHoras)}</span> da sua vida — nestas tarefas.{" "}
-                Imagine devolver mesmo que só {top3[0] ? brl(top3[0].custoMes) : "uma parte"} disso pro seu negócio (ou pra você).
+                Imagine devolver mesmo que só {top3[0] ? fmtMoeda(top3[0].custoMes, state.moeda) : "uma parte"} disso pro seu negócio (ou pra você).
                 É exatamente o que as IAs do Pilar 1 vão te ajudar a fazer.
               </p>
               <div className="mt-3 flex flex-wrap gap-2">

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
+import PillarHeader from "../../components/PillarHeader";
 import ProgressBar from "../../components/ProgressBar";
 import VideoPlaceholder from "../../components/VideoPlaceholder";
 import TodoBanner from "../../components/TodoBanner";
@@ -45,14 +46,16 @@ export default function Videos() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar={2} pilarLabel="Criar Autoridade" backTo="/metodo/pilar-2" backLabel="Voltar para o Pilar 2" />
+      <PilarBreadcrumb pilar="academia" pilarLabel="Academia de IA" backTo="/metodo/pilar-1/aprenda-ia" backLabel="Voltar para a Academia de IA" />
       <TodoBanner texto="Etapa 5 — Vídeos: conteúdo pendente. Aguardando documentação detalhada (estrutura definitiva das aulas, prompts e fluxo)." />
-      <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
-        <h1 className="font-serif text-3xl text-ink mb-2">Vídeos profissionais sem gravar 50 vezes</h1>
-        <p className="text-muted mb-6">
-          Clones falantes, personagens animados e vídeos com IA — aulas práticas com HeyGen, Kling, Hedra e mais.
-        </p>
-
+      <PillarHeader
+        numeral="IA"
+        icon={<PlayCircle size={18} />}
+        pilarLabel="Academia de IA"
+        titulo="Vídeos profissionais sem gravar 50 vezes"
+        subtitulo="Clones falantes, personagens animados e vídeos com IA — aulas práticas com HeyGen, Kling, Hedra e mais."
+      />
+      <div className="px-5 md:px-10 pt-8 pb-10 max-w-4xl mx-auto">
         <div className="rounded-2xl border border-border bg-white p-4 mb-6">
           <ProgressBar done={0} total={total} />
         </div>
@@ -93,8 +96,8 @@ export default function Videos() {
           </div>
         ))}
 
-        <Link to="/metodo/pilar-2" className="flex items-center gap-1.5 text-sm text-muted mt-4">
-          <ArrowLeft size={14} /> Voltar para o Pilar 2
+        <Link to="/metodo/pilar-1/aprenda-ia" className="flex items-center gap-1.5 text-sm text-muted mt-4">
+          <ArrowLeft size={14} /> Voltar para a Academia de IA
         </Link>
       </div>
     </Layout>
