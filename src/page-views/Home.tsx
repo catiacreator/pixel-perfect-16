@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import HeroRobot from "../components/HeroRobot";
+import { useAccess } from "@/lib/use-access";
+import { MODULES } from "@/lib/access";
 import {
   ArrowUpRight,
   Sparkles,
@@ -9,10 +11,12 @@ import {
   GraduationCap,
   MessageSquare,
   FileText,
+  Lock,
 } from "lucide-react";
 
 const CARDS = [
   {
+    modulo: "jornada" as const,
     icon: Compass,
     titulo: "A sua jornada",
     desc: "Os 4 pilares do método, passo a passo — do tempo à venda.",
@@ -22,6 +26,7 @@ const CARDS = [
     cor: "#C0653A",
   },
   {
+    modulo: "academia" as const,
     icon: GraduationCap,
     titulo: "Academia de IA",
     desc: "Domine as principais IAs para o seu negócio — aulas práticas por ferramenta.",
@@ -31,6 +36,7 @@ const CARDS = [
     cor: "#2E7CB8",
   },
   {
+    modulo: "redes" as const,
     icon: MessageSquare,
     titulo: "Criando para as Redes Sociais",
     desc: "Modelos de posts, linha editorial e calendário para publicar com método.",
@@ -42,6 +48,7 @@ const CARDS = [
 ];
 
 export default function Home() {
+  const { has, loading: accessLoading } = useAccess();
   const orbRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let x = window.innerWidth / 2;
@@ -193,20 +200,25 @@ export default function Home() {
           <div className="grid md:grid-cols-3 gap-4 md:gap-5">
             {CARDS.map((c, i) => {
               const Icon = c.icon;
-              return (
-                <Link
-                  key={c.titulo}
-                  to={c.to}
-                  style={{ "--mc": c.cor, animationDelay: `${i * 90}ms` } as Record<string, string>}
-                  className="fade-up group relative overflow-hidden rounded-3xl border border-white/60 bg-white/55 backdrop-blur-xl p-6 md:p-7 flex flex-col transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:bg-white/70"
-                >
+              const locked = !accessLoading && !has(c.modulo);
+              const checkout = MODULES[c.modulo].checkoutUrl;
+              const cls = "fade-up group relative overflow-hidden rounded-3xl border border-white/60 bg-white/55 backdrop-blur-xl p-6 md:p-7 flex flex-col transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:bg-white/70";
+              const style = { "--mc": c.cor, animationDelay: `${i * 90}ms` } as Record<string, string>;
+
+              const inner = (
+                <>
                   <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5" style={{ background: c.cor }} />
+                  {locked && (
+                    <span className="absolute top-4 right-4 inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-ink/55 bg-white/80 border border-[var(--color-border)] rounded-full px-2 py-1">
+                      <Lock size={11} /> Bloqueado
+                    </span>
+                  )}
                   <div className="mb-6">
                     <span
                       className="w-[52px] h-[52px] rounded-2xl text-cream flex items-center justify-center shadow-[0_8px_20px_-8px_rgba(0,0,0,0.35)] transition-transform group-hover:scale-105"
                       style={{ background: c.cor }}
                     >
-                      <Icon size={22} strokeWidth={1.75} />
+                      {locked ? <Lock size={20} strokeWidth={2} /> : <Icon size={22} strokeWidth={1.75} />}
                     </span>
                   </div>
 
@@ -228,14 +240,32 @@ export default function Home() {
                   </div>
 
                   <span className="mt-6 inline-flex items-center gap-2.5 text-sm font-semibold" style={{ color: c.cor }}>
-                    {c.cta}
+                    {locked ? "Desbloquear na Hotmart" : c.cta}
                     <span
                       className="w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-300 group-hover:text-cream group-hover:translate-x-0.5 group-hover:bg-[var(--mc)] group-hover:border-[var(--mc)]"
                       style={{ borderColor: c.cor }}
                     >
-                      <ArrowUpRight size={15} strokeWidth={2.25} />
+                      {locked ? <Lock size={14} strokeWidth={2.25} /> : <ArrowUpRight size={15} strokeWidth={2.25} />}
                     </span>
                   </span>
+                </>
+              );
+
+              if (locked) {
+                return checkout ? (
+                  <a key={c.titulo} href={checkout} target="_blank" rel="noreferrer" className={cls} style={style}>
+                    {inner}
+                  </a>
+                ) : (
+                  <div key={c.titulo} className={`${cls} cursor-default`} style={style} title="Em breve na Hotmart">
+                    {inner}
+                  </div>
+                );
+              }
+
+              return (
+                <Link key={c.titulo} to={c.to} className={cls} style={style}>
+                  {inner}
                 </Link>
               );
             })}
