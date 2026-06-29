@@ -35,7 +35,7 @@ const CARDS = [
     cta: "Entrar",
     tags: ["ChatGPT", "Claude", "Gemini", "Grok", "NotebookLM", "Lovable", "Tella"],
     cor: "#2E7CB8",
-    img: "",
+    img: "/academia-ia.png",
   },
   {
     modulo: "redes" as const,
