@@ -8,7 +8,7 @@ const INTRO_MS = 8000; // acena + roda + ri
 const SCENE_MS = 6000; // cada cena
 const AUTO_EVERY_MS = 30000; // uma animação automática a cada 30s
 
-export default function HeroRobot() {
+export default function HeroRobot({ scale = 0.86 }: { scale?: number }) {
   const stageRef = useRef<HTMLDivElement>(null);
   const bubbleRef = useRef<HTMLDivElement>(null);
   const rainRef = useRef<HTMLDivElement>(null);
@@ -95,7 +95,7 @@ export default function HeroRobot() {
   }, []);
 
   return (
-    <div className="hero-robot">
+    <div className="hero-robot" style={{ ["--scale" as string]: String(scale) } as React.CSSProperties}>
       <div className="stage intro" ref={stageRef} onClick={handleClick}>
         <div className="bubble" ref={bubbleRef} />
 

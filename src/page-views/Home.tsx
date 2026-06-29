@@ -22,8 +22,9 @@ const CARDS = [
     desc: "Os 4 pilares do método, passo a passo — do tempo à venda.",
     to: "/metodo",
     cta: "Ver a jornada",
-    tags: ["Pilar 1", "Pilar 2", "Pilar 3", "Pilar 4"],
+    tags: [] as string[],
     cor: "#C0653A",
+    img: "/card-jornada.jpg",
   },
   {
     modulo: "academia" as const,
@@ -34,6 +35,7 @@ const CARDS = [
     cta: "Entrar",
     tags: ["ChatGPT", "Claude", "Gemini", "Grok", "NotebookLM", "Lovable", "Tella"],
     cor: "#2E7CB8",
+    img: "",
   },
   {
     modulo: "redes" as const,
@@ -44,6 +46,7 @@ const CARDS = [
     cta: "Explorar",
     tags: ["Modelos", "Linha editorial", "Calendário", "Bio"],
     cor: "#C8487E",
+    img: "",
   },
 ];
 
@@ -106,7 +109,7 @@ export default function Home() {
             style={{ backgroundImage: "radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)", backgroundSize: "24px 24px" }}
           />
 
-          <div className="relative grid lg:grid-cols-[1.1fr_0.9fr] gap-4 lg:gap-10 items-center px-6 md:px-12 py-9 md:py-14">
+          <div className="relative grid lg:grid-cols-[1.1fr_0.9fr] gap-4 lg:gap-10 items-center px-6 md:px-12 py-6 md:py-9">
             {/* Texto */}
             <div className="fade-up">
               <div className="flex items-center gap-2 mb-6">
@@ -150,8 +153,8 @@ export default function Home() {
             </div>
 
             {/* Robô animado */}
-            <div className="relative fade-up flex justify-center items-center min-h-[400px] md:min-h-[440px]" style={{ animationDelay: "120ms" }}>
-              <HeroRobot />
+            <div className="relative fade-up flex justify-center items-center min-h-[280px] md:min-h-[320px]" style={{ animationDelay: "120ms" }}>
+              <HeroRobot scale={0.66} />
             </div>
           </div>
         </div>
@@ -205,7 +208,28 @@ export default function Home() {
               const cls = "fade-up group relative overflow-hidden rounded-3xl border border-white/60 bg-white/55 backdrop-blur-xl p-6 md:p-7 flex flex-col aspect-[9/16] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:bg-white/70";
               const style = { "--mc": c.cor, animationDelay: `${i * 90}ms` } as Record<string, string>;
 
-              const inner = (
+              const inner = c.img ? (
+                /* Card com imagem (full-bleed) — a imagem já traz o título */
+                <>
+                  <div
+                    aria-hidden
+                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                    style={{ backgroundImage: `url(${c.img})`, backgroundColor: c.cor }}
+                  />
+                  <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+                  {locked && (
+                    <span className="absolute top-4 right-4 z-10 inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-white bg-black/45 border border-white/25 rounded-full px-2 py-1 backdrop-blur-sm">
+                      <Lock size={11} /> Bloqueado
+                    </span>
+                  )}
+                  <span className="relative mt-auto inline-flex items-center gap-2.5 text-sm font-semibold text-white">
+                    {locked ? "Desbloquear na Hotmart" : c.cta}
+                    <span className="w-9 h-9 rounded-full border border-white/60 flex items-center justify-center transition-all duration-300 group-hover:bg-white group-hover:text-ink group-hover:translate-x-0.5">
+                      {locked ? <Lock size={14} strokeWidth={2.25} /> : <ArrowUpRight size={15} strokeWidth={2.25} />}
+                    </span>
+                  </span>
+                </>
+              ) : (
                 <>
                   <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5" style={{ background: c.cor }} />
                   {locked && (
