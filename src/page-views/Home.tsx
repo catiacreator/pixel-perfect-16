@@ -50,7 +50,7 @@ const CARDS = [
 ];
 
 export default function Home() {
-  const { has, loading: accessLoading } = useAccess();
+  const { has, loading: accessLoading, signedIn } = useAccess();
   const orbRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let x = window.innerWidth / 2;
@@ -131,24 +131,26 @@ export default function Home() {
                 Transforme o que sabe em conteúdo, autoridade e liberdade — com Inteligência Artificial.
               </p>
 
-              <div className="mt-5 flex flex-wrap items-center gap-3">
-                <Link
-                  to="/doc-mestre"
-                  className="group inline-flex items-center gap-2 bg-[#ffffff] text-[#141414] pl-6 pr-2 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_-12px_rgba(0,0,0,0.5)] active:scale-[0.97]"
-                >
-                  Começar agora
-                  <span className="w-9 h-9 rounded-full bg-[#141414] text-white flex items-center justify-center">
-                    <ArrowUpRight size={15} strokeWidth={2.5} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                  </span>
-                </Link>
-                <Link
-                  to="/assistente"
-                  className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-sm font-medium text-white border border-white/40 hover:bg-white/10 transition-colors active:scale-[0.97]"
-                >
-                  <Sparkles size={14} />
-                  Assistente
-                </Link>
-              </div>
+              {signedIn && (
+                <div className="mt-5 flex flex-wrap items-center gap-3">
+                  <Link
+                    to="/doc-mestre"
+                    className="group inline-flex items-center gap-2 bg-[#ffffff] text-[#141414] pl-6 pr-2 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_-12px_rgba(0,0,0,0.5)] active:scale-[0.97]"
+                  >
+                    Começar agora
+                    <span className="w-9 h-9 rounded-full bg-[#141414] text-white flex items-center justify-center">
+                      <ArrowUpRight size={15} strokeWidth={2.5} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </span>
+                  </Link>
+                  <Link
+                    to="/assistente"
+                    className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-sm font-medium text-white border border-white/40 hover:bg-white/10 transition-colors active:scale-[0.97]"
+                  >
+                    <Sparkles size={14} />
+                    Assistente
+                  </Link>
+                </div>
+              )}
             </div>
 
             {/* Robô animado */}

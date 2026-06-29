@@ -1,12 +1,25 @@
 import { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
+import { readStoredSession } from "@/lib/session";
 
 const KEY = "leveza.theme";
 
 export default function ThemeToggle() {
   const [dark, setDark] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
 
   useEffect(() => {
+    const isSignedIn = !!readStoredSession()?.user;
+    setSignedIn(isSignedIn);
+
+    // Visitante (sem login) → sempre modo claro (a marca é clara).
+    if (!isSignedIn) {
+      setDark(false);
+      document.documentElement.classList.remove("dark");
+      return;
+    }
+
+    // Com login → respeita a preferência guardada.
     let isDark = false;
     try {
       isDark = localStorage.getItem(KEY) === "dark";
@@ -27,6 +40,9 @@ export default function ThemeToggle() {
       /* ignora */
     }
   };
+
+  // O botão de tema só faz sentido depois do login.
+  if (!signedIn) return null;
 
   return (
     <button
