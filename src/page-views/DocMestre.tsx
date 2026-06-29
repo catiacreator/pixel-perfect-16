@@ -50,36 +50,6 @@ type DocState = {
   diasSemana: string;
   faturamentoMensal: string;
   tomDeVoz: string;
-  // 05 Arquétipos da marca
-  arquetipoDominante: string;
-  arquetipoSecundario: string;
-  combinacaoArquetipos: string;
-  arquetipoCliente: string;
-  // 06 Tom de voz & linguagem
-  tomVoz: string;
-  palavrasUsar: string;
-  palavrasEvitar: string;
-  crencaCentral: string;
-  // 08 Identidade visual
-  vibeMarca: string;
-  cor1: string;
-  cor2: string;
-  cor3: string;
-  cor4: string;
-  corDestaque: string;
-  fonteTitulo: string;
-  fonteCorpo: string;
-  fonteMao: string;
-  estiloImagem: string;
-  antipadroes: string;
-  // 09 Bio & posicionamento
-  opiniao1: string;
-  opiniao2: string;
-  opiniao3: string;
-  formatoConteudo: string;
-  url: string;
-  // 10 Estilo pessoal & cenário
-  formatoEntrega: string;
 };
 
 const EMPTY: DocState = {
@@ -97,31 +67,6 @@ const EMPTY: DocState = {
   diasSemana: "",
   faturamentoMensal: "",
   tomDeVoz: "",
-  arquetipoDominante: "",
-  arquetipoSecundario: "",
-  combinacaoArquetipos: "",
-  arquetipoCliente: "",
-  tomVoz: "",
-  palavrasUsar: "",
-  palavrasEvitar: "",
-  crencaCentral: "",
-  vibeMarca: "",
-  cor1: "",
-  cor2: "",
-  cor3: "",
-  cor4: "",
-  corDestaque: "",
-  fonteTitulo: "",
-  fonteCorpo: "",
-  fonteMao: "",
-  estiloImagem: "",
-  antipadroes: "",
-  opiniao1: "",
-  opiniao2: "",
-  opiniao3: "",
-  formatoConteudo: "",
-  url: "",
-  formatoEntrega: "",
 };
 
 const STORAGE_KEY = "leveza.doc-mestre.v1";
@@ -861,61 +806,7 @@ export default function DocMestre() {
           )}
         </section>
 
-        {/* SECÇÃO 5 — Arquétipos da marca */}
-        <section className="rounded-2xl border border-border bg-white p-5 mb-5 print:border-0 print:p-0 print:mb-8">
-          <h2 className="font-serif text-xl text-ink mb-4">5. Arquétipos da marca</h2>
-          <Field label="Arquétipo dominante" value={doc.arquetipoDominante} onChange={(v) => set("arquetipoDominante", v)} textarea placeholder="ex: Sábia — vendes clareza, transformas o confuso num passo a passo." />
-          <Field label="Arquétipo secundário" value={doc.arquetipoSecundario} onChange={(v) => set("arquetipoSecundario", v)} textarea placeholder="ex: Cuidadora — ensinas sem esmagar." />
-          <Field label="Combinação" value={doc.combinacaoArquetipos} onChange={(v) => set("combinacaoArquetipos", v)} placeholder="ex: Sábia + Cuidadora = clareza prática com apoio." />
-          <Field label="Arquétipo do cliente" value={doc.arquetipoCliente} onChange={(v) => set("arquetipoCliente", v)} textarea placeholder="ex: Cara Comum + Sábia — quer sentir que também consegue." />
-        </section>
-
-        {/* SECÇÃO 6 — Tom de voz & linguagem */}
-        <section className="rounded-2xl border border-border bg-white p-5 mb-5 print:border-0 print:p-0 print:mb-8">
-          <h2 className="font-serif text-xl text-ink mb-4">6. Tom de voz &amp; linguagem</h2>
-          <Field label="Tom de voz" value={doc.tomVoz} onChange={(v) => set("tomVoz", v)} textarea placeholder="Como escreves, ritmo, postura." />
-          <Field label="Palavras para usar" value={doc.palavrasUsar} onChange={(v) => set("palavrasUsar", v)} placeholder="lista separada por · (ex: simples · processo · clareza)" />
-          <Field label="Palavras para evitar" value={doc.palavrasEvitar} onChange={(v) => set("palavrasEvitar", v)} placeholder="lista separada por · (ex: milagre · fórmula secreta)" />
-          <Field label="Crença central" value={doc.crencaCentral} onChange={(v) => set("crencaCentral", v)} textarea placeholder="A ideia que sustenta a tua marca." />
-        </section>
-
-        {/* SECÇÃO 7 — Identidade visual */}
-        <section className="rounded-2xl border border-border bg-white p-5 mb-5 print:border-0 print:p-0 print:mb-8">
-          <h2 className="font-serif text-xl text-ink mb-4">7. Identidade visual</h2>
-          <Field label="Vibe da marca" value={doc.vibeMarca} onChange={(v) => set("vibeMarca", v)} textarea placeholder="ex: Moderna, colorida e criativa — gradientes quentes, cantos arredondados." />
-          <p className="text-[11px] tracking-[0.18em] uppercase text-muted mt-2 mb-2">Paleta (hex)</p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-            <Field label="Cor 1" value={doc.cor1} onChange={(v) => set("cor1", v)} placeholder="#C2186A" />
-            <Field label="Cor 2" value={doc.cor2} onChange={(v) => set("cor2", v)} placeholder="#E8743B" />
-            <Field label="Cor 3" value={doc.cor3} onChange={(v) => set("cor3", v)} placeholder="#6D4AC4" />
-            <Field label="Cor 4" value={doc.cor4} onChange={(v) => set("cor4", v)} placeholder="#2563C9" />
-            <Field label="Destaque" value={doc.corDestaque} onChange={(v) => set("corDestaque", v)} placeholder="#1E1B2E" />
-          </div>
-          <p className="text-[11px] tracking-[0.18em] uppercase text-muted mt-4 mb-2">Tipografia</p>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <Field label="Título" value={doc.fonteTitulo} onChange={(v) => set("fonteTitulo", v)} placeholder="ex: Poppins (bold)" />
-            <Field label="Corpo" value={doc.fonteCorpo} onChange={(v) => set("fonteCorpo", v)} placeholder="ex: Poppins" />
-            <Field label="Manuscrita" value={doc.fonteMao} onChange={(v) => set("fonteMao", v)} placeholder="ex: Caveat" />
-          </div>
-          <div className="mt-2">
-            <Field label="Estilo de imagem" value={doc.estiloImagem} onChange={(v) => set("estiloImagem", v)} textarea placeholder="Como são as tuas imagens." />
-            <Field label="Antipadrões visuais" value={doc.antipadroes} onChange={(v) => set("antipadroes", v)} placeholder="O que evitar no visual." />
-          </div>
-        </section>
-
-        {/* SECÇÃO 8 — Bio & posicionamento */}
-        <section className="rounded-2xl border border-border bg-white p-5 mb-8 print:border-0 print:p-0 print:mb-8">
-          <h2 className="font-serif text-xl text-ink mb-4">8. Bio &amp; posicionamento</h2>
-          <p className="text-[11px] tracking-[0.18em] uppercase text-muted mb-2">Opiniões / pontos de vista</p>
-          <Field label="Opinião 1" value={doc.opiniao1} onChange={(v) => set("opiniao1", v)} textarea placeholder="Uma posição forte e clara." />
-          <Field label="Opinião 2" value={doc.opiniao2} onChange={(v) => set("opiniao2", v)} textarea />
-          <Field label="Opinião 3" value={doc.opiniao3} onChange={(v) => set("opiniao3", v)} textarea />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
-            <Field label="Formato de conteúdo" value={doc.formatoConteudo} onChange={(v) => set("formatoConteudo", v)} placeholder="ex: Estático, vídeo curto…" />
-            <Field label="Página / URL" value={doc.url} onChange={(v) => set("url", v)} placeholder="ex: catiacreator.store" />
-          </div>
-          <Field label="Formato de entrega" value={doc.formatoEntrega} onChange={(v) => set("formatoEntrega", v)} placeholder="ex: Comunidade com aulas gravadas." />
-        </section>
+        {/* Secções Arquétipos, Tom de voz, Identidade visual e Bio vêm do Pilar 2 e aparecem só no PDF (Visualizar PDF). */}
 
         {/* Refinar com IA */}
         <div className="print:hidden rounded-2xl border border-border bg-white mb-8 overflow-hidden">

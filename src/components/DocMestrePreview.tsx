@@ -120,17 +120,18 @@ export default function DocMestrePreview({
           </Seccao>
 
           <Seccao n="05" titulo="Arquétipos da marca">
-            <Campo label="Dominante" value={doc.arquetipoDominante} />
-            <Campo label="Secundário" value={doc.arquetipoSecundario} />
-            <Campo label="Combinação" value={doc.combinacaoArquetipos} />
-            <Campo label="Arquétipo do cliente" value={doc.arquetipoCliente} />
+            <Campo label="Dominante" value={metodo.arquetipoDominante} />
+            <Campo label="Secundário" value={metodo.arquetipoSecundario} />
+            <Campo label="Combinação" value={[metodo.arquetipoDominante, metodo.arquetipoSecundario].filter(Boolean).join(" + ")} />
+            <Campo label="Arquétipo do cliente" value={[metodo.arquetipoClienteDominante, metodo.arquetipoClienteSecundario].filter(Boolean).join(" + ")} />
+            <Campo label="Dor principal do cliente" value={metodo.dorPrincipalCliente} />
           </Seccao>
 
           <Seccao n="06" titulo="Tom de voz & linguagem">
-            <Campo label="Tom de voz" value={doc.tomVoz} />
-            <Campo label="Palavras para usar" value={doc.palavrasUsar} />
-            <Campo label="Palavras para evitar" value={doc.palavrasEvitar} />
-            <Campo label="Crença central" value={doc.crencaCentral} />
+            <Campo label="Tom de voz" value={metodo.tomDeVoz} />
+            <Campo label="Palavras para usar" value={metodo.palavrasUsar} />
+            <Campo label="Palavras para evitar" value={metodo.palavrasEvitar} />
+            <Campo label="Crença central" value={metodo.crencaCentral} />
           </Seccao>
 
           <Seccao n="07" titulo="O teu método">
@@ -141,28 +142,16 @@ export default function DocMestrePreview({
           </Seccao>
 
           <Seccao n="08" titulo="Identidade visual">
-            <Campo label="Vibe da marca" value={doc.vibeMarca} />
-            {(doc.cor1 || doc.cor2 || doc.cor3 || doc.cor4 || doc.corDestaque) && (
-              <div className="flex flex-wrap gap-2 mb-3">
-                {[doc.cor1, doc.cor2, doc.cor3, doc.cor4, doc.corDestaque].filter(Boolean).map((c: string, i: number) => (
-                  <span key={i} className="inline-flex items-center gap-1.5 text-[11px] text-ink/70 border border-[var(--color-border)] rounded-full pl-1.5 pr-2 py-0.5">
-                    <span className="w-3 h-3 rounded-full" style={{ background: c }} /> {c}
-                  </span>
-                ))}
-              </div>
-            )}
-            <Campo label="Tipografia" value={[doc.fonteTitulo, doc.fonteCorpo, doc.fonteMao].filter(Boolean).join(" · ")} />
-            <Campo label="Estilo de imagem" value={doc.estiloImagem} />
-            <Campo label="Antipadrões" value={doc.antipadroes} />
+            <Campo label="Vibe da marca" value={metodo.vibeMarca} />
+            <Campo label="Paleta" value={metodo.paleta} />
+            <Campo label="Tipografia" value={[metodo.tipografiaTitulo, metodo.tipografiaCorpo, metodo.tipografiaManuscrita].filter(Boolean).join(" · ")} />
+            <Campo label="Estilo de imagem" value={metodo.estiloImagem} />
+            <Campo label="Antipadrões" value={metodo.antipadroesVisuais} />
           </Seccao>
 
           <Seccao n="09" titulo="Bio & posicionamento">
-            <Campo label="Opinião 1" value={doc.opiniao1} />
-            <Campo label="Opinião 2" value={doc.opiniao2} />
-            <Campo label="Opinião 3" value={doc.opiniao3} />
-            <Campo label="Formato de conteúdo" value={doc.formatoConteudo} />
-            <Campo label="Página / URL" value={doc.url} />
-            <Campo label="Formato de entrega" value={doc.formatoEntrega} />
+            <Campo label="Opiniões / pontos de vista" value={metodo.opinioesPolemicas} />
+            <Campo label="Posicionamento" value={metodo.posicionamento} />
           </Seccao>
 
           <p className="text-[11px] text-ink/40 mt-8 pt-4 border-t border-[var(--color-border)]">
