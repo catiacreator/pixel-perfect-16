@@ -1,28 +1,87 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { isAdminEmail } from "@/lib/access";
 import { z } from "zod";
 
-async function assertAdmin(supabase: any, userId: string) {
-  const { data, error } = await supabase.rpc("has_role", { _user_id: userId, _role: "admin" });
-  if (error) throw new Error("Falha ao validar permissão");
-  if (!data) throw new Error("Forbidden");
+// A administradora principal (dona) — só ela pode adicionar/eliminar alunos e atribuir papéis.
+const OWNER_EMAILS = ["catiasmgon@gmail.com"];
+
+function emailFromContext(context: any): string {
+  return String(context?.claims?.email ?? "").trim().toLowerCase();
+}
+
+/** Papéis de um utilizador (lidos via service role, ignora RLS/grants). */
+async function rolesOf(supabaseAdmin: any, userId: string): Promise<string[]> {
+  const { data } = await supabaseAdmin.from("user_roles").select("role").eq("user_id", userId);
+  return (data ?? []).map((r: { role: string }) => r.role);
+}
+
+/** Pode entrar no painel: admin (por email) OU papel admin/moderador. */
+async function assertAdmin(context: any) {
+  const email = emailFromContext(context);
+  if (isAdminEmail(email) || OWNER_EMAILS.includes(email)) return;
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const roles = await rolesOf(supabaseAdmin, context.userId);
+  if (!roles.includes("admin") && !roles.includes("moderator")) throw new Error("Forbidden");
+}
+
+/** Só a dona — ações sensíveis (adicionar/eliminar/atribuir papéis). */
+async function assertOwner(userId: string) {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { data } = await supabaseAdmin.from("profiles").select("email").eq("id", userId).single();
+  const email = (data?.email ?? "").trim().toLowerCase();
+  if (!OWNER_EMAILS.includes(email)) {
+    throw new Error("Apenas a administradora principal pode fazer isto.");
+  }
 }
 
 export const checkIsAdmin = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { data } = await context.supabase.rpc("has_role", {
-      _user_id: context.userId,
-      _role: "admin",
-    });
-    return { isAdmin: Boolean(data) };
+    // Porta do painel — NÃO depende da service role (usa o email do token + papéis via RLS),
+    // para o shell carregar mesmo antes de a service role estar configurada.
+    const email = emailFromContext(context);
+    if (isAdminEmail(email) || OWNER_EMAILS.includes(email)) {
+      return { isAdmin: true, canAccess: true, isOwner: OWNER_EMAILS.includes(email) };
+    }
+    let canAccess = false;
+    try {
+      const { data: roles } = await context.supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", context.userId);
+      canAccess = (roles ?? []).some(
+        (r: { role: string }) => r.role === "admin" || r.role === "moderator",
+      );
+    } catch {
+      // tabela ainda não existe
+    }
+    return { isAdmin: canAccess, canAccess, isOwner: false };
+  });
+
+// Estado de configuração do painel (não depende da service role).
+export const getAdminConfig = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async () => {
+    const serviceRole = !!process.env.SUPABASE_SERVICE_ROLE_KEY;
+    let schema = false;
+    if (serviceRole) {
+      try {
+        const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+        const { error } = await supabaseAdmin.from("profiles").select("id").limit(1);
+        schema = !error;
+      } catch {
+        schema = false;
+      }
+    }
+    return { serviceRole, schema };
   });
 
 // ---------- Métricas / Visão geral ----------
 export const getAdminOverview = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const seteDias = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
@@ -66,14 +125,27 @@ export const getAdminOverview = createServerFn({ method: "GET" })
 export const listMentoradas = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data, error } = await supabaseAdmin
-      .from("profiles")
-      .select("id, nome, email, tier, pontos, sequencia, ultima_atividade, created_at, approved")
-      .order("created_at", { ascending: false });
+    const [{ data, error }, { data: roles }] = await Promise.all([
+      supabaseAdmin
+        .from("profiles")
+        .select("id, nome, email, tier, pontos, sequencia, ultima_atividade, created_at, approved")
+        .order("created_at", { ascending: false }),
+      supabaseAdmin.from("user_roles").select("user_id, role"),
+    ]);
     if (error) throw error;
-    return data ?? [];
+    // Papel "mais forte" por utilizador: admin > moderator > user.
+    const rank = (r: string) => (r === "admin" ? 3 : r === "moderator" ? 2 : 1);
+    const roleByUser = new Map<string, string>();
+    for (const r of roles ?? []) {
+      const cur = roleByUser.get(r.user_id);
+      if (!cur || rank(r.role) > rank(cur)) roleByUser.set(r.user_id, r.role);
+    }
+    return (data ?? []).map((m: { id: string }) => ({
+      ...m,
+      role: roleByUser.get(m.id) ?? "user",
+    }));
   });
 
 export const setApproval = createServerFn({ method: "POST" })
@@ -82,7 +154,7 @@ export const setApproval = createServerFn({ method: "POST" })
     z.object({ userId: z.string().uuid(), approved: z.boolean() }).parse(d),
   )
   .handler(async ({ context, data }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin
       .from("profiles")
@@ -96,7 +168,7 @@ export const getMentorada = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ context, data }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const [{ data: perfil }, { data: log }, { data: conquistas }] = await Promise.all([
       supabaseAdmin.from("profiles").select("*").eq("id", data.id).single(),
@@ -126,7 +198,7 @@ export const adjustPoints = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ context, data }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     const { data: profile } = await supabaseAdmin
@@ -152,7 +224,7 @@ export const updateTier = createServerFn({ method: "POST" })
     z.object({ userId: z.string().uuid(), tier: z.string().min(1).max(40) }).parse(d),
   )
   .handler(async ({ context, data }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     await supabaseAdmin.from("profiles").update({ tier: data.tier }).eq("id", data.userId);
     return { ok: true };
@@ -162,10 +234,64 @@ export const deleteMentorada = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { userId: string }) => z.object({ userId: z.string().uuid() }).parse(d))
   .handler(async ({ context, data }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { error } = await supabaseAdmin.auth.admin.deleteUser(data.userId);
     if (error) throw error;
+    return { ok: true };
+  });
+
+// Adicionar aluno (só a dona). Cria a conta já confirmada; o trigger cria o perfil.
+export const createMentorada = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { email: string; nome: string; password: string }) =>
+    z
+      .object({
+        email: z.string().email(),
+        nome: z.string().min(1).max(120),
+        password: z.string().min(6).max(72),
+      })
+      .parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertOwner(context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
+      email: data.email,
+      password: data.password,
+      email_confirm: true,
+      user_metadata: { full_name: data.nome },
+    });
+    if (error) throw new Error(error.message);
+    // O trigger handle_new_user cria o perfil; garante nome + aprovação.
+    if (created.user) {
+      await supabaseAdmin
+        .from("profiles")
+        .update({ nome: data.nome, approved: true })
+        .eq("id", created.user.id);
+    }
+    return { ok: true };
+  });
+
+// Atribuir papel (só a dona): admin | moderator | user. Substitui os papéis existentes.
+export const setUserRole = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { userId: string; role: "admin" | "moderator" | "user" }) =>
+    z.object({ userId: z.string().uuid(), role: z.enum(["admin", "moderator", "user"]) }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertOwner(context.userId);
+    if (data.userId === context.userId && data.role !== "admin") {
+      throw new Error("Não pode remover o seu próprio acesso de administradora.");
+    }
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    await supabaseAdmin.from("user_roles").delete().eq("user_id", data.userId);
+    // O enum em types.ts ainda não lista "moderator" (acrescentado por migração) — cast seguro.
+    await supabaseAdmin.from("user_roles").insert({ user_id: data.userId, role: data.role } as any);
+    // Quem tem privilégios entra já aprovado.
+    if (data.role === "admin" || data.role === "moderator") {
+      await supabaseAdmin.from("profiles").update({ approved: true }).eq("id", data.userId);
+    }
     return { ok: true };
   });
 
@@ -173,7 +299,7 @@ export const deleteMentorada = createServerFn({ method: "POST" })
 export const resetRanking = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     await supabaseAdmin.from("profiles").update({ pontos: 0, sequencia: 0 }).neq("id", "00000000-0000-0000-0000-000000000000");
     await supabaseAdmin.from("pontos_log").insert({
@@ -191,7 +317,7 @@ export const updateSequencia = createServerFn({ method: "POST" })
     z.object({ userId: z.string().uuid(), sequencia: z.number().int().min(0) }).parse(d),
   )
   .handler(async ({ context, data }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     await supabaseAdmin.from("profiles").update({ sequencia: data.sequencia }).eq("id", data.userId);
     return { ok: true };
@@ -200,7 +326,7 @@ export const updateSequencia = createServerFn({ method: "POST" })
 export const listConquistas = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data } = await supabaseAdmin.from("conquistas").select("*").order("ordem");
     return data ?? [];
@@ -212,7 +338,7 @@ export const grantConquista = createServerFn({ method: "POST" })
     z.object({ userId: z.string().uuid(), conquistaId: z.string().uuid() }).parse(d),
   )
   .handler(async ({ context, data }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     await supabaseAdmin
       .from("mentorada_conquistas")
@@ -226,7 +352,7 @@ export const revokeConquista = createServerFn({ method: "POST" })
     z.object({ userId: z.string().uuid(), conquistaId: z.string().uuid() }).parse(d),
   )
   .handler(async ({ context, data }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     await supabaseAdmin
       .from("mentorada_conquistas")
@@ -240,7 +366,7 @@ export const revokeConquista = createServerFn({ method: "POST" })
 export const listPilares = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: pilares } = await supabaseAdmin.from("pilares").select("*").order("ordem");
     const { data: etapas } = await supabaseAdmin.from("etapas").select("*").order("ordem");
@@ -262,7 +388,7 @@ export const upsertPilar = createServerFn({ method: "POST" })
         .parse(d),
   )
   .handler(async ({ context, data }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     if (data.id) {
       await supabaseAdmin.from("pilares").update(data).eq("id", data.id);
@@ -297,7 +423,7 @@ export const upsertEtapa = createServerFn({ method: "POST" })
         .parse(d),
   )
   .handler(async ({ context, data }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     if (data.id) {
       await supabaseAdmin.from("etapas").update(data).eq("id", data.id);
@@ -311,7 +437,7 @@ export const deleteEtapa = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
   .handler(async ({ context, data }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     await supabaseAdmin.from("etapas").delete().eq("id", data.id);
     return { ok: true };
@@ -321,7 +447,7 @@ export const deleteEtapa = createServerFn({ method: "POST" })
 export const listRanking = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    await assertAdmin(context.supabase, context.userId);
+    await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data } = await supabaseAdmin
       .from("profiles")

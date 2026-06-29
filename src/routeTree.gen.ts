@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PendingRouteImport } from './routes/pending'
 import { Route as MinhaBaseRouteImport } from './routes/minha-base'
 import { Route as MeusProjetosRouteImport } from './routes/meus-projetos'
@@ -89,6 +90,11 @@ import { Route as MetodoPilar2RedesSociaisInstagramFormatoRouteImport } from './
 import { Route as MetodoPilar1AprendaIaClaudeInstalarSkillsRouteImport } from './routes/metodo.pilar-1.aprenda-ia.claude.instalar-skills'
 import { Route as MetodoPilar1AprendaIaToolLessonSlugRouteImport } from './routes/metodo.pilar-1.aprenda-ia.$tool.$lessonSlug'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PendingRoute = PendingRouteImport.update({
   id: '/pending',
   path: '/pending',
@@ -532,6 +538,7 @@ export interface FileRoutesByFullPath {
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
   '/pending': typeof PendingRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/api/hotmart-webhook': typeof ApiHotmartWebhookRoute
@@ -611,6 +618,7 @@ export interface FileRoutesByTo {
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
   '/pending': typeof PendingRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/api/chat': typeof ApiChatRoute
   '/api/hotmart-webhook': typeof ApiHotmartWebhookRoute
   '/metodo': typeof MetodoIndexRoute
@@ -682,6 +690,7 @@ export interface FileRoutesById {
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
   '/pending': typeof PendingRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/api/hotmart-webhook': typeof ApiHotmartWebhookRoute
@@ -764,6 +773,7 @@ export interface FileRouteTypes {
     | '/meus-projetos'
     | '/minha-base'
     | '/pending'
+    | '/reset-password'
     | '/admin'
     | '/api/chat'
     | '/api/hotmart-webhook'
@@ -843,6 +853,7 @@ export interface FileRouteTypes {
     | '/meus-projetos'
     | '/minha-base'
     | '/pending'
+    | '/reset-password'
     | '/api/chat'
     | '/api/hotmart-webhook'
     | '/metodo'
@@ -913,6 +924,7 @@ export interface FileRouteTypes {
     | '/meus-projetos'
     | '/minha-base'
     | '/pending'
+    | '/reset-password'
     | '/_authenticated/admin'
     | '/api/chat'
     | '/api/hotmart-webhook'
@@ -995,12 +1007,20 @@ export interface RootRouteChildren {
   MeusProjetosRoute: typeof MeusProjetosRoute
   MinhaBaseRoute: typeof MinhaBaseRoute
   PendingRoute: typeof PendingRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiHotmartWebhookRoute: typeof ApiHotmartWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/pending': {
       id: '/pending'
       path: '/pending'
@@ -1862,6 +1882,7 @@ const rootRouteChildren: RootRouteChildren = {
   MeusProjetosRoute: MeusProjetosRoute,
   MinhaBaseRoute: MinhaBaseRoute,
   PendingRoute: PendingRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ApiChatRoute: ApiChatRoute,
   ApiHotmartWebhookRoute: ApiHotmartWebhookRoute,
 }

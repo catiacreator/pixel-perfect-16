@@ -1,10 +1,12 @@
 import { Link } from "@/lib/router-compat";
 import { useLocation, useRouter } from "@tanstack/react-router";
-import { FileText, Mail, Map, Bot, Database, Award, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, LogOut, CalendarDays, Lock } from "lucide-react";
+import { FileText, Mail, Map, Bot, Database, Award, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, CalendarDays, Lock } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { initMasterDocSync, resetMasterDocSync } from "@/lib/master-doc-sync";
+import { initMasterDocSync } from "@/lib/master-doc-sync";
+import { readStoredSession } from "@/lib/session";
 import ThemeToggle from "@/components/ThemeToggle";
+import UserMenu from "@/components/UserMenu";
 import ModulePaywall from "@/components/ModulePaywall";
 import { useAccess } from "@/lib/use-access";
 import type { ModuleKey } from "@/lib/access";
@@ -27,20 +29,27 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     let active = true;
-    async function load() {
-      const { data: { user } } = await supabase.auth.getUser();
+    async function load(uid: string | null) {
       if (!active) return;
-      setSignedIn(!!user);
-      if (user) {
+      setSignedIn(!!uid);
+      if (uid) {
         void initMasterDocSync();
-        const { data } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
-        if (active) setIsAdmin(!!data);
+        // Lê os papéis direto da tabela (RLS permite ler os próprios) — has_role tem EXECUTE revogado.
+        const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", uid);
+        const isStaff = (roles ?? []).some(
+          (r) => (r.role as string) === "admin" || (r.role as string) === "moderator",
+        );
+        if (active) setIsAdmin(isStaff);
       } else {
         setIsAdmin(false);
       }
     }
-    load();
-    const { data: sub } = supabase.auth.onAuthStateChange(() => load());
+    // Leitura síncrona do storage — instantânea e não pendura.
+    load(readStoredSession()?.user?.id ?? null);
+    // Reage a login/logout.
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) =>
+      load(session?.user?.id ?? readStoredSession()?.user?.id ?? null),
+    );
     return () => { active = false; sub.subscription.unsubscribe(); };
   }, []);
 
@@ -69,12 +78,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const blocked = !!gateModule && !accessLoading && !has(gateModule);
   // Itens de navegação só ficam disponíveis com pelo menos 1 módulo comprado.
   const navLocked = !accessLoading && !hasAny;
-
-  async function handleLogout() {
-    await supabase.auth.signOut();
-    resetMasterDocSync();
-    router.navigate({ to: "/auth" });
-  }
 
   return (
     <div className={`min-h-screen w-full flex flex-col bg-cream text-ink font-display${roxo ? " theme-roxo" : ""}`}>
@@ -149,17 +152,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <Mail size={15} strokeWidth={1.75} />
             </Link>
             {signedIn ? (
-              <button
-                onClick={handleLogout}
-                className="hidden md:inline-flex w-10 h-10 rounded-full border border-ink/15 items-center justify-center text-ink/60 hover:bg-ink/5 hover:text-ink transition-colors"
-                aria-label="Sair"
-              >
-                <LogOut size={15} strokeWidth={1.75} />
-              </button>
+              <UserMenu />
             ) : (
               <Link
                 to="/auth"
-                className="hidden md:inline-flex text-[13px] px-4 py-2 border border-ink/20 text-ink rounded-full hover:bg-ink/5 transition-colors"
+                className="inline-flex text-[13px] px-4 py-2 border border-ink/20 text-ink rounded-full hover:bg-ink/5 transition-colors"
               >
                 Entrar
               </Link>

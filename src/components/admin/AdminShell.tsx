@@ -1,15 +1,15 @@
 import { Link, useRouterState, useNavigate, Outlet } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { LayoutDashboard, Users, Trophy, FileText, LogOut, ArrowLeft } from "lucide-react";
+import { LayoutDashboard, Users, Trophy, FileText, LogOut, ArrowLeft, KeyRound } from "lucide-react";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { checkIsAdmin } from "@/lib/admin.functions";
+import { checkIsAdmin, getAdminConfig } from "@/lib/admin.functions";
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
 const ITEMS: NavItem[] = [
   { to: "/admin", label: "Visão geral", icon: LayoutDashboard, exact: true },
-  { to: "/admin/mentoradas", label: "Mentoradas", icon: Users },
+  { to: "/admin/mentoradas", label: "Alunos", icon: Users },
   { to: "/admin/ranking", label: "Ranking", icon: Trophy },
   { to: "/admin/conteudo", label: "Conteúdo", icon: FileText },
 ];
@@ -17,9 +17,14 @@ const ITEMS: NavItem[] = [
 export function AdminShell() {
   const navigate = useNavigate();
   const check = useServerFn(checkIsAdmin);
+  const configFn = useServerFn(getAdminConfig);
   const { data } = useSuspenseQuery({
     queryKey: ["admin-check"],
     queryFn: () => check(),
+  });
+  const { data: config } = useSuspenseQuery({
+    queryKey: ["admin-config"],
+    queryFn: () => configFn(),
   });
 
   useEffect(() => {
@@ -90,8 +95,62 @@ export function AdminShell() {
       </aside>
 
       <main className="flex-1 min-w-0 overflow-auto">
-        <Outlet />
+        {!config.serviceRole ? (
+          <SetupCard
+            titulo="Falta configurar a chave de serviço"
+            descricao="O painel precisa da Service Role Key do Supabase para gerir contas (ver alunos, adicionar, eliminar, atribuir papéis)."
+            passos={[
+              "No Supabase: Settings → API → service_role → Reveal → Copy.",
+              "Abre o ficheiro .env do projeto e cola depois de SUPABASE_SERVICE_ROLE_KEY=.",
+              "Guarda (o servidor reinicia) e recarrega esta página.",
+            ]}
+            nota="⚠️ É uma chave secreta — fica só no servidor (o .env não vai para o git)."
+          />
+        ) : !config.schema ? (
+          <SetupCard
+            titulo="Falta criar as tabelas (correr o SQL)"
+            descricao="A chave de serviço já está OK, mas a base de dados do projeto novo ainda está vazia — faltam as tabelas (profiles, user_roles, etc.)."
+            passos={[
+              "No Supabase: SQL Editor → New query.",
+              "Abre scripts/setup-supabase.sql, copia tudo, cola e clica Run.",
+              "Recarrega esta página.",
+            ]}
+            nota="Isto também te torna admin e aprovada automaticamente."
+          />
+        ) : (
+          <Outlet />
+        )}
       </main>
+    </div>
+  );
+}
+
+function SetupCard({
+  titulo,
+  descricao,
+  passos,
+  nota,
+}: {
+  titulo: string;
+  descricao: string;
+  passos: string[];
+  nota?: string;
+}) {
+  return (
+    <div className="p-8 max-w-2xl mx-auto">
+      <div className="bg-white border border-amber-200 rounded-2xl p-6">
+        <div className="flex items-center gap-2.5 text-amber-700">
+          <KeyRound size={18} />
+          <h1 className="text-lg font-semibold">{titulo}</h1>
+        </div>
+        <p className="text-sm text-ink/70 mt-3 leading-relaxed">{descricao}</p>
+        <ol className="text-sm text-ink/70 mt-4 space-y-2 list-decimal pl-5">
+          {passos.map((p) => (
+            <li key={p}>{p}</li>
+          ))}
+        </ol>
+        {nota && <p className="text-xs text-ink/45 mt-4">{nota}</p>}
+      </div>
     </div>
   );
 }

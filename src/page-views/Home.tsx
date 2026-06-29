@@ -45,7 +45,7 @@ const CARDS = [
     cta: "Explorar",
     tags: ["Modelos", "Linha editorial", "Calendário", "Bio"],
     cor: "#C8487E",
-    img: "",
+    img: "/redes-sociais.png?v=3",
   },
 ];
 
@@ -108,10 +108,10 @@ export default function Home() {
             style={{ backgroundImage: "radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)", backgroundSize: "24px 24px" }}
           />
 
-          <div className="relative grid lg:grid-cols-[1.1fr_0.9fr] gap-4 lg:gap-10 items-center px-6 md:px-12 py-6 md:py-9">
+          <div className="relative grid lg:grid-cols-[1.1fr_0.9fr] gap-4 lg:gap-10 items-center px-6 md:px-12 py-4 md:py-6">
             {/* Texto */}
             <div className="fade-up">
-              <div className="flex items-center gap-2 mb-6">
+              <div className="flex items-center gap-2 mb-4">
                 <span className="w-2 h-2 rounded-full bg-white/90" />
                 <span className="w-2 h-2 rounded-full bg-white/60" />
                 <span className="w-2 h-2 rounded-full bg-white/40" />
@@ -127,11 +127,11 @@ export default function Home() {
                 <span className="block">e método</span>
               </h1>
 
-              <p className="text-white/80 max-w-md mt-5 leading-relaxed">
+              <p className="text-white/80 max-w-md mt-4 leading-relaxed">
                 Transforme o que sabe em conteúdo, autoridade e liberdade — com Inteligência Artificial.
               </p>
 
-              <div className="mt-7 flex flex-wrap items-center gap-3">
+              <div className="mt-5 flex flex-wrap items-center gap-3">
                 <Link
                   to="/doc-mestre"
                   className="group inline-flex items-center gap-2 bg-[#ffffff] text-[#141414] pl-6 pr-2 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_-12px_rgba(0,0,0,0.5)] active:scale-[0.97]"
@@ -152,8 +152,8 @@ export default function Home() {
             </div>
 
             {/* Robô animado */}
-            <div className="relative fade-up flex justify-center items-center min-h-[280px] md:min-h-[320px]" style={{ animationDelay: "120ms" }}>
-              <HeroRobot scale={0.66} />
+            <div className="relative fade-up flex justify-center items-center min-h-[240px] md:min-h-[280px]" style={{ animationDelay: "120ms" }}>
+              <HeroRobot scale={0.78} />
             </div>
           </div>
         </div>
@@ -170,12 +170,12 @@ export default function Home() {
           </div>
 
 
-          <div className="grid md:grid-cols-3 gap-4 md:gap-5">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             {CARDS.map((c, i) => {
               const Icon = c.icon;
               const locked = !accessLoading && !has(c.modulo);
               const checkout = MODULES[c.modulo].checkoutUrl;
-              const cls = "fade-up group relative overflow-hidden rounded-3xl border border-white/60 bg-white/55 backdrop-blur-xl p-6 md:p-7 flex flex-col aspect-[9/16] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:bg-white/70";
+              const cls = "fade-up group relative overflow-hidden rounded-3xl border border-white/60 bg-white/55 backdrop-blur-xl p-5 md:p-6 flex flex-col aspect-[9/16] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:bg-white/70";
               const style = { "--mc": c.cor, animationDelay: `${i * 90}ms` } as Record<string, string>;
 
               const inner = c.img ? (
@@ -187,13 +187,15 @@ export default function Home() {
                     style={{ backgroundImage: `url(${c.img})`, backgroundColor: c.cor }}
                   />
                   <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
+                  {/* barrinha da cor do módulo no topo */}
+                  <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5 z-10" style={{ background: c.cor }} />
                   {locked && (
-                    <span className="absolute top-4 right-4 z-10 inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-white bg-black/45 border border-white/25 rounded-full px-2 py-1 backdrop-blur-sm">
-                      <Lock size={11} /> Bloqueado
+                    <span className="absolute top-4 right-4 z-10 inline-flex items-center gap-1.5 text-[13px] font-semibold uppercase tracking-wider text-white bg-black/50 border border-white/25 rounded-full px-3 py-1.5 backdrop-blur-sm">
+                      <Lock size={14} /> Bloqueado
                     </span>
                   )}
-                  <span className="relative mt-auto inline-flex items-center gap-2.5 text-sm font-semibold text-white">
-                    {locked ? "Desbloquear na Hotmart" : c.cta}
+                  <span className="relative mt-auto inline-flex items-center gap-2.5 text-base font-semibold text-white">
+                    {locked ? "Desbloquear acesso" : c.cta}
                     <span className="w-9 h-9 rounded-full border border-white/60 flex items-center justify-center transition-all duration-300 group-hover:bg-white group-hover:text-ink group-hover:translate-x-0.5">
                       {locked ? <Lock size={14} strokeWidth={2.25} /> : <ArrowUpRight size={15} strokeWidth={2.25} />}
                     </span>
@@ -203,8 +205,8 @@ export default function Home() {
                 <>
                   <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5" style={{ background: c.cor }} />
                   {locked && (
-                    <span className="absolute top-4 right-4 inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-ink/55 bg-white/80 border border-[var(--color-border)] rounded-full px-2 py-1">
-                      <Lock size={11} /> Bloqueado
+                    <span className="absolute top-4 right-4 inline-flex items-center gap-1.5 text-[13px] font-semibold uppercase tracking-wider text-ink/55 bg-white/80 border border-[var(--color-border)] rounded-full px-3 py-1.5">
+                      <Lock size={14} /> Bloqueado
                     </span>
                   )}
                   <div className="mb-6">
@@ -233,8 +235,8 @@ export default function Home() {
                     ))}
                   </div>
 
-                  <span className="mt-6 inline-flex items-center gap-2.5 text-sm font-semibold" style={{ color: c.cor }}>
-                    {locked ? "Desbloquear na Hotmart" : c.cta}
+                  <span className="mt-6 inline-flex items-center gap-2.5 text-base font-semibold" style={{ color: c.cor }}>
+                    {locked ? "Desbloquear acesso" : c.cta}
                     <span
                       className="w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-300 group-hover:text-cream group-hover:translate-x-0.5 group-hover:bg-[var(--mc)] group-hover:border-[var(--mc)]"
                       style={{ borderColor: c.cor }}
@@ -263,6 +265,20 @@ export default function Home() {
                 </Link>
               );
             })}
+
+            {/* 4.º card — Em breve (placeholder, não clicável) */}
+            <div
+              className="fade-up relative overflow-hidden rounded-3xl border border-dashed border-ink/20 bg-white/30 p-5 md:p-6 flex flex-col items-center justify-center text-center aspect-[9/16]"
+              style={{ animationDelay: `${CARDS.length * 90}ms` }}
+            >
+              <span className="w-12 h-12 rounded-2xl bg-ink/5 flex items-center justify-center text-ink/35 mb-4">
+                <Sparkles size={20} strokeWidth={1.75} />
+              </span>
+              <p className="text-[11px] uppercase tracking-[0.3em] text-ink/40">Em breve</p>
+              <h3 className="font-display text-xl md:text-2xl text-ink/55 mt-2 leading-tight">
+                Novo módulo<br />a chegar
+              </h3>
+            </div>
           </div>
         </div>
       </section>

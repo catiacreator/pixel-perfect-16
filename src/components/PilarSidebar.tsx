@@ -256,7 +256,9 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
             const Icon = item.icon;
             const active = isActive(item.to);
             const hasChildren = !!item.children?.length;
-            const open = openId === item.to || (hasChildren && active);
+            // Abre se for o pai ativo OU se uma filha for a página atual (reativo à rota).
+            const childActive = hasChildren && item.children!.some((c) => isActive(c.to));
+            const open = openId === item.to || active || childActive;
 
             return (
               <li key={item.to}>

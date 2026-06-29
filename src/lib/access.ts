@@ -7,6 +7,7 @@
 // Emails de administração — vêem SEMPRE tudo desbloqueado (sem paywall).
 export const ADMIN_EMAILS = [
   "catiacreator.oficial@gmail.com",
+  "catiacreator@gmail.com",
   "catiasmgon@gmail.com",
 ];
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { isAdminEmail, type ModuleKey } from "@/lib/access";
+import { readStoredSession } from "@/lib/session";
 
 const ALL: ModuleKey[] = ["jornada", "academia", "redes"];
 
@@ -18,30 +19,42 @@ export function useAccess() {
 
   useEffect(() => {
     let active = true;
+    // Salvaguarda: nunca deixar o ecrã preso em "A verificar acesso…".
+    const safety = setTimeout(() => { if (active) setLoading(false); }, 4000);
     (async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        // Lê a sessão direto do storage (síncrono, nunca pendura) — getSession()/getUser() podem bloquear.
+        const user = readStoredSession()?.user;
         if (!user) {
           if (active) { setSignedIn(false); setLoading(false); }
           return;
         }
         if (active) setSignedIn(true);
 
-        // Admin por email — vê SEMPRE tudo (não depende do papel na BD)
+        // Admin por email — vê SEMPRE tudo, de imediato e sem tocar na BD.
         if (isAdminEmail(user.email)) {
           if (active) { setIsAdmin(true); setUnlocked(new Set(ALL)); setLoading(false); }
           return;
         }
 
-        // Admin por papel na base de dados
-        const { data: adm } = await supabase.rpc("has_role", { _user_id: user.id, _role: "admin" });
-        if (adm) {
-          if (active) { setIsAdmin(true); setUnlocked(new Set(ALL)); setLoading(false); }
-          return;
+        // Admin/moderador por papel — lê user_roles diretamente (RLS permite ler os próprios).
+        try {
+          const { data: roles } = await supabase
+            .from("user_roles")
+            .select("role")
+            .eq("user_id", user.id);
+          const staff = (roles ?? []).some(
+            (r) => (r.role as string) === "admin" || (r.role as string) === "moderator",
+          );
+          if (staff) {
+            if (active) { setIsAdmin(true); setUnlocked(new Set(ALL)); setLoading(false); }
+            return;
+          }
+        } catch {
+          // tabela ainda não existe → segue para compras
         }
 
         // Compras por módulo (webhook da Hotmart preenche esta tabela).
-        // Procura pelo email do utilizador (a compra fica ligada ao email do comprador).
         try {
           const { data: rows } = await (supabase as any)
             .from("module_purchases")
@@ -55,10 +68,11 @@ export function useAccess() {
           // tabela ainda não existe / erro → tudo bloqueado
         }
       } finally {
+        clearTimeout(safety);
         if (active) setLoading(false);
       }
     })();
-    return () => { active = false; };
+    return () => { active = false; clearTimeout(safety); };
   }, []);
 
   const has = (k: ModuleKey) => isAdmin || unlocked.has(k);
