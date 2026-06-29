@@ -62,5 +62,6 @@ export function useAccess() {
   }, []);
 
   const has = (k: ModuleKey) => isAdmin || unlocked.has(k);
-  return { loading, has, isAdmin, signedIn };
+  const hasAny = isAdmin || unlocked.size > 0;
+  return { loading, has, hasAny, isAdmin, signedIn };
 }

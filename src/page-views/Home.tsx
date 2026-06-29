@@ -10,7 +10,6 @@ import {
   Compass,
   GraduationCap,
   MessageSquare,
-  FileText,
   Lock,
 } from "lucide-react";
 
@@ -170,35 +169,6 @@ export default function Home() {
             </h2>
           </div>
 
-          {/* Card horizontal — Documento Mestre */}
-          <Link
-            to="/doc-mestre"
-            className="fade-up group relative overflow-hidden rounded-3xl mb-4 md:mb-5 flex flex-wrap items-center gap-4 md:gap-5 p-5 md:p-7 text-white transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_24px_55px_-22px_rgba(0,0,0,0.55)]"
-            style={{ background: "linear-gradient(120deg, #A9572E 0%, #C0653A 48%, #C98A50 100%)" }}
-          >
-            <span
-              aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-[0.07]"
-              style={{ backgroundImage: "radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)", backgroundSize: "22px 22px" }}
-            />
-            <span className="relative w-14 h-14 md:w-16 md:h-16 rounded-2xl bg-white/15 border border-white/25 backdrop-blur-sm flex items-center justify-center shrink-0">
-              <FileText size={26} strokeWidth={1.75} />
-            </span>
-            <div className="relative min-w-0 flex-1">
-              <h3 className="font-display text-xl md:text-2xl tracking-[-0.01em] leading-tight">
-                Cria o teu Documento Mestre
-              </h3>
-              <p className="text-white/70 text-sm mt-1 leading-relaxed">
-                Este documento vai alimentar todo o teu sistema.
-              </p>
-            </div>
-            <span className="relative ml-auto inline-flex items-center gap-2 bg-white text-ink pl-5 pr-2 py-2 rounded-full text-sm font-semibold shrink-0 transition-transform group-hover:translate-x-0.5">
-              Começa aqui
-              <span className="w-8 h-8 rounded-full bg-ink text-cream flex items-center justify-center">
-                <ArrowUpRight size={15} strokeWidth={2.25} />
-              </span>
-            </span>
-          </Link>
 
           <div className="grid md:grid-cols-3 gap-4 md:gap-5">
             {CARDS.map((c, i) => {

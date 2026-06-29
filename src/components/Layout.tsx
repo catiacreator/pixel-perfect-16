@@ -1,6 +1,6 @@
 import { Link } from "@/lib/router-compat";
 import { useLocation, useRouter } from "@tanstack/react-router";
-import { FileText, Mail, Map, Bot, Database, Award, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, LogOut, CalendarDays } from "lucide-react";
+import { FileText, Mail, Map, Bot, Database, Award, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, LogOut, CalendarDays, Lock } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { initMasterDocSync, resetMasterDocSync } from "@/lib/master-doc-sync";
@@ -11,11 +11,11 @@ import type { ModuleKey } from "@/lib/access";
 
 const NAV = [
   { to: "/", label: "Início", icon: Map },
-  { to: "/assistente", label: "Assistente IA", icon: Bot },
+  { to: "/assistente", label: "Assistente IA", icon: Bot, gated: true },
   { to: "/metodo/pilar-1/aprenda-ia/claude/instalar-skills", label: "Skills", icon: Award },
-  { to: "/minha-base", label: "A minha jornada", icon: Database },
-  { to: "/agenda", label: "A minha Agenda", icon: CalendarDays },
-  { to: "/conquistas", label: "Vitórias", icon: Trophy },
+  { to: "/minha-base", label: "A minha jornada", icon: Database, gated: true },
+  { to: "/agenda", label: "A minha Agenda", icon: CalendarDays, gated: true },
+  { to: "/conquistas", label: "Vitórias", icon: Trophy, gated: true },
 ];
 
 export default function Layout({ children }: { children: React.ReactNode }) {
@@ -65,8 +65,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   // Paywall por módulo: bloqueia o acesso direto às rotas dos produtos.
   const gateModule: ModuleKey | null = academia ? "academia" : redes ? "redes" : jornada ? "jornada" : null;
-  const { has, loading: accessLoading, signedIn: hasAccessSignedIn } = useAccess();
+  const { has, hasAny, loading: accessLoading, signedIn: hasAccessSignedIn } = useAccess();
   const blocked = !!gateModule && !accessLoading && !has(gateModule);
+  // Itens de navegação só ficam disponíveis com pelo menos 1 módulo comprado.
+  const navLocked = !accessLoading && !hasAny;
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -93,6 +95,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <nav className="hidden lg:flex items-center justify-center gap-1">
             {NAV.map((item) => {
               const active = isActive(item.to);
+              if (item.gated && navLocked) {
+                return (
+                  <span
+                    key={item.to}
+                    title="Disponível depois da primeira compra"
+                    className="relative px-3.5 py-2 rounded-full text-[13px] text-ink/30 cursor-not-allowed inline-flex items-center gap-1.5"
+                  >
+                    <Lock size={12} /> {item.label}
+                  </span>
+                );
+              }
               return (
                 <Link
                   key={item.to}
@@ -167,6 +180,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {NAV.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.to);
+              if (item.gated && navLocked) {
+                return (
+                  <span
+                    key={item.to}
+                    className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm text-ink/30 cursor-not-allowed"
+                  >
+                    <Lock size={16} strokeWidth={1.75} />
+                    {item.label}
+                  </span>
+                );
+              }
               return (
                 <Link
                   key={item.to}
