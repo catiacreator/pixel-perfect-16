@@ -485,7 +485,7 @@ export default function EsbocoMetodo() {
                   onClick={() => notifySaved("Método guardado ✓")}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta text-cream text-sm font-semibold hover:bg-terracotta/90 transition-colors"
                 >
-                  <Save size={14} /> Salvar método
+                  <Save size={14} /> Guardar método
                 </button>
               </div>
             </div>
@@ -501,7 +501,7 @@ export default function EsbocoMetodo() {
           </Link>
           <SaveBar
             onSave={() => {}}
-            label="Salvar esboço"
+            label="Guardar esboço"
             extra={
               <Link
                 to="/doc-mestre"

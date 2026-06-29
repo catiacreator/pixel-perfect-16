@@ -100,7 +100,7 @@ export default function PesquisaMercado() {
               />
             </div>
           ))}
-          <SaveBar onSave={() => {/* já é salvo on-change via update */}} label="Salvar" />
+          <SaveBar onSave={() => {/* já é salvo on-change via update */}} />
         </div>
 
         <div className="rounded-2xl border border-terracotta bg-white p-5 text-center">

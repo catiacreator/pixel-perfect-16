@@ -1,10 +1,11 @@
+import { useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import PillarHeader from "../../components/PillarHeader";
 import PromptCard from "../../components/PromptCard";
 import SaveBar from "../../components/SaveBar";
-import { ArrowRight, ExternalLink, Wand2, Printer } from "lucide-react";
+import { ArrowRight, ExternalLink, Wand2, Printer, Copy, Check } from "lucide-react";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import { PROMPT_IDENTIDADE_VISUAL } from "@/data/prompts/pilar2-tom-visual";
 import { parseIdentidadeVisual } from "@/lib/pilar2-parsers";
@@ -15,13 +16,25 @@ function Area({
   label,
   placeholder,
   rows = 3,
+  copy = false,
 }: {
   value: string;
   onChange: (v: string) => void;
   label: string;
   placeholder?: string;
   rows?: number;
+  copy?: boolean;
 }) {
+  const [copied, setCopied] = useState(false);
+  const doCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      /* ignore */
+    }
+  };
   return (
     <div className="mb-4">
       <label className="text-xs tracking-[0.1em] uppercase text-muted mb-1.5 block">{label}</label>
@@ -32,6 +45,33 @@ function Area({
         placeholder={placeholder}
         className="w-full rounded-xl border border-border p-3 text-sm outline-none focus:border-terracotta resize-none"
       />
+      {copy && (
+        <div className="flex flex-wrap gap-2 mt-2">
+          <button
+            onClick={doCopy}
+            disabled={!value.trim()}
+            className="text-xs font-semibold px-3 py-1.5 rounded-full bg-terracotta text-cream inline-flex items-center gap-1.5 hover:bg-terracotta/90 disabled:opacity-40 transition-colors"
+          >
+            {copied ? <Check size={12} /> : <Copy size={12} />} {copied ? "Copiado" : "Copiar prompt"}
+          </button>
+          <a
+            href="https://gemini.google.com/app"
+            target="_blank"
+            rel="noreferrer"
+            className="text-xs font-semibold px-3 py-1.5 rounded-full border border-border inline-flex items-center gap-1.5 text-ink/70 hover:text-ink hover:border-terracotta transition-colors"
+          >
+            Abrir Gemini <ExternalLink size={11} />
+          </a>
+          <a
+            href="https://chat.openai.com"
+            target="_blank"
+            rel="noreferrer"
+            className="text-xs font-semibold px-3 py-1.5 rounded-full border border-border inline-flex items-center gap-1.5 text-ink/70 hover:text-ink hover:border-terracotta transition-colors"
+          >
+            Abrir ChatGPT <ExternalLink size={11} />
+          </a>
+        </div>
+      )}
     </div>
   );
 }
@@ -196,16 +236,19 @@ export default function IdentidadeVisual() {
             label="✍️ Prompt — Capa de Carrossel"
             value={state.promptCarrossel}
             onChange={(v) => update({ promptCarrossel: v })}
+            copy
           />
           <Area
             label="🎬 Prompt — Capa de Reels"
             value={state.promptReels}
             onChange={(v) => update({ promptReels: v })}
+            copy
           />
           <Area
             label="📸 Prompt — Imagem Lifestyle/Bastidor"
             value={state.promptLifestyle}
             onChange={(v) => update({ promptLifestyle: v })}
+            copy
           />
           <SaveBar
             onSave={() => {}}

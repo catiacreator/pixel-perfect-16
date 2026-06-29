@@ -4,7 +4,7 @@ import { notifySaved } from "@/lib/toast";
 
 export default function SaveBar({
   onSave,
-  label = "Salvar",
+  label = "Guardar",
   savedMsg = "Guardado ✓",
   extra,
 }: {
@@ -21,14 +21,14 @@ export default function SaveBar({
     setTimeout(() => setSaved(false), 1800);
   };
   return (
-    <div className="flex flex-wrap gap-3 items-center mt-4">
+    <div className="flex flex-wrap gap-3 items-center justify-end mt-4">
+      {extra}
       <button
         onClick={handle}
-        className="text-sm font-semibold px-4 py-2 rounded-full bg-ink text-cream flex items-center gap-1.5"
+        className="text-sm font-semibold px-4 py-2 rounded-full bg-terracotta text-cream flex items-center gap-1.5 hover:bg-terracotta/90 transition-colors"
       >
-        {saved ? <Check size={14} /> : <Save size={14} />} {saved ? "Salvo" : label}
+        {saved ? <Check size={14} /> : <Save size={14} />} {saved ? "Guardado" : label}
       </button>
-      {extra}
     </div>
   );
 }
