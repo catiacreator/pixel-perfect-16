@@ -166,7 +166,19 @@ const PILARES: Record<string | number, PilarDef> = {
       { num: 4, label: "Conclusão Pilar 2", to: "/metodo/pilar-2/conclusao", icon: Trophy },
     ],
   },
-  3: { pilar: 3, title: "Crie o seu Produto", enabled: false, items: [] },
+  3: {
+    pilar: 3,
+    title: "Criar Soluções Digitais",
+    enabled: true,
+    items: [
+      { num: 1, label: "Descobrir soluções", to: "/metodo/pilar-3/descobrir", icon: Search },
+      { num: 2, label: "Como entregar", to: "/metodo/pilar-3/como-entregar", icon: Compass },
+      { num: 3, label: "Criar o produto", to: "/metodo/pilar-3/criar-produto", icon: Wrench },
+      { num: 4, label: "Validar o produto", to: "/metodo/pilar-3/validar-produto", icon: CircleDot },
+      { num: 5, label: "Página de vendas", to: "/metodo/pilar-3/pagina-vendas", icon: FileText },
+      { num: 6, label: "Revise e celebre", to: "/metodo/pilar-3/conclusao", icon: Trophy },
+    ],
+  },
   4: {
     pilar: 4,
     title: "Aprender a Vender",
@@ -188,7 +200,7 @@ const PILARES: Record<string | number, PilarDef> = {
 const PILAR_SHORT: Record<number, string> = {
   1: "Crie com Leveza sem roubar o seu tempo",
   2: "Criar Autoridade",
-  3: "Crie o seu Produto",
+  3: "Criar Soluções Digitais",
   4: "Aprender a Vender",
 };
 

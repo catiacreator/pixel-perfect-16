@@ -34,11 +34,11 @@ const PILARES = [
   {
     n: "03",
     icon: Lightbulb,
-    titulo: "Crie o seu produto",
-    sub: "Transforme o que sabe em produtos digitais.",
-    to: "#",
-    status: "embreve" as const,
-    minutos: "Em breve",
+    titulo: "Criar Soluções Digitais",
+    sub: "Transforme o que sabe em produtos digitais que valem dinheiro.",
+    to: "/metodo/pilar-3",
+    status: "disponivel" as const,
+    minutos: "6 etapas",
   },
   {
     n: "04",
@@ -64,7 +64,7 @@ export default function Jornada() {
       />
       <div className="max-w-[1400px] mx-auto px-5 md:px-10 pt-8 md:pt-10 pb-20 md:pb-28">
         <div className="flex justify-end mb-6">
-          <p className="text-xs text-ink/40">3 disponíveis · 1 em breve</p>
+          <p className="text-xs text-ink/40">4 pilares disponíveis</p>
         </div>
 
         {/* Pilares */}

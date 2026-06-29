@@ -23,12 +23,14 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MetodoIndexRouteImport } from './routes/metodo.index'
 import { Route as MetodoPilar4RouteImport } from './routes/metodo.pilar-4'
+import { Route as MetodoPilar3RouteImport } from './routes/metodo.pilar-3'
 import { Route as MetodoPilar2RouteImport } from './routes/metodo.pilar-2'
 import { Route as MetodoPilar1RouteImport } from './routes/metodo.pilar-1'
 import { Route as MetodoConsultoriaIaRouteImport } from './routes/metodo.consultoria-ia'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as MetodoPilar4IndexRouteImport } from './routes/metodo.pilar-4.index'
+import { Route as MetodoPilar3IndexRouteImport } from './routes/metodo.pilar-3.index'
 import { Route as MetodoPilar2IndexRouteImport } from './routes/metodo.pilar-2.index'
 import { Route as MetodoPilar1IndexRouteImport } from './routes/metodo.pilar-1.index'
 import { Route as MetodoConsultoriaIaIndexRouteImport } from './routes/metodo.consultoria-ia.index'
@@ -145,6 +147,11 @@ const MetodoPilar4Route = MetodoPilar4RouteImport.update({
   path: '/pilar-4',
   getParentRoute: () => MetodoRoute,
 } as any)
+const MetodoPilar3Route = MetodoPilar3RouteImport.update({
+  id: '/pilar-3',
+  path: '/pilar-3',
+  getParentRoute: () => MetodoRoute,
+} as any)
 const MetodoPilar2Route = MetodoPilar2RouteImport.update({
   id: '/pilar-2',
   path: '/pilar-2',
@@ -174,6 +181,11 @@ const MetodoPilar4IndexRoute = MetodoPilar4IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => MetodoPilar4Route,
+} as any)
+const MetodoPilar3IndexRoute = MetodoPilar3IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MetodoPilar3Route,
 } as any)
 const MetodoPilar2IndexRoute = MetodoPilar2IndexRouteImport.update({
   id: '/',
@@ -451,6 +463,7 @@ export interface FileRoutesByFullPath {
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
   '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
+  '/metodo/pilar-3': typeof MetodoPilar3RouteWithChildren
   '/metodo/pilar-4': typeof MetodoPilar4RouteWithChildren
   '/metodo/': typeof MetodoIndexRoute
   '/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
@@ -483,6 +496,7 @@ export interface FileRoutesByFullPath {
   '/metodo/consultoria-ia/': typeof MetodoConsultoriaIaIndexRoute
   '/metodo/pilar-1/': typeof MetodoPilar1IndexRoute
   '/metodo/pilar-2/': typeof MetodoPilar2IndexRoute
+  '/metodo/pilar-3/': typeof MetodoPilar3IndexRoute
   '/metodo/pilar-4/': typeof MetodoPilar4IndexRoute
   '/admin/mentoradas/$id': typeof AuthenticatedAdminMentoradasIdRoute
   '/metodo/pilar-1/aprenda-ia/$tool': typeof MetodoPilar1AprendaIaToolRouteWithChildren
@@ -541,6 +555,7 @@ export interface FileRoutesByTo {
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaIndexRoute
   '/metodo/pilar-1': typeof MetodoPilar1IndexRoute
   '/metodo/pilar-2': typeof MetodoPilar2IndexRoute
+  '/metodo/pilar-3': typeof MetodoPilar3IndexRoute
   '/metodo/pilar-4': typeof MetodoPilar4IndexRoute
   '/admin/mentoradas/$id': typeof AuthenticatedAdminMentoradasIdRoute
   '/metodo/pilar-1/aprenda-ia/principais-ias': typeof MetodoPilar1AprendaIaPrincipaisIasRoute
@@ -576,6 +591,7 @@ export interface FileRoutesById {
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
   '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
+  '/metodo/pilar-3': typeof MetodoPilar3RouteWithChildren
   '/metodo/pilar-4': typeof MetodoPilar4RouteWithChildren
   '/metodo/': typeof MetodoIndexRoute
   '/_authenticated/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
@@ -608,6 +624,7 @@ export interface FileRoutesById {
   '/metodo/consultoria-ia/': typeof MetodoConsultoriaIaIndexRoute
   '/metodo/pilar-1/': typeof MetodoPilar1IndexRoute
   '/metodo/pilar-2/': typeof MetodoPilar2IndexRoute
+  '/metodo/pilar-3/': typeof MetodoPilar3IndexRoute
   '/metodo/pilar-4/': typeof MetodoPilar4IndexRoute
   '/_authenticated/admin/mentoradas/$id': typeof AuthenticatedAdminMentoradasIdRoute
   '/metodo/pilar-1/aprenda-ia/$tool': typeof MetodoPilar1AprendaIaToolRouteWithChildren
@@ -645,6 +662,7 @@ export interface FileRouteTypes {
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
+    | '/metodo/pilar-3'
     | '/metodo/pilar-4'
     | '/metodo/'
     | '/admin/conteudo'
@@ -677,6 +695,7 @@ export interface FileRouteTypes {
     | '/metodo/consultoria-ia/'
     | '/metodo/pilar-1/'
     | '/metodo/pilar-2/'
+    | '/metodo/pilar-3/'
     | '/metodo/pilar-4/'
     | '/admin/mentoradas/$id'
     | '/metodo/pilar-1/aprenda-ia/$tool'
@@ -735,6 +754,7 @@ export interface FileRouteTypes {
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
+    | '/metodo/pilar-3'
     | '/metodo/pilar-4'
     | '/admin/mentoradas/$id'
     | '/metodo/pilar-1/aprenda-ia/principais-ias'
@@ -769,6 +789,7 @@ export interface FileRouteTypes {
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
+    | '/metodo/pilar-3'
     | '/metodo/pilar-4'
     | '/metodo/'
     | '/_authenticated/admin/conteudo'
@@ -801,6 +822,7 @@ export interface FileRouteTypes {
     | '/metodo/consultoria-ia/'
     | '/metodo/pilar-1/'
     | '/metodo/pilar-2/'
+    | '/metodo/pilar-3/'
     | '/metodo/pilar-4/'
     | '/_authenticated/admin/mentoradas/$id'
     | '/metodo/pilar-1/aprenda-ia/$tool'
@@ -936,6 +958,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MetodoPilar4RouteImport
       parentRoute: typeof MetodoRoute
     }
+    '/metodo/pilar-3': {
+      id: '/metodo/pilar-3'
+      path: '/pilar-3'
+      fullPath: '/metodo/pilar-3'
+      preLoaderRoute: typeof MetodoPilar3RouteImport
+      parentRoute: typeof MetodoRoute
+    }
     '/metodo/pilar-2': {
       id: '/metodo/pilar-2'
       path: '/pilar-2'
@@ -977,6 +1006,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/metodo/pilar-4/'
       preLoaderRoute: typeof MetodoPilar4IndexRouteImport
       parentRoute: typeof MetodoPilar4Route
+    }
+    '/metodo/pilar-3/': {
+      id: '/metodo/pilar-3/'
+      path: '/'
+      fullPath: '/metodo/pilar-3/'
+      preLoaderRoute: typeof MetodoPilar3IndexRouteImport
+      parentRoute: typeof MetodoPilar3Route
     }
     '/metodo/pilar-2/': {
       id: '/metodo/pilar-2/'
@@ -1510,6 +1546,18 @@ const MetodoPilar2RouteWithChildren = MetodoPilar2Route._addFileChildren(
   MetodoPilar2RouteChildren,
 )
 
+interface MetodoPilar3RouteChildren {
+  MetodoPilar3IndexRoute: typeof MetodoPilar3IndexRoute
+}
+
+const MetodoPilar3RouteChildren: MetodoPilar3RouteChildren = {
+  MetodoPilar3IndexRoute: MetodoPilar3IndexRoute,
+}
+
+const MetodoPilar3RouteWithChildren = MetodoPilar3Route._addFileChildren(
+  MetodoPilar3RouteChildren,
+)
+
 interface MetodoPilar4RouteChildren {
   MetodoPilar4AltoTicketRoute: typeof MetodoPilar4AltoTicketRoute
   MetodoPilar4AtalhoSkillRoute: typeof MetodoPilar4AtalhoSkillRoute
@@ -1546,6 +1594,7 @@ interface MetodoRouteChildren {
   MetodoConsultoriaIaRoute: typeof MetodoConsultoriaIaRouteWithChildren
   MetodoPilar1Route: typeof MetodoPilar1RouteWithChildren
   MetodoPilar2Route: typeof MetodoPilar2RouteWithChildren
+  MetodoPilar3Route: typeof MetodoPilar3RouteWithChildren
   MetodoPilar4Route: typeof MetodoPilar4RouteWithChildren
   MetodoIndexRoute: typeof MetodoIndexRoute
 }
@@ -1554,6 +1603,7 @@ const MetodoRouteChildren: MetodoRouteChildren = {
   MetodoConsultoriaIaRoute: MetodoConsultoriaIaRouteWithChildren,
   MetodoPilar1Route: MetodoPilar1RouteWithChildren,
   MetodoPilar2Route: MetodoPilar2RouteWithChildren,
+  MetodoPilar3Route: MetodoPilar3RouteWithChildren,
   MetodoPilar4Route: MetodoPilar4RouteWithChildren,
   MetodoIndexRoute: MetodoIndexRoute,
 }
