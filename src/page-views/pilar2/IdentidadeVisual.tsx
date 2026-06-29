@@ -100,8 +100,35 @@ function Input({
   );
 }
 
+const PROMPT_KIT_FORMATADO = `A tua resposta anterior não veio no formato que eu preciso. Reescreve a análise de identidade visual EXATAMENTE neste formato, com as secções numeradas e os títulos em maiúsculas (mantém o conteúdo, só corrige o formato):
+
+1. VIBE DA MARCA
+2. PALETA (5 cores — para cada: Nome #HEX (função))
+3. TIPOGRAFIA — Título (nome + link Google Fonts)
+4. TIPOGRAFIA — Corpo (nome + link Google Fonts)
+5. TIPOGRAFIA — Manuscrita (nome + link Google Fonts)
+6. ESTILO DE IMAGEM
+7. ELEMENTOS VISUAIS
+8. ANTIPADRÕES VISUAIS
+9. PROMPT — CAPA DE CARROSSEL
+10. PROMPT — CAPA DE REELS
+11. PROMPT — IMAGEM LIFESTYLE/BASTIDOR
+
+Devolve só estas secções, numeradas, sem texto extra.`;
+
 export default function IdentidadeVisual() {
   const { state, update } = usePilar2();
+  const [copiedKit, setCopiedKit] = useState(false);
+
+  const pedirKit = async () => {
+    try {
+      await navigator.clipboard.writeText(PROMPT_KIT_FORMATADO);
+      setCopiedKit(true);
+      setTimeout(() => setCopiedKit(false), 1800);
+    } catch {
+      /* ignore */
+    }
+  };
 
   const parsear = () => {
     if (!state.identidadeVisualCola.trim()) return;
@@ -177,12 +204,23 @@ export default function IdentidadeVisual() {
             rows={8}
             placeholder="Cole as 10 seções numeradas que o ChatGPT entregou…"
           />
-          <button
-            onClick={parsear}
-            className="text-xs font-semibold text-terracotta flex items-center gap-1.5"
-          >
-            <Wand2 size={13} /> Preencher campos automaticamente
-          </button>
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <button
+              onClick={parsear}
+              className="text-xs font-semibold text-terracotta flex items-center gap-1.5"
+            >
+              <Wand2 size={13} /> Preencher campos automaticamente
+            </button>
+            <button
+              onClick={pedirKit}
+              className="text-xs font-semibold px-3 py-1.5 rounded-full border border-border inline-flex items-center gap-1.5 text-ink/70 hover:text-ink hover:border-terracotta transition-colors"
+            >
+              {copiedKit ? <Check size={13} /> : <Copy size={13} />} {copiedKit ? "Copiado" : "Pedir kit formatado"}
+            </button>
+          </div>
+          <p className="text-xs text-muted mt-2">
+            Se o ChatGPT não entregou no formato esperado, clica em <strong className="text-ink/70">"Pedir kit formatado"</strong>, cola a mensagem de volta no ChatGPT e ele refaz no formato certo.
+          </p>
         </div>
 
         <div className="rounded-2xl border border-border bg-white p-5 mb-6">
