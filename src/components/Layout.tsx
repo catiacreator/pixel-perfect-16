@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { initMasterDocSync, resetMasterDocSync } from "@/lib/master-doc-sync";
 import ThemeToggle from "@/components/ThemeToggle";
+import ModulePaywall from "@/components/ModulePaywall";
+import { useAccess } from "@/lib/use-access";
+import type { ModuleKey } from "@/lib/access";
 
 const NAV = [
   { to: "/", label: "Início", icon: Map },
@@ -59,6 +62,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const jornada = !academia && !redes && (path.startsWith("/metodo") || path.startsWith("/doc-mestre"));
   const roxo = path.startsWith("/minha-base") || path.startsWith("/agenda") || path.startsWith("/conquistas");
   const headerMod = academia ? "academia" : redes ? "redes" : jornada ? "jornada" : roxo ? "roxo" : "default";
+
+  // Paywall por módulo: bloqueia o acesso direto às rotas dos produtos.
+  const gateModule: ModuleKey | null = academia ? "academia" : redes ? "redes" : jornada ? "jornada" : null;
+  const { has, loading: accessLoading, signedIn: hasAccessSignedIn } = useAccess();
+  const blocked = !!gateModule && !accessLoading && !has(gateModule);
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -177,7 +185,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         )}
       </header>
 
-      <main className="flex-1 w-full">{children}</main>
+      <main className="flex-1 w-full">
+        {gateModule && accessLoading ? (
+          <div className="px-5 py-20 text-center text-ink/45 text-sm">A verificar acesso…</div>
+        ) : blocked && gateModule ? (
+          <ModulePaywall module={gateModule} signedIn={hasAccessSignedIn} />
+        ) : (
+          children
+        )}
+      </main>
 
       <footer className="w-full border-t border-[var(--color-border)] mt-24">
         <div className="max-w-[1400px] mx-auto px-5 md:px-10 py-10 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4">
