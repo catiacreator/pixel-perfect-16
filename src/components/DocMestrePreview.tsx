@@ -37,9 +37,14 @@ export default function DocMestrePreview({
   const desejos: string[] = Array.isArray(doc.desejos) ? doc.desejos.filter(Boolean) : [];
 
   const baixar = () => {
+    const nome = String(doc.nome || "").trim();
+    const tituloOriginal = document.title;
+    // O browser usa o document.title como nome do ficheiro PDF.
+    document.title = nome ? `${nome} - Documento Mestre` : "Documento Mestre";
     document.body.classList.add("pdf-printing");
     const cleanup = () => {
       document.body.classList.remove("pdf-printing");
+      document.title = tituloOriginal;
       window.removeEventListener("afterprint", cleanup);
     };
     window.addEventListener("afterprint", cleanup);
