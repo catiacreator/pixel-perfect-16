@@ -54,8 +54,16 @@ function ResetPasswordPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-cream px-4 font-display">
-      <div className="w-full max-w-md bg-white border border-[var(--color-border)] rounded-2xl p-8">
+    <div
+      className="min-h-screen flex items-center justify-center px-4 font-display relative overflow-hidden"
+      style={{ background: "radial-gradient(130% 130% at 82% 16%, #F0A766 0%, #C8487E 55%, #2E7CB8 100%)" }}
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.08]"
+        style={{ backgroundImage: "radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)", backgroundSize: "24px 24px" }}
+      />
+      <div className="relative w-full max-w-md bg-white rounded-3xl p-8 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.45)]">
         <div className="flex items-center gap-2.5 mb-6">
           <span className="w-2 h-2 rounded-full bg-terracotta shadow-[0_0_18px_2px_var(--color-terracotta)]" />
           <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none">Leveza no Digital</span>
