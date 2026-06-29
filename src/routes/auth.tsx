@@ -95,8 +95,17 @@ function AuthPage() {
         : "Indique o seu e-mail e enviamos um link para redefinir a palavra-passe.";
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-cream px-4 font-display">
-      <div className="w-full max-w-md bg-white border border-[var(--color-border)] rounded-2xl p-8">
+    <div
+      className="min-h-screen flex items-center justify-center px-4 font-display relative overflow-hidden"
+      style={{ background: "radial-gradient(130% 130% at 82% 16%, #F0A766 0%, #C8487E 55%, #2E7CB8 100%)" }}
+    >
+      {/* textura de pontos (igual ao hero) */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-[0.08]"
+        style={{ backgroundImage: "radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)", backgroundSize: "24px 24px" }}
+      />
+      <div className="relative w-full max-w-md bg-white rounded-3xl p-8 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.45)]">
         <div className="flex items-center gap-2.5 mb-6">
           <span className="w-2 h-2 rounded-full bg-terracotta shadow-[0_0_18px_2px_var(--color-terracotta)]" />
           <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none">Leveza no Digital</span>
@@ -186,13 +195,10 @@ function AuthPage() {
           </button>
         </form>
 
-        {mode !== "forgot" && (
-          <button
-            onClick={() => trocarModo(mode === "signin" ? "signup" : "signin")}
-            className="mt-4 w-full text-center text-xs text-ink/60 hover:text-ink"
-          >
-            {mode === "signin" ? "Não tem conta? Criar agora" : "Já tem conta? Entrar"}
-          </button>
+        {mode === "signin" && (
+          <p className="mt-4 text-center text-[11px] text-ink/45 leading-relaxed">
+            O acesso é criado automaticamente após a compra. Recebes um email para definir a palavra-passe.
+          </p>
         )}
       </div>
     </div>
