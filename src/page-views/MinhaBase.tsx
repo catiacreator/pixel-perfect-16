@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import IdeiasModal from "../components/IdeiasModal";
+import AgendaBoard from "../components/AgendaBoard";
 import {
   FileText,
   Mic2,
@@ -794,6 +795,18 @@ export default function MinhaBase() {
               ))}
             </ul>
           )}
+        </section>
+
+        {/* A minha Agenda (quadro de tarefas) */}
+        <section className="mt-10">
+          <div className="flex items-center gap-2.5 mb-1">
+            <CalendarIcon size={16} className="text-terracotta" />
+            <h2 className="font-display text-2xl tracking-[-0.02em] text-ink">A minha Agenda</h2>
+          </div>
+          <p className="text-sm text-ink/55 mb-5">
+            Organize o que tem para fazer, arraste entre as colunas e anexe aulas a cada tarefa.
+          </p>
+          <AgendaBoard />
         </section>
       </div>
 
