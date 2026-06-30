@@ -7,6 +7,7 @@ import { initMasterDocSync } from "@/lib/master-doc-sync";
 import { readStoredSession } from "@/lib/session";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserMenu from "@/components/UserMenu";
+import QuickIdeas from "@/components/QuickIdeas";
 import ModulePaywall from "@/components/ModulePaywall";
 import { useAccess } from "@/lib/use-access";
 import type { ModuleKey } from "@/lib/access";
@@ -235,6 +236,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </p>
         </div>
       </footer>
+
+      {signedIn && <QuickIdeas />}
     </div>
   );
 }
