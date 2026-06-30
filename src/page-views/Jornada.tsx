@@ -10,6 +10,7 @@ import {
   TrendingUp,
   Briefcase,
   Sparkles,
+  HeartPulse,
 } from "lucide-react";
 
 const PILARES = [
@@ -169,6 +170,35 @@ export default function Jornada() {
               <Briefcase size={14} strokeWidth={2.25} />
               Conhecer
               <span className="w-9 h-9 rounded-full bg-ink text-cream flex items-center justify-center">
+                <ArrowUpRight size={16} strokeWidth={2.5} />
+              </span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Caminho por segmento — Saúde */}
+        <div className="relative overflow-hidden rounded-[28px] bg-white border border-[var(--color-border)] p-8 md:p-12 mt-5 md:mt-6">
+          <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] items-end gap-8">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 mb-4">
+                <HeartPulse size={14} className="text-terracotta" />
+                <p className="text-[11px] tracking-[0.3em] uppercase text-terracotta">Caminho por segmento</p>
+              </div>
+              <h3 className="font-display text-3xl md:text-5xl text-ink tracking-[-0.025em] max-w-xl leading-[1.05]">
+                Área da <span className="italic font-normal text-terracotta">Saúde</span>
+              </h3>
+              <p className="text-sm md:text-base text-ink/60 mt-5 max-w-lg leading-relaxed">
+                Trilha pensada para médicas, dentistas, nutricionistas, fisioterapeutas e psicólogas —
+                aplicar Inteligência Artificial com ética e resultado na sua prática.
+              </p>
+            </div>
+            <Link
+              to="/metodo/saude"
+              className="group inline-flex items-center gap-2.5 bg-terracotta text-cream pl-6 pr-2 py-2 rounded-full text-sm font-semibold hover:bg-terracotta-dark transition-all shrink-0"
+            >
+              <HeartPulse size={14} strokeWidth={2.25} />
+              Conhecer
+              <span className="w-9 h-9 rounded-full bg-cream text-terracotta flex items-center justify-center">
                 <ArrowUpRight size={16} strokeWidth={2.5} />
               </span>
             </Link>

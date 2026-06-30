@@ -24,6 +24,7 @@ import { Route as AgendaRouteImport } from './routes/agenda'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as MetodoIndexRouteImport } from './routes/metodo.index'
+import { Route as MetodoSaudeRouteImport } from './routes/metodo.saude'
 import { Route as MetodoPilar4RouteImport } from './routes/metodo.pilar-4'
 import { Route as MetodoPilar3RouteImport } from './routes/metodo.pilar-3'
 import { Route as MetodoPilar2RouteImport } from './routes/metodo.pilar-2'
@@ -163,6 +164,11 @@ const IndexRoute = IndexRouteImport.update({
 const MetodoIndexRoute = MetodoIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => MetodoRoute,
+} as any)
+const MetodoSaudeRoute = MetodoSaudeRouteImport.update({
+  id: '/saude',
+  path: '/saude',
   getParentRoute: () => MetodoRoute,
 } as any)
 const MetodoPilar4Route = MetodoPilar4RouteImport.update({
@@ -554,6 +560,7 @@ export interface FileRoutesByFullPath {
   '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
   '/metodo/pilar-3': typeof MetodoPilar3RouteWithChildren
   '/metodo/pilar-4': typeof MetodoPilar4RouteWithChildren
+  '/metodo/saude': typeof MetodoSaudeRoute
   '/metodo/': typeof MetodoIndexRoute
   '/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
   '/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
@@ -629,6 +636,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/api/chat': typeof ApiChatRoute
   '/api/hotmart-webhook': typeof ApiHotmartWebhookRoute
+  '/metodo/saude': typeof MetodoSaudeRoute
   '/metodo': typeof MetodoIndexRoute
   '/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
   '/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
@@ -708,6 +716,7 @@ export interface FileRoutesById {
   '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
   '/metodo/pilar-3': typeof MetodoPilar3RouteWithChildren
   '/metodo/pilar-4': typeof MetodoPilar4RouteWithChildren
+  '/metodo/saude': typeof MetodoSaudeRoute
   '/metodo/': typeof MetodoIndexRoute
   '/_authenticated/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
   '/_authenticated/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
@@ -792,6 +801,7 @@ export interface FileRouteTypes {
     | '/metodo/pilar-2'
     | '/metodo/pilar-3'
     | '/metodo/pilar-4'
+    | '/metodo/saude'
     | '/metodo/'
     | '/admin/conteudo'
     | '/admin/mentoradas'
@@ -867,6 +877,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/api/chat'
     | '/api/hotmart-webhook'
+    | '/metodo/saude'
     | '/metodo'
     | '/admin/conteudo'
     | '/admin/mentoradas'
@@ -945,6 +956,7 @@ export interface FileRouteTypes {
     | '/metodo/pilar-2'
     | '/metodo/pilar-3'
     | '/metodo/pilar-4'
+    | '/metodo/saude'
     | '/metodo/'
     | '/_authenticated/admin/conteudo'
     | '/_authenticated/admin/mentoradas'
@@ -1130,6 +1142,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/metodo/'
       preLoaderRoute: typeof MetodoIndexRouteImport
+      parentRoute: typeof MetodoRoute
+    }
+    '/metodo/saude': {
+      id: '/metodo/saude'
+      path: '/saude'
+      fullPath: '/metodo/saude'
+      preLoaderRoute: typeof MetodoSaudeRouteImport
       parentRoute: typeof MetodoRoute
     }
     '/metodo/pilar-4': {
@@ -1874,6 +1893,7 @@ interface MetodoRouteChildren {
   MetodoPilar2Route: typeof MetodoPilar2RouteWithChildren
   MetodoPilar3Route: typeof MetodoPilar3RouteWithChildren
   MetodoPilar4Route: typeof MetodoPilar4RouteWithChildren
+  MetodoSaudeRoute: typeof MetodoSaudeRoute
   MetodoIndexRoute: typeof MetodoIndexRoute
 }
 
@@ -1883,6 +1903,7 @@ const MetodoRouteChildren: MetodoRouteChildren = {
   MetodoPilar2Route: MetodoPilar2RouteWithChildren,
   MetodoPilar3Route: MetodoPilar3RouteWithChildren,
   MetodoPilar4Route: MetodoPilar4RouteWithChildren,
+  MetodoSaudeRoute: MetodoSaudeRoute,
   MetodoIndexRoute: MetodoIndexRoute,
 }
 
