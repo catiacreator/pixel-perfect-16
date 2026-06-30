@@ -3,7 +3,7 @@ import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import HeroRobot from "../components/HeroRobot";
 import { useAccess } from "@/lib/use-access";
-import { MODULES } from "@/lib/access";
+import { CHECKOUT_URL } from "@/lib/access";
 import {
   ArrowUpRight,
   Sparkles,
@@ -176,7 +176,7 @@ export default function Home() {
             {CARDS.map((c, i) => {
               const Icon = c.icon;
               const locked = !accessLoading && !has(c.modulo);
-              const checkout = MODULES[c.modulo].checkoutUrl;
+              const checkout = CHECKOUT_URL;
               const cls = "fade-up group relative overflow-hidden rounded-3xl border border-white/60 bg-white/55 backdrop-blur-xl p-5 md:p-6 flex flex-col aspect-[9/16] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:bg-white/70";
               const style = { "--mc": c.cor, animationDelay: `${i * 90}ms` } as Record<string, string>;
 
