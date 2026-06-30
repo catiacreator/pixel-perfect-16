@@ -15,6 +15,7 @@ import { Route as MinhaBaseRouteImport } from './routes/minha-base'
 import { Route as MeusProjetosRouteImport } from './routes/meus-projetos'
 import { Route as MetodoRouteImport } from './routes/metodo'
 import { Route as MensagensRouteImport } from './routes/mensagens'
+import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as DocMestreRouteImport } from './routes/doc-mestre'
 import { Route as ConquistasRouteImport } from './routes/conquistas'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -118,6 +119,11 @@ const MetodoRoute = MetodoRouteImport.update({
 const MensagensRoute = MensagensRouteImport.update({
   id: '/mensagens',
   path: '/mensagens',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GlossarioRoute = GlossarioRouteImport.update({
+  id: '/glossario',
+  path: '/glossario',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DocMestreRoute = DocMestreRouteImport.update({
@@ -533,6 +539,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/doc-mestre': typeof DocMestreRoute
+  '/glossario': typeof GlossarioRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
@@ -614,6 +621,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/doc-mestre': typeof DocMestreRoute
+  '/glossario': typeof GlossarioRoute
   '/mensagens': typeof MensagensRoute
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
@@ -685,6 +693,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/doc-mestre': typeof DocMestreRoute
+  '/glossario': typeof GlossarioRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
@@ -768,6 +777,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/conquistas'
     | '/doc-mestre'
+    | '/glossario'
     | '/mensagens'
     | '/metodo'
     | '/meus-projetos'
@@ -849,6 +859,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/conquistas'
     | '/doc-mestre'
+    | '/glossario'
     | '/mensagens'
     | '/meus-projetos'
     | '/minha-base'
@@ -919,6 +930,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/conquistas'
     | '/doc-mestre'
+    | '/glossario'
     | '/mensagens'
     | '/metodo'
     | '/meus-projetos'
@@ -1002,6 +1014,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ConquistasRoute: typeof ConquistasRoute
   DocMestreRoute: typeof DocMestreRoute
+  GlossarioRoute: typeof GlossarioRoute
   MensagensRoute: typeof MensagensRoute
   MetodoRoute: typeof MetodoRouteWithChildren
   MeusProjetosRoute: typeof MeusProjetosRoute
@@ -1054,6 +1067,13 @@ declare module '@tanstack/react-router' {
       path: '/mensagens'
       fullPath: '/mensagens'
       preLoaderRoute: typeof MensagensRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/glossario': {
+      id: '/glossario'
+      path: '/glossario'
+      fullPath: '/glossario'
+      preLoaderRoute: typeof GlossarioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/doc-mestre': {
@@ -1877,6 +1897,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ConquistasRoute: ConquistasRoute,
   DocMestreRoute: DocMestreRoute,
+  GlossarioRoute: GlossarioRoute,
   MensagensRoute: MensagensRoute,
   MetodoRoute: MetodoRouteWithChildren,
   MeusProjetosRoute: MeusProjetosRoute,
