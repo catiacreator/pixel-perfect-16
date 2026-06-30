@@ -324,6 +324,7 @@ const ACESSO_RAPIDO = [
   { icon: Star, label: "Identidade de Marca", to: "/metodo/pilar-2/identidade", color: "text-pink-500" },
   { icon: Target, label: "Redes Sociais", to: "/metodo/pilar-2/redes-sociais", color: "text-sage" },
   { icon: FileText, label: "Documento Mestre", to: "/doc-mestre", color: "text-amber-600" },
+  { icon: BookOpen, label: "Glossário de IA", to: "/glossario", color: "text-sky-600" },
 ];
 
 type Conquista = {
