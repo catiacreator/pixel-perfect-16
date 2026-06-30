@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
+import IdeiasModal from "../components/IdeiasModal";
 import {
   FileText,
   Mic2,
@@ -368,6 +369,7 @@ export default function MinhaBase() {
   const [mounted, setMounted] = useState(false);
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [calVersion, setCalVersion] = useState(0);
+  const [ideiasFor, setIdeiasFor] = useState<string | null>(null);
 
   useEffect(() => {
     setState(loadState());
@@ -560,6 +562,7 @@ export default function MinhaBase() {
                       <span className="truncate">{p.nome}</span>
                     </button>
                     <button
+                      onClick={() => setIdeiasFor(p.id)}
                       className="w-10 h-10 rounded-lg border border-[var(--color-border)] flex items-center justify-center text-terracotta hover:bg-white"
                       aria-label="Ideias com IA"
                       title="3 ideias + prompt para o ChatGPT"
@@ -800,6 +803,8 @@ export default function MinhaBase() {
           onCalendarChange={() => setCalVersion(v => v + 1)}
         />
       )}
+
+      {ideiasFor && <IdeiasModal tipo={ideiasFor} onClose={() => setIdeiasFor(null)} />}
     </Layout>
   );
 }
