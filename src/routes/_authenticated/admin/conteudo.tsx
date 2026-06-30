@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { toast } from "sonner";
+import { notify } from "@/lib/toast";
 import { Plus, Trash2 } from "lucide-react";
 import {
   listPilares,
@@ -41,18 +41,18 @@ function ConteudoPage() {
 
   const savePilar = useMutation({
     mutationFn: (p: any) => upPilar({ data: p }),
-    onSuccess: () => { toast.success("Salvo"); refresh(); setOpenPilar(null); },
-    onError: (e) => toast.error(e.message),
+    onSuccess: () => { notify("Salvo", "success"); refresh(); setOpenPilar(null); },
+    onError: (e) => notify(e.message, "error"),
   });
   const saveEtapa = useMutation({
     mutationFn: (p: any) => upEtapa({ data: p }),
-    onSuccess: () => { toast.success("Etapa salva"); refresh(); setOpenEtapa(null); },
-    onError: (e) => toast.error(e.message),
+    onSuccess: () => { notify("Etapa salva", "success"); refresh(); setOpenEtapa(null); },
+    onError: (e) => notify(e.message, "error"),
   });
   const removeEtapa = useMutation({
     mutationFn: (id: string) => delE({ data: { id } }),
-    onSuccess: () => { toast.success("Etapa removida"); refresh(); },
-    onError: (e) => toast.error(e.message),
+    onSuccess: () => { notify("Etapa removida", "success"); refresh(); },
+    onError: (e) => notify(e.message, "error"),
   });
 
   return (
