@@ -113,6 +113,10 @@ export default function Conquistas() {
 
   const ranking = topComVoce.findIndex((r) => r.nome.endsWith("(você)")) + 1;
 
+  const mesAno = mounted
+    ? new Date().toLocaleDateString("pt-PT", { month: "long", year: "numeric" })
+    : "";
+
   if (!mounted) return <Layout><div className="h-[60vh]" /></Layout>;
 
   return (
@@ -193,6 +197,24 @@ export default function Conquistas() {
           </div>
         </div>
 
+        {/* Pódio do Mês */}
+        <section className="bg-white rounded-2xl border border-[var(--color-border)] p-6 mb-8">
+          <div className="flex items-center justify-between gap-3 mb-1">
+            <h2 className="font-serif text-lg text-ink flex items-center gap-2">
+              <Trophy size={18} className="text-amber-500" /> Pódio do Mês
+            </h2>
+            <span className="text-[11px] uppercase tracking-[0.2em] text-ink/45">{mesAno}</span>
+          </div>
+          <p className="text-xs text-ink/55 mb-5 leading-relaxed">
+            Ranking de <strong className="text-ink">presença + conteúdo</strong> (as aulas não contam aqui).
+            No fim do mês, as duas primeiras ganham:
+          </p>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <PodiumSpot emoji="🥇" lugar="1.º lugar" premio="Sessão de 40 min com a mentora + menção nos stories" />
+            <PodiumSpot emoji="🥈" lugar="2.º lugar" premio="Menção nos stories" />
+          </div>
+        </section>
+
 
         {/* Histórico + Top 20 */}
         <div className="grid md:grid-cols-2 gap-6">
@@ -272,6 +294,21 @@ function PointRow({
       <span className="text-ink/75">{label}</span>
       <span className="text-ink/40">—</span>
       <span className="font-semibold text-ink">{pts}</span>
+    </div>
+  );
+}
+
+function PodiumSpot({ emoji, lugar, premio }: { emoji: string; lugar: string; premio: string }) {
+  return (
+    <div className="rounded-2xl border border-[var(--color-border)] bg-cream/60 p-4">
+      <div className="flex items-center gap-2.5">
+        <span className="text-2xl leading-none">{emoji}</span>
+        <div>
+          <p className="text-sm font-semibold text-ink">{lugar}</p>
+          <p className="text-[11px] text-ink/45">Sem líder ainda este mês</p>
+        </div>
+      </div>
+      <p className="text-xs text-ink/60 mt-3 leading-relaxed">{premio}</p>
     </div>
   );
 }
