@@ -75,7 +75,8 @@ export function useAccess() {
     return () => { active = false; clearTimeout(safety); };
   }, []);
 
-  const has = (k: ModuleKey) => isAdmin || unlocked.has(k);
+  // Produto único: ter QUALQUER compra ativa desbloqueia TODOS os módulos.
   const hasAny = isAdmin || unlocked.size > 0;
+  const has = (_k: ModuleKey) => hasAny;
   return { loading, has, hasAny, isAdmin, signedIn };
 }

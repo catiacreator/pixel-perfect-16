@@ -15,6 +15,12 @@ export function isAdminEmail(email?: string | null): boolean {
   return !!email && ADMIN_EMAILS.includes(email.trim().toLowerCase());
 }
 
+// ── Produto único ──────────────────────────────────────────────
+// A plataforma é vendida como UM só produto: comprar desbloqueia TUDO.
+// Preenche estes dois quando criares o produto na Hotmart.
+export const CHECKOUT_URL = ""; // TODO: link de checkout do produto único na Hotmart
+export const FULL_ACCESS_PRODUCT_ID = ""; // TODO: id do produto único na Hotmart
+
 export type ModuleKey = "jornada" | "academia" | "redes";
 
 export type ModuleInfo = {
@@ -43,8 +49,11 @@ export const MODULES: Record<ModuleKey, ModuleInfo> = {
   },
 };
 
-/** Mapa id-do-produto-Hotmart -> módulo (para o webhook). */
+/** Mapa id-do-produto-Hotmart -> módulo (para o webhook).
+ *  Produto único: qualquer compra (o produto único) concede acesso total,
+ *  por isso registamos sob "jornada" — o `useAccess` desbloqueia tudo na mesma. */
 export function moduleByHotmartProduct(productId: string): ModuleKey | null {
+  if (FULL_ACCESS_PRODUCT_ID && productId === FULL_ACCESS_PRODUCT_ID) return "jornada";
   const entry = (Object.entries(MODULES) as [ModuleKey, ModuleInfo][]).find(
     ([, m]) => m.hotmartProductId && m.hotmartProductId === productId,
   );
