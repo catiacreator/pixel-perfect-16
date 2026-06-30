@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { toast } from "sonner";
+import { notify } from "@/lib/toast";
 import { listRanking, resetRanking } from "@/lib/admin.functions";
 import { RotateCcw } from "lucide-react";
 
@@ -19,11 +19,11 @@ function RankingPage() {
   const resetMut = useMutation({
     mutationFn: () => reset(),
     onSuccess: () => {
-      toast.success("Ranking resetado");
+      notify("Ranking resetado", "success");
       qc.invalidateQueries({ queryKey: ["admin-ranking"] });
       qc.invalidateQueries({ queryKey: ["admin-mentoradas"] });
     },
-    onError: (e) => toast.error(e.message),
+    onError: (e) => notify(e.message, "error"),
   });
 
   return (
