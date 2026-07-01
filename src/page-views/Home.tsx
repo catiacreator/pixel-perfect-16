@@ -3,14 +3,12 @@ import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import HeroRobot from "../components/HeroRobot";
 import { useAccess } from "@/lib/use-access";
-import { CHECKOUT_URL } from "@/lib/access";
 import {
   ArrowUpRight,
   Sparkles,
   Compass,
   GraduationCap,
   MessageSquare,
-  Lock,
 } from "lucide-react";
 
 const CARDS = [
@@ -50,7 +48,7 @@ const CARDS = [
 ];
 
 export default function Home() {
-  const { has, loading: accessLoading, signedIn } = useAccess();
+  const { signedIn } = useAccess();
   const orbRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let x = window.innerWidth / 2;
@@ -175,8 +173,6 @@ export default function Home() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
             {CARDS.map((c, i) => {
               const Icon = c.icon;
-              const locked = !accessLoading && !has(c.modulo);
-              const checkout = CHECKOUT_URL;
               const cls = "fade-up group relative overflow-hidden rounded-3xl border border-white/60 bg-white/55 backdrop-blur-xl p-5 md:p-6 flex flex-col aspect-[9/16] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:bg-white/70";
               const style = { "--mc": c.cor, animationDelay: `${i * 90}ms` } as Record<string, string>;
 
@@ -191,32 +187,22 @@ export default function Home() {
                   <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
                   {/* barrinha da cor do módulo no topo */}
                   <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5 z-10" style={{ background: c.cor }} />
-                  {locked && (
-                    <span className="absolute top-4 right-4 z-10 inline-flex items-center gap-1.5 text-[13px] font-semibold uppercase tracking-wider text-white bg-black/50 border border-white/25 rounded-full px-3 py-1.5 backdrop-blur-sm">
-                      <Lock size={14} /> Bloqueado
-                    </span>
-                  )}
                   <span className="relative mt-auto inline-flex items-center gap-2.5 text-base font-semibold text-white">
-                    {locked ? "Desbloquear acesso" : c.cta}
+                    {c.cta}
                     <span className="w-9 h-9 rounded-full border border-white/60 flex items-center justify-center transition-all duration-300 group-hover:bg-white group-hover:text-ink group-hover:translate-x-0.5">
-                      {locked ? <Lock size={14} strokeWidth={2.25} /> : <ArrowUpRight size={15} strokeWidth={2.25} />}
+                      <ArrowUpRight size={15} strokeWidth={2.25} />
                     </span>
                   </span>
                 </>
               ) : (
                 <>
                   <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5" style={{ background: c.cor }} />
-                  {locked && (
-                    <span className="absolute top-4 right-4 inline-flex items-center gap-1.5 text-[13px] font-semibold uppercase tracking-wider text-ink/55 bg-white/80 border border-[var(--color-border)] rounded-full px-3 py-1.5">
-                      <Lock size={14} /> Bloqueado
-                    </span>
-                  )}
                   <div className="mb-6">
                     <span
                       className="w-[52px] h-[52px] rounded-2xl text-cream flex items-center justify-center shadow-[0_8px_20px_-8px_rgba(0,0,0,0.35)] transition-transform group-hover:scale-105"
                       style={{ background: c.cor }}
                     >
-                      {locked ? <Lock size={20} strokeWidth={2} /> : <Icon size={22} strokeWidth={1.75} />}
+                      <Icon size={22} strokeWidth={1.75} />
                     </span>
                   </div>
 
@@ -238,28 +224,16 @@ export default function Home() {
                   </div>
 
                   <span className="mt-6 inline-flex items-center gap-2.5 text-base font-semibold" style={{ color: c.cor }}>
-                    {locked ? "Desbloquear acesso" : c.cta}
+                    {c.cta}
                     <span
                       className="w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-300 group-hover:text-cream group-hover:translate-x-0.5 group-hover:bg-[var(--mc)] group-hover:border-[var(--mc)]"
                       style={{ borderColor: c.cor }}
                     >
-                      {locked ? <Lock size={14} strokeWidth={2.25} /> : <ArrowUpRight size={15} strokeWidth={2.25} />}
+                      <ArrowUpRight size={15} strokeWidth={2.25} />
                     </span>
                   </span>
                 </>
               );
-
-              if (locked) {
-                return checkout ? (
-                  <a key={c.titulo} href={checkout} target="_blank" rel="noreferrer" className={cls} style={style}>
-                    {inner}
-                  </a>
-                ) : (
-                  <div key={c.titulo} className={`${cls} cursor-default`} style={style} title="Em breve na Hotmart">
-                    {inner}
-                  </div>
-                );
-              }
 
               return (
                 <Link key={c.titulo} to={c.to} className={cls} style={style}>
