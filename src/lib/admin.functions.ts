@@ -596,23 +596,45 @@ export const getTurmas = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { INICIANTE_ID, INICIANTE_NOME, INICIANTE_ACESSOS_PADRAO } = await import("@/lib/turmas");
+    const { blob } = await readOwnerBlob(supabaseAdmin);
+    const t = blob[TURMAS_KEY];
+    return Array.isArray(t) ? t : [];
+  });
+
+// ───────── Papéis — permissões por nível (Aluno / Moderador) ─────────
+// Admin vê sempre tudo (não guardado). Guardado em "__papeis__": { aluno, moderador }.
+const PAPEIS_KEY = "__papeis__";
+const PAPEIS_PADRAO = ["redes", "jornada", "academia"]; // por defeito: tudo
+
+export const getPapeis = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { blob } = await readOwnerBlob(supabaseAdmin);
+    const p = (blob[PAPEIS_KEY] as { aluno?: string[]; moderador?: string[] }) ?? {};
+    return {
+      aluno: Array.isArray(p.aluno) ? p.aluno : [...PAPEIS_PADRAO],
+      moderador: Array.isArray(p.moderador) ? p.moderador : [...PAPEIS_PADRAO],
+    };
+  });
+
+export const setPapeis = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { aluno: string[]; moderador: string[] }) =>
+    z.object({ aluno: z.array(z.string()).max(2000), moderador: z.array(z.string()).max(2000) }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { uid, blob } = await readOwnerBlob(supabaseAdmin);
-    let turmas = (Array.isArray(blob[TURMAS_KEY]) ? blob[TURMAS_KEY] : []) as {
-      id: string; nome: string; cor?: string; membros: string[]; acessos: string[];
-    }[];
-    // Garante que a turma "Iniciante" existe sempre (é a turma por defeito).
-    if (!turmas.some((t) => t.id === INICIANTE_ID)) {
-      turmas = [
-        { id: INICIANTE_ID, nome: INICIANTE_NOME, cor: "#2FA98A", membros: [], acessos: [...INICIANTE_ACESSOS_PADRAO] },
-        ...turmas,
-      ];
-      await supabaseAdmin.from("master_documents").upsert(
-        { user_id: uid, data: { ...blob, [TURMAS_KEY]: turmas }, updated_at: new Date().toISOString() },
-        { onConflict: "user_id" },
-      );
-    }
-    return turmas;
+    const next = { ...blob, [PAPEIS_KEY]: { aluno: data.aluno, moderador: data.moderador } };
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: uid, data: next, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
+    return { ok: true };
   });
 
 export const setTurmas = createServerFn({ method: "POST" })
@@ -641,24 +663,32 @@ export const setTurmas = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-// O aluno lê a SUA turma: devolve se está restrito e a que tem acesso.
-// Se não estiver em nenhuma turma explícita → é tratado como "Iniciante".
+// O aluno lê o que pode ver. Regra: Papel é a base, Turma é exceção.
+//  - admin           → vê tudo (sem restrição)
+//  - moderador       → permissões do papel Moderador
+//  - aluno numa turma→ permissões dessa turma (sobrepõe o papel)
+//  - aluno sem turma → permissões do papel Aluno (o "Iniciante" por defeito)
 export const getMinhaTurmaAcessos = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { INICIANTE_ID } = await import("@/lib/turmas");
+    const roles = await rolesOf(supabaseAdmin, context.userId);
+    if (roles.includes("admin")) return { restrito: false, acessos: [] as string[] };
+
     const { blob } = await readOwnerBlob(supabaseAdmin);
+    const papeis = (blob[PAPEIS_KEY] as { aluno?: string[]; moderador?: string[] }) ?? {};
+
+    if (roles.includes("moderator")) {
+      return { restrito: true, acessos: Array.isArray(papeis.moderador) ? papeis.moderador : [...PAPEIS_PADRAO] };
+    }
+
+    // Aluno: turma explícita sobrepõe o papel.
     const turmas = (Array.isArray(blob[TURMAS_KEY]) ? blob[TURMAS_KEY] : []) as {
-      id?: string; membros?: string[]; acessos?: string[];
+      membros?: string[]; acessos?: string[];
     }[];
-    // 1) Turma explícita (diferente de Iniciante) onde o aluno está.
-    const explicita = turmas.find(
-      (t) => t.id !== INICIANTE_ID && Array.isArray(t.membros) && t.membros.includes(context.userId),
-    );
-    const alvo = explicita ?? turmas.find((t) => t.id === INICIANTE_ID);
-    if (!alvo) return { restrito: false, acessos: [] as string[] };
-    return { restrito: true, acessos: Array.isArray(alvo.acessos) ? alvo.acessos : [] };
+    const turma = turmas.find((t) => Array.isArray(t.membros) && t.membros.includes(context.userId));
+    if (turma) return { restrito: true, acessos: Array.isArray(turma.acessos) ? turma.acessos : [] };
+    return { restrito: true, acessos: Array.isArray(papeis.aluno) ? papeis.aluno : [...PAPEIS_PADRAO] };
   });
 
 // Ranking visível a qualquer aluno autenticado (top 50 por pontos).
