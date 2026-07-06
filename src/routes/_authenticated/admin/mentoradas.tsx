@@ -84,6 +84,23 @@ function MentoradasPage() {
     setSelectedIds(new Set());
     setBulkTurma("");
   };
+  const [aRemover, setARemover] = useState(false);
+  const removerVarios = async () => {
+    const ids = [...selectedIds];
+    if (ids.length === 0) return;
+    if (!confirm(`Eliminar PERMANENTEMENTE ${ids.length} contacto(s)? A conta e o acesso são removidos — esta ação é irreversível.`)) return;
+    setARemover(true);
+    try {
+      await Promise.all(ids.map((id) => del({ data: { userId: id } })));
+      notify(`${ids.length} contacto(s) eliminado(s)`, "success");
+      setSelectedIds(new Set());
+      qc.invalidateQueries({ queryKey: ["admin-mentoradas"] });
+    } catch (e) {
+      notify(e instanceof Error ? e.message : "Não foi possível eliminar.", "error");
+    } finally {
+      setARemover(false);
+    }
+  };
 
   const [q, setQ] = useState("");
   const [turmaFiltro, setTurmaFiltro] = useState("");
@@ -225,6 +242,13 @@ function MentoradasPage() {
             >
               Aplicar
             </button>
+            <button
+              onClick={removerVarios}
+              disabled={aRemover}
+              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-rose-600 text-white text-sm font-semibold hover:bg-rose-700 transition-colors disabled:opacity-50"
+            >
+              <Trash2 size={14} /> {aRemover ? "A remover…" : "Remover"}
+            </button>
             <button onClick={() => setSelectedIds(new Set())} className="text-sm text-ink/50 hover:text-ink">
               Limpar
             </button>
@@ -350,17 +374,16 @@ function MentoradasPage() {
                   >
                     <Coins size={13} /> Pontos
                   </button>
-                  {isOwner && (
-                    <button
-                      onClick={() => {
-                        if (confirm(`Eliminar ${m.nome ?? "este aluno"}? Esta ação é irreversível.`)) delMut.mutate(m.id);
-                      }}
-                      className="text-ink/40 hover:text-rose-700"
-                      aria-label="Eliminar"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  )}
+                  <button
+                    onClick={() => {
+                      if (confirm(`Eliminar PERMANENTEMENTE ${m.nome ?? "este aluno"}? A conta e o acesso são removidos — esta ação é irreversível.`)) delMut.mutate(m.id);
+                    }}
+                    className="text-ink/40 hover:text-rose-700"
+                    aria-label="Eliminar permanentemente"
+                    title="Eliminar permanentemente"
+                  >
+                    <Trash2 size={14} />
+                  </button>
                 </td>
               </tr>
             ))}
