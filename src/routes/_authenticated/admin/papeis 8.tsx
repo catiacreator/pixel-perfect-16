@@ -2,14 +2,16 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { ShieldCheck, Shield, GraduationCap, Star } from "lucide-react";
+import { ShieldCheck, Shield, GraduationCap, Lock, Check, Star } from "lucide-react";
 import { notify } from "@/lib/toast";
 import { getPapeis, setPapeis } from "@/lib/admin.functions";
-import AcessoArvore from "@/components/admin/AcessoArvore";
+import { ESTRUTURA, type Nodo, type NodoTipo } from "@/lib/estrutura";
 
-export const Route = createFileRoute("/_authenticated/admin/papeis")({
+export const Route = createFileRoute("/_authenticated/admin/papeis 8")({
   component: PapeisPage,
 });
+
+const TIPO_LABEL: Record<NodoTipo, string> = { modulo: "Módulo", pilar: "Pilar", pagina: "Página", subpagina: "Subpágina" };
 
 type Papeis = { aluno: string[]; moderador: string[] };
 
@@ -27,8 +29,12 @@ function PapeisPage() {
 
   const [aberto, setAberto] = useState<"aluno" | "moderador" | null>("aluno");
 
-  const setAcessos = (papel: "aluno" | "moderador", acessos: string[]) => {
-    const next: Papeis = { ...papeis, [papel]: acessos };
+  const toggle = (papel: "aluno" | "moderador", nodeId: string) => {
+    const atual = papeis[papel];
+    const next: Papeis = {
+      ...papeis,
+      [papel]: atual.includes(nodeId) ? atual.filter((x) => x !== nodeId) : [...atual, nodeId],
+    };
     // atualização otimista via cache do react-query
     qc.setQueryData(["admin-papeis"], next);
     mut.mutate(next);
@@ -66,7 +72,7 @@ function PapeisPage() {
           grants={papeis.moderador}
           aberto={aberto === "moderador"}
           onAbrir={() => setAberto(aberto === "moderador" ? null : "moderador")}
-          onChange={(next) => setAcessos("moderador", next)}
+          onToggle={(nid) => toggle("moderador", nid)}
         />
 
         <PapelCard
@@ -77,7 +83,7 @@ function PapeisPage() {
           grants={papeis.aluno}
           aberto={aberto === "aluno"}
           onAbrir={() => setAberto(aberto === "aluno" ? null : "aluno")}
-          onChange={(next) => setAcessos("aluno", next)}
+          onToggle={(nid) => toggle("aluno", nid)}
         />
       </div>
     </div>
@@ -85,7 +91,7 @@ function PapeisPage() {
 }
 
 function PapelCard({
-  icon, titulo, descricao, grants, aberto, onAbrir, onChange,
+  icon, titulo, descricao, grants, aberto, onAbrir, onToggle,
 }: {
   id: string;
   icon: React.ReactNode;
@@ -94,7 +100,7 @@ function PapelCard({
   grants: string[];
   aberto: boolean;
   onAbrir: () => void;
-  onChange: (next: string[]) => void;
+  onToggle: (id: string) => void;
 }) {
   return (
     <div className="rounded-2xl border border-[var(--color-border)] bg-white overflow-hidden">
@@ -107,10 +113,40 @@ function PapelCard({
         <span className="text-[12px] text-ink/50 shrink-0">{grants.length} acesso(s)</span>
       </button>
       {aberto && (
-        <div className="border-t border-[var(--color-border)] p-4">
-          <AcessoArvore grants={grants} onChange={onChange} />
+        <div className="border-t border-[var(--color-border)] px-4 py-1">
+          <AccessTree grants={grants} onToggle={onToggle} />
         </div>
       )}
     </div>
   );
+}
+
+function AccessTree({ grants, onToggle }: { grants: string[]; onToggle: (id: string) => void }) {
+  const set = new Set(grants);
+  const render = (nodos: Nodo[], depth: number, paiConcedido: boolean) =>
+    nodos.map((n) => {
+      const raw = set.has(n.id);
+      const efetivo = raw || paiConcedido;
+      return (
+        <div key={n.id}>
+          <div className="flex items-center gap-2.5 py-2 border-b border-[var(--color-border)]" style={{ paddingLeft: depth * 20 }}>
+            <span className="text-[8px] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded-full font-semibold bg-ink/5 text-ink/45 shrink-0">{TIPO_LABEL[n.tipo]}</span>
+            <span className={`text-[13px] flex-1 min-w-0 truncate ${efetivo ? "text-ink" : "text-ink/45"}`}>{n.label}</span>
+            {paiConcedido ? (
+              <span className="text-[11px] text-emerald-600/70 italic shrink-0">herdado</span>
+            ) : (
+              <button
+                onClick={() => onToggle(n.id)}
+                className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors shrink-0 ${raw ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-ink/[0.03] border-[var(--color-border)] text-ink/45 hover:text-ink"}`}
+              >
+                {raw ? <Check size={11} /> : <Lock size={11} />}
+                {raw ? "Com acesso" : "Sem acesso"}
+              </button>
+            )}
+          </div>
+          {n.filhos && render(n.filhos, depth + 1, efetivo)}
+        </div>
+      );
+    });
+  return <>{render(ESTRUTURA, 0, false)}</>;
 }

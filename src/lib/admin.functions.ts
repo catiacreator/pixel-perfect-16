@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { isAdminEmail } from "@/lib/access";
+import { achatarEstrutura } from "@/lib/estrutura";
 import { z } from "zod";
 
 // A administradora principal (dona) — só ela pode adicionar/eliminar alunos e atribuir papéis.
@@ -702,7 +703,8 @@ export const getTurmas = createServerFn({ method: "GET" })
 // ───────── Papéis — permissões por nível (Aluno / Moderador) ─────────
 // Admin vê sempre tudo (não guardado). Guardado em "__papeis__": { aluno, moderador }.
 const PAPEIS_KEY = "__papeis__";
-const PAPEIS_PADRAO = ["redes", "jornada", "academia"]; // por defeito: tudo
+// Por defeito: TODOS os nós (acesso a tudo). Acesso é por nó (página/subpágina).
+const PAPEIS_PADRAO: string[] = achatarEstrutura().map((n) => n.id);
 
 export const getPapeis = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
