@@ -3,14 +3,13 @@ import { Link } from "@/lib/router-compat";
 import { useState } from "react";
 import { Check, KeyRound, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { validarCodigo } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/registo")({
   head: () => ({ meta: [{ title: "Registo — Estúdio Creator" }] }),
   component: RegistoPage,
 });
 
-// Código de acesso partilhado com os alunos do Estúdio Creator.
-const CODIGO = "IAVIRAL";
 
 function traduzErro(msg: string): string {
   const m = msg.toLowerCase();
@@ -32,12 +31,15 @@ function RegistoPage() {
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     setErro("");
-    if (codigo.trim().toUpperCase() !== CODIGO) {
-      setErro("Código de acesso inválido. Confirme o código que a Cátia lhe enviou.");
-      return;
-    }
     setLoading(true);
     try {
+      // Valida o código (só os ativos, geridos em Admin → Códigos de acesso).
+      const { valido } = await validarCodigo({ data: { codigo: codigo.trim() } });
+      if (!valido) {
+        setErro("Código de acesso inválido ou desativado. Confirme o código que a Cátia lhe enviou.");
+        setLoading(false);
+        return;
+      }
       const { error } = await supabase.auth.signUp({
         email,
         password,

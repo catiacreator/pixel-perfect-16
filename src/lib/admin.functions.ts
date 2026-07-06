@@ -578,6 +578,55 @@ export const setBloqueios = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+// ───────── Códigos de acesso — a mentora cria; usados para criar conta ─────────
+const CODIGOS_KEY = "__codigos__";
+
+export const getCodigos = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { blob } = await readOwnerBlob(supabaseAdmin);
+    const c = blob[CODIGOS_KEY];
+    return Array.isArray(c) ? c : [];
+  });
+
+export const setCodigos = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { codigos: unknown[] }) =>
+    z.object({
+      codigos: z.array(z.object({
+        codigo: z.string().min(1).max(60),
+        ativo: z.boolean(),
+        nota: z.string().max(200).optional(),
+      })).max(1000),
+    }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { uid, blob } = await readOwnerBlob(supabaseAdmin);
+    const next = { ...blob, [CODIGOS_KEY]: data.codigos };
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: uid, data: next, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
+    return { ok: true };
+  });
+
+// Validação pública (sem sessão) — usada na página de registo antes de criar conta.
+export const validarCodigo = createServerFn({ method: "POST" })
+  .inputValidator((d: { codigo: string }) => z.object({ codigo: z.string().min(1).max(60) }).parse(d))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { blob } = await readOwnerBlob(supabaseAdmin);
+    const codigos = (Array.isArray(blob[CODIGOS_KEY]) ? blob[CODIGOS_KEY] : []) as { codigo: string; ativo: boolean }[];
+    const alvo = data.codigo.trim().toLowerCase();
+    const valido = codigos.some((c) => c.ativo && String(c.codigo).trim().toLowerCase() === alvo);
+    return { valido };
+  });
+
 // ───────── Turmas — grupos de alunos com permissões próprias ─────────
 // Guardadas na linha da dona, sob "__turmas__": [{ id, nome, cor, membros[], acessos[] }].
 // `acessos` = ids da ESTRUTURA que a turma PODE ver (grant; herda para os filhos).
