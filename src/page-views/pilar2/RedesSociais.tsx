@@ -508,6 +508,8 @@ export default function RedesSociais() {
   const bloqueadoParaAlunos = useBloqueadoParaAlunos();
   const { isBloqueado } = useBloqueios();
   const conteudoBloqueado = bloqueadoParaAlunos && isBloqueado(`redes.${aba}`);
+  // Vista admin: a aba está "Em breve" p/ alunos, mas a admin vê o conteúdo.
+  const avisoAdminEmBreve = !bloqueadoParaAlunos && isBloqueado(`redes.${aba}`);
   const [formato, setFormato] = useState<"reels" | "estatico" | null>(null);
   const [objetivo, setObjetivo] = useState<Objetivo>("autoridade");
 
@@ -648,6 +650,15 @@ export default function RedesSociais() {
         </div>
       )}
       <div className={`px-5 md:px-10 max-w-4xl mx-auto ${aba === "boas-vindas" ? "py-10" : "pt-6 pb-12"}`}>
+        {avisoAdminEmBreve && (
+          <div className="mb-5 flex items-center gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-[13px] text-amber-800">
+            <Lock size={14} className="shrink-0" />
+            <span>
+              Esta secção está <b>Em breve</b> para os alunos — só você (admin) a vê. Altere em{" "}
+              <b>Admin → Estrutura &amp; Bloqueios</b>.
+            </span>
+          </div>
+        )}
         {conteudoBloqueado ? (
           <div className="rounded-2xl border border-border bg-white p-8 text-center">
             <div className="w-12 h-12 mx-auto rounded-full bg-ink/5 text-ink/50 flex items-center justify-center mb-4">
