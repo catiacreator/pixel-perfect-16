@@ -284,6 +284,8 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
               );
             }
 
+            // Em vista admin, sinaliza (sem bloquear) o que está "Em breve" p/ alunos.
+            const emBreveAlunos = !bloqueadoParaAlunos && !!item.id && isBloqueado(item.id);
             const active = isActive(item.to);
             const hasChildren = !!item.children?.length;
             // Abre se for o pai ativo OU se uma filha for a página atual (reativo à rota).
@@ -317,6 +319,14 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                     {item.badge && (
                       <span className={`ml-1 text-[9px] tracking-[0.18em] uppercase px-2 py-0.5 rounded-full font-semibold ${active ? "bg-terracotta/10 text-terracotta" : "bg-white/20 text-white"}`}>
                         {item.badge}
+                      </span>
+                    )}
+                    {emBreveAlunos && (
+                      <span
+                        title="Em breve para os alunos (você, admin, continua a ver)"
+                        className="ml-1 inline-flex items-center gap-1 text-[8.5px] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded-full font-semibold bg-amber-400/25 text-amber-200 shrink-0"
+                      >
+                        <Lock size={9} strokeWidth={2.5} /> Alunos
                       </span>
                     )}
                   </Link>
