@@ -2,6 +2,7 @@ import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import { ArrowUpRight, ArrowLeft, Compass, Instagram, FileText, Lock } from "lucide-react";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
+import { useBloqueios } from "@/lib/bloqueios";
 
 const CARDS = [
   {
@@ -15,6 +16,7 @@ const CARDS = [
     pos: "center calc(38% - 25px)",
     cor: "#C0653A",
     icon: Compass,
+    estruturaId: "jornada",
   },
   {
     key: "instagram",
@@ -27,12 +29,13 @@ const CARDS = [
     pos: "center 42%",
     cor: "#C8487E",
     icon: Instagram,
-    bloqueavel: true,
+    estruturaId: "redes",
   },
 ];
 
 export default function ProtocoloViral() {
-  const bloqueado = useBloqueadoParaAlunos();
+  const bloqueadoParaAlunos = useBloqueadoParaAlunos();
+  const { isBloqueado } = useBloqueios();
   return (
     <Layout>
       <section className="max-w-[1200px] mx-auto px-5 md:px-10 pt-10 md:pt-16 pb-20 md:pb-28">
@@ -74,7 +77,8 @@ export default function ProtocoloViral() {
         <div className="grid md:grid-cols-2 gap-5 md:gap-6">
           {CARDS.map((c, i) => {
             const Icon = c.icon;
-            const locked = Boolean((c as { bloqueavel?: boolean }).bloqueavel) && bloqueado;
+            const eid = (c as { estruturaId?: string }).estruturaId;
+            const locked = !!eid && isBloqueado(eid) && bloqueadoParaAlunos;
             const Wrapper: any = locked ? "div" : Link;
             const wrapperProps = locked ? { "aria-disabled": true } : { to: c.to };
             return (

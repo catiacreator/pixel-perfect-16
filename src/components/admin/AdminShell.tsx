@@ -1,7 +1,7 @@
 import { Link, useRouterState, useNavigate, Outlet } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { LayoutDashboard, Users, Trophy, FileText, LogOut, Eye, KeyRound, Home, ChevronDown, ListTree, GraduationCap, ShieldCheck, Ticket, Link2 } from "lucide-react";
+import { LayoutDashboard, Users, Trophy, FileText, LogOut, Eye, KeyRound, Home, ChevronDown, ChevronLeft, ListTree, GraduationCap, ShieldCheck, Ticket, Link2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { checkIsAdmin, getAdminConfig } from "@/lib/admin.functions";
@@ -58,11 +58,20 @@ export function AdminShell() {
       {/* Cabeçalho — mesmo estilo (gradiente pastel) da app */}
       <header className="app-header sticky top-0 z-40 text-ink border-b border-black/5 shadow-[0_4px_24px_-16px_rgba(0,0,0,0.35)]">
         <div className="px-5 md:px-8 h-16 md:h-18 flex items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-2.5 leading-none shrink-0 group">
-            <span className="w-2 h-2 rounded-full bg-gold shadow-[0_0_14px_2px_rgba(184,121,74,0.45)]" />
-            <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none">Cátia Creator</span>
-            <span className="text-[9px] tracking-[0.24em] uppercase text-ink/50 font-semibold border border-ink/15 rounded-full px-2 py-0.5 ml-1">Admin</span>
-          </Link>
+          <div className="flex items-center gap-3 min-w-0">
+            <button
+              onClick={() => window.history.back()}
+              className="inline-flex items-center gap-1.5 text-[13px] font-medium text-ink/70 px-3 py-1.5 rounded-full border border-ink/15 bg-white/50 hover:bg-white transition-colors shrink-0"
+              title="Voltar à página anterior"
+            >
+              <ChevronLeft size={15} /> Voltar
+            </button>
+            <Link to="/" className="flex items-center gap-2.5 leading-none shrink-0 group">
+              <span className="w-2 h-2 rounded-full bg-gold shadow-[0_0_14px_2px_rgba(184,121,74,0.45)]" />
+              <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none hidden sm:inline">Cátia Creator</span>
+              <span className="text-[9px] tracking-[0.24em] uppercase text-ink/50 font-semibold border border-ink/15 rounded-full px-2 py-0.5 sm:ml-1">Admin</span>
+            </Link>
+          </div>
           <AdminTopbarActions onLogout={logout} />
         </div>
       </header>
