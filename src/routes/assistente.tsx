@@ -4,10 +4,10 @@ import Assistente from "@/page-views/Assistente";
 export const Route = createFileRoute("/assistente")({
   head: () => ({
     meta: [
-      { title: "Assistente IA — Leveza no Digital" },
+      { title: "Assistente IA — Cátia Creator" },
       {
         name: "description",
-        content: "Conversa com o assistente Leveza no Digital sobre o método, conteúdo, vendas e IA.",
+        content: "Conversa com o assistente Cátia Creator sobre o método, conteúdo, vendas e IA.",
       },
     ],
   }),

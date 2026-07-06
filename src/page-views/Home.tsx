@@ -2,53 +2,42 @@ import { useEffect, useRef } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import HeroRobot from "../components/HeroRobot";
-import { useAccess } from "@/lib/use-access";
-import {
-  ArrowUpRight,
-  Sparkles,
-  Compass,
-  GraduationCap,
-  MessageSquare,
-} from "lucide-react";
+import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock } from "lucide-react";
+import { useBloqueadoParaAlunos } from "@/lib/admin-view";
 
-const CARDS = [
+// Porta de entrada: dois produtos independentes.
+const PRODUTOS = [
   {
-    modulo: "jornada" as const,
-    icon: Compass,
-    titulo: "A sua jornada",
-    desc: "Os 4 pilares do método, passo a passo — do tempo à venda.",
-    to: "/metodo",
-    cta: "Ver a jornada",
-    tags: [] as string[],
-    cor: "#C0653A",
-    img: "/card-jornada.jpg",
-  },
-  {
-    modulo: "academia" as const,
-    icon: GraduationCap,
-    titulo: "Academia de IA",
-    desc: "Domine as principais IAs para o seu negócio — aulas práticas por ferramenta.",
-    to: "/metodo/pilar-1/aprenda-ia",
-    cta: "Entrar",
-    tags: ["ChatGPT", "Claude", "Gemini", "Grok", "NotebookLM", "Lovable", "Tella"],
-    cor: "#2E7CB8",
-    img: "/academia-ia.png",
-  },
-  {
-    modulo: "redes" as const,
-    icon: MessageSquare,
-    titulo: "Criando para as Redes Sociais",
-    desc: "Modelos de posts, linha editorial e calendário para publicar com método.",
-    to: "/metodo/pilar-2/redes-sociais",
-    cta: "Explorar",
-    tags: ["Modelos", "Linha editorial", "Calendário", "Bio"],
-    cor: "#C8487E",
+    key: "protocolo",
+    tag: "Mentoria · Instagram",
+    titulo: "Protocolo Viral",
+    assinatura: "não é sorte, é método",
+    desc: "O método de IA para transformar o teu perfil numa máquina de crescimento.",
+    to: "/protocolo",
+    cta: "Entrar no Protocolo",
     img: "/redes-sociais.png?v=3",
+    pos: "center calc(42% - 10px)",
+    cor: "#C8487E",
+    icon: Instagram,
+  },
+  {
+    key: "academia",
+    tag: "Ferramentas",
+    titulo: "Academia de IA",
+    assinatura: "domina as IAs que interessam",
+    desc: "Aulas práticas, ferramenta a ferramenta, para aplicar Inteligência Artificial no teu negócio.",
+    to: "/metodo/pilar-1/aprenda-ia",
+    cta: "Entrar na Academia",
+    img: "/academia-ia.png",
+    pos: "center bottom",
+    cor: "#2E7CB8",
+    icon: GraduationCap,
+    bloqueavel: true,
   },
 ];
 
 export default function Home() {
-  const { signedIn } = useAccess();
+  const bloqueado = useBloqueadoParaAlunos();
   const orbRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let x = window.innerWidth / 2;
@@ -95,7 +84,7 @@ export default function Home() {
         style={{ background: "radial-gradient(circle at center, #F0A766 0%, #C8487E 35%, transparent 62%)" }}
       />
 
-      {/* HERO — faixa colorida (gradiente da marca) */}
+      {/* HERO — faixa colorida (gradiente da marca) + robô */}
       <section className="relative px-4 md:px-10 pt-5 md:pt-7 pb-2 md:pb-4">
         <div
           className="relative max-w-[1400px] mx-auto overflow-hidden rounded-[28px] md:rounded-[36px]"
@@ -128,27 +117,6 @@ export default function Home() {
               <p className="text-white/80 max-w-md mt-4 leading-relaxed">
                 Transforme o que sabe em conteúdo, autoridade e liberdade — com Inteligência Artificial.
               </p>
-
-              {signedIn && (
-                <div className="mt-5 flex flex-wrap items-center gap-3">
-                  <Link
-                    to="/doc-mestre"
-                    className="group inline-flex items-center gap-2 bg-[#ffffff] text-[#141414] pl-6 pr-2 py-2.5 rounded-full text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_34px_-12px_rgba(0,0,0,0.5)] active:scale-[0.97]"
-                  >
-                    Começar agora
-                    <span className="w-9 h-9 rounded-full bg-[#141414] text-white flex items-center justify-center">
-                      <ArrowUpRight size={15} strokeWidth={2.5} className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                    </span>
-                  </Link>
-                  <Link
-                    to="/assistente"
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-full text-sm font-medium text-white border border-white/40 hover:bg-white/10 transition-colors active:scale-[0.97]"
-                  >
-                    <Sparkles size={14} />
-                    Assistente
-                  </Link>
-                </div>
-              )}
             </div>
 
             {/* Robô animado */}
@@ -159,103 +127,73 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HUB — 3 caminhos */}
-      <section className="relative">
-        <div className="max-w-[1400px] mx-auto px-5 md:px-10 pt-2 md:pt-4 pb-20 md:pb-28">
-          <div className="mb-8">
-            <p className="text-[11px] tracking-[0.3em] uppercase text-terracotta mb-3">/ Por onde começar</p>
-            <h2 className="font-display text-4xl md:text-6xl tracking-[-0.025em] text-ink max-w-3xl leading-[1.05]">
-              Escolha o seu <span className="text-ink/35">caminho.</span>
-            </h2>
-          </div>
+      {/* Dois caminhos */}
+      <section className="max-w-[1200px] mx-auto px-5 md:px-10 pt-8 md:pt-12 pb-20 md:pb-28">
+        <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14 fade-up">
+          <p className="text-[11px] tracking-[0.3em] uppercase text-terracotta mb-4">Escolhe por onde entrar</p>
+          <h2 className="font-display text-2xl md:text-4xl tracking-[-0.02em] text-ink leading-[1.1]">
+            Dois caminhos para <span className="text-ink/35">crescer com IA.</span>
+          </h2>
+          <p className="text-ink/55 mt-4 leading-relaxed">
+            A mentoria que torna o teu Instagram imparável, e a academia que te dá as ferramentas. Entra no que precisas.
+          </p>
+        </div>
 
+        <div className="grid md:grid-cols-2 gap-5 md:gap-6">
+          {PRODUTOS.map((p, i) => {
+            const Icon = p.icon;
+            const locked = Boolean((p as { bloqueavel?: boolean }).bloqueavel) && bloqueado;
+            const Wrapper: any = locked ? "div" : Link;
+            const wrapperProps = locked ? { "aria-disabled": true } : { to: p.to };
+            return (
+              <Wrapper
+                key={p.key}
+                {...wrapperProps}
+                className={`fade-up group relative overflow-hidden rounded-[28px] border border-white/60 flex flex-col justify-end min-h-[440px] md:min-h-[520px] p-7 md:p-9 transition-all duration-300 ${locked ? "cursor-not-allowed" : "hover:-translate-y-1.5 hover:shadow-[0_34px_70px_-30px_rgba(40,20,15,0.55)]"}`}
+                style={{ animationDelay: `${i * 100}ms` }}
+              >
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-cover transition-transform duration-700 group-hover:scale-105"
+                  style={{ backgroundImage: `url(${p.img})`, backgroundColor: p.cor, backgroundPosition: p.pos }}
+                />
+                <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/25" />
+                <div aria-hidden className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/92 via-black/62 to-transparent" />
+                <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5" style={{ background: p.cor }} />
+                {locked && <div aria-hidden className="absolute inset-0 bg-black/35" />}
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
-            {CARDS.map((c, i) => {
-              const Icon = c.icon;
-              const cls = "fade-up group relative overflow-hidden rounded-3xl border border-white/60 bg-white/55 backdrop-blur-xl p-5 md:p-6 flex flex-col aspect-[9/16] transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-[0_24px_55px_-22px_rgba(90,40,25,0.4)] hover:bg-white/70";
-              const style = { "--mc": c.cor, animationDelay: `${i * 90}ms` } as Record<string, string>;
-
-              const inner = c.img ? (
-                /* Card com imagem (full-bleed) — a imagem já traz o título */
-                <>
-                  <div
-                    aria-hidden
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                    style={{ backgroundImage: `url(${c.img})`, backgroundColor: c.cor }}
-                  />
-                  <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent" />
-                  {/* barrinha da cor do módulo no topo */}
-                  <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5 z-10" style={{ background: c.cor }} />
-                  <span className="relative mt-auto inline-flex items-center gap-2.5 text-base font-semibold text-white">
-                    {c.cta}
-                    <span className="w-9 h-9 rounded-full border border-white/60 flex items-center justify-center transition-all duration-300 group-hover:bg-white group-hover:text-ink group-hover:translate-x-0.5">
-                      <ArrowUpRight size={15} strokeWidth={2.25} />
-                    </span>
+                <span className="absolute top-6 left-7 md:left-9 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 bg-white/12 border border-white/25 rounded-full px-3 py-1.5 backdrop-blur-sm">
+                  <Icon size={13} /> {p.tag}
+                </span>
+                {locked && (
+                  <span className="absolute top-6 right-7 md:right-9 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white bg-white/15 border border-white/30 rounded-full px-3 py-1.5 backdrop-blur-sm">
+                    <Lock size={12} /> Em breve
                   </span>
-                </>
-              ) : (
-                <>
-                  <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5" style={{ background: c.cor }} />
-                  <div className="mb-6">
-                    <span
-                      className="w-[52px] h-[52px] rounded-2xl text-cream flex items-center justify-center shadow-[0_8px_20px_-8px_rgba(0,0,0,0.35)] transition-transform group-hover:scale-105"
-                      style={{ background: c.cor }}
-                    >
-                      <Icon size={22} strokeWidth={1.75} />
+                )}
+
+                <div className="relative [text-shadow:0_2px_18px_rgba(0,0,0,0.6)]">
+                  <p className="text-[12px] tracking-[0.24em] uppercase text-white/85 mb-2">{p.assinatura}</p>
+                  <h2 className="font-display text-3xl md:text-[2.6rem] leading-[1.02] tracking-[-0.02em] text-white">
+                    {p.titulo}
+                  </h2>
+                  <p className="text-sm md:text-[15px] text-white/90 mt-3 leading-relaxed max-w-md">{p.desc}</p>
+
+                  {locked ? (
+                    <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white/85">
+                      <Lock size={15} /> Disponível em breve
                     </span>
-                  </div>
-
-                  <h3 className="font-display text-2xl md:text-[1.7rem] leading-[1.1] tracking-[-0.02em] text-ink">
-                    {c.titulo}
-                  </h3>
-                  <p className="text-sm text-ink/55 mt-2.5 leading-relaxed flex-1">{c.desc}</p>
-
-                  <div className="flex flex-wrap gap-1.5 mt-4">
-                    {c.tags.map((t) => (
-                      <span
-                        key={t}
-                        className="text-[11px] font-medium px-2.5 py-1 rounded-full border"
-                        style={{ color: c.cor, borderColor: c.cor + "55" }}
-                      >
-                        {t}
+                  ) : (
+                    <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white">
+                      {p.cta}
+                      <span className="w-9 h-9 rounded-full border border-white/60 flex items-center justify-center transition-all duration-300 group-hover:bg-white group-hover:text-ink group-hover:translate-x-0.5">
+                        <ArrowUpRight size={15} strokeWidth={2.25} />
                       </span>
-                    ))}
-                  </div>
-
-                  <span className="mt-6 inline-flex items-center gap-2.5 text-base font-semibold" style={{ color: c.cor }}>
-                    {c.cta}
-                    <span
-                      className="w-9 h-9 rounded-full border flex items-center justify-center transition-all duration-300 group-hover:text-cream group-hover:translate-x-0.5 group-hover:bg-[var(--mc)] group-hover:border-[var(--mc)]"
-                      style={{ borderColor: c.cor }}
-                    >
-                      <ArrowUpRight size={15} strokeWidth={2.25} />
                     </span>
-                  </span>
-                </>
-              );
-
-              return (
-                <Link key={c.titulo} to={c.to} className={cls} style={style}>
-                  {inner}
-                </Link>
-              );
-            })}
-
-            {/* 4.º card — Em breve (placeholder, não clicável) */}
-            <div
-              className="fade-up relative overflow-hidden rounded-3xl border border-dashed border-ink/20 bg-white/30 p-5 md:p-6 flex flex-col items-center justify-center text-center aspect-[9/16]"
-              style={{ animationDelay: `${CARDS.length * 90}ms` }}
-            >
-              <span className="w-12 h-12 rounded-2xl bg-ink/5 flex items-center justify-center text-ink/35 mb-4">
-                <Sparkles size={20} strokeWidth={1.75} />
-              </span>
-              <p className="text-[11px] uppercase tracking-[0.3em] text-ink/40">Em breve</p>
-              <h3 className="font-display text-xl md:text-2xl text-ink/55 mt-2 leading-tight">
-                Novo módulo<br />a chegar
-              </h3>
-            </div>
-          </div>
+                  )}
+                </div>
+              </Wrapper>
+            );
+          })}
         </div>
       </section>
     </Layout>

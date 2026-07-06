@@ -22,7 +22,7 @@ const OutSchema = z.object({
   mensagem_fechamento: z.string().describe("Quando type='metodo': mensagem final breve e calorosa. Caso contrário, vazio."),
 });
 
-const SYSTEM = `És a assistente da plataforma "Leveza no Digital", criada pela Cátia Creator. O teu papel é ajudar a expert a estruturar o MÉTODO dela, definindo UMA vitória concreta para cada dor do público.
+const SYSTEM = `És a assistente da Cátia Creator. O teu papel é ajudar a expert a estruturar o MÉTODO dela, definindo UMA vitória concreta para cada dor do público.
 
 Escreve SEMPRE em português, tratando a expert por "você" de forma próxima e leve.
 

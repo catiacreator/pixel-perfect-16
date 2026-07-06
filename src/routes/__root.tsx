@@ -78,10 +78,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Leveza no Digital" },
-      { name: "description", content: "Leveza no Digital — a jornada rápida para transformar seu conhecimento em liberdade, autoridade e lucro com Inteligência Artificial." },
+      { title: "Cátia Creator" },
+      { name: "description", content: "Cátia Creator — a jornada rápida para transformar seu conhecimento em liberdade, autoridade e lucro com Inteligência Artificial." },
       { name: "author", content: "Cátia Creator" },
-      { property: "og:title", content: "Leveza no Digital" },
+      { property: "og:title", content: "Cátia Creator" },
       { property: "og:description", content: "Transforme o que sabe em conteúdo, autoridade e liberdade — com Inteligência Artificial." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://levezanodigital.com" },

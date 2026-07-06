@@ -4,7 +4,7 @@ import MinhaBase from "@/page-views/MinhaBase";
 export const Route = createFileRoute("/minha-base")({
   head: () => ({
     meta: [
-      { title: "Minha base — Leveza no Digital" },
+      { title: "Minha base — Cátia Creator" },
       { name: "description", content: "Sua jornada, documentos, rotina do dia, calendário e conquistas." },
     ],
   }),

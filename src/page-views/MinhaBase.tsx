@@ -18,7 +18,6 @@ import {
   Calendar as CalendarIcon,
   Zap,
   Star,
-  Search,
   Compass,
   Mic,
   Target,
@@ -338,7 +337,6 @@ type Conquista = {
 
 const CONQUISTAS: Conquista[] = [
   { id: "doc", icon: FileText, titulo: "Documento Mestre", sub: "Se conheceu de verdade", desbloqueada: true },
-  { id: "detetive", icon: Search, titulo: "Mapa do Tempo", sub: "Descobriu onde o tempo vai", desbloqueada: true },
   { id: "arq", icon: Compass, titulo: "Arquétipos Decifrados", sub: "Você + cliente com clareza", desbloqueada: true },
   { id: "voz", icon: Mic, titulo: "Voz Definida", sub: "Sua marca tem som próprio", desbloqueada: false },
   { id: "visual", icon: Palette, titulo: "Identidade Visual", sub: "Paleta, tipografia e mood", desbloqueada: false },
@@ -526,112 +524,6 @@ export default function MinhaBase() {
                 </div>
               );
             })}
-          </div>
-        </section>
-
-        {/* HOJE */}
-        <section className="mt-10">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-gold/30 text-terracotta flex items-center justify-center">
-              <Sun size={18} />
-            </div>
-            <div>
-              <h2 className="font-display text-lg text-ink leading-tight">Hoje</h2>
-              <p className="text-xs text-ink/55">Rotina do dia</p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Postagens */}
-            <div className="rounded-2xl border border-[var(--color-border)] bg-white p-5">
-              <p className="text-[11px] tracking-[0.2em] uppercase text-ink/55 mb-3">Postagens</p>
-              <div className="space-y-2">
-                {state.postagens.map((p) => (
-                  <div key={p.id} className="flex items-center gap-2">
-                    <button
-                      onClick={() => togglePostagem(p.id)}
-                      className={`flex-1 flex items-center gap-2 rounded-lg border px-3 py-2.5 text-sm transition-colors ${
-                        p.feita
-                          ? "border-sage/40 bg-sage/10/60 text-sage line-through"
-                          : "border-[var(--color-border)] text-ink hover:bg-white"
-                      }`}
-                    >
-                      {p.feita ? (
-                        <CheckCircle2 size={16} className="text-sage shrink-0" />
-                      ) : (
-                        <Circle size={16} className="text-ink/40 shrink-0" />
-                      )}
-                      <span className="truncate">{p.nome}</span>
-                    </button>
-                    <button
-                      onClick={() => setIdeiasFor(p.id)}
-                      className="w-10 h-10 rounded-lg border border-[var(--color-border)] flex items-center justify-center text-terracotta hover:bg-white"
-                      aria-label="Ideias com IA"
-                      title="3 ideias + prompt para o ChatGPT"
-                    >
-                      <Sparkles size={15} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-              <p className="text-[11px] text-ink/50 mt-3 flex items-center gap-1.5">
-                <Sparkles size={11} className="text-terracotta" />
-                Clique em <Sparkles size={11} className="inline text-terracotta" /> para ver 3 ideias + prompt para o ChatGPT
-              </p>
-            </div>
-
-            {/* Tarefas */}
-            <div className="rounded-2xl border border-[var(--color-border)] bg-white p-5">
-              <p className="text-[11px] tracking-[0.2em] uppercase text-ink/55 mb-3 flex items-center gap-2">
-                <FileText size={11} /> Tarefas do dia
-              </p>
-              <div className="space-y-2">
-                {state.tarefas.map((t, i) => (
-                  <div key={t.id} className="flex items-center gap-2">
-                    <button
-                      onClick={() => toggleTarefa(t.id)}
-                      className={`w-6 h-6 rounded-full border flex items-center justify-center text-[10px] font-semibold shrink-0 ${
-                        t.feita
-                          ? "bg-sage/100 border-sage text-white"
-                          : "border-[var(--color-border)] text-ink/50 bg-white"
-                      }`}
-                    >
-                      {t.feita ? "✓" : i + 1}
-                    </button>
-                    <input
-                      value={t.texto}
-                      onChange={(e) => setTarefaTexto(t.id, e.target.value)}
-                      placeholder={`Tarefa ${i + 1}...`}
-                      className={`flex-1 rounded-lg border border-[var(--color-border)] bg-cream-warm/40 px-3 py-2 text-sm outline-none focus:border-terracotta ${
-                        t.feita ? "line-through text-ink/40" : "text-ink"
-                      }`}
-                    />
-                  </div>
-                ))}
-                <button
-                  onClick={addTarefa}
-                  className="w-full mt-1 flex items-center justify-center gap-1.5 text-sm text-ink/55 rounded-lg border border-dashed border-[var(--color-border)] py-2.5 hover:bg-white"
-                >
-                  <Plus size={14} /> Adicionar mais uma tarefa
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Tag row */}
-          <div className="flex flex-wrap gap-2 mt-4">
-            {state.postagens.map((p) => (
-              <span
-                key={p.id}
-                className={`text-[11px] px-2.5 py-1 rounded-full border ${
-                  p.feita
-                    ? "bg-sage/10 border-sage/30 text-sage"
-                    : "bg-white border-[var(--color-border)] text-ink/50"
-                }`}
-              >
-                {p.nome.replace("Post de ", "")} {p.feita ? "✓" : ""}
-              </span>
-            ))}
           </div>
         </section>
 

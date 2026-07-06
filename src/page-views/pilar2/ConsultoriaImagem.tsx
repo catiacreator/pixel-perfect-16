@@ -83,10 +83,6 @@ export default function ConsultoriaImagem() {
             prompt={PROMPT_CONSULTORIA_CABELO}
             rotuloBotao="Copiar prompt"
           />
-          <p className="flex items-start gap-2 text-[11px] text-muted">
-            <AlertCircle size={12} className="mt-0.5 flex-shrink-0 text-terracotta" />
-            Conteúdo deste prompt pendente — aguardando documentação.
-          </p>
         </div>
 
         <div className="rounded-2xl border border-terracotta bg-white p-5 text-center">

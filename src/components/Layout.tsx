@@ -1,7 +1,7 @@
 import { Link } from "@/lib/router-compat";
 import { useLocation, useRouter } from "@tanstack/react-router";
-import { FileText, Mail, Map, Bot, Database, Award, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield } from "lucide-react";
-import { useEffect, useState } from "react";
+import { FileText, Mail, Map, Bot, Database, Award, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, ChevronDown, Instagram, GraduationCap, Eye } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { initMasterDocSync } from "@/lib/master-doc-sync";
 import { readStoredSession } from "@/lib/session";
@@ -10,11 +10,12 @@ import UserMenu from "@/components/UserMenu";
 import QuickIdeas from "@/components/QuickIdeas";
 import ModulePaywall from "@/components/ModulePaywall";
 import { useAccess } from "@/lib/use-access";
-import type { ModuleKey } from "@/lib/access";
+import { useAdminView, setAdminView } from "@/lib/admin-view";
+import { isAdminEmail, type ModuleKey } from "@/lib/access";
 
 const NAV = [
   { to: "/", label: "Início", icon: Map },
-  { to: "/assistente", label: "Assistente IA", icon: Bot, gated: true },
+  { to: "/assistente", label: "Robot do Curso", icon: Bot, gated: true },
   { to: "/metodo/pilar-1/aprenda-ia/claude/instalar-skills", label: "Skills", icon: Award },
   { to: "/minha-base", label: "A minha jornada", icon: Database, gated: true },
   { to: "/conquistas", label: "Vitórias", icon: Trophy, gated: true },
@@ -25,31 +26,44 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [adminView] = useAdminView();
   const [signedIn, setSignedIn] = useState(false);
+  const [prodOpen, setProdOpen] = useState(false);
+  const prodRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!prodOpen) return;
+    const onDoc = (e: MouseEvent) => {
+      if (prodRef.current && !prodRef.current.contains(e.target as Node)) setProdOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, [prodOpen]);
 
   useEffect(() => {
     let active = true;
-    async function load(uid: string | null) {
+    async function load(uid: string | null, email: string | null) {
       if (!active) return;
       setSignedIn(!!uid);
-      if (uid) {
-        void initMasterDocSync();
-        // Lê os papéis direto da tabela (RLS permite ler os próprios) — has_role tem EXECUTE revogado.
-        const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", uid);
-        const isStaff = (roles ?? []).some(
-          (r) => (r.role as string) === "admin" || (r.role as string) === "moderator",
-        );
-        if (active) setIsAdmin(isStaff);
-      } else {
-        setIsAdmin(false);
-      }
+      if (!uid) { setIsAdmin(false); return; }
+      void initMasterDocSync();
+      // Admin por email — imediato, sem tocar na BD (igual ao useAccess).
+      if (isAdminEmail(email)) { setIsAdmin(true); return; }
+      // Caso contrário, papel admin/moderador na tabela (RLS permite ler os próprios).
+      const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", uid);
+      const isStaff = (roles ?? []).some(
+        (r) => (r.role as string) === "admin" || (r.role as string) === "moderator",
+      );
+      if (active) setIsAdmin(isStaff);
     }
     // Leitura síncrona do storage — instantânea e não pendura.
-    load(readStoredSession()?.user?.id ?? null);
+    const u0 = readStoredSession()?.user;
+    load(u0?.id ?? null, u0?.email ?? null);
     // Reage a login/logout.
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) =>
-      load(session?.user?.id ?? readStoredSession()?.user?.id ?? null),
-    );
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
+      const u = session?.user ?? readStoredSession()?.user;
+      load(u?.id ?? null, u?.email ?? null);
+    });
     return () => { active = false; sub.subscription.unsubscribe(); };
   }, []);
 
@@ -88,12 +102,53 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Link to="/" className="flex items-center gap-2.5 leading-none shrink-0 group">
             <span className="w-2 h-2 rounded-full bg-gold shadow-[0_0_14px_2px_rgba(184,121,74,0.45)]" />
             <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none">
-              Leveza<span className="hidden sm:inline"> no Digital</span>
+              Cátia Creator
             </span>
           </Link>
 
           {/* Navegação desktop */}
           <nav className="hidden lg:flex items-center justify-center gap-1">
+            {/* Menu de produtos */}
+            <div className="relative mr-1" ref={prodRef}>
+              <button
+                onClick={() => setProdOpen((v) => !v)}
+                className="relative px-3.5 py-2 rounded-full text-[13px] font-medium text-ink/70 hover:text-ink hover:bg-ink/10 transition-all inline-flex items-center gap-1.5"
+              >
+                Cursos
+                <ChevronDown size={13} className={`transition-transform ${prodOpen ? "rotate-180" : ""}`} />
+              </button>
+              {prodOpen && (
+                <div className="absolute left-0 mt-2 w-64 bg-white border border-[var(--color-border)] rounded-2xl shadow-[0_20px_50px_-20px_rgba(0,0,0,0.4)] p-2 z-50">
+                  <Link
+                    to="/protocolo"
+                    onClick={() => setProdOpen(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-ink/5 transition-colors"
+                  >
+                    <span className="w-9 h-9 rounded-lg bg-[#C8487E]/12 text-[#C8487E] flex items-center justify-center shrink-0">
+                      <Instagram size={16} />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-semibold text-ink">Protocolo Viral</span>
+                      <span className="block text-[11px] text-ink/50">Mentoria · Instagram</span>
+                    </span>
+                  </Link>
+                  <Link
+                    to="/metodo/pilar-1/aprenda-ia"
+                    onClick={() => setProdOpen(false)}
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-ink/5 transition-colors"
+                  >
+                    <span className="w-9 h-9 rounded-lg bg-[#2E7CB8]/12 text-[#2E7CB8] flex items-center justify-center shrink-0">
+                      <GraduationCap size={16} />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-semibold text-ink">Academia de IA</span>
+                      <span className="block text-[11px] text-ink/50">Ferramentas · aulas</span>
+                    </span>
+                  </Link>
+                </div>
+              )}
+            </div>
+
             {NAV.map((item) => {
               const active = isActive(item.to);
               // Sem login: itens visíveis mas desativados.
@@ -136,13 +191,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </Link>
             )}
             {isAdmin && (
-              <Link
-                to="/admin"
-                className="hidden md:inline-flex items-center gap-1.5 text-[13px] px-3 py-2 border border-ink/15 rounded-full text-ink/70 hover:bg-ink/5 transition-colors"
-                aria-label="Admin"
-              >
-                <Shield size={13} strokeWidth={2.25} /> Admin
-              </Link>
+              <div className="hidden md:inline-flex items-center gap-0.5 p-0.5 rounded-full border border-ink/15 bg-white" title="Pré-visualizar como aluno ou admin (só muda a vista)">
+                <button
+                  onClick={() => setAdminView("aluno")}
+                  className={`inline-flex items-center gap-1.5 text-[12px] font-semibold px-2.5 py-1.5 rounded-full transition-colors ${adminView === "aluno" ? "bg-terracotta text-cream" : "text-ink/60 hover:text-ink"}`}
+                >
+                  <Eye size={12} /> Aluno
+                </button>
+                <button
+                  onClick={() => setAdminView("admin")}
+                  className={`inline-flex items-center gap-1.5 text-[12px] font-semibold px-2.5 py-1.5 rounded-full transition-colors ${adminView === "admin" ? "bg-ink text-cream" : "text-ink/60 hover:text-ink"}`}
+                >
+                  <Shield size={12} /> Admin
+                </button>
+              </div>
             )}
             <ThemeToggle />
             {signedIn && (
@@ -224,7 +286,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="min-w-0">
             <div className="flex items-center gap-2.5">
               <span className="w-1.5 h-1.5 rounded-full bg-terracotta" />
-              <p className="font-sans font-semibold text-base text-ink">Leveza no Digital</p>
+              <p className="font-sans font-semibold text-base text-ink">Cátia Creator</p>
             </div>
             <p className="text-xs text-ink/50 mt-2 max-w-sm">
               Transforme conhecimento em liberdade. Jornada guiada com Inteligência Artificial.

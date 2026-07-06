@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Camera, LogOut, User } from "lucide-react";
+import { Camera, LogOut, User, Eye, Shield } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { resetMasterDocSync } from "@/lib/master-doc-sync";
 import { readStoredSession } from "@/lib/session";
 import { notify } from "@/lib/toast";
+import { useAccess } from "@/lib/use-access";
+import { useAdminView } from "@/lib/admin-view";
 
 /** Redimensiona/recorta a imagem para um quadrado de 256px e devolve um data URL JPEG. */
 function fileToAvatar(file: File): Promise<string> {
@@ -30,6 +32,8 @@ function fileToAvatar(file: File): Promise<string> {
 }
 
 export default function UserMenu() {
+  const { isAdmin } = useAccess();
+  const [adminView, setView] = useAdminView();
   const [open, setOpen] = useState(false);
   const [avatar, setAvatar] = useState<string | null>(null);
   const [nome, setNome] = useState<string>("");
@@ -147,6 +151,34 @@ export default function UserMenu() {
             <p className="text-sm font-medium text-ink truncate">{nome || "Conta"}</p>
             {email && <p className="text-xs text-ink/50 truncate">{email}</p>}
           </div>
+
+          {isAdmin && (
+            <div className="px-1.5 pb-2 mb-1 border-b border-[var(--color-border)]">
+              <p className="text-[10px] tracking-[0.14em] uppercase text-ink/40 px-1.5 pt-1 pb-1.5">Pré-visualizar como</p>
+              <div className="flex gap-1 p-1 rounded-xl bg-cream-warm/60 border border-[var(--color-border)]">
+                <button
+                  onClick={() => setView("aluno")}
+                  className={`flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-semibold py-2 rounded-lg transition-colors ${adminView === "aluno" ? "bg-white text-ink shadow-sm" : "text-ink/55 hover:text-ink"}`}
+                >
+                  <Eye size={13} /> Aluno
+                </button>
+                <button
+                  onClick={() => setView("admin")}
+                  className={`flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-semibold py-2 rounded-lg transition-colors ${adminView === "admin" ? "bg-white text-ink shadow-sm" : "text-ink/55 hover:text-ink"}`}
+                >
+                  <Eye size={13} /> Admin
+                </button>
+              </div>
+              <button
+                onClick={() => { setOpen(false); window.location.assign("/admin"); }}
+                className="w-full flex items-center gap-3 mt-1.5 px-3 py-2.5 rounded-lg text-sm font-medium text-terracotta hover:bg-terracotta/5 transition-colors"
+              >
+                <Shield size={16} strokeWidth={1.75} />
+                Ir para admin
+              </button>
+            </div>
+          )}
+
           <button
             onClick={() => fileRef.current?.click()}
             disabled={uploading}

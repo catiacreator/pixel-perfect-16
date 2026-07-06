@@ -192,7 +192,7 @@ function ChatWindow({
               <MascotRobot scale={0.2} />
             </div>
             <div className="min-w-0">
-              <p className="text-[11px] tracking-[0.28em] uppercase text-white/80 font-medium">Assistente · Leveza no Digital</p>
+              <p className="text-[11px] tracking-[0.28em] uppercase text-white/80 font-medium">Assistente · Cátia Creator</p>
               <h1 className="font-editorial text-2xl md:text-4xl text-white leading-tight tracking-[-0.01em]">Liv.IA</h1>
               <p className="text-sm text-white/85 mt-1.5 max-w-md leading-relaxed">
                 A sua colega de mentoria — pergunte sobre o método, conteúdo, ferramentas e vendas.

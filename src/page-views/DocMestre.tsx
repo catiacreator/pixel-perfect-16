@@ -597,15 +597,10 @@ export default function DocMestre() {
           />
         </section>
 
-        {/* SECÇÃO ROTINA */}
+        {/* SECÇÃO TOM DE COMUNICAÇÃO */}
         <section className="rounded-2xl border border-border bg-white p-5 mb-5 print:border-0 print:p-0 print:mb-8">
-          <h2 className="font-serif text-xl text-ink mb-4">Sua rotina e receita</h2>
-          <p className="text-xs text-muted mb-4">Usado pelo Mapa do Tempo e pelos prompts personalizados.</p>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            <Field label="Horas por dia" value={doc.horasDia} onChange={(v) => set("horasDia", v)} placeholder="ex: 8" />
-            <Field label="Dias por semana" value={doc.diasSemana} onChange={(v) => set("diasSemana", v)} placeholder="ex: 5" />
-            <Field label="Faturamento mensal (R$)" value={doc.faturamentoMensal} onChange={(v) => set("faturamentoMensal", v)} placeholder="ex: 15000" />
-          </div>
+          <h2 className="font-serif text-xl text-ink mb-4">Tom de comunicação</h2>
+          <p className="text-xs text-muted mb-4">Usado pelos prompts personalizados.</p>
           <Field
             label="Tom de comunicação"
             value={doc.tomDeVoz}
@@ -873,13 +868,13 @@ export default function DocMestre() {
         <div className="print:hidden rounded-2xl border border-terracotta bg-gradient-to-br from-white to-cream-warm/60 p-6 text-center">
           <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">Próximo passo</p>
           <p className="font-serif text-xl md:text-2xl text-ink mb-4">
-            Crie o seu método
+            Pesquisa de Mercado
           </p>
           <Link
-            to="/metodo/pilar-2/metodo"
+            to="/metodo/pilar-2/pesquisa-mercado"
             className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-ink text-cream text-sm font-semibold hover:bg-terracotta transition-colors"
           >
-            Ir para Crie o seu método <ArrowRight size={15} />
+            Ir para a Pesquisa de Mercado <ArrowRight size={15} />
           </Link>
         </div>
       </div>

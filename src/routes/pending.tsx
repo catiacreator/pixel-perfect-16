@@ -40,8 +40,7 @@ function PendingPage() {
       <div className="w-full max-w-md text-center">
         <div className="flex items-center justify-center gap-2.5 mb-8">
           <span className="w-2 h-2 rounded-full bg-terracotta shadow-[0_0_18px_2px_var(--color-terracotta)]" />
-          <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none">Leveza</span>
-          <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none">no Digital</span>
+          <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none">Cátia Creator</span>
         </div>
 
         <div className="bg-white border border-[var(--color-border)] rounded-2xl p-10">

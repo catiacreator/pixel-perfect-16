@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import PillarHeader from "../components/PillarHeader";
 import {
   ArrowUpRight,
+  ArrowLeft,
   Compass,
   Hourglass,
   Crown,
@@ -11,7 +12,10 @@ import {
   Briefcase,
   Sparkles,
   HeartPulse,
+  Instagram,
+  Lock,
 } from "lucide-react";
+import { useBloqueadoParaAlunos } from "@/lib/admin-view";
 
 const PILARES = [
   {
@@ -40,6 +44,7 @@ const PILARES = [
     to: "/metodo/pilar-3",
     status: "disponivel" as const,
     minutos: "6 etapas",
+    lock: true,
   },
   {
     n: "04",
@@ -49,12 +54,38 @@ const PILARES = [
     to: "/metodo/pilar-4",
     status: "disponivel" as const,
     minutos: "9 etapas",
+    lock: true,
   },
 ];
 
 export default function Jornada() {
+  const bloqueado = useBloqueadoParaAlunos();
   return (
     <Layout>
+      <div className="max-w-[1400px] mx-auto px-5 md:px-10 pt-6 flex items-center justify-between gap-3">
+        <Link
+          to="/protocolo"
+          className="inline-flex items-center gap-2 text-sm font-medium text-ink/55 hover:text-terracotta transition-colors"
+        >
+          <ArrowLeft size={16} /> Voltar ao Protocolo Viral
+        </Link>
+        {bloqueado ? (
+          <span className="inline-flex items-center gap-2 rounded-full bg-ink/5 text-ink/40 border border-border px-4 py-2 text-sm font-semibold cursor-not-allowed">
+            <Lock size={14} /> Criar para o Instagram · em breve
+          </span>
+        ) : (
+          <Link
+            to="/metodo/pilar-2/redes-sociais"
+            className="group inline-flex items-center gap-2 rounded-full bg-terracotta text-cream pl-4 pr-1.5 py-1.5 text-sm font-semibold hover:bg-terracotta-dark transition-colors"
+          >
+            <Instagram size={15} /> Criar para o Instagram
+            <span className="w-7 h-7 rounded-full bg-cream/20 flex items-center justify-center transition-transform group-hover:translate-x-0.5">
+              <ArrowUpRight size={14} strokeWidth={2.5} />
+            </span>
+          </Link>
+        )}
+      </div>
+
       <PillarHeader
         numeral="✦"
         icon={<Compass size={18} />}
@@ -65,14 +96,17 @@ export default function Jornada() {
       />
       <div className="max-w-[1400px] mx-auto px-5 md:px-10 pt-8 md:pt-10 pb-20 md:pb-28">
         <div className="flex justify-end mb-6">
-          <p className="text-xs text-ink/40">4 pilares disponíveis</p>
+          <p className="text-xs text-ink/40">
+            {PILARES.filter((p) => p.status === "disponivel" && !((p as { lock?: boolean }).lock && bloqueado)).length} de {PILARES.length} pilares disponíveis
+          </p>
         </div>
 
         {/* Pilares */}
         <div className="grid sm:grid-cols-2 gap-4 md:gap-5">
           {PILARES.map((p) => {
             const Icon = p.icon;
-            const disponivel = p.status === "disponivel";
+            const locked = Boolean((p as { lock?: boolean }).lock) && bloqueado;
+            const disponivel = p.status === "disponivel" && !locked;
             const Wrapper: any = disponivel ? Link : "div";
             const props = disponivel ? { to: p.to } : {};
             return (
@@ -128,6 +162,10 @@ export default function Jornada() {
                         <ArrowUpRight size={15} strokeWidth={2.25} />
                       </span>
                     </span>
+                  ) : locked ? (
+                    <span className="inline-flex items-center gap-2 text-sm font-semibold text-ink/45">
+                      <Lock size={15} /> Em breve
+                    </span>
                   ) : (
                     <span />
                   )}
@@ -136,7 +174,7 @@ export default function Jornada() {
                       disponivel ? "bg-terracotta/10 text-terracotta" : "bg-ink/5 text-ink/40"
                     }`}
                   >
-                    {p.minutos}
+                    {locked ? "Bloqueado" : p.minutos}
                   </span>
                 </div>
               </Wrapper>
@@ -163,16 +201,22 @@ export default function Jornada() {
                 cobre mais, entregue resultados.
               </p>
             </div>
-            <Link
-              to="/metodo/consultoria-ia"
-              className="group inline-flex items-center gap-2.5 bg-cream text-ink pl-6 pr-2 py-2 rounded-full text-sm font-semibold hover:bg-white transition-all shrink-0"
-            >
-              <Briefcase size={14} strokeWidth={2.25} />
-              Conhecer
-              <span className="w-9 h-9 rounded-full bg-ink text-cream flex items-center justify-center">
-                <ArrowUpRight size={16} strokeWidth={2.5} />
+            {bloqueado ? (
+              <span className="inline-flex items-center gap-2 bg-white/10 text-cream/60 border border-white/25 px-5 py-2.5 rounded-full text-sm font-semibold cursor-not-allowed shrink-0">
+                <Lock size={14} /> Em breve
               </span>
-            </Link>
+            ) : (
+              <Link
+                to="/metodo/consultoria-ia"
+                className="group inline-flex items-center gap-2.5 bg-cream text-ink pl-6 pr-2 py-2 rounded-full text-sm font-semibold hover:bg-white transition-all shrink-0"
+              >
+                <Briefcase size={14} strokeWidth={2.25} />
+                Conhecer
+                <span className="w-9 h-9 rounded-full bg-ink text-cream flex items-center justify-center">
+                  <ArrowUpRight size={16} strokeWidth={2.5} />
+                </span>
+              </Link>
+            )}
           </div>
         </div>
 
@@ -192,16 +236,22 @@ export default function Jornada() {
                 aplicar Inteligência Artificial com ética e resultado na sua prática.
               </p>
             </div>
-            <Link
-              to="/metodo/saude"
-              className="group inline-flex items-center gap-2.5 bg-terracotta text-cream pl-6 pr-2 py-2 rounded-full text-sm font-semibold hover:bg-terracotta-dark transition-all shrink-0"
-            >
-              <HeartPulse size={14} strokeWidth={2.25} />
-              Conhecer
-              <span className="w-9 h-9 rounded-full bg-cream text-terracotta flex items-center justify-center">
-                <ArrowUpRight size={16} strokeWidth={2.5} />
+            {bloqueado ? (
+              <span className="inline-flex items-center gap-2 bg-ink/5 text-ink/40 border border-border px-5 py-2.5 rounded-full text-sm font-semibold cursor-not-allowed shrink-0">
+                <Lock size={14} /> Em breve
               </span>
-            </Link>
+            ) : (
+              <Link
+                to="/metodo/saude"
+                className="group inline-flex items-center gap-2.5 bg-terracotta text-cream pl-6 pr-2 py-2 rounded-full text-sm font-semibold hover:bg-terracotta-dark transition-all shrink-0"
+              >
+                <HeartPulse size={14} strokeWidth={2.25} />
+                Conhecer
+                <span className="w-9 h-9 rounded-full bg-cream text-terracotta flex items-center justify-center">
+                  <ArrowUpRight size={16} strokeWidth={2.5} />
+                </span>
+              </Link>
+            )}
           </div>
         </div>
       </div>

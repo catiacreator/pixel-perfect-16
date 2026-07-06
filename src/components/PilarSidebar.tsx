@@ -42,7 +42,6 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   NotebookLM: Book,
   Lovable: Heart,
   Tella: Video,
-  "Modelos de Posts": LayoutGrid,
   "Linha Editorial": AlignLeft,
   "Calendário Editorial": CalendarDays,
   "Bio": UserCircle2,
@@ -112,26 +111,25 @@ const PILARES: Record<string | number, PilarDef> = {
   },
   redes: {
     pilar: "redes",
-    title: "Criando para as Redes Sociais",
+    title: "Criar para o Instagram",
     enabled: true,
     items: [
-      { num: 1, label: "Modelos de Posts", to: "/metodo/pilar-2/redes-sociais?aba=modelos", icon: LayoutGrid },
-      { num: 2, label: "Linha Editorial", to: "/metodo/pilar-2/redes-sociais?aba=linha", icon: AlignLeft },
-      { num: 3, label: "Calendário Editorial", to: "/metodo/pilar-2/redes-sociais?aba=calendario", icon: CalendarDays },
-      { num: 4, label: "Bio", to: "/metodo/pilar-2/redes-sociais?aba=bio", icon: UserCircle2 },
-      { num: 5, label: "Projeto de Postagens", to: "/metodo/pilar-2/redes-sociais?aba=projeto", icon: FolderOpen },
-      { num: 6, label: "Como agendar", to: "/metodo/pilar-2/redes-sociais?aba=agendar", icon: CalendarClock },
+      { num: 1, label: "Boas-vindas", to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas", icon: Compass },
+      { num: 2, label: "Posicionamento e Bio", to: "/metodo/pilar-2/redes-sociais?aba=bio", icon: UserCircle2 },
       {
-        num: 7,
-        label: "Instagram",
-        to: "/metodo/pilar-2/redes-sociais/instagram",
-        icon: Instagram,
+        num: 3, label: "Formatos de Conteúdo", to: "/metodo/pilar-2/redes-sociais?aba=formatos", icon: Book,
         children: [
-          { label: "↳ Carrossel", to: "/metodo/pilar-2/redes-sociais/instagram/carrossel" },
-          { label: "↳ Stories", to: "/metodo/pilar-2/redes-sociais/instagram/stories" },
-          { label: "↳ Reels", to: "/metodo/pilar-2/redes-sociais/instagram/reels" },
+          { label: "↳ Roteiros simples", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=roteiros" },
+          { label: "↳ Reels virais", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=reels" },
+          { label: "↳ Carrosséis que vendem", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=carrossel" },
+          { label: "↳ Stories que vendem", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=stories" },
         ],
       },
+      { num: 4, label: "Criar Conteúdo", to: "/metodo/pilar-2/redes-sociais?aba=criar", icon: Sparkle },
+      { num: 5, label: "Plano de Posts", to: "/metodo/pilar-2/redes-sociais?aba=plano", icon: CalendarDays },
+      { num: 6, label: "30 posts em 30 dias", to: "/metodo/pilar-2/redes-sociais?aba=desafio", icon: Zap },
+      { num: 7, label: "Assistente Cat.IA", to: "/metodo/pilar-2/redes-sociais?aba=assistente", icon: Sparkles, badge: "IA" },
+      { num: 8, label: "Publicar", to: "/metodo/pilar-2/redes-sociais?aba=agendar", icon: CalendarClock },
     ],
   },
   1: {
@@ -140,9 +138,7 @@ const PILARES: Record<string | number, PilarDef> = {
     enabled: true,
     items: [
       { num: 1, label: "Preencha seu Documento Mestre", to: "/doc-mestre", icon: FileText },
-      { num: 2, label: "Mapa do Tempo", to: "/metodo/pilar-1/detetive-do-tempo", icon: Clock },
-      { num: 3, label: "Relatório do tempo", to: "/metodo/pilar-1/detetive-do-tempo/relatorio", icon: FileText },
-      { num: 4, label: "Revise e celebre", to: "/metodo/pilar-1/conclusao", icon: Trophy },
+      { num: 2, label: "Revise e celebre", to: "/metodo/pilar-1/conclusao", icon: Trophy },
     ],
   },
   2: {
@@ -218,9 +214,13 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
   const isActive = (to: string) => {
     const [toPath, toQuery] = to.split("?");
     if (toQuery) {
-      const currentAba = new URLSearchParams(searchStr.replace(/^\?/, "")).get("aba");
-      const targetAba = new URLSearchParams(toQuery).get("aba");
-      return pathname === toPath && currentAba === targetAba;
+      if (pathname !== toPath) return false;
+      const cur = new URLSearchParams(searchStr.replace(/^\?/, ""));
+      const tgt = new URLSearchParams(toQuery);
+      if (cur.get("aba") !== tgt.get("aba")) return false;
+      // se o alvo tem um sub-formato (fmt), exige correspondência exata
+      if (tgt.get("fmt")) return cur.get("fmt") === tgt.get("fmt");
+      return true;
     }
     return pathname === toPath || pathname.startsWith(toPath + "/");
   };

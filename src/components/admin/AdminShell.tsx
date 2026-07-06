@@ -1,15 +1,19 @@
 import { Link, useRouterState, useNavigate, Outlet } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { LayoutDashboard, Users, Trophy, FileText, LogOut, ArrowLeft, KeyRound } from "lucide-react";
-import { useEffect } from "react";
+import { LayoutDashboard, Users, Trophy, FileText, LogOut, Eye, KeyRound, KeySquare, Home, ChevronDown, Contact } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { checkIsAdmin, getAdminConfig } from "@/lib/admin.functions";
+import { setAdminView } from "@/lib/admin-view";
+import { readStoredSession } from "@/lib/session";
 
 type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
 const ITEMS: NavItem[] = [
   { to: "/admin", label: "Visão geral", icon: LayoutDashboard, exact: true },
   { to: "/admin/mentoradas", label: "Alunos", icon: Users },
+  { to: "/admin/estudio", label: "Estúdio Creator", icon: Contact },
+  { to: "/admin/acessos", label: "Acessos", icon: KeySquare },
   { to: "/admin/ranking", label: "Ranking", icon: Trophy },
   { to: "/admin/conteudo", label: "Conteúdo", icon: FileText },
 ];
@@ -54,7 +58,7 @@ export function AdminShell() {
             <span className="w-2 h-2 rounded-full bg-terracotta shadow-[0_0_18px_2px_var(--color-terracotta)]" />
             <span className="text-[14px] font-semibold tracking-tight">Admin</span>
           </div>
-          <p className="text-[10px] tracking-[0.3em] uppercase text-ink/40 mt-1">Leveza no Digital</p>
+          <p className="text-[10px] tracking-[0.3em] uppercase text-ink/40 mt-1">Cátia Creator</p>
         </div>
 
         <nav className="flex-1 p-3 flex flex-col gap-1">
@@ -77,13 +81,13 @@ export function AdminShell() {
         </nav>
 
         <div className="p-3 border-t border-[var(--color-border)] flex flex-col gap-1">
-          <Link
-            to="/"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] text-ink/70 hover:bg-ink/5"
+          <button
+            onClick={() => { setAdminView("aluno"); window.location.assign("/"); }}
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] text-ink/70 hover:bg-ink/5 text-left"
           >
-            <ArrowLeft size={15} strokeWidth={1.75} />
-            Voltar ao app
-          </Link>
+            <Eye size={15} strokeWidth={1.75} />
+            Vista de aluno
+          </button>
           <button
             onClick={logout}
             className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] text-ink/70 hover:bg-ink/5"
@@ -95,6 +99,7 @@ export function AdminShell() {
       </aside>
 
       <main className="flex-1 min-w-0 overflow-auto">
+        <AdminTopbar onLogout={logout} />
         {!config.serviceRole ? (
           <SetupCard
             titulo="Falta configurar a chave de serviço"
@@ -122,6 +127,68 @@ export function AdminShell() {
         )}
       </main>
     </div>
+  );
+}
+
+function AdminTopbar({ onLogout }: { onLogout: () => void }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const sess = readStoredSession();
+  const email = sess?.user?.email ?? "";
+  const nome = (sess?.user?.user_metadata?.full_name as string) || email.split("@")[0] || "Conta";
+  const inicial = (nome || email || "?").trim().charAt(0).toUpperCase();
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false); };
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, [open]);
+
+  return (
+    <header className="sticky top-0 z-20 flex items-center justify-end gap-2 px-6 py-3 border-b border-[var(--color-border)] bg-white/85 backdrop-blur-sm">
+      <a
+        href="/"
+        className="inline-flex items-center gap-2 text-[13px] font-medium text-ink/70 px-3 py-2 rounded-full border border-[var(--color-border)] hover:bg-ink/5 transition-colors"
+      >
+        <Home size={14} /> Ir para o site
+      </a>
+
+      <div className="relative" ref={ref}>
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className="inline-flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full border border-[var(--color-border)] hover:bg-ink/5 transition-colors"
+        >
+          <span className="w-8 h-8 rounded-full bg-terracotta/10 text-terracotta flex items-center justify-center text-sm font-semibold">{inicial}</span>
+          <span className="text-[13px] font-medium text-ink max-w-[120px] truncate">{nome}</span>
+          <ChevronDown size={14} className={`text-ink/40 transition-transform ${open ? "rotate-180" : ""}`} />
+        </button>
+
+        {open && (
+          <div className="absolute right-0 mt-2 w-60 bg-white border border-[var(--color-border)] rounded-2xl shadow-[0_20px_50px_-20px_rgba(0,0,0,0.4)] p-2 z-50">
+            <div className="px-3 py-2.5 border-b border-[var(--color-border)] mb-1">
+              <p className="text-sm font-medium text-ink truncate">{nome}</p>
+              {email && <p className="text-xs text-ink/50 truncate">{email}</p>}
+            </div>
+            <a href="/" className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-ink/80 hover:bg-ink/5 transition-colors">
+              <Home size={16} strokeWidth={1.75} /> Ir para o site
+            </a>
+            <button
+              onClick={() => { setAdminView("aluno"); window.location.assign("/"); }}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-ink/80 hover:bg-ink/5 transition-colors"
+            >
+              <Eye size={16} strokeWidth={1.75} /> Vista de aluno
+            </button>
+            <button
+              onClick={onLogout}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-ink/80 hover:bg-ink/5 transition-colors"
+            >
+              <LogOut size={16} strokeWidth={1.75} /> Sair
+            </button>
+          </div>
+        )}
+      </div>
+    </header>
   );
 }
 

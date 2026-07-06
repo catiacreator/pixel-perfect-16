@@ -12,7 +12,7 @@ export default function ModulePaywall(_props: { module: ModuleKey; signedIn: boo
       <p className="text-[11px] tracking-[0.28em] uppercase text-terracotta font-semibold mb-2">Área reservada</p>
       <h1 className="font-display text-3xl md:text-4xl text-ink tracking-tight">Entre para aceder</h1>
       <p className="text-ink/60 mt-3 leading-relaxed">
-        Este conteúdo é para alunas da <strong>Leveza no Digital</strong>. Entre com a sua conta para continuar.
+        Este conteúdo é para alunas da <strong>Cátia Creator</strong>. Entre com a sua conta para continuar.
         Ainda não tem acesso? Fale com a mentora.
       </p>
 
