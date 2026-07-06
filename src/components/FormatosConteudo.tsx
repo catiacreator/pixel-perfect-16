@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "@/lib/router-compat";
-import { Film, Sparkles, MessageCircle, LayoutGrid, ArrowRight, Bot, ImageIcon } from "lucide-react";
+import { Film, Sparkles, MessageCircle, LayoutGrid, ArrowRight, ArrowUpRight, Bot, ImageIcon } from "lucide-react";
+import { agenteUrl } from "@/lib/agentes-catia";
 import VideoPlaceholder from "./VideoPlaceholder";
 
 // Formatos de Conteúdo — a navegação entre formatos é feita pelo submenu da
@@ -243,9 +244,21 @@ export default function FormatosConteudo() {
           )}
 
           {/* Agente */}
-          <div className="flex items-center gap-2 rounded-xl bg-cream-warm/50 border border-border px-3 py-2.5">
-            <Bot size={16} className="text-terracotta shrink-0" />
-            <span className="text-sm text-ink/70">Agente no ChatGPT: <b className="text-ink">{f.agente}</b></span>
+          <div className="flex items-center gap-2 flex-wrap rounded-xl bg-cream-warm/50 border border-border px-3 py-2.5">
+            <span className="inline-flex items-center gap-2 text-sm text-ink/70">
+              <Bot size={16} className="text-terracotta shrink-0" />
+              Agente no ChatGPT: <b className="text-ink">{f.agente}</b>
+            </span>
+            {agenteUrl(f.agente) && (
+              <a
+                href={agenteUrl(f.agente)}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-cream bg-ink hover:bg-terracotta rounded-full px-3 py-1.5 transition-colors ml-auto"
+              >
+                Abrir agente <ArrowUpRight size={13} />
+              </a>
+            )}
           </div>
         </div>
       </div>
