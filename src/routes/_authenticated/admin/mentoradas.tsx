@@ -154,7 +154,7 @@ function MentoradasPage() {
   }, [alunoParam]);
 
   return (
-    <div className="p-8 max-w-6xl mx-auto">
+    <div className="p-6 md:p-8 max-w-[1600px] mx-auto">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold">Alunos</h1>
@@ -233,7 +233,7 @@ function MentoradasPage() {
       )}
 
       <div className="mt-5 bg-white border border-[var(--color-border)] rounded-2xl overflow-x-auto">
-        <table className="w-full text-sm">
+        <table className="w-full min-w-[1040px] text-sm">
           <thead className="text-[11px] uppercase tracking-wider text-ink/50">
             <tr className="border-b border-[var(--color-border)]">
               <th className="px-4 py-3 w-10">
