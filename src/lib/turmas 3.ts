@@ -7,13 +7,6 @@ export type Turma = {
   acessos: string[]; // ids da ESTRUTURA que a turma pode ver
 };
 
-// Turma por defeito: quem se regista (e ainda não foi movido) é tratado como
-// "Iniciante". Não pode ser apagada. Por defeito dá acesso a tudo (a mentora
-// depois restringe conforme quiser).
-export const INICIANTE_ID = "turma-iniciante";
-export const INICIANTE_NOME = "Iniciante";
-export const INICIANTE_ACESSOS_PADRAO = ["redes", "jornada", "academia"];
-
 export const CORES_TURMA = [
   "#C8487E", "#2E7CB8", "#9E7FEC", "#F0A766", "#2FA98A", "#E0567A", "#6C8CD5", "#D98C3F",
 ];

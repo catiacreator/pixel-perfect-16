@@ -15,7 +15,7 @@ import {
   getTurmas,
   setTurmas,
 } from "@/lib/admin.functions";
-import type { Turma } from "@/lib/turmas";
+import { INICIANTE_ID, type Turma } from "@/lib/turmas";
 
 export const Route = createFileRoute("/_authenticated/admin/mentoradas")({
   component: MentoradasPage,
@@ -40,37 +40,61 @@ function MentoradasPage() {
   const { data: turmasData } = useSuspenseQuery({ queryKey: ["admin-turmas"], queryFn: () => fetchTurmas() });
   const isOwner = Boolean(ctx?.isOwner);
   const turmas = (turmasData as Turma[]) || [];
-  const turmaDoAluno = (uid: string) => turmas.find((t) => t.membros.includes(uid))?.id ?? "";
 
   const turmaMut = useMutation({
     mutationFn: (next: Turma[]) => saveTurmas({ data: { turmas: next } }),
     onSuccess: () => { notify("Turma atualizada", "success"); qc.invalidateQueries({ queryKey: ["admin-turmas"] }); },
     onError: (e) => notify(e.message, "error"),
   });
-  const atribuirTurma = (uid: string, turmaId: string) => {
-    // Modelo de uma turma por aluno: entra na escolhida, sai das outras.
-    const next = turmas.map((t) => ({
-      ...t,
-      membros: t.id === turmaId
-        ? Array.from(new Set([...t.membros, uid]))
-        : t.membros.filter((m) => m !== uid),
-    }));
+  // Uma turma por aluno. Iniciante é o defeito: mover para lá = sair de todas.
+  const moverMembros = (uids: string[], turmaId: string) => {
+    const set = new Set(uids);
+    const next = turmas.map((t) => {
+      if (t.id === INICIANTE_ID) return t; // Iniciante não guarda membros (é o default)
+      if (t.id === turmaId) return { ...t, membros: Array.from(new Set([...t.membros, ...uids])) };
+      return { ...t, membros: t.membros.filter((m) => !set.has(m)) };
+    });
     turmaMut.mutate(next);
+  };
+  const atribuirTurma = (uid: string, turmaId: string) => moverMembros([uid], turmaId);
+  const atribuirVarios = (turmaId: string) => {
+    if (!turmaId || selectedIds.size === 0) return;
+    moverMembros([...selectedIds], turmaId);
+    setSelectedIds(new Set());
+    setBulkTurma("");
   };
 
   const [q, setQ] = useState("");
+  const [turmaFiltro, setTurmaFiltro] = useState("");
+  const [estadoFiltro, setEstadoFiltro] = useState("");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [bulkTurma, setBulkTurma] = useState("");
   const [adjusting, setAdjusting] = useState<{ id: string; nome: string } | null>(null);
   const [adding, setAdding] = useState(false);
 
+  const turmaExplicitaDoAluno = (uid: string) => turmas.find((t) => t.id !== INICIANTE_ID && t.membros.includes(uid))?.id ?? "";
+  const turmaDoAluno = (uid: string) => turmaExplicitaDoAluno(uid) || INICIANTE_ID;
+
   const filtered = useMemo(() => {
     const term = q.toLowerCase();
-    return data.filter(
-      (m: any) =>
-        !term ||
-        m.nome?.toLowerCase().includes(term) ||
-        m.email?.toLowerCase().includes(term),
-    );
-  }, [data, q]);
+    return data.filter((m: any) => {
+      if (term && !(m.nome?.toLowerCase().includes(term) || m.email?.toLowerCase().includes(term))) return false;
+      if (turmaFiltro && turmaDoAluno(m.id) !== turmaFiltro) return false;
+      if (estadoFiltro === "aprovado" && !m.approved) return false;
+      if (estadoFiltro === "pendente" && m.approved) return false;
+      return true;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, q, turmaFiltro, estadoFiltro, turmas]);
+
+  const idsFiltrados = filtered.map((m: any) => m.id);
+  const todosSelecionados = idsFiltrados.length > 0 && idsFiltrados.every((id: string) => selectedIds.has(id));
+  const toggleTodos = () => setSelectedIds(todosSelecionados ? new Set() : new Set(idsFiltrados));
+  const toggleUm = (id: string) => setSelectedIds((prev) => {
+    const n = new Set(prev);
+    if (n.has(id)) n.delete(id); else n.add(id);
+    return n;
+  });
 
   const delMut = useMutation({
     mutationFn: (userId: string) => del({ data: { userId } }),
@@ -116,20 +140,79 @@ function MentoradasPage() {
         )}
       </div>
 
-      <div className="relative mt-5">
-        <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-ink/40" />
-        <input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Procurar nome ou e-mail"
-          className="w-full h-11 pl-10 pr-4 rounded-full border border-[var(--color-border)] bg-white text-sm"
-        />
+      <div className="mt-5 flex flex-wrap items-center gap-2.5">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search size={14} className="absolute left-4 top-1/2 -translate-y-1/2 text-ink/40" />
+          <input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Procurar nome ou e-mail"
+            className="w-full h-11 pl-10 pr-4 rounded-full border border-[var(--color-border)] bg-white text-sm"
+          />
+        </div>
+        <select
+          value={turmaFiltro}
+          onChange={(e) => setTurmaFiltro(e.target.value)}
+          className="h-11 rounded-full border border-[var(--color-border)] bg-white px-4 text-sm"
+        >
+          <option value="">Todas as turmas</option>
+          {turmas.map((t) => (
+            <option key={t.id} value={t.id}>{t.nome}</option>
+          ))}
+        </select>
+        <select
+          value={estadoFiltro}
+          onChange={(e) => setEstadoFiltro(e.target.value)}
+          className="h-11 rounded-full border border-[var(--color-border)] bg-white px-4 text-sm"
+        >
+          <option value="">Todos os estados</option>
+          <option value="aprovado">Aprovados</option>
+          <option value="pendente">Pendentes</option>
+        </select>
       </div>
+
+      {/* Barra de ação em massa */}
+      {selectedIds.size > 0 && (
+        <div className="mt-3 flex flex-wrap items-center gap-3 rounded-2xl border border-terracotta/30 bg-terracotta/5 px-4 py-3">
+          <span className="text-sm font-semibold text-ink">{selectedIds.size} selecionado(s)</span>
+          <div className="flex items-center gap-2 ml-auto">
+            <select
+              value={bulkTurma}
+              onChange={(e) => setBulkTurma(e.target.value)}
+              className="h-9 rounded-full border border-[var(--color-border)] bg-white px-3 text-sm"
+            >
+              <option value="">Adicionar à turma…</option>
+              {turmas.map((t) => (
+                <option key={t.id} value={t.id}>{t.nome}</option>
+              ))}
+            </select>
+            <button
+              onClick={() => atribuirVarios(bulkTurma)}
+              disabled={!bulkTurma || turmaMut.isPending}
+              className="h-9 px-4 rounded-full bg-ink text-cream text-sm font-semibold hover:bg-terracotta transition-colors disabled:opacity-50"
+            >
+              Aplicar
+            </button>
+            <button onClick={() => setSelectedIds(new Set())} className="text-sm text-ink/50 hover:text-ink">
+              Limpar
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="mt-5 bg-white border border-[var(--color-border)] rounded-2xl overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="text-[11px] uppercase tracking-wider text-ink/50">
             <tr className="border-b border-[var(--color-border)]">
+              <th className="px-4 py-3 w-10">
+                <input
+                  type="checkbox"
+                  checked={todosSelecionados}
+                  onChange={toggleTodos}
+                  aria-label="Selecionar todos"
+                  className="w-4 h-4 accent-terracotta cursor-pointer"
+                />
+              </th>
               <th className="text-left px-5 py-3 font-medium">Nome</th>
               <th className="text-left px-5 py-3 font-medium">E-mail</th>
               <th className="text-left px-5 py-3 font-medium">Papel</th>
@@ -141,7 +224,16 @@ function MentoradasPage() {
           </thead>
           <tbody>
             {filtered.map((m: any) => (
-              <tr key={m.id} className="border-b border-[var(--color-border)] last:border-0">
+              <tr key={m.id} className={`border-b border-[var(--color-border)] last:border-0 ${selectedIds.has(m.id) ? "bg-terracotta/5" : ""}`}>
+                <td className="px-4 py-3">
+                  <input
+                    type="checkbox"
+                    checked={selectedIds.has(m.id)}
+                    onChange={() => toggleUm(m.id)}
+                    aria-label={`Selecionar ${m.nome ?? m.email}`}
+                    className="w-4 h-4 accent-terracotta cursor-pointer"
+                  />
+                </td>
                 <td className="px-5 py-3">
                   <Link to="/admin/mentoradas/$id" params={{ id: m.id }} className="hover:underline">
                     {m.nome ?? "—"}
@@ -171,9 +263,9 @@ function MentoradasPage() {
                     value={turmaDoAluno(m.id)}
                     onChange={(e) => atribuirTurma(m.id, e.target.value)}
                     disabled={turmaMut.isPending}
-                    className="h-8 rounded-lg border border-[var(--color-border)] bg-white px-2 text-xs disabled:opacity-50 max-w-[140px]"
+                    className="h-8 rounded-lg border border-[var(--color-border)] bg-white px-2 text-xs disabled:opacity-50 max-w-[150px]"
                   >
-                    <option value="">Sem turma</option>
+                    {turmas.length === 0 && <option value="">—</option>}
                     {turmas.map((t) => (
                       <option key={t.id} value={t.id}>{t.nome}</option>
                     ))}
@@ -221,7 +313,7 @@ function MentoradasPage() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-5 py-10 text-center text-ink/50">
+                <td colSpan={8} className="px-5 py-10 text-center text-ink/50">
                   Nenhum aluno encontrado.
                 </td>
               </tr>
