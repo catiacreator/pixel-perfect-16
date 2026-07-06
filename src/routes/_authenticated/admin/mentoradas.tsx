@@ -15,7 +15,7 @@ import {
   getTurmas,
   setTurmas,
 } from "@/lib/admin.functions";
-import { INICIANTE_ID, type Turma } from "@/lib/turmas";
+import { SEM_TURMA_LABEL, type Turma } from "@/lib/turmas";
 
 export const Route = createFileRoute("/_authenticated/admin/mentoradas")({
   component: MentoradasPage,
@@ -46,11 +46,10 @@ function MentoradasPage() {
     onSuccess: () => { notify("Turma atualizada", "success"); qc.invalidateQueries({ queryKey: ["admin-turmas"] }); },
     onError: (e) => notify(e.message, "error"),
   });
-  // Uma turma por aluno. Iniciante é o defeito: mover para lá = sair de todas.
+  // Uma turma por aluno. turmaId "" = tirar de todas (volta a Iniciante/papel Aluno).
   const moverMembros = (uids: string[], turmaId: string) => {
     const set = new Set(uids);
     const next = turmas.map((t) => {
-      if (t.id === INICIANTE_ID) return t; // Iniciante não guarda membros (é o default)
       if (t.id === turmaId) return { ...t, membros: Array.from(new Set([...t.membros, ...uids])) };
       return { ...t, membros: t.membros.filter((m) => !set.has(m)) };
     });
@@ -59,7 +58,7 @@ function MentoradasPage() {
   const atribuirTurma = (uid: string, turmaId: string) => moverMembros([uid], turmaId);
   const atribuirVarios = (turmaId: string) => {
     if (!turmaId || selectedIds.size === 0) return;
-    moverMembros([...selectedIds], turmaId);
+    moverMembros([...selectedIds], turmaId === "__sem__" ? "" : turmaId);
     setSelectedIds(new Set());
     setBulkTurma("");
   };
@@ -72,14 +71,15 @@ function MentoradasPage() {
   const [adjusting, setAdjusting] = useState<{ id: string; nome: string } | null>(null);
   const [adding, setAdding] = useState(false);
 
-  const turmaExplicitaDoAluno = (uid: string) => turmas.find((t) => t.id !== INICIANTE_ID && t.membros.includes(uid))?.id ?? "";
-  const turmaDoAluno = (uid: string) => turmaExplicitaDoAluno(uid) || INICIANTE_ID;
+  // "" = sem turma explícita = Iniciante (padrão), segue o papel Aluno.
+  const turmaDoAluno = (uid: string) => turmas.find((t) => t.membros.includes(uid))?.id ?? "";
 
   const filtered = useMemo(() => {
     const term = q.toLowerCase();
     return data.filter((m: any) => {
       if (term && !(m.nome?.toLowerCase().includes(term) || m.email?.toLowerCase().includes(term))) return false;
-      if (turmaFiltro && turmaDoAluno(m.id) !== turmaFiltro) return false;
+      if (turmaFiltro === "__sem__" && turmaDoAluno(m.id) !== "") return false;
+      if (turmaFiltro && turmaFiltro !== "__sem__" && turmaDoAluno(m.id) !== turmaFiltro) return false;
       if (estadoFiltro === "aprovado" && !m.approved) return false;
       if (estadoFiltro === "pendente" && m.approved) return false;
       return true;
@@ -156,6 +156,7 @@ function MentoradasPage() {
           className="h-11 rounded-full border border-[var(--color-border)] bg-white px-4 text-sm"
         >
           <option value="">Todas as turmas</option>
+          <option value="__sem__">{SEM_TURMA_LABEL}</option>
           {turmas.map((t) => (
             <option key={t.id} value={t.id}>{t.nome}</option>
           ))}
@@ -182,6 +183,7 @@ function MentoradasPage() {
               className="h-9 rounded-full border border-[var(--color-border)] bg-white px-3 text-sm"
             >
               <option value="">Adicionar à turma…</option>
+              <option value="__sem__">{SEM_TURMA_LABEL}</option>
               {turmas.map((t) => (
                 <option key={t.id} value={t.id}>{t.nome}</option>
               ))}
@@ -265,7 +267,7 @@ function MentoradasPage() {
                     disabled={turmaMut.isPending}
                     className="h-8 rounded-lg border border-[var(--color-border)] bg-white px-2 text-xs disabled:opacity-50 max-w-[150px]"
                   >
-                    {turmas.length === 0 && <option value="">—</option>}
+                    <option value="">{SEM_TURMA_LABEL}</option>
                     {turmas.map((t) => (
                       <option key={t.id} value={t.id}>{t.nome}</option>
                     ))}

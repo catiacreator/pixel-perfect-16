@@ -7,10 +7,6 @@ export type Turma = {
   acessos: string[]; // ids da ESTRUTURA que a turma pode ver
 };
 
-// Estado por defeito (sem turma): o aluno segue o papel "Aluno" (ver /admin/papeis).
-// Mostrado como "Iniciante (padrão)" na tabela de Alunos.
-export const SEM_TURMA_LABEL = "Iniciante (padrão)";
-
 export const CORES_TURMA = [
   "#C8487E", "#2E7CB8", "#9E7FEC", "#F0A766", "#2FA98A", "#E0567A", "#6C8CD5", "#D98C3F",
 ];

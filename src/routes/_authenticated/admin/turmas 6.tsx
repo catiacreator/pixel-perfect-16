@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Plus, Trash2, Users, Lock, X, Check } from "lucide-react";
 import { notify } from "@/lib/toast";
 import { getTurmas, setTurmas, listMentoradas } from "@/lib/admin.functions";
 import { ESTRUTURA, type Nodo, type NodoTipo } from "@/lib/estrutura";
 import { CORES_TURMA, novoTurmaId, type Turma } from "@/lib/turmas";
 
-export const Route = createFileRoute("/_authenticated/admin/turmas")({
+export const Route = createFileRoute("/_authenticated/admin/turmas 6")({
   component: TurmasPage,
 });
 
@@ -41,14 +41,6 @@ function TurmasPage() {
   const persist = (next: Turma[]) => mut.mutate(next);
 
   const sel = turmas.find((t) => t.id === selId) || null;
-
-  // Rascunho local do nome — evita gravar a cada tecla (que reiniciava o campo).
-  // Só grava ao sair do campo (blur) ou Enter.
-  const [nomeDraft, setNomeDraft] = useState("");
-  useEffect(() => { setNomeDraft(sel?.nome ?? ""); }, [selId, sel?.nome]);
-  const commitNome = () => {
-    if (sel && nomeDraft.trim() && nomeDraft.trim() !== sel.nome) editar(sel.id, { nome: nomeDraft.trim() });
-  };
 
   function criarTurma() {
     const nome = `Turma ${turmas.length + 1}`;
@@ -114,25 +106,17 @@ function TurmasPage() {
             {turmas.map((t) => {
               const on = t.id === selId;
               return (
-                <div
+                <button
                   key={t.id}
                   onClick={() => setSelId(t.id)}
-                  className={`group w-full flex items-center gap-2.5 px-3.5 py-3 rounded-xl border text-left transition-colors cursor-pointer ${on ? "border-terracotta bg-terracotta/5" : "border-[var(--color-border)] bg-white hover:border-terracotta/40"}`}
+                  className={`w-full flex items-center gap-2.5 px-3.5 py-3 rounded-xl border text-left transition-colors ${on ? "border-terracotta bg-terracotta/5" : "border-[var(--color-border)] bg-white hover:border-terracotta/40"}`}
                 >
                   <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: t.cor || "#999" }} />
                   <span className="flex-1 min-w-0">
                     <span className="block text-sm font-medium text-ink truncate">{t.nome}</span>
                     <span className="block text-[11px] text-ink/45">{t.membros.length} aluno(s) · {t.acessos.length} acesso(s)</span>
                   </span>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); apagarTurma(t.id); }}
-                    className="text-ink/30 hover:text-rose-600 p-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
-                    aria-label={`Apagar ${t.nome}`}
-                    title="Apagar turma"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -142,11 +126,8 @@ function TurmasPage() {
             <div className="rounded-2xl border border-[var(--color-border)] bg-white p-5">
               <div className="flex items-center gap-3 mb-4">
                 <input
-                  value={nomeDraft}
-                  onChange={(e) => setNomeDraft(e.target.value)}
-                  onBlur={commitNome}
-                  onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
-                  placeholder="Nome da turma"
+                  value={sel.nome}
+                  onChange={(e) => editar(sel.id, { nome: e.target.value })}
                   className="flex-1 text-lg font-semibold text-ink bg-transparent outline-none border-b border-transparent focus:border-terracotta/40 py-1"
                 />
                 <div className="flex items-center gap-1">
