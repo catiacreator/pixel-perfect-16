@@ -85,16 +85,22 @@ function MentoradasPage() {
     setBulkTurma("");
   };
   const [aRemover, setARemover] = useState(false);
-  const removerVarios = async () => {
-    const ids = [...selectedIds];
-    if (ids.length === 0) return;
-    if (!confirm(`Eliminar PERMANENTEMENTE ${ids.length} contacto(s)? A conta e o acesso são removidos — esta ação é irreversível.`)) return;
+  // Pop-up de confirmação de remoção (evita enganos).
+  const [remocao, setRemocao] = useState<{ ids: string[]; label: string } | null>(null);
+  const pedirRemoverVarios = () => {
+    if (selectedIds.size === 0) return;
+    setRemocao({ ids: [...selectedIds], label: `${selectedIds.size} contacto(s) selecionado(s)` });
+  };
+  const executarRemocao = async () => {
+    if (!remocao) return;
+    const ids = remocao.ids;
     setARemover(true);
     try {
       await Promise.all(ids.map((id) => del({ data: { userId: id } })));
       notify(`${ids.length} contacto(s) eliminado(s)`, "success");
-      setSelectedIds(new Set());
+      setSelectedIds((prev) => { const n = new Set(prev); ids.forEach((i) => n.delete(i)); return n; });
       qc.invalidateQueries({ queryKey: ["admin-mentoradas"] });
+      setRemocao(null);
     } catch (e) {
       notify(e instanceof Error ? e.message : "Não foi possível eliminar.", "error");
     } finally {
@@ -133,15 +139,6 @@ function MentoradasPage() {
     const n = new Set(prev);
     if (n.has(id)) n.delete(id); else n.add(id);
     return n;
-  });
-
-  const delMut = useMutation({
-    mutationFn: (userId: string) => del({ data: { userId } }),
-    onSuccess: () => {
-      notify("Aluno removido", "success");
-      qc.invalidateQueries({ queryKey: ["admin-mentoradas"] });
-    },
-    onError: (e) => notify(e.message, "error"),
   });
 
   const approveMut = useMutation({
@@ -243,11 +240,10 @@ function MentoradasPage() {
               Aplicar
             </button>
             <button
-              onClick={removerVarios}
-              disabled={aRemover}
-              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-rose-600 text-white text-sm font-semibold hover:bg-rose-700 transition-colors disabled:opacity-50"
+              onClick={pedirRemoverVarios}
+              className="inline-flex items-center gap-1.5 h-9 px-4 rounded-full bg-rose-600 text-white text-sm font-semibold hover:bg-rose-700 transition-colors"
             >
-              <Trash2 size={14} /> {aRemover ? "A remover…" : "Remover"}
+              <Trash2 size={14} /> Remover
             </button>
             <button onClick={() => setSelectedIds(new Set())} className="text-sm text-ink/50 hover:text-ink">
               Limpar
@@ -375,9 +371,7 @@ function MentoradasPage() {
                     <Coins size={13} /> Pontos
                   </button>
                   <button
-                    onClick={() => {
-                      if (confirm(`Eliminar PERMANENTEMENTE ${m.nome ?? "este aluno"}? A conta e o acesso são removidos — esta ação é irreversível.`)) delMut.mutate(m.id);
-                    }}
+                    onClick={() => setRemocao({ ids: [m.id], label: m.nome ?? m.email ?? "este contacto" })}
                     className="text-ink/40 hover:text-rose-700"
                     aria-label="Eliminar permanentemente"
                     title="Eliminar permanentemente"
@@ -422,6 +416,59 @@ function MentoradasPage() {
           }}
         />
       )}
+
+      {remocao && (
+        <ConfirmarRemocao
+          label={remocao.label}
+          varios={remocao.ids.length > 1}
+          loading={aRemover}
+          onCancel={() => setRemocao(null)}
+          onConfirm={executarRemocao}
+        />
+      )}
+    </div>
+  );
+}
+
+function ConfirmarRemocao({
+  label, varios, loading, onCancel, onConfirm,
+}: {
+  label: string;
+  varios: boolean;
+  loading: boolean;
+  onCancel: () => void;
+  onConfirm: () => void;
+}) {
+  return (
+    <div className="fixed inset-0 z-[60] bg-black/40 flex items-center justify-center p-4" onClick={loading ? undefined : onCancel}>
+      <div className="bg-white w-full max-w-md rounded-3xl p-6 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.5)]" onClick={(e) => e.stopPropagation()}>
+        <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mb-4">
+          <Trash2 size={22} />
+        </div>
+        <h2 className="text-lg font-semibold text-ink">Eliminar {varios ? "contactos" : "contacto"} permanentemente?</h2>
+        <p className="text-sm text-ink/60 mt-2 leading-relaxed">
+          Vai eliminar <b className="text-ink">{label}</b>. A conta e o acesso são removidos por completo — <b>não é possível recuperar</b>.
+        </p>
+        <p className="text-[13px] text-ink/45 mt-3">
+          Se só quer tirar o acesso sem apagar, use antes <b>Revogar</b> ou mude a turma.
+        </p>
+        <div className="flex gap-2 mt-6">
+          <button
+            onClick={onCancel}
+            disabled={loading}
+            className="flex-1 h-11 rounded-full border border-[var(--color-border)] text-sm font-medium text-ink hover:bg-ink/5 transition-colors disabled:opacity-50"
+          >
+            Cancelar
+          </button>
+          <button
+            onClick={onConfirm}
+            disabled={loading}
+            className="flex-1 h-11 rounded-full bg-rose-600 text-white text-sm font-semibold hover:bg-rose-700 transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-2"
+          >
+            <Trash2 size={15} /> {loading ? "A eliminar…" : "Eliminar"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
