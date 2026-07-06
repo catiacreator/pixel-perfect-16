@@ -4,7 +4,8 @@ import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import VideoPlaceholder from "../../components/VideoPlaceholder";
 import ColarResultado from "../../components/ColarResultado";
-import { ArrowRight, Smartphone, Copy, Check, ChevronDown, ClipboardPaste, Play, FileText, Eye, EyeOff, MessageSquare, Bot, Lock } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Smartphone, Copy, Check, ChevronDown, ClipboardPaste, Play, FileText, Eye, EyeOff, MessageSquare, Bot, Lock } from "lucide-react";
+import { agenteUrl } from "@/lib/agentes-catia";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import PillarHeader from "../../components/PillarHeader";
 import PromptCard from "../../components/PromptCard";
@@ -206,9 +207,19 @@ function BioPasso1() {
       {/* Agente prioritário */}
       <div className="rounded-xl border border-terracotta/25 bg-terracotta/5 p-4 mb-3">
         <p className="text-[10px] tracking-[0.14em] uppercase text-terracotta font-semibold mb-1.5">Passo 1 · Use o agente no ChatGPT</p>
-        <div className="flex items-center gap-2 mb-3">
-          <Bot size={16} className="text-terracotta shrink-0" />
-          <span className="text-sm text-ink"><b>cat.ia — Criador de Posicionamento e Bio</b></span>
+        <div className="flex items-center gap-2 mb-3 flex-wrap">
+          <span className="inline-flex items-center gap-2 text-sm text-ink">
+            <Bot size={16} className="text-terracotta shrink-0" />
+            <b>cat.ia — Criador de Posicionamento e Bio</b>
+          </span>
+          <a
+            href={agenteUrl("cat.ia — Criador de Posicionamento e Bio")}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-cream bg-ink hover:bg-terracotta rounded-full px-3 py-1.5 transition-colors"
+          >
+            Abrir agente no ChatGPT <ArrowUpRight size={13} />
+          </a>
         </div>
         <p className="text-sm text-ink/60 leading-relaxed mb-3">
           Fale com este agente no ChatGPT — ele entrega o posicionamento, a mensagem de marca e 3 versões de bio.
@@ -688,9 +699,21 @@ export default function RedesSociais() {
               <div key={c.id} className="mb-4">
                 <PromptCard titulo={c.titulo} descricao={c.descricao} prompt={c.prompts[objetivo]} rotuloBotao="Copiar prompt" />
                 {AGENTE_POR_FORMATO[c.id] && (
-                  <div className="flex items-center gap-2 -mt-2.5 mb-1 px-1">
-                    <Bot size={13} className="text-terracotta shrink-0" />
-                    <span className="text-[11px] text-ink/55">Agente no ChatGPT: <b className="text-ink/75">{AGENTE_POR_FORMATO[c.id]}</b></span>
+                  <div className="flex items-center flex-wrap gap-2 -mt-2.5 mb-1 px-1">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] text-ink/55">
+                      <Bot size={13} className="text-terracotta shrink-0" />
+                      Agente: <b className="text-ink/75">{AGENTE_POR_FORMATO[c.id]}</b>
+                    </span>
+                    {agenteUrl(AGENTE_POR_FORMATO[c.id]) && (
+                      <a
+                        href={agenteUrl(AGENTE_POR_FORMATO[c.id])}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-cream bg-ink hover:bg-terracotta rounded-full px-2.5 py-1 transition-colors"
+                      >
+                        Abrir agente no ChatGPT <ArrowUpRight size={12} />
+                      </a>
+                    )}
                   </div>
                 )}
               </div>
