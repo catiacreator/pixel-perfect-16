@@ -67,11 +67,8 @@ function TurmasPage() {
   function editar(id: string, patch: Partial<Turma>) {
     persist(turmas.map((t) => (t.id === id ? { ...t, ...patch } : t)));
   }
-  function toggleAcesso(id: string, nodeId: string) {
-    const t = turmas.find((x) => x.id === id);
-    if (!t) return;
-    const has = t.acessos.includes(nodeId);
-    editar(id, { acessos: has ? t.acessos.filter((a) => a !== nodeId) : [...t.acessos, nodeId] });
+  function setAcessos(id: string, next: string[]) {
+    editar(id, { acessos: next });
   }
   function removerMembro(id: string, uid: string) {
     const t = turmas.find((x) => x.id === id);
@@ -182,7 +179,7 @@ function TurmasPage() {
 
               {/* Permissões (acesso à estrutura) */}
               <p className="text-[10px] tracking-[0.14em] uppercase text-ink/45 mb-2">Permissões — o que esta turma vê</p>
-              <AcessoArvore grants={sel.acessos} onToggle={(nid) => toggleAcesso(sel.id, nid)} />
+              <AcessoArvore grants={sel.acessos} onChange={(next) => setAcessos(sel.id, next)} />
               <p className="text-[11px] text-ink/40 mt-2">Dar acesso a um módulo dá acesso às suas páginas. Para escolher página a página, deixe o módulo sem acesso e ligue as que quiser.</p>
             </div>
           )}

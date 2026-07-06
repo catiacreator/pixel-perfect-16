@@ -1,58 +1,68 @@
 import { useState } from "react";
-import { ChevronDown, Lock, Check } from "lucide-react";
+import { ChevronDown, Lock, Check, Minus } from "lucide-react";
 import { ESTRUTURA, type Nodo, type NodoTipo } from "@/lib/estrutura";
 
-// Árvore de permissões em acordeão: um card por módulo (colapsável), com toggle
-// do módulo inteiro e, ao expandir, toggle de cada página/subpágina.
-// `grants` = ids concedidos. Dar acesso a um pai concede aos filhos (herdado);
-// para escolher página a página, deixe o módulo sem acesso e ligue as que quiser.
+// Árvore de permissões: um card por módulo (acordeão). CADA nó (módulo, página,
+// subpágina) tem o seu próprio interruptor. Ligar/desligar um nó liga/desliga
+// tudo o que está dentro dele — mas depois podes ligar/desligar páginas e
+// subpáginas individualmente. `grants` = ids concedidos (por nó).
 
 const TIPO_LABEL: Record<NodoTipo, string> = { modulo: "Módulo", pilar: "Pilar", pagina: "Página", subpagina: "Subpágina" };
 
-function ToggleAcesso({ on, onClick }: { on: boolean; onClick: () => void }) {
+function subtreeIds(n: Nodo): string[] {
+  const ids = [n.id];
+  for (const f of n.filhos ?? []) ids.push(...subtreeIds(f));
+  return ids;
+}
+
+type Estado = "tudo" | "parcial" | "nada";
+function estadoDe(n: Nodo, set: Set<string>): Estado {
+  const ids = subtreeIds(n);
+  const on = ids.filter((id) => set.has(id)).length;
+  return on === 0 ? "nada" : on === ids.length ? "tudo" : "parcial";
+}
+
+function Toggle({ estado, onClick }: { estado: Estado; onClick: () => void }) {
+  const cfg =
+    estado === "tudo"
+      ? { cls: "bg-emerald-50 border-emerald-200 text-emerald-700", icon: <Check size={11} />, txt: "Com acesso" }
+      : estado === "parcial"
+        ? { cls: "bg-amber-50 border-amber-200 text-amber-700", icon: <Minus size={11} />, txt: "Parcial" }
+        : { cls: "bg-ink/[0.03] border-[var(--color-border)] text-ink/45 hover:text-ink", icon: <Lock size={11} />, txt: "Sem acesso" };
   return (
     <button
       onClick={(e) => { e.stopPropagation(); onClick(); }}
-      className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors shrink-0 ${
-        on ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-ink/[0.03] border-[var(--color-border)] text-ink/45 hover:text-ink"
-      }`}
+      className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors shrink-0 ${cfg.cls}`}
     >
-      {on ? <Check size={11} /> : <Lock size={11} />}
-      {on ? "Com acesso" : "Sem acesso"}
+      {cfg.icon} {cfg.txt}
     </button>
   );
 }
 
-function Filhos({ nodos, depth, paiConcedido, set, onToggle }: {
-  nodos: Nodo[]; depth: number; paiConcedido: boolean; set: Set<string>; onToggle: (id: string) => void;
-}) {
+export default function AcessoArvore({ grants, onChange }: { grants: string[]; onChange: (next: string[]) => void }) {
+  const set = new Set(grants);
+
+  // Liga/desliga a subárvore de um nó.
+  const alternar = (n: Nodo) => {
+    const ids = subtreeIds(n);
+    const next = new Set(set);
+    const estado = estadoDe(n, set);
+    if (estado === "tudo") ids.forEach((id) => next.delete(id));
+    else ids.forEach((id) => next.add(id));
+    onChange([...next]);
+  };
+
   return (
-    <>
-      {nodos.map((n) => {
-        const raw = set.has(n.id);
-        const efetivo = raw || paiConcedido;
-        return (
-          <div key={n.id}>
-            <div className="flex items-center gap-2.5 py-2 border-b border-[var(--color-border)] last:border-0" style={{ paddingLeft: depth * 20 }}>
-              <span className="text-[8px] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded-full font-semibold bg-ink/5 text-ink/45 shrink-0">{TIPO_LABEL[n.tipo]}</span>
-              <span className={`text-[13px] flex-1 min-w-0 truncate ${efetivo ? "text-ink" : "text-ink/45"}`}>{n.label}</span>
-              {paiConcedido ? (
-                <span className="text-[11px] text-emerald-600/70 italic shrink-0">herdado</span>
-              ) : (
-                <ToggleAcesso on={raw} onClick={() => onToggle(n.id)} />
-              )}
-            </div>
-            {n.filhos && <Filhos nodos={n.filhos} depth={depth + 1} paiConcedido={efetivo} set={set} onToggle={onToggle} />}
-          </div>
-        );
-      })}
-    </>
+    <div className="space-y-2.5">
+      {ESTRUTURA.map((mod) => (
+        <ModuloCard key={mod.id} modulo={mod} set={set} onAlternar={alternar} />
+      ))}
+    </div>
   );
 }
 
-function ModuloAccordion({ modulo, set, onToggle }: { modulo: Nodo; set: Set<string>; onToggle: (id: string) => void }) {
+function ModuloCard({ modulo, set, onAlternar }: { modulo: Nodo; set: Set<string>; onAlternar: (n: Nodo) => void }) {
   const [open, setOpen] = useState(false);
-  const granted = set.has(modulo.id);
   return (
     <div className="rounded-xl border border-[var(--color-border)] bg-white overflow-hidden">
       <div className="flex items-center gap-2.5 px-3.5 py-3">
@@ -61,24 +71,33 @@ function ModuloAccordion({ modulo, set, onToggle }: { modulo: Nodo; set: Set<str
           <span className="text-[9px] tracking-[0.12em] uppercase px-2 py-0.5 rounded-full font-semibold bg-terracotta/10 text-terracotta shrink-0">Módulo</span>
           <span className="text-sm font-semibold text-ink truncate">{modulo.label}</span>
         </button>
-        <ToggleAcesso on={granted} onClick={() => onToggle(modulo.id)} />
+        <Toggle estado={estadoDe(modulo, set)} onClick={() => onAlternar(modulo)} />
       </div>
       {open && modulo.filhos && (
         <div className="border-t border-[var(--color-border)] px-3.5 py-1 bg-cream-warm/20">
-          <Filhos nodos={modulo.filhos} depth={0} paiConcedido={granted} set={set} onToggle={onToggle} />
+          <Filhos nodos={modulo.filhos} depth={0} set={set} onAlternar={onAlternar} />
         </div>
       )}
     </div>
   );
 }
 
-export default function AcessoArvore({ grants, onToggle }: { grants: string[]; onToggle: (id: string) => void }) {
-  const set = new Set(grants);
+function Filhos({ nodos, depth, set, onAlternar }: { nodos: Nodo[]; depth: number; set: Set<string>; onAlternar: (n: Nodo) => void }) {
   return (
-    <div className="space-y-2.5">
-      {ESTRUTURA.map((mod) => (
-        <ModuloAccordion key={mod.id} modulo={mod} set={set} onToggle={onToggle} />
-      ))}
-    </div>
+    <>
+      {nodos.map((n) => {
+        const estado = estadoDe(n, set);
+        return (
+          <div key={n.id}>
+            <div className="flex items-center gap-2.5 py-2 border-b border-[var(--color-border)] last:border-0" style={{ paddingLeft: depth * 20 }}>
+              <span className="text-[8px] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded-full font-semibold bg-ink/5 text-ink/45 shrink-0">{TIPO_LABEL[n.tipo]}</span>
+              <span className={`text-[13px] flex-1 min-w-0 truncate ${estado !== "nada" ? "text-ink" : "text-ink/45"}`}>{n.label}</span>
+              <Toggle estado={estado} onClick={() => onAlternar(n)} />
+            </div>
+            {n.filhos && <Filhos nodos={n.filhos} depth={depth + 1} set={set} onAlternar={onAlternar} />}
+          </div>
+        );
+      })}
+    </>
   );
 }
