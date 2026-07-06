@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import IdeiasModal from "../components/IdeiasModal";
+import IdeiasGuardadas from "../components/IdeiasGuardadas";
 import AgendaBoard from "../components/AgendaBoard";
 import {
   FileText,
@@ -427,18 +428,6 @@ export default function MinhaBase() {
   const nivel = Math.min(10, Math.max(1, Math.round((conquistasFeitas / CONQUISTAS.length) * 10)));
   const progresso = Math.round((conquistasFeitas / CONQUISTAS.length) * 100);
 
-  const addMarco = () => {
-    const titulo = window.prompt("Título do marco (ex.: Lancei minha página)");
-    if (!titulo) return;
-    setState((s) => ({
-      ...s,
-      marcos: [
-        ...s.marcos,
-        { id: `m${Date.now()}`, titulo, data: new Date().toLocaleDateString("pt-BR") },
-      ],
-    }));
-  };
-
   return (
     <Layout>
       <div className="max-w-6xl mx-auto px-5 md:px-10 py-8 md:py-10">
@@ -664,42 +653,8 @@ export default function MinhaBase() {
           </div>
         </section>
 
-        {/* MARCOS */}
-        <section className="mt-10 mb-10">
-          <div className="flex items-end justify-between gap-3 mb-3">
-            <div>
-              <h2 className="font-display text-lg text-ink">Suas vitórias</h2>
-              <p className="text-xs text-ink/55">Lançamentos, criações e vitórias que você quer guardar.</p>
-            </div>
-            <button
-              onClick={addMarco}
-              className="inline-flex items-center gap-1.5 bg-terracotta text-cream rounded-full px-4 py-2 text-sm font-medium hover:bg-terracotta-dark"
-            >
-              <Plus size={14} /> Adicionar marco
-            </button>
-          </div>
-          {state.marcos.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-[var(--color-border)] bg-cream-warm/30 p-10 text-center">
-              <Crown size={24} className="mx-auto text-terracotta mb-3" />
-              <p className="text-sm text-ink">Nada por aqui ainda.</p>
-              <p className="text-xs text-ink/55 mt-1">
-                Registre seu primeiro marco — uma página publicada, um lançamento, um cliente fechado.
-              </p>
-            </div>
-          ) : (
-            <ul className="space-y-2">
-              {state.marcos.map((m) => (
-                <li
-                  key={m.id}
-                  className="rounded-xl border border-[var(--color-border)] bg-white px-4 py-3 flex items-center justify-between gap-3"
-                >
-                  <span className="text-sm text-ink">{m.titulo}</span>
-                  <span className="text-xs text-ink/50">{m.data}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </section>
+        {/* IDEIAS — reunidas do botão "Escreva as suas ideias" */}
+        <IdeiasGuardadas />
       </div>
 
       {selectedDay && (

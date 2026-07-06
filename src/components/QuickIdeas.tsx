@@ -21,7 +21,14 @@ export default function QuickIdeas() {
   const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setIdeias(ler());
+    const load = () => setIdeias(ler());
+    load();
+    window.addEventListener("leveza:ideias-changed", load);
+    window.addEventListener("leveza:hydrated", load);
+    return () => {
+      window.removeEventListener("leveza:ideias-changed", load);
+      window.removeEventListener("leveza:hydrated", load);
+    };
   }, []);
 
   useEffect(() => {
@@ -41,6 +48,8 @@ export default function QuickIdeas() {
     try {
       window.localStorage.setItem(KEY, JSON.stringify(nova));
     } catch { /* ignora */ }
+    // avisa a página "A minha jornada" para refrescar a lista de ideias
+    window.dispatchEvent(new Event("leveza:ideias-changed"));
     setTexto("");
     notify("Ideia guardada ✓", "success");
   }
