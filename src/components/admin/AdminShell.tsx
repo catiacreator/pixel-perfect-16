@@ -53,86 +53,112 @@ export function AdminShell() {
   }
 
   return (
-    <div className="min-h-screen flex bg-cream text-ink font-display">
-      <aside className="w-60 shrink-0 border-r border-[var(--color-border)] bg-white flex flex-col">
-        <div className="px-5 py-5 border-b border-[var(--color-border)]">
-          <div className="flex items-center gap-2.5">
-            <span className="w-2 h-2 rounded-full bg-terracotta shadow-[0_0_18px_2px_var(--color-terracotta)]" />
-            <span className="text-[14px] font-semibold tracking-tight">Admin</span>
+    <div className="min-h-screen flex flex-col bg-cream text-ink font-display">
+      {/* Cabeçalho — mesmo estilo (gradiente pastel) da app */}
+      <header className="app-header sticky top-0 z-40 text-ink border-b border-black/5 shadow-[0_4px_24px_-16px_rgba(0,0,0,0.35)]">
+        <div className="px-5 md:px-8 h-16 md:h-18 flex items-center justify-between gap-4">
+          <Link to="/" className="flex items-center gap-2.5 leading-none shrink-0 group">
+            <span className="w-2 h-2 rounded-full bg-gold shadow-[0_0_14px_2px_rgba(184,121,74,0.45)]" />
+            <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none">Cátia Creator</span>
+            <span className="text-[9px] tracking-[0.24em] uppercase text-ink/50 font-semibold border border-ink/15 rounded-full px-2 py-0.5 ml-1">Admin</span>
+          </Link>
+          <AdminTopbarActions onLogout={logout} />
+        </div>
+      </header>
+
+      <div className="flex flex-1 min-h-0">
+        {/* Barra lateral — cream, com pills arredondadas ao estilo da app */}
+        <aside className="w-60 shrink-0 border-r border-[var(--color-border)] bg-white/60 backdrop-blur-sm hidden md:flex flex-col">
+          <nav className="flex-1 p-3 flex flex-col gap-1 overflow-y-auto">
+            {ITEMS.map((it) => {
+              const active = it.exact ? pathname === it.to : pathname.startsWith(it.to);
+              const Icon = it.icon;
+              return (
+                <Link
+                  key={it.to}
+                  to={it.to as "/admin"}
+                  className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] transition-all ${
+                    active
+                      ? "bg-terracotta text-cream font-semibold shadow-[0_10px_24px_-14px_var(--color-terracotta)]"
+                      : "text-ink/70 hover:bg-ink/5 hover:text-ink"
+                  }`}
+                >
+                  <Icon size={15} strokeWidth={active ? 2.1 : 1.75} />
+                  {it.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="p-3 border-t border-[var(--color-border)] flex flex-col gap-1">
+            <button
+              onClick={() => { setAdminView("aluno"); window.location.assign("/"); }}
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] text-ink/70 hover:bg-ink/5 hover:text-ink text-left transition-colors"
+            >
+              <Eye size={15} strokeWidth={1.75} />
+              Vista de aluno
+            </button>
+            <button
+              onClick={logout}
+              className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[13px] text-ink/70 hover:bg-ink/5 hover:text-ink transition-colors"
+            >
+              <LogOut size={15} strokeWidth={1.75} />
+              Sair
+            </button>
           </div>
-          <p className="text-[10px] tracking-[0.3em] uppercase text-ink/40 mt-1">Cátia Creator</p>
-        </div>
+        </aside>
 
-        <nav className="flex-1 p-3 flex flex-col gap-1">
-          {ITEMS.map((it) => {
-            const active = it.exact ? pathname === it.to : pathname.startsWith(it.to);
-            const Icon = it.icon;
-            return (
-              <Link
-                key={it.to}
-                to={it.to as "/admin"}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] transition-colors ${
-                  active ? "bg-ink text-cream" : "text-ink/70 hover:bg-ink/5 hover:text-ink"
-                }`}
-              >
-                <Icon size={15} strokeWidth={1.75} />
-                {it.label}
-              </Link>
-            );
-          })}
-        </nav>
+        <main className="flex-1 min-w-0 overflow-auto">
+          {/* Nav horizontal em ecrã pequeno (a barra lateral esconde-se) */}
+          <nav className="md:hidden flex gap-1.5 overflow-x-auto px-4 py-3 border-b border-[var(--color-border)] bg-white/60">
+            {ITEMS.map((it) => {
+              const active = it.exact ? pathname === it.to : pathname.startsWith(it.to);
+              return (
+                <Link
+                  key={it.to}
+                  to={it.to as "/admin"}
+                  className={`shrink-0 px-3.5 py-1.5 rounded-full text-[12.5px] whitespace-nowrap transition-colors ${active ? "bg-terracotta text-cream font-semibold" : "text-ink/70 bg-ink/5"}`}
+                >
+                  {it.label}
+                </Link>
+              );
+            })}
+          </nav>
 
-        <div className="p-3 border-t border-[var(--color-border)] flex flex-col gap-1">
-          <button
-            onClick={() => { setAdminView("aluno"); window.location.assign("/"); }}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] text-ink/70 hover:bg-ink/5 text-left"
-          >
-            <Eye size={15} strokeWidth={1.75} />
-            Vista de aluno
-          </button>
-          <button
-            onClick={logout}
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] text-ink/70 hover:bg-ink/5"
-          >
-            <LogOut size={15} strokeWidth={1.75} />
-            Sair
-          </button>
-        </div>
-      </aside>
-
-      <main className="flex-1 min-w-0 overflow-auto">
-        <AdminTopbar onLogout={logout} />
-        {!config.serviceRole ? (
-          <SetupCard
-            titulo="Falta configurar a chave de serviço"
-            descricao="O painel precisa da Service Role Key do Supabase para gerir contas (ver alunos, adicionar, eliminar, atribuir papéis)."
-            passos={[
-              "No Supabase: Settings → API → service_role → Reveal → Copy.",
-              "Abre o ficheiro .env do projeto e cola depois de SUPABASE_SERVICE_ROLE_KEY=.",
-              "Guarda (o servidor reinicia) e recarrega esta página.",
-            ]}
-            nota="⚠️ É uma chave secreta — fica só no servidor (o .env não vai para o git)."
-          />
-        ) : !config.schema ? (
-          <SetupCard
-            titulo="Falta criar as tabelas (correr o SQL)"
-            descricao="A chave de serviço já está OK, mas a base de dados do projeto novo ainda está vazia — faltam as tabelas (profiles, user_roles, etc.)."
-            passos={[
-              "No Supabase: SQL Editor → New query.",
-              "Abre scripts/setup-supabase.sql, copia tudo, cola e clica Run.",
-              "Recarrega esta página.",
-            ]}
-            nota="Isto também te torna admin e aprovada automaticamente."
-          />
-        ) : (
-          <Outlet />
-        )}
-      </main>
+          {!config.serviceRole ? (
+            <SetupCard
+              titulo="Falta configurar a chave de serviço"
+              descricao="O painel precisa da Service Role Key do Supabase para gerir contas (ver alunos, adicionar, eliminar, atribuir papéis)."
+              passos={[
+                "No Supabase: Settings → API → service_role → Reveal → Copy.",
+                "Abre o ficheiro .env do projeto e cola depois de SUPABASE_SERVICE_ROLE_KEY=.",
+                "Guarda (o servidor reinicia) e recarrega esta página.",
+              ]}
+              nota="⚠️ É uma chave secreta — fica só no servidor (o .env não vai para o git)."
+            />
+          ) : !config.schema ? (
+            <SetupCard
+              titulo="Falta criar as tabelas (correr o SQL)"
+              descricao="A chave de serviço já está OK, mas a base de dados do projeto novo ainda está vazia — faltam as tabelas (profiles, user_roles, etc.)."
+              passos={[
+                "No Supabase: SQL Editor → New query.",
+                "Abre scripts/setup-supabase.sql, copia tudo, cola e clica Run.",
+                "Recarrega esta página.",
+              ]}
+              nota="Isto também te torna admin e aprovada automaticamente."
+            />
+          ) : (
+            <div className="fade-up">
+              <Outlet />
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   );
 }
 
-function AdminTopbar({ onLogout }: { onLogout: () => void }) {
+function AdminTopbarActions({ onLogout }: { onLogout: () => void }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const sess = readStoredSession();
@@ -148,10 +174,10 @@ function AdminTopbar({ onLogout }: { onLogout: () => void }) {
   }, [open]);
 
   return (
-    <header className="sticky top-0 z-20 flex items-center justify-end gap-2 px-6 py-3 border-b border-[var(--color-border)] bg-white/85 backdrop-blur-sm">
+    <div className="flex items-center gap-2">
       <a
         href="/"
-        className="inline-flex items-center gap-2 text-[13px] font-medium text-ink/70 px-3 py-2 rounded-full border border-[var(--color-border)] hover:bg-ink/5 transition-colors"
+        className="hidden sm:inline-flex items-center gap-1.5 text-[13px] font-medium text-ink/75 px-3.5 py-2 rounded-full border border-ink/15 bg-white/50 hover:bg-white transition-colors"
       >
         <Home size={14} /> Ir para o site
       </a>
@@ -159,10 +185,10 @@ function AdminTopbar({ onLogout }: { onLogout: () => void }) {
       <div className="relative" ref={ref}>
         <button
           onClick={() => setOpen((v) => !v)}
-          className="inline-flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full border border-[var(--color-border)] hover:bg-ink/5 transition-colors"
+          className="inline-flex items-center gap-2 pl-1 pr-2.5 py-1 rounded-full border border-ink/15 bg-white/50 hover:bg-white transition-colors"
         >
-          <span className="w-8 h-8 rounded-full bg-terracotta/10 text-terracotta flex items-center justify-center text-sm font-semibold">{inicial}</span>
-          <span className="text-[13px] font-medium text-ink max-w-[120px] truncate">{nome}</span>
+          <span className="w-8 h-8 rounded-full bg-terracotta/12 text-terracotta flex items-center justify-center text-sm font-semibold">{inicial}</span>
+          <span className="text-[13px] font-medium text-ink max-w-[120px] truncate hidden sm:inline">{nome}</span>
           <ChevronDown size={14} className={`text-ink/40 transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
 
@@ -190,7 +216,7 @@ function AdminTopbar({ onLogout }: { onLogout: () => void }) {
           </div>
         )}
       </div>
-    </header>
+    </div>
   );
 }
 
