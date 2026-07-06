@@ -596,9 +596,23 @@ export const getTurmas = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { blob } = await readOwnerBlob(supabaseAdmin);
-    const t = blob[TURMAS_KEY];
-    return Array.isArray(t) ? t : [];
+    const { INICIANTE_ID, INICIANTE_NOME, INICIANTE_ACESSOS_PADRAO } = await import("@/lib/turmas");
+    const { uid, blob } = await readOwnerBlob(supabaseAdmin);
+    let turmas = (Array.isArray(blob[TURMAS_KEY]) ? blob[TURMAS_KEY] : []) as {
+      id: string; nome: string; cor?: string; membros: string[]; acessos: string[];
+    }[];
+    // Garante que a turma "Iniciante" existe sempre (é a turma por defeito).
+    if (!turmas.some((t) => t.id === INICIANTE_ID)) {
+      turmas = [
+        { id: INICIANTE_ID, nome: INICIANTE_NOME, cor: "#2FA98A", membros: [], acessos: [...INICIANTE_ACESSOS_PADRAO] },
+        ...turmas,
+      ];
+      await supabaseAdmin.from("master_documents").upsert(
+        { user_id: uid, data: { ...blob, [TURMAS_KEY]: turmas }, updated_at: new Date().toISOString() },
+        { onConflict: "user_id" },
+      );
+    }
+    return turmas;
   });
 
 export const setTurmas = createServerFn({ method: "POST" })
@@ -628,17 +642,23 @@ export const setTurmas = createServerFn({ method: "POST" })
   });
 
 // O aluno lê a SUA turma: devolve se está restrito e a que tem acesso.
+// Se não estiver em nenhuma turma explícita → é tratado como "Iniciante".
 export const getMinhaTurmaAcessos = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { INICIANTE_ID } = await import("@/lib/turmas");
     const { blob } = await readOwnerBlob(supabaseAdmin);
     const turmas = (Array.isArray(blob[TURMAS_KEY]) ? blob[TURMAS_KEY] : []) as {
-      membros?: string[]; acessos?: string[];
+      id?: string; membros?: string[]; acessos?: string[];
     }[];
-    const minha = turmas.find((t) => Array.isArray(t.membros) && t.membros.includes(context.userId));
-    if (!minha) return { restrito: false, acessos: [] as string[] };
-    return { restrito: true, acessos: Array.isArray(minha.acessos) ? minha.acessos : [] };
+    // 1) Turma explícita (diferente de Iniciante) onde o aluno está.
+    const explicita = turmas.find(
+      (t) => t.id !== INICIANTE_ID && Array.isArray(t.membros) && t.membros.includes(context.userId),
+    );
+    const alvo = explicita ?? turmas.find((t) => t.id === INICIANTE_ID);
+    if (!alvo) return { restrito: false, acessos: [] as string[] };
+    return { restrito: true, acessos: Array.isArray(alvo.acessos) ? alvo.acessos : [] };
   });
 
 // Ranking visível a qualquer aluno autenticado (top 50 por pontos).
