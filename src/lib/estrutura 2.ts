@@ -21,45 +21,24 @@ export type Nodo = {
 
 export const ESTRUTURA: Nodo[] = [
   {
-    id: "redes",
-    label: "Criar para o Instagram",
+    id: "doc-mestre",
+    label: "Documento Mestre",
     tipo: "modulo",
-    to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas",
-    filhos: [
-      { id: "redes.boas-vindas", label: "Boas-vindas", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas" },
-      { id: "redes.bio", label: "Posicionamento e Bio", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=bio" },
-      {
-        id: "redes.formatos",
-        label: "Formatos de Conteúdo",
-        tipo: "pagina",
-        to: "/metodo/pilar-2/redes-sociais?aba=formatos",
-        filhos: [
-          { id: "redes.formatos.roteiros", label: "Roteiros simples", tipo: "subpagina", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=roteiros" },
-          { id: "redes.formatos.reels", label: "Reels virais", tipo: "subpagina", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=reels" },
-          { id: "redes.formatos.carrossel", label: "Carrosséis que vendem", tipo: "subpagina", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=carrossel" },
-          { id: "redes.formatos.stories", label: "Stories que vendem", tipo: "subpagina", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=stories" },
-        ],
-      },
-      { id: "redes.criar", label: "Criar Conteúdo", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=criar" },
-      { id: "redes.plano", label: "Plano de Posts", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=plano" },
-      { id: "redes.desafio", label: "30 posts em 30 dias", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=desafio" },
-      { id: "redes.assistente", label: "Assistente Cat.IA", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=assistente" },
-      { id: "redes.agendar", label: "Publicar", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=agendar" },
-    ],
+    to: "/doc-mestre",
   },
   {
-    id: "jornada",
-    label: "Jornada",
+    id: "protocolo",
+    label: "Protocolo Viral (Mentoria)",
     tipo: "modulo",
-    to: "/metodo",
+    to: "/protocolo",
     filhos: [
-      { id: "doc-mestre", label: "Documento Mestre", tipo: "pagina", to: "/doc-mestre" },
       {
         id: "pilar-1",
         label: "Pilar 1 — Crie com Leveza",
         tipo: "pilar",
         to: "/metodo/pilar-1",
         filhos: [
+          { id: "pilar-1.doc", label: "Preencha o Documento Mestre", tipo: "pagina", to: "/doc-mestre" },
           { id: "pilar-1.conclusao", label: "Revise e celebre", tipo: "pagina", to: "/metodo/pilar-1/conclusao" },
         ],
       },
@@ -83,6 +62,33 @@ export const ESTRUTURA: Nodo[] = [
             ],
           },
           { id: "pilar-2.conclusao", label: "Conclusão Pilar 2", tipo: "pagina", to: "/metodo/pilar-2/conclusao" },
+        ],
+      },
+      {
+        id: "redes",
+        label: "Criar para o Instagram",
+        tipo: "pilar",
+        to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas",
+        filhos: [
+          { id: "redes.boas-vindas", label: "Boas-vindas", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas" },
+          { id: "redes.bio", label: "Posicionamento e Bio", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=bio" },
+          {
+            id: "redes.formatos",
+            label: "Formatos de Conteúdo",
+            tipo: "pagina",
+            to: "/metodo/pilar-2/redes-sociais?aba=formatos",
+            filhos: [
+              { id: "redes.formatos.roteiros", label: "Roteiros simples", tipo: "subpagina", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=roteiros" },
+              { id: "redes.formatos.reels", label: "Reels virais", tipo: "subpagina", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=reels" },
+              { id: "redes.formatos.carrossel", label: "Carrosséis que vendem", tipo: "subpagina", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=carrossel" },
+              { id: "redes.formatos.stories", label: "Stories que vendem", tipo: "subpagina", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=stories" },
+            ],
+          },
+          { id: "redes.criar", label: "Criar Conteúdo", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=criar" },
+          { id: "redes.plano", label: "Plano de Posts", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=plano" },
+          { id: "redes.desafio", label: "30 posts em 30 dias", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=desafio" },
+          { id: "redes.assistente", label: "Assistente Cat.IA", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=assistente" },
+          { id: "redes.agendar", label: "Publicar", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=agendar" },
         ],
       },
       {
@@ -115,8 +121,6 @@ export const ESTRUTURA: Nodo[] = [
           { id: "pilar-4.conclusao", label: "Revise e celebre", tipo: "pagina", to: "/metodo/pilar-4/conclusao" },
         ],
       },
-      { id: "consultoria", label: "Consultoria de IA", tipo: "pagina", to: "/metodo/consultoria-ia" },
-      { id: "saude", label: "Área da Saúde", tipo: "pagina", to: "/saude" },
     ],
   },
   {
@@ -152,6 +156,18 @@ export const ESTRUTURA: Nodo[] = [
         ],
       },
     ],
+  },
+  {
+    id: "consultoria",
+    label: "Consultoria de IA",
+    tipo: "modulo",
+    to: "/consultoria-ia",
+  },
+  {
+    id: "saude",
+    label: "Área da Saúde",
+    tipo: "modulo",
+    to: "/saude",
   },
 ];
 
