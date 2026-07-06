@@ -2,8 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@/lib/router-compat";
 import { useState } from "react";
 import { Check, KeyRound, Sparkles } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { validarCodigo } from "@/lib/admin.functions";
+import { registarComCodigo } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/registo")({
   head: () => ({ meta: [{ title: "Registo — Estúdio Creator" }] }),
@@ -33,19 +32,18 @@ function RegistoPage() {
     setErro("");
     setLoading(true);
     try {
-      // Valida o código (só os ativos, geridos em Admin → Códigos de acesso).
-      const { valido } = await validarCodigo({ data: { codigo: codigo.trim() } });
-      if (!valido) {
-        setErro("Código de acesso inválido ou desativado. Confirme o código que a Cátia lhe enviou.");
+      // Cria a conta no servidor: valida o código (ativo) e mete o aluno na
+      // turma do código, se tiver. A conta fica pronta para entrar.
+      const res = await registarComCodigo({ data: { codigo: codigo.trim(), email, nome, password } });
+      if (!res.ok) {
+        if (res.erro === "codigo") {
+          setErro("Código de acesso inválido ou desativado. Confirme o código que a Cátia lhe enviou.");
+        } else {
+          setErro(traduzErro(res.erro || ""));
+        }
         setLoading(false);
         return;
       }
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { full_name: nome }, emailRedirectTo: window.location.origin },
-      });
-      if (error) throw error;
       setFeito(true);
     } catch (err) {
       setErro(traduzErro(err instanceof Error ? err.message : ""));
@@ -71,7 +69,7 @@ function RegistoPage() {
           <div className="text-center py-4">
             <div className="w-14 h-14 mx-auto rounded-full bg-sage/15 text-sage flex items-center justify-center mb-4"><Check size={26} /></div>
             <h1 className="text-2xl font-semibold text-ink">Conta criada! 🎉</h1>
-            <p className="text-sm text-ink/60 mt-2 mb-6">Verifique o seu e-mail para confirmar a conta e depois entre.</p>
+            <p className="text-sm text-ink/60 mt-2 mb-6">A sua conta já está pronta. Entre com o seu e-mail e palavra-passe.</p>
             <Link to="/auth" className="inline-flex items-center justify-center w-full py-3 rounded-full bg-ink text-cream text-sm font-semibold hover:bg-terracotta transition-colors">
               Ir para o login
             </Link>
