@@ -10,7 +10,8 @@
 // A escrita é capturada de forma central interceptando localStorage.setItem,
 // por isso não é preciso instrumentar cada página individualmente.
 
-import { supabase } from "@/integrations/supabase/client";
+import { readStoredSession } from "@/lib/session";
+import { getMyMasterDoc, saveMyMasterDoc } from "@/lib/admin.functions";
 import type { Json } from "@/integrations/supabase/types";
 
 // Chaves sincronizadas (estado persistente do utilizador).
@@ -18,7 +19,6 @@ import type { Json } from "@/integrations/supabase/types";
 const SYNC_KEYS = [
   "leveza.doc-mestre.v1",
   "leveza.pilar2.v1",
-  "leveza.detetive.v1",
   "leveza.minha-base.v1",
   "leveza.calendario.v1",
   "leveza.bio.v1",
@@ -49,15 +49,16 @@ function installInterceptor() {
   };
 }
 
-async function pull(userId: string) {
-  const { data, error } = await supabase
-    .from("master_documents")
-    .select("data")
-    .eq("user_id", userId)
-    .maybeSingle();
-  if (error || !data?.data || typeof window === "undefined" || !origSetItem) return;
+async function pull(_userId: string) {
+  // Via função de servidor (service role) — o cliente supabase não autentica aqui.
+  let blob: Record<string, Json> | null = null;
+  try {
+    blob = (await getMyMasterDoc()) as Record<string, Json> | null;
+  } catch {
+    return;
+  }
+  if (!blob || typeof window === "undefined" || !origSetItem) return;
 
-  const blob = data.data as Record<string, Json>;
   hydrating = true;
   let changed = false;
   for (const key of SYNC_KEYS) {
@@ -89,10 +90,7 @@ async function pushNow() {
     }
   }
   try {
-    await supabase.from("master_documents").upsert(
-      { user_id: currentUserId, data: blob, updated_at: new Date().toISOString() },
-      { onConflict: "user_id" },
-    );
+    await saveMyMasterDoc({ data: blob });
   } catch {
     // offline ou tabela ainda não aplicada — mantém-se o localStorage
   }
@@ -102,10 +100,11 @@ async function pushNow() {
 // Sem sessão iniciada, não faz nada (a app continua só com localStorage).
 export async function initMasterDocSync() {
   if (initialized || typeof window === "undefined") return;
-  const { data } = await supabase.auth.getUser();
-  if (!data.user) return;
+  // Leitura síncrona da sessão (localStorage) — supabase.auth.getUser() pendura neste ambiente.
+  const user = readStoredSession()?.user;
+  if (!user?.id) return;
   initialized = true;
-  currentUserId = data.user.id;
+  currentUserId = user.id;
   installInterceptor();
   await pull(currentUserId);
 }

@@ -5,7 +5,6 @@ import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import PillarHeader from "../../components/PillarHeader";
 import ProgressBar from "../../components/ProgressBar";
 import VideoPlaceholder from "../../components/VideoPlaceholder";
-import TodoBanner from "../../components/TodoBanner";
 import { ChevronDown, PlayCircle, ArrowLeft } from "lucide-react";
 
 const MODULOS = [
@@ -47,7 +46,6 @@ export default function Videos() {
   return (
     <Layout>
       <PilarBreadcrumb pilar="academia" pilarLabel="Academia de IA" backTo="/metodo/pilar-1/aprenda-ia" backLabel="Voltar para a Academia de IA" />
-      <TodoBanner texto="Etapa 5 — Vídeos: conteúdo pendente. Aguardando documentação detalhada (estrutura definitiva das aulas, prompts e fluxo)." />
       <PillarHeader
         numeral="IA"
         icon={<PlayCircle size={18} />}

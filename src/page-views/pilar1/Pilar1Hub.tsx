@@ -6,20 +6,18 @@ import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import PillarHeader from "../../components/PillarHeader";
 import EtapaCard from "../../components/EtapaCard";
-import { Hourglass, GraduationCap, Search, Trophy, ArrowUpRight, BookOpen, Play } from "lucide-react";
+import { Hourglass, GraduationCap, Trophy, ArrowUpRight, BookOpen, Play } from "lucide-react";
 import { getPilarBySlug } from "@/lib/pilares.functions";
+
+// Etapas descontinuadas (não mostrar no hub).
+const ETAPAS_OCULTAS = ["aprenda-ia", "detetive-do-tempo"];
 
 const ICONS: Record<string, ReactElement> = {
   "aprenda-ia": <GraduationCap size={18} />,
-  "detetive-do-tempo": <Search size={18} />,
   conclusao: <Trophy size={18} />,
 };
 
 const SUBLINKS: Record<string, { label: string; to: string }[]> = {
-  "detetive-do-tempo": [
-    { label: "Mapeamento de Tarefas", to: "/metodo/pilar-1/detetive-do-tempo" },
-    { label: "Relatório", to: "/metodo/pilar-1/detetive-do-tempo/relatorio" },
-  ],
   conclusao: [
     { label: "Revisar Documento Mestre", to: "/doc-mestre" },
     { label: "Checklist Pilar 1", to: "/metodo/pilar-1/conclusao" },
@@ -75,7 +73,7 @@ export default function Pilar1Hub() {
         <div className="space-y-4">
           {isLoading && <p className="text-sm text-ink/50">Carregando etapas…</p>}
           {data?.etapas
-            .filter((e) => e.slug !== "aprenda-ia")
+            .filter((e) => !ETAPAS_OCULTAS.includes(e.slug))
             .map((e, idx) => (
             <div key={e.id} className="relative">
               <EtapaCard

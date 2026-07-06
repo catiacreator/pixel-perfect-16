@@ -344,11 +344,11 @@ export default function EsbocoMetodo() {
                             onClick={() => setPar(i, { intensidade: n.id })}
                             className={`text-xs px-3 py-1.5 rounded-full border inline-flex items-center gap-1.5 transition-colors ${
                               active
-                                ? "bg-ink/5 border-ink/30 text-ink"
-                                : "bg-white border-border text-ink/70"
+                                ? "bg-ink border-ink text-cream font-semibold shadow-sm"
+                                : "bg-white border-border text-ink/70 hover:border-ink/40"
                             }`}
                           >
-                            <span className={`w-1.5 h-1.5 rounded-full ${n.dot}`} />
+                            <span className={`w-2 h-2 rounded-full ${n.dot} ${active ? "ring-2 ring-cream/40" : ""}`} />
                             {n.id}
                           </button>
                         );
@@ -435,7 +435,7 @@ export default function EsbocoMetodo() {
                 <input
                   value={state.nomeMetodo}
                   onChange={(e) => update({ nomeMetodo: e.target.value })}
-                  placeholder="Ex: Leveza no Digital"
+                  placeholder="Ex: Cátia Creator"
                   className="w-full rounded-xl border border-border p-3 text-sm outline-none focus:border-terracotta"
                 />
               </div>

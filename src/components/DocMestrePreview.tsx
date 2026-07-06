@@ -79,7 +79,7 @@ export default function DocMestrePreview({
         <div className="pdf-sheet mx-auto bg-white shadow-xl w-full max-w-[820px] p-8 md:p-12">
           {/* Capa */}
           <div className="mb-8">
-            <p className="text-[11px] tracking-[0.3em] uppercase text-terracotta font-semibold">● Leveza no Digital · Jornada 2026</p>
+            <p className="text-[11px] tracking-[0.3em] uppercase text-terracotta font-semibold">● Cátia Creator · Jornada 2026</p>
             <h1 className="font-display text-4xl text-ink mt-2 leading-tight">Documento Mestre</h1>
             <p className="text-sm text-ink/60 mt-2">
               Tudo o que a IA precisa para trabalhar como se fosse {doc.nome || "você"}.
@@ -113,13 +113,7 @@ export default function DocMestrePreview({
             )}
           </Seccao>
 
-          <Seccao n="04" titulo="Detetive do tempo">
-            <Campo label="Faturação mensal" value={doc.faturamentoMensal} />
-            <Campo label="Horas por dia" value={doc.horasDia} />
-            <Campo label="Dias por semana" value={doc.diasSemana} />
-          </Seccao>
-
-          <Seccao n="05" titulo="Arquétipos da marca">
+          <Seccao n="04" titulo="Arquétipos da marca">
             <Campo label="Dominante" value={metodo.arquetipoDominante} />
             <Campo label="Secundário" value={metodo.arquetipoSecundario} />
             <Campo label="Combinação" value={[metodo.arquetipoDominante, metodo.arquetipoSecundario].filter(Boolean).join(" + ")} />
@@ -127,21 +121,21 @@ export default function DocMestrePreview({
             <Campo label="Dor principal do cliente" value={metodo.dorPrincipalCliente} />
           </Seccao>
 
-          <Seccao n="06" titulo="Tom de voz & linguagem">
+          <Seccao n="05" titulo="Tom de voz & linguagem">
             <Campo label="Tom de voz" value={metodo.tomDeVoz} />
             <Campo label="Palavras para usar" value={metodo.palavrasUsar} />
             <Campo label="Palavras para evitar" value={metodo.palavrasEvitar} />
             <Campo label="Crença central" value={metodo.crencaCentral} />
           </Seccao>
 
-          <Seccao n="07" titulo="O teu método">
+          <Seccao n="06" titulo="O teu método">
             <Campo label="Nome do método" value={metodo.nomeMetodo} />
             <Campo label="Promessa" value={metodo.promessa} />
             <Campo label="Pilares" value={metodo.pilares} />
             <Campo label="Posicionamento" value={metodo.posicionamento} />
           </Seccao>
 
-          <Seccao n="08" titulo="Identidade visual">
+          <Seccao n="07" titulo="Identidade visual">
             <Campo label="Vibe da marca" value={metodo.vibeMarca} />
             <Campo label="Paleta" value={metodo.paleta} />
             <Campo label="Tipografia" value={[metodo.tipografiaTitulo, metodo.tipografiaCorpo, metodo.tipografiaManuscrita].filter(Boolean).join(" · ")} />
@@ -149,13 +143,13 @@ export default function DocMestrePreview({
             <Campo label="Antipadrões" value={metodo.antipadroesVisuais} />
           </Seccao>
 
-          <Seccao n="09" titulo="Bio & posicionamento">
+          <Seccao n="08" titulo="Bio & posicionamento">
             <Campo label="Opiniões / pontos de vista" value={metodo.opinioesPolemicas} />
             <Campo label="Posicionamento" value={metodo.posicionamento} />
           </Seccao>
 
           <p className="text-[11px] text-ink/40 mt-8 pt-4 border-t border-[var(--color-border)]">
-            Este documento alimenta todo o sistema — use-o como fonte da verdade em cada prompt. · Leveza no Digital
+            Este documento alimenta todo o sistema — use-o como fonte da verdade em cada prompt. · Cátia Creator
           </p>
         </div>
       </div>

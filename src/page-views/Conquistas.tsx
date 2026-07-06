@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import Layout from "../components/Layout";
+import { setMyPoints, getRanking } from "@/lib/admin.functions";
 import {
   Trophy,
   Sparkles,
@@ -17,6 +19,49 @@ import {
 const AULAS_KEY = "leveza.aulas-concluidas.v1";
 const BASE_KEY = "leveza.minha-base.v1";
 const DOC_KEY = "leveza.doc-mestre.v1";
+const POSTS_KEY = "leveza.posts-publicados.v1"; // posts publicados no Plano de Posts
+const PILARES_KEY = "leveza.pilares-conteudo.v1";
+const CONCLUSAO_KEYS = ["leveza.conclusao.p1", "leveza.conclusao.p2", "leveza.conclusao.p3", "leveza.conclusao.p4"];
+const PONTOS_POR_POST = 15;
+const PONTOS_POR_ETAPA = 5; // item de "Revise e celebre"
+const PONTOS_POR_CAMPO_DOC = 10; // campo do Documento Mestre preenchido
+const PONTOS_POR_PILAR = 5;
+
+function readNumber(key: string): number {
+  if (typeof window === "undefined") return 0;
+  const n = Number(window.localStorage.getItem(key));
+  return Number.isFinite(n) ? n : 0;
+}
+
+// Conta itens concluídos nas páginas "Revise e celebre" (arrays de índices).
+function readConclusaoItems(): number {
+  if (typeof window === "undefined") return 0;
+  let total = 0;
+  for (const k of CONCLUSAO_KEYS) {
+    try { const arr = JSON.parse(window.localStorage.getItem(k) || "[]"); if (Array.isArray(arr)) total += arr.length; } catch { /* ignora */ }
+  }
+  return total;
+}
+
+// Conta campos preenchidos do Documento Mestre.
+function readDocCampos(): number {
+  if (typeof window === "undefined") return 0;
+  try {
+    const d = JSON.parse(window.localStorage.getItem(DOC_KEY) || "{}");
+    let n = 0;
+    for (const f of ["nome", "profissao", "oQueFaz", "comoResolve", "publico", "tomDeVoz"]) if ((d?.[f] || "").toString().trim()) n++;
+    if (Array.isArray(d?.dores)) n += d.dores.filter((x: string) => (x || "").trim()).length;
+    return n;
+  } catch { return 0; }
+}
+
+function readPilaresDefinidos(): number {
+  if (typeof window === "undefined") return 0;
+  try {
+    const arr = JSON.parse(window.localStorage.getItem(PILARES_KEY) || "[]");
+    return Array.isArray(arr) ? arr.filter((p: { nome?: string }) => (p?.nome || "").trim()).length : 0;
+  } catch { return 0; }
+}
 
 function readJson<T>(key: string, fallback: T): T {
   if (typeof window === "undefined") return fallback;
@@ -66,6 +111,12 @@ export default function Conquistas() {
   const [aulasMap, setAulasMap] = useState<Record<string, boolean>>({});
   const [nome, setNome] = useState("Você");
   const [base, setBase] = useState({ streak: 0 });
+  const [postsPublicados, setPostsPublicados] = useState(0);
+  const [extras, setExtras] = useState({ conclusao: 0, docCampos: 0, pilares: 0 });
+  const [serverRanking, setServerRanking] = useState<{ pos: number; nome: string; tier: string; pontos: number; isMe: boolean }[] | null>(null);
+
+  const pushFn = useServerFn(setMyPoints);
+  const rankingFn = useServerFn(getRanking);
 
   useEffect(() => {
     setMounted(true);
@@ -73,6 +124,8 @@ export default function Conquistas() {
     const doc = readJson<any>(DOC_KEY, {});
     if (doc?.nome) setNome(doc.nome.split(" ").slice(0, 2).join(" "));
     setBase(readJson<{ streak: number }>(BASE_KEY, { streak: 0 }));
+    setPostsPublicados(readNumber(POSTS_KEY));
+    setExtras({ conclusao: readConclusaoItems(), docCampos: readDocCampos(), pilares: readPilaresDefinidos() });
   }, []);
 
   const aulasFeitas = useMemo(
@@ -81,11 +134,30 @@ export default function Conquistas() {
   );
 
   const pontos = useMemo(() => {
-    // 10 por aula + bônus de presença
-    const base = aulasFeitas * 10;
-    // pequeno bônus inicial para refletir uso (doc mestre, etc.)
-    return base + (aulasFeitas > 0 ? 80 : 0);
-  }, [aulasFeitas]);
+    const feito = aulasFeitas + postsPublicados + extras.conclusao + extras.docCampos + extras.pilares;
+    return (
+      aulasFeitas * 10 +
+      postsPublicados * PONTOS_POR_POST +
+      extras.conclusao * PONTOS_POR_ETAPA +
+      extras.docCampos * PONTOS_POR_CAMPO_DOC +
+      extras.pilares * PONTOS_POR_PILAR +
+      (feito > 0 ? 20 : 0) // bónus de arranque
+    );
+  }, [aulasFeitas, postsPublicados, extras]);
+
+  // Guarda os pontos no perfil (para o ranking) e carrega o ranking de todos.
+  useEffect(() => {
+    if (!mounted) return;
+    let active = true;
+    (async () => {
+      try { await pushFn({ data: { pontos } }); } catch { /* offline/sem sessão — segue local */ }
+      try {
+        const rows = (await rankingFn()) as typeof serverRanking;
+        if (active && Array.isArray(rows) && rows.length) setServerRanking(rows);
+      } catch { /* ranking indisponível — mostra só os teus pontos */ }
+    })();
+    return () => { active = false; };
+  }, [mounted, pontos, pushFn, rankingFn]);
 
   const tier = tierFor(pontos);
   const nextLabel = tier.next
@@ -105,13 +177,15 @@ export default function Conquistas() {
     }));
   }, [aulasFeitas]);
 
-  const topComVoce = useMemo(() => {
-    const linha: TopRow = { nome: `${nome} (você)`, tier: tier.label, pontos };
-    const todos = [linha, ...TOP_BASE].sort((a, b) => b.pontos - a.pontos).slice(0, 20);
-    return todos;
-  }, [nome, tier.label, pontos]);
-
-  const ranking = topComVoce.findIndex((r) => r.nome.endsWith("(você)")) + 1;
+  // Ranking real (do servidor) quando disponível; senão mostra só o próprio.
+  const listaRanking = useMemo(
+    () => serverRanking ?? [{ pos: 1, nome: `${nome}`, tier: tier.label, pontos, isMe: true }],
+    [serverRanking, nome, tier.label, pontos],
+  );
+  const ranking = useMemo(() => {
+    if (serverRanking) { const me = serverRanking.find((r) => r.isMe); return me ? me.pos : serverRanking.length + 1; }
+    return 1;
+  }, [serverRanking]);
 
   const mesAno = mounted
     ? new Date().toLocaleDateString("pt-PT", { month: "long", year: "numeric" })
@@ -188,12 +262,12 @@ export default function Conquistas() {
         <div className="bg-white rounded-2xl border border-[var(--color-border)] p-6 mb-8">
           <h2 className="font-serif text-lg text-ink mb-4">Como ganhar pontos</h2>
           <div className="grid md:grid-cols-2 gap-x-10 gap-y-3 text-sm">
+            <PointRow emoji="📄" label="Preencher um campo do Documento Mestre" pts="+10 pts" />
+            <PointRow emoji="🚀" label="Publicar um post (com link no Plano)" pts="+15 pts" />
             <PointRow emoji="🎒" label="Concluir uma aula" pts="+10 pts" />
-            <PointRow emoji="🏛️" label="Concluir um pilar" pts="+100 pts" />
-            <PointRow emoji="📅" label="Acessar o sistema (1x por dia)" pts="+5 pts" />
-            <PointRow emoji="🔥" label="Streak de 7 dias seguidos" pts="+5 pts bônus" />
-            <PointRow emoji="📝" label="Responder uma pesquisa" pts="+50 pts" />
-            <PointRow emoji="🍯" label="Usar a base de mentorado" pts="+5 pts/dia" />
+            <PointRow emoji="✅" label="Marcar um passo em ‘Revise e celebre’" pts="+5 pts" />
+            <PointRow emoji="🧭" label="Definir um pilar de conteúdo" pts="+5 pts" />
+            <PointRow emoji="🔥" label="Streak de 7 dias seguidos" pts="+5 pts bónus" />
           </div>
         </div>
 
@@ -243,34 +317,31 @@ export default function Conquistas() {
           </section>
 
           <section className="bg-white rounded-2xl border border-[var(--color-border)] p-6">
-            <h2 className="font-serif text-lg text-ink mb-4">Top 20 mentoradas</h2>
+            <div className="flex items-center justify-between gap-2 mb-4">
+              <h2 className="font-serif text-lg text-ink">Ranking geral</h2>
+              {!serverRanking && <span className="text-[10px] uppercase tracking-[0.14em] text-ink/40">a carregar…</span>}
+            </div>
             <ul className="space-y-1">
-              {topComVoce.map((r, i) => {
-                const isYou = r.nome.endsWith("(você)");
-                return (
-                  <li
-                    key={r.nome}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${
-                      isYou ? "bg-terracotta/8 border border-terracotta/25" : ""
-                    }`}
-                  >
-                    <span className="w-6 text-sm text-ink/50 tabular-nums">{i + 1}</span>
-                    <div className="w-8 h-8 rounded-full bg-ink/10 flex items-center justify-center text-[11px] font-medium text-ink/70">
-                      {r.nome.replace(" (você)", "").split(" ").map((p) => p[0]).slice(0, 2).join("")}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm text-ink truncate">
-                        {r.nome.replace(" (você)", "")}{" "}
-                        {isYou && <span className="text-ink/45 text-xs">(você)</span>}
-                      </p>
-                      <p className="text-[11px] text-ink/50 flex items-center gap-1">
-                        <Star size={10} className="text-amber-500" /> {r.tier}
-                      </p>
-                    </div>
-                    <span className="text-sm font-medium text-ink tabular-nums">{r.pontos}</span>
-                  </li>
-                );
-              })}
+              {listaRanking.map((r) => (
+                <li
+                  key={r.pos + r.nome}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${r.isMe ? "bg-terracotta/8 border border-terracotta/25" : ""}`}
+                >
+                  <span className="w-6 text-sm text-ink/50 tabular-nums">{r.pos}</span>
+                  <div className="w-8 h-8 rounded-full bg-ink/10 flex items-center justify-center text-[11px] font-medium text-ink/70">
+                    {(r.nome || "?").split(" ").map((p) => p[0]).slice(0, 2).join("")}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm text-ink truncate">
+                      {r.nome} {r.isMe && <span className="text-ink/45 text-xs">(você)</span>}
+                    </p>
+                    <p className="text-[11px] text-ink/50 flex items-center gap-1">
+                      <Star size={10} className="text-amber-500" /> {r.tier}
+                    </p>
+                  </div>
+                  <span className="text-sm font-medium text-ink tabular-nums">{r.pontos}</span>
+                </li>
+              ))}
             </ul>
           </section>
         </div>

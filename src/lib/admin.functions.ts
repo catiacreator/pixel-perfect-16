@@ -456,3 +456,62 @@ export const listRanking = createServerFn({ method: "GET" })
       .limit(50);
     return data ?? [];
   });
+
+// ─────────── Gamificação (qualquer aluno autenticado) ───────────
+// Grava os pontos do próprio aluno no perfil (para o ranking valer entre todos).
+export const setMyPoints = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { pontos: number }) => z.object({ pontos: z.number().int().min(0).max(10000000) }).parse(d))
+  .handler(async ({ context, data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("profiles").update({ pontos: data.pontos }).eq("id", context.userId);
+    if (error) throw error;
+    return { ok: true };
+  });
+
+// ─── Documento Mestre por servidor (o cliente não consegue ler/escrever aqui) ───
+export const getMyMasterDoc = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data } = await supabaseAdmin
+      .from("master_documents")
+      .select("data")
+      .eq("user_id", context.userId)
+      .maybeSingle();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (data?.data ?? null) as any;
+  });
+
+export const saveMyMasterDoc = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  .inputValidator((blob: any) => blob)
+  .handler(async ({ context, data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: context.userId, data, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
+    return { ok: true };
+  });
+
+// Ranking visível a qualquer aluno autenticado (top 50 por pontos).
+export const getRanking = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data } = await supabaseAdmin
+      .from("profiles")
+      .select("id, nome, tier, pontos")
+      .order("pontos", { ascending: false })
+      .limit(50);
+    return (data ?? []).map((r: { id: string; nome: string | null; tier: string | null; pontos: number | null }, i: number) => ({
+      pos: i + 1,
+      nome: r.nome || "Aluno",
+      tier: r.tier || "Início",
+      pontos: r.pontos ?? 0,
+      isMe: r.id === context.userId,
+    }));
+  });

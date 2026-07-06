@@ -269,9 +269,9 @@ select:focus {
 /* Tema de cor por módulo — sobrepõe a cor de acento (primária/gold) no scope.
    Mantém fundo/preto/branco quente globais; muda só os acentos do módulo. */
 .theme-jornada {
-  --color-terracotta: #C0653A;
-  --color-terracotta-dark: #9C4E2B;
-  --color-gold: #E8923F;
+  --color-terracotta: #A9743F;
+  --color-terracotta-dark: #7E5228;
+  --color-gold: #C99A5B;
 }
 .theme-academia {
   --color-terracotta: #2E7CB8;

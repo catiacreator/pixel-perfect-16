@@ -4,11 +4,39 @@ import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import VideoPlaceholder from "../../components/VideoPlaceholder";
 import ColarResultado from "../../components/ColarResultado";
-import TodoBanner from "../../components/TodoBanner";
-import { ArrowRight, Smartphone, Copy, Check, ChevronDown, ClipboardPaste, Play, FileText, Eye, EyeOff, MessageSquare } from "lucide-react";
+import { ArrowRight, Smartphone, Copy, Check, ChevronDown, ClipboardPaste, Play, FileText, Eye, EyeOff, MessageSquare, Bot } from "lucide-react";
 import { usePilar2 } from "@/lib/pilar2-hooks";
-import ModeloPost from "./ModeloPost";
 import PillarHeader from "../../components/PillarHeader";
+import PromptCard from "../../components/PromptCard";
+import ConteudoAssistente from "../../components/ConteudoAssistente";
+import BoasVindasInstagram from "../../components/BoasVindasInstagram";
+import PlanoConteudo from "../../components/PlanoConteudo";
+import FormatosConteudo from "../../components/FormatosConteudo";
+import Desafio30Dias from "../../components/Desafio30Dias";
+import { CRIAR_CONTEUDO, type Objetivo } from "@/data/criar-conteudo";
+
+const AGENTE_POR_FORMATO: Record<string, string> = {
+  reels: "cat.ia — Criação de Reels Virais",
+  stories: "cat.ia — Criação de Stories que Vendem",
+  carrossel: "cat.ia — Criação de Posts que Vendem (Carrossel)",
+};
+
+const TITULOS: Record<string, string> = {
+  formatos: "Formatos de Conteúdo",
+  criar: "Criar Conteúdo",
+  plano: "Plano de Posts",
+  desafio: "30 posts em 30 dias",
+  assistente: "Assistente Cat.IA",
+  linha: "Linha Editorial",
+  bio: "Posicionamento e Bio",
+  agendar: "Publicar",
+};
+
+const OBJETIVOS_CONTEUDO: { id: Objetivo; label: string }[] = [
+  { id: "autoridade", label: "Autoridade" },
+  { id: "seguidores", label: "Seguidores" },
+  { id: "vendas", label: "Vendas" },
+];
 
 const BIO_STORAGE_KEY = "leveza.bio.v1";
 const BIO_CONQUISTA_KEY = "leveza.bio.conquista.v1";
@@ -126,7 +154,7 @@ Público: Iniciantes e empreendedores que querem começar a produzir conteúdo e
 Dores do público: Eu não sei usar Inteligência Artificial para criar conteúdo. | Eu não sei o básico do Instagram para começar. | Eu não sei por onde começar meu calendário de posts.
 Desejos do público: Quero dominar ferramentas de Inteligência Artificial de forma simples. | Quero crescer seguidores qualificados de forma consistente. | Quero gerar leads a partir do meu conteúdo.
 Posicionamento: Eu ajudo iniciantes, empreendedores e pequenos negócios a criar conteúdo com IA para crescer nas redes e captar leads, solucionando a falta de clareza, tempo e consistência, por meio de uma comunidade com aulas gravadas, templates, prompts, checklists, tutoriais e feedback em grupo.
-Método/diferencial: Leveza no Digital — Cria conteúdo com IA, publica com consistência e capta leads sem complicar.
+Método/diferencial: Cátia Creator — Cria conteúdo com IA, publica com consistência e capta leads sem complicar.
 Tom de voz: Escreva como quem mostra o próximo passo, não como quem despeja uma aula inteira.
 Use palavras simples como processo, clareza, consistência, publicar e leads.
 Mostre exemplos concretos antes de explicar a teoria.
@@ -164,37 +192,48 @@ function BioPasso1() {
 
   return (
     <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6 mb-4">
-      <p className="text-[10px] tracking-[0.2em] uppercase text-ink/45 mb-1">Passo 1 — Gere com Inteligência Artificial</p>
-      <div className="flex items-start justify-between gap-4 mb-3">
-        <div>
-          <h3 className="font-serif text-xl text-ink">Crie sua bio do Instagram</h3>
-          <p className="text-sm text-ink/55 mt-1 leading-relaxed">
-            Copie o prompt abaixo, cole no ChatGPT e receba 3 versões de bio prontas para você escolher a melhor.
-          </p>
+      <span className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.14em] px-2.5 py-1 rounded-full mb-3" style={{ background: "#35C0A01a", color: "#2a9c82" }}>
+        Base · autoridade
+      </span>
+      <h3 className="font-serif text-xl text-ink">Posicionamento e Bio</h3>
+      <p className="text-sm text-ink/55 mt-1 leading-relaxed mb-4">
+        A base de clareza antes de qualquer post. Gera o seu <b>posicionamento</b> ("eu ajudo X a Y fazendo Z"),
+        a <b>mensagem de marca</b> e a <b>bio</b> pronta a copiar.
+      </p>
+
+      {/* Agente prioritário */}
+      <div className="rounded-xl border border-terracotta/25 bg-terracotta/5 p-4 mb-3">
+        <p className="text-[10px] tracking-[0.14em] uppercase text-terracotta font-semibold mb-1.5">Passo 1 · Use o agente no ChatGPT</p>
+        <div className="flex items-center gap-2 mb-3">
+          <Bot size={16} className="text-terracotta shrink-0" />
+          <span className="text-sm text-ink"><b>cat.ia — Criador de Posicionamento e Bio</b></span>
         </div>
-        <button
-          onClick={copiar}
-          className="shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl bg-terracotta text-cream text-sm font-medium hover:bg-terracotta-dark transition-colors"
-        >
-          {copiado ? <Check size={14} /> : <Copy size={14} />}
-          {copiado ? "Copiado!" : "Copiar prompt"}
-        </button>
+        <p className="text-sm text-ink/60 leading-relaxed mb-3">
+          Fale com este agente no ChatGPT — ele entrega o posicionamento, a mensagem de marca e 3 versões de bio.
+          Se ainda não o tem, use o prompt abaixo como alternativa.
+        </p>
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={copiar}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-terracotta text-cream text-sm font-medium hover:bg-terracotta-dark transition-colors"
+          >
+            {copiado ? <Check size={14} /> : <Copy size={14} />}
+            {copiado ? "Copiado!" : "Copiar prompt (alternativa)"}
+          </button>
+          <button
+            onClick={() => setMostrar(v => !v)}
+            className="inline-flex items-center gap-1.5 text-xs tracking-[0.06em] uppercase font-semibold text-ink/50 hover:text-ink transition-colors px-2 py-2"
+          >
+            {mostrar ? "Ocultar prompt" : "Ver prompt"}
+            <ChevronDown size={13} className={`transition-transform ${mostrar ? "rotate-180" : ""}`} />
+          </button>
+        </div>
+        {mostrar && (
+          <pre className="mt-3 text-xs bg-[#F5EFE6] rounded-xl p-4 whitespace-pre-wrap text-ink/60 leading-relaxed max-h-72 overflow-y-auto">
+            {PROMPT_BIO}
+          </pre>
+        )}
       </div>
-      <button
-        onClick={() => setMostrar(v => !v)}
-        className="w-full flex items-center justify-between text-sm text-ink/50 hover:text-ink transition-colors border-t border-[var(--color-border)] pt-3"
-      >
-        <span>Ver prompt completo</span>
-        <span className="flex items-center gap-1 text-xs tracking-[0.1em] uppercase font-semibold text-ink/40">
-          {mostrar ? "Ocultar" : "Mostrar"}
-          <ChevronDown size={13} className={`transition-transform ${mostrar ? "rotate-180" : ""}`} />
-        </span>
-      </button>
-      {mostrar && (
-        <pre className="mt-3 text-xs bg-[#F5EFE6] rounded-xl p-4 whitespace-pre-wrap text-ink/60 leading-relaxed">
-          {PROMPT_BIO}
-        </pre>
-      )}
     </div>
   );
 }
@@ -405,15 +444,6 @@ function LinhaEditorial({ formato }: { formato: "reels" | "estatico" | null }) {
   );
 }
 
-const TABS = [
-  { id: "modelos", label: "Modelos de Posts" },
-  { id: "linha", label: "Linha Editorial" },
-  { id: "calendario", label: "Calendário Editorial" },
-  { id: "bio", label: "Bio" },
-  { id: "projeto", label: "Projeto de Post" },
-  { id: "agendar", label: "Como agendar" },
-];
-
 const DIAS = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
 
 type DiaCal = { tema: string; formato: string; story: string };
@@ -452,9 +482,10 @@ const escHtml = (s: string) =>
   s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c] as string));
 
 export default function RedesSociais() {
-  const [params, setParams] = useSearchParams();
-  const aba = params.get("aba") || "modelos";
+  const [params] = useSearchParams();
+  const aba = params.get("aba") || "boas-vindas";
   const [formato, setFormato] = useState<"reels" | "estatico" | null>(null);
+  const [objetivo, setObjetivo] = useState<Objetivo>("autoridade");
 
   // ─── Calendário Editorial ───
   const [cal, setCal] = useState<DiaCal[]>(emptyCal);
@@ -555,7 +586,7 @@ export default function RedesSociais() {
 </style></head>
 <body>
   <div class="top">
-    <p class="kicker">Leveza no Digital · Pilar 2</p>
+    <p class="kicker">Cátia Creator · Pilar 2</p>
     <h1>Calendário Editorial da Semana</h1>
     <p class="sub">${nome ? escHtml(nome) + " · " : ""}7 dias · tema, formato e story por dia</p>
   </div>
@@ -563,7 +594,7 @@ export default function RedesSociais() {
     <thead><tr><th>Dia</th><th>Tema do post</th><th>Formato</th><th>Story do dia</th></tr></thead>
     <tbody>${linhas}</tbody>
   </table>
-  <p class="foot">Gerado em Leveza no Digital</p>
+  <p class="foot">Gerado em Cátia Creator</p>
   <script>window.onload=function(){window.print();}</script>
 </body></html>`;
     const w = window.open("", "_blank", "width=1000,height=800");
@@ -577,187 +608,74 @@ export default function RedesSociais() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar="redes" pilarLabel="Criando para as Redes Sociais" backTo="/" backLabel="Voltar para Início" />
-      <TodoBanner texto="Etapa 4 — conteúdo pendente. Aguardando documentação detalhada de Redes Sociais (prompts, calendário, modelos)." />
-      <PillarHeader
-        numeral="✦"
-        icon={<MessageSquare size={18} />}
-        pilarLabel="Criando para as Redes Sociais"
-        titulo="Redes Sociais"
-        subtitulo="Comece pelos modelos de posts e depois entre nas redes."
-      />
-      <div className="px-5 md:px-10 py-10 max-w-4xl mx-auto">
-        <div className="flex gap-2 mb-6 flex-wrap">
-          {TABS.map((t) => (
-            <button
-              key={t.id}
-              onClick={() => setParams({ aba: t.id })}
-              className={`text-sm px-4 py-1.5 rounded-full border transition-colors ${aba === t.id ? "bg-gradient-to-br from-terracotta to-terracotta-dark text-cream border-transparent" : "bg-white border-border text-ink hover:border-terracotta/50"}`}
-            >
-              {t.label}
-            </button>
-          ))}
+      <PilarBreadcrumb pilar="redes" pilarLabel="Criar para o Instagram" backTo="/protocolo" backLabel="Voltar ao Protocolo Viral" />
+      {aba === "boas-vindas" ? (
+        <PillarHeader
+          numeral="✦"
+          icon={<MessageSquare size={18} />}
+          pilarLabel="Protocolo Viral · Instagram"
+          titulo="Criar para o Instagram"
+          subtitulo="Comece pelas Boas-vindas: reveja o seu Documento Mestre e defina os temas com a Estrategista."
+        />
+      ) : (
+        <div className="px-5 md:px-10 pt-6 max-w-4xl mx-auto">
+          <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">Criar para o Instagram</p>
+          <h1 className="font-serif text-2xl md:text-3xl text-ink tracking-tight">{TITULOS[aba] || "Criar para o Instagram"}</h1>
         </div>
+      )}
+      <div className={`px-5 md:px-10 max-w-4xl mx-auto ${aba === "boas-vindas" ? "py-10" : "pt-6 pb-12"}`}>
+        {aba === "boas-vindas" && <BoasVindasInstagram />}
 
-        {aba === "modelos" && (
-          <>
-            <div className="mb-6"><VideoPlaceholder label="Criando carrosséis com IA: como ajustar e refinar seus posts" /></div>
-            <div className="mb-6">
-              <ModeloPost />
-            </div>
-            <Link to="/metodo/pilar-2/redes-sociais?aba=linha" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-semibold">
-              Ir para Linha Editorial <ArrowRight size={15} />
-            </Link>
-          </>
-        )}
+        {aba === "formatos" && <FormatosConteudo />}
 
-        {aba === "linha" && (
+        {aba === "desafio" && <Desafio30Dias />}
+
+        {aba === "assistente" && <ConteudoAssistente />}
+
+        {aba === "plano" && <PlanoConteudo />}
+
+        {aba === "criar" && (
           <>
-            {/* Passo 1 — escolha de formato */}
-            <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6 mb-4">
-              <p className="text-[11px] tracking-[0.2em] uppercase text-ink/45 mb-1">Passo 1 — Antes de gerar</p>
-              <h2 className="font-serif text-xl text-ink mb-1.5">Você vai aparecer em vídeo?</h2>
-              <p className="text-sm text-ink/55 mb-5">
-                Isto define se o seu calendário vai incluir Reels ou só posts estáticos (carrossel e imagem única).
+            <div className="rounded-2xl border border-terracotta/25 bg-terracotta/5 p-5 mb-6">
+              <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">Criar Conteúdo · Prompts prontos</p>
+              <h2 className="font-serif text-2xl text-ink mb-1.5">Transforme o seu método em posts</h2>
+              <p className="text-sm text-ink/60 leading-relaxed">
+                Escolha o <b>formato</b> e o <b>objetivo</b>. Copie o prompt (já vem com o seu Documento Mestre) e use-o
+                com o <b>agente Cat.IA</b> indicado no ChatGPT. Depois cole o resultado no <b>Plano de Posts</b>.
               </p>
-              <div className="grid md:grid-cols-2 gap-3">
-                <OpcaoFormato
-                  ativo={formato === "reels"}
-                  onClick={() => setFormato("reels")}
-                  icon={<Play size={18} />}
-                  titulo="Apareço em Reels"
-                  desc="Gravo vídeo — quero Reels no calendário"
-                />
-                <OpcaoFormato
-                  ativo={formato === "estatico"}
-                  onClick={() => setFormato("estatico")}
-                  icon={<FileText size={18} />}
-                  titulo="Prefiro posts estáticos"
-                  desc="Carrossel e imagem única — sem precisar aparecer"
-                />
-              </div>
-              {!formato && (
-                <p className="text-xs text-terracotta mt-4">
-                  ⚠️ Escolha um formato para o prompt ser gerado corretamente.
-                </p>
-              )}
             </div>
 
-            <LinhaEditorial formato={formato} />
-            <ColarResultado label="Cole o que a IA te devolveu" />
-          </>
-        )}
-
-        {aba === "calendario" && (
-          <>
-            {/* Cabeçalho do card */}
-            <div className="rounded-2xl border border-border bg-white overflow-hidden mb-5">
-              <div className="bg-gradient-to-br from-terracotta to-terracotta-dark px-6 py-5">
-                <p className="text-[11px] tracking-[0.22em] uppercase text-cream/70 mb-1">Pilar 2 · Etapa 4</p>
-                <h2 className="font-serif text-2xl text-cream">Calendário Editorial da Semana</h2>
-                <p className="text-sm text-cream/75 mt-1">
-                  Distribui os temas, formatos e stories pelos 7 dias — a partir da tua Linha Editorial.
-                </p>
-              </div>
-              <div className="p-6">
-                <label className="text-xs tracking-[0.1em] uppercase text-muted mb-1.5 block">
-                  Cola aqui o resultado da Linha Editorial
-                </label>
-                <textarea
-                  rows={4}
-                  value={colado}
-                  onChange={(e) => setColado(e.target.value)}
-                  placeholder="Cola o que a IA devolveu (inclui o bloco CALENDARIO_INICIO … CALENDARIO_FIM)…"
-                  className="w-full rounded-xl border border-border p-3 text-sm outline-none focus:border-terracotta resize-none mb-3"
-                />
-                <div className="flex flex-wrap gap-2">
+            {/* Objetivo do conteúdo */}
+            <div className="mb-6">
+              <p className="text-[10px] tracking-[0.14em] uppercase text-ink/45 mb-2">Objetivo deste conteúdo</p>
+              <div className="flex flex-wrap gap-2">
+                {OBJETIVOS_CONTEUDO.map((o) => (
                   <button
-                    onClick={preencherDaLinha}
-                    className="inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full bg-terracotta text-cream hover:bg-terracotta-dark transition-colors"
+                    key={o.id}
+                    onClick={() => setObjetivo(o.id)}
+                    className={`text-sm px-4 py-1.5 rounded-full border transition-colors ${objetivo === o.id ? "bg-gradient-to-br from-terracotta to-terracotta-dark text-cream border-transparent" : "bg-white border-border text-ink hover:border-terracotta/50"}`}
                   >
-                    ✨ Preencher calendário a partir da Linha Editorial
+                    {o.label}
                   </button>
-                  <button
-                    onClick={preencherStories}
-                    className="inline-flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-full border border-border text-ink hover:border-terracotta/50 transition-colors"
-                  >
-                    Preencher stories automaticamente
-                  </button>
-                </div>
-                {aviso && <p className="text-xs text-sage mt-3">{aviso}</p>}
+                ))}
               </div>
             </div>
 
-            {/* Tabela dos 7 dias */}
-            <div className="rounded-2xl border border-border bg-white overflow-hidden">
-              <div className="hidden md:grid grid-cols-[90px_1fr_150px_1fr] gap-3 px-4 py-3 bg-cream-warm/60 border-b border-border text-[10px] tracking-[0.14em] uppercase text-ink/50 font-medium">
-                <span>Dia</span>
-                <span>Tema do post</span>
-                <span>Formato</span>
-                <span>Story do dia</span>
+            {CRIAR_CONTEUDO.map((c) => (
+              <div key={c.id} className="mb-4">
+                <PromptCard titulo={c.titulo} descricao={c.descricao} prompt={c.prompts[objetivo]} rotuloBotao="Copiar prompt" />
+                {AGENTE_POR_FORMATO[c.id] && (
+                  <div className="flex items-center gap-2 -mt-2.5 mb-1 px-1">
+                    <Bot size={13} className="text-terracotta shrink-0" />
+                    <span className="text-[11px] text-ink/55">Agente no ChatGPT: <b className="text-ink/75">{AGENTE_POR_FORMATO[c.id]}</b></span>
+                  </div>
+                )}
               </div>
-              {DIAS.map((dia, i) => (
-                <div
-                  key={dia}
-                  className="grid grid-cols-1 md:grid-cols-[90px_1fr_150px_1fr] gap-2 md:gap-3 px-4 py-3 border-b border-border last:border-0 md:items-center"
-                >
-                  <p className="font-serif text-base md:text-sm text-terracotta">{dia}</p>
-                  <input
-                    value={cal[i]?.tema || ""}
-                    onChange={(e) => setDia(i, { tema: e.target.value })}
-                    placeholder="[BASTIDOR] tema — Pilar 2"
-                    className="w-full rounded-lg border border-border p-2 text-sm"
-                  />
-                  <select
-                    value={cal[i]?.formato || ""}
-                    onChange={(e) => setDia(i, { formato: e.target.value })}
-                    className="w-full rounded-lg border border-border p-2 text-sm"
-                  >
-                    <option value="">Formato…</option>
-                    {cal[i]?.formato && !["Carrossel", "Reels", "Imagem única"].includes(cal[i].formato) && (
-                      <option value={cal[i].formato}>{cal[i].formato}</option>
-                    )}
-                    <option>Carrossel</option>
-                    <option>Reels</option>
-                    <option>Imagem única</option>
-                  </select>
-                  <input
-                    value={cal[i]?.story || ""}
-                    onChange={(e) => setDia(i, { story: e.target.value })}
-                    placeholder="Story do dia"
-                    className="w-full rounded-lg border border-border p-2 text-sm"
-                  />
-                </div>
-              ))}
-            </div>
+            ))}
 
-            {/* Ações */}
-            <div className="flex flex-wrap items-center gap-3 mt-6">
-              <button
-                onClick={zerarCal}
-                className="text-sm px-4 py-2 rounded-full border border-border text-ink hover:border-terracotta/50 transition-colors"
-              >
-                Zerar
-              </button>
-              <button
-                onClick={baixarCalPDF}
-                className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-full border border-border text-ink hover:border-terracotta/50 transition-colors"
-              >
-                <FileText size={14} /> Baixar PDF
-              </button>
-              <button
-                onClick={salvarCal}
-                className="text-sm px-4 py-2 rounded-full bg-terracotta text-cream hover:bg-terracotta-dark transition-colors"
-              >
-                Salvar
-              </button>
-              <Link
-                to="/metodo/pilar-2/redes-sociais?aba=bio"
-                className="inline-flex items-center gap-2 text-sm px-4 py-2 rounded-full bg-ink text-cream ml-auto"
-              >
-                Ir para a próxima fase: Bio <ArrowRight size={15} />
-              </Link>
-            </div>
+            <Link to="/metodo/pilar-2/redes-sociais?aba=plano" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-semibold mt-2">
+              Organizar no Plano de Posts <ArrowRight size={15} />
+            </Link>
           </>
         )}
 
@@ -768,28 +686,11 @@ export default function RedesSociais() {
             <BioConquista />
             <div className="flex justify-end">
               <Link
-                to="/metodo/pilar-2/redes-sociais?aba=projeto"
+                to="/metodo/pilar-2/redes-sociais?aba=agendar"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta text-cream text-sm font-semibold hover:bg-terracotta-dark transition-colors"
               >
-                Ir para a próxima fase: Projeto de Posts <ArrowRight size={15} />
+                Ir para a próxima fase: Publicar <ArrowRight size={15} />
               </Link>
-            </div>
-          </>
-        )}
-
-        {aba === "projeto" && (
-          <>
-            <div className="mb-6"><VideoPlaceholder label="Como criar seu agente de conteúdo com IA" /></div>
-            <div className="rounded-2xl border border-border bg-white p-5">
-              <p className="font-serif text-lg text-ink mb-2">Seu assistente de conteúdo no ChatGPT</p>
-              <p className="text-sm text-muted mb-3">
-                Configura um projeto no ChatGPT com toda a sua identidade — ele cria carrosséis, roteiros de Reels e
-                stories no seu tom, sem precisares de explicar tudo de novo.
-              </p>
-              <div className="flex gap-2">
-                <button className="text-xs font-semibold px-3 py-1.5 rounded-full border border-border">Baixar PDF</button>
-                <button className="text-xs font-semibold px-3 py-1.5 rounded-full bg-ink text-cream">Copiar instrução</button>
-              </div>
             </div>
           </>
         )}

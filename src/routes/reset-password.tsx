@@ -66,7 +66,7 @@ function ResetPasswordPage() {
       <div className="relative w-full max-w-md bg-white rounded-3xl p-8 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.45)]">
         <div className="flex items-center gap-2.5 mb-6">
           <span className="w-2 h-2 rounded-full bg-terracotta shadow-[0_0_18px_2px_var(--color-terracotta)]" />
-          <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none">Leveza no Digital</span>
+          <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none">Cátia Creator</span>
         </div>
 
         <h1 className="text-2xl font-semibold text-ink">Nova palavra-passe</h1>
