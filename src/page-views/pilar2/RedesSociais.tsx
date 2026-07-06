@@ -6,6 +6,7 @@ import VideoPlaceholder from "../../components/VideoPlaceholder";
 import ColarResultado from "../../components/ColarResultado";
 import { ArrowRight, ArrowUpRight, Smartphone, Copy, Check, ChevronDown, ClipboardPaste, Play, FileText, Eye, EyeOff, MessageSquare, Bot, Lock, Film, Sparkles, MessageCircle, LayoutGrid, AlignLeft, Zap, type LucideIcon } from "lucide-react";
 import { agenteUrl } from "@/lib/agentes-catia";
+import { fillPilar2Prompt } from "@/lib/pilar2-fill";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import PillarHeader from "../../components/PillarHeader";
 import PromptCard from "../../components/PromptCard";
@@ -157,49 +158,44 @@ Domingo | [tipo] tema do post — Pilar T | formato sugerido | story: o que most
 [CALENDARIO_FIM]`;
 }
 
-const PROMPT_BIO = `Você é especialista em copywriting para Instagram de profissionais autônomos.
+const PROMPT_BIO = `Você é estratega de posicionamento de marca pessoal e copywriter para Instagram. Use SEMPRE o meu contexto abaixo, na minha voz e no meu tom.
 
-DADOS DA PROFISSIONAL:
-Nome: Cátia Creator
-Profissão: especialista em IA e criação de conteudo
-O que faz: Ensino iniciantes e empreendedores a criar conteúdo com Inteligência Artificial por meio de uma comunidade com aulas gravadas. Ajudo a sair do zero até publicar e captar leads com consistência.
-Como resolve: Aulas gravadas on‑demand com passo a passo, templates, prompts de Inteligência Artificial, checklists e tutoriais. Comunidade ativa para dúvidas e feedback em grupo, com jornadas do zero ao primeiro calendário de conteúdo e automações básicas. Sucesso medido por crescimento do perfil e leads gerados, sem promessa de prazo fixo.
-Público: Iniciantes e empreendedores que querem começar a produzir conteúdo e usar Inteligência Artificial para crescer no Instagram e outras redes, incluindo micro e pequenos negócios em fase inicial.
-Dores do público: Eu não sei usar Inteligência Artificial para criar conteúdo. | Eu não sei o básico do Instagram para começar. | Eu não sei por onde começar meu calendário de posts.
-Desejos do público: Quero dominar ferramentas de Inteligência Artificial de forma simples. | Quero crescer seguidores qualificados de forma consistente. | Quero gerar leads a partir do meu conteúdo.
-Posicionamento: Eu ajudo iniciantes, empreendedores e pequenos negócios a criar conteúdo com IA para crescer nas redes e captar leads, solucionando a falta de clareza, tempo e consistência, por meio de uma comunidade com aulas gravadas, templates, prompts, checklists, tutoriais e feedback em grupo.
-Método/diferencial: Cátia Creator — Cria conteúdo com IA, publica com consistência e capta leads sem complicar.
-Tom de voz: Escreva como quem mostra o próximo passo, não como quem despeja uma aula inteira.
-Use palavras simples como processo, clareza, consistência, publicar e leads.
-Mostre exemplos concretos antes de explicar a teoria.
-Fale da Inteligência Artificial como apoio prático para sair do bloqueio, não como assunto técnico.
+📋 MEU CONTEXTO (Documento Mestre)
+- Nome: [nome]
+- Especialidade / profissão: [profissao]
+- O que faço: [o_que_faz]
+- Como resolvo: [como_resolve]
+- Público / cliente ideal: [publico]
+- Dor principal do cliente: [dor_principal_cliente]
+- Desejos do público: [desejos_lista]
+- Promessa / oferta: [promessa]
+- Diferencial / prova social: [prova_social]
+- Arquétipo da marca: [arquetipo_dominante] (secundário: [arquetipo_secundario])
+- Tom de voz desejado: [tom_de_voz]
+- Palavras a usar: [palavras_usar]
+- Palavras a evitar: [palavras_evitar]
 
-TAREFA: Crie 3 versões de bio para o Instagram de Cátia Creator.
-
-Cada bio deve ter no máximo 150 caracteres no total (limite do Instagram).
-Use emojis com moderação — só se combinar com o tom dela.
-
-BIO 1 — Foco no resultado que entrega:
-(quem é + o que entrega + CTA ou link)
-
-BIO 2 — Foco na dor/desejo do público:
-(fala diretamente com a dor/desejo + quem ela ajuda + CTA)
-
-BIO 3 — Foco no posicionamento/método:
-(o diferencial dela + para quem + próximo passo)
+TAREFA — entregue, nesta ordem:
+1. POSICIONAMENTO NUMA FRASE — "Eu ajudo [o meu público] a [resultado] através de [o meu método]".
+2. PROPOSTA DE VALOR — 2 a 3 linhas do que me torna a escolha certa.
+3. 3 MENSAGENS-CHAVE — os pilares que devo repetir na minha comunicação.
+4. 3 VERSÕES DE BIO para o Instagram (máx. 150 caracteres cada):
+   • BIO 1 — foco no resultado que entrego (quem sou + o que entrego + CTA)
+   • BIO 2 — foco na dor/desejo do público (fala com a dor + para quem + CTA)
+   • BIO 3 — foco no posicionamento/método (diferencial + para quem + próximo passo)
 
 REGRAS:
-- Direto ao ponto, sem floreios
-- Linguagem da mulher que ela é (arquétipo: Sábia)
-- CTA pode ser: "Link abaixo", "Me chama no DM", "Baixe grátis" etc.
-- NÃO use: "apaixonada por", "especialista em ajudar", "mãe e", "sempre amei"`;
+- Fale na minha voz; direto ao ponto, sem floreios; use as minhas palavras a usar e evite as palavras a evitar.
+- Emojis com moderação (só se combinarem com o meu tom).
+- CTA pode ser: "Link abaixo", "Chama no Direct", "Baixe grátis", etc.
+- NÃO use clichês tipo "apaixonada por", "especialista em ajudar", "sempre amei".`;
 
 function BioPasso1() {
   const [copiado, setCopiado] = useState(false);
   const [mostrar, setMostrar] = useState(false);
 
   function copiar() {
-    navigator.clipboard?.writeText(PROMPT_BIO);
+    navigator.clipboard?.writeText(fillPilar2Prompt(PROMPT_BIO));
     setCopiado(true);
     setTimeout(() => setCopiado(false), 1500);
   }
@@ -227,7 +223,8 @@ function BioPasso1() {
             href={agenteUrl("cat.ia — Criador de Posicionamento e Bio")}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-cream bg-ink hover:bg-terracotta rounded-full px-3 py-1.5 transition-colors"
+            className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-cream rounded-full px-3 py-1.5 transition-opacity hover:opacity-90"
+            style={{ background: "#C8487E" }}
           >
             Abrir agente no ChatGPT <ArrowUpRight size={13} />
           </a>
@@ -254,7 +251,7 @@ function BioPasso1() {
         </div>
         {mostrar && (
           <pre className="mt-3 text-xs bg-[#F5EFE6] rounded-xl p-4 whitespace-pre-wrap text-ink/60 leading-relaxed max-h-72 overflow-y-auto">
-            {PROMPT_BIO}
+            {fillPilar2Prompt(PROMPT_BIO)}
           </pre>
         )}
       </div>
@@ -720,6 +717,7 @@ export default function RedesSociais() {
                   cor={meta?.cor}
                   agente={agente}
                   agenteUrl={agenteUrl(agente)}
+                  botaoCor="#C8487E"
                 />
               );
             })}

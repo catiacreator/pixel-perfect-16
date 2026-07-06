@@ -254,7 +254,8 @@ export default function FormatosConteudo() {
                 href={agenteUrl(f.agente)}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-cream bg-ink hover:bg-terracotta rounded-full px-3 py-1.5 transition-colors ml-auto"
+                className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-cream rounded-full px-3 py-1.5 transition-opacity hover:opacity-90 ml-auto"
+                style={{ background: "#C8487E" }}
               >
                 Abrir agente <ArrowUpRight size={13} />
               </a>
