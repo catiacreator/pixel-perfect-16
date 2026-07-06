@@ -12,7 +12,10 @@ import {
   createMentorada,
   setUserRole,
   checkIsAdmin,
+  getTurmas,
+  setTurmas,
 } from "@/lib/admin.functions";
+import type { Turma } from "@/lib/turmas";
 
 export const Route = createFileRoute("/_authenticated/admin/mentoradas")({
   component: MentoradasPage,
@@ -28,11 +31,32 @@ function MentoradasPage() {
   const create = useServerFn(createMentorada);
   const setRole = useServerFn(setUserRole);
   const ctxFn = useServerFn(checkIsAdmin);
+  const fetchTurmas = useServerFn(getTurmas);
+  const saveTurmas = useServerFn(setTurmas);
   const qc = useQueryClient();
 
   const { data } = useSuspenseQuery({ queryKey: ["admin-mentoradas"], queryFn: () => fetch() });
   const { data: ctx } = useSuspenseQuery({ queryKey: ["admin-check"], queryFn: () => ctxFn() });
+  const { data: turmasData } = useSuspenseQuery({ queryKey: ["admin-turmas"], queryFn: () => fetchTurmas() });
   const isOwner = Boolean(ctx?.isOwner);
+  const turmas = (turmasData as Turma[]) || [];
+  const turmaDoAluno = (uid: string) => turmas.find((t) => t.membros.includes(uid))?.id ?? "";
+
+  const turmaMut = useMutation({
+    mutationFn: (next: Turma[]) => saveTurmas({ data: { turmas: next } }),
+    onSuccess: () => { notify("Turma atualizada", "success"); qc.invalidateQueries({ queryKey: ["admin-turmas"] }); },
+    onError: (e) => notify(e.message, "error"),
+  });
+  const atribuirTurma = (uid: string, turmaId: string) => {
+    // Modelo de uma turma por aluno: entra na escolhida, sai das outras.
+    const next = turmas.map((t) => ({
+      ...t,
+      membros: t.id === turmaId
+        ? Array.from(new Set([...t.membros, uid]))
+        : t.membros.filter((m) => m !== uid),
+    }));
+    turmaMut.mutate(next);
+  };
 
   const [q, setQ] = useState("");
   const [adjusting, setAdjusting] = useState<{ id: string; nome: string } | null>(null);
@@ -109,6 +133,7 @@ function MentoradasPage() {
               <th className="text-left px-5 py-3 font-medium">Nome</th>
               <th className="text-left px-5 py-3 font-medium">E-mail</th>
               <th className="text-left px-5 py-3 font-medium">Papel</th>
+              <th className="text-left px-5 py-3 font-medium">Turma</th>
               <th className="text-left px-5 py-3 font-medium">Estado</th>
               <th className="text-right px-5 py-3 font-medium">Pontos</th>
               <th className="px-5 py-3" />
@@ -140,6 +165,19 @@ function MentoradasPage() {
                   ) : (
                     <RoleBadge role={m.role} />
                   )}
+                </td>
+                <td className="px-5 py-3">
+                  <select
+                    value={turmaDoAluno(m.id)}
+                    onChange={(e) => atribuirTurma(m.id, e.target.value)}
+                    disabled={turmaMut.isPending}
+                    className="h-8 rounded-lg border border-[var(--color-border)] bg-white px-2 text-xs disabled:opacity-50 max-w-[140px]"
+                  >
+                    <option value="">Sem turma</option>
+                    {turmas.map((t) => (
+                      <option key={t.id} value={t.id}>{t.nome}</option>
+                    ))}
+                  </select>
                 </td>
                 <td className="px-5 py-3">
                   {m.approved ? (
@@ -183,7 +221,7 @@ function MentoradasPage() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={6} className="px-5 py-10 text-center text-ink/50">
+                <td colSpan={7} className="px-5 py-10 text-center text-ink/50">
                   Nenhum aluno encontrado.
                 </td>
               </tr>

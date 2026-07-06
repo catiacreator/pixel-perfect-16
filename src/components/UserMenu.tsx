@@ -34,6 +34,8 @@ function fileToAvatar(file: File): Promise<string> {
 export default function UserMenu() {
   const { isAdmin } = useAccess();
   const [adminView, setView] = useAdminView();
+  // boolean separado para não estreitar o tipo de `adminView` dentro do bloco
+  const emVistaAdmin = adminView === "admin";
   const [open, setOpen] = useState(false);
   const [avatar, setAvatar] = useState<string | null>(null);
   const [nome, setNome] = useState<string>("");
@@ -154,19 +156,21 @@ export default function UserMenu() {
 
           {/* Só para admin E apenas na vista de admin — na pré-visualização como
               aluno o perfil fica igual ao de um aluno (sem vistas nem link admin). */}
-          {isAdmin && adminView === "admin" && (
+          {isAdmin && emVistaAdmin && (
             <div className="px-1.5 pb-2 mb-1 border-b border-[var(--color-border)]">
               <p className="text-[10px] tracking-[0.14em] uppercase text-ink/40 px-1.5 pt-1 pb-1.5">Pré-visualizar como</p>
               <div className="flex gap-1 p-1 rounded-xl bg-cream-warm/60 border border-[var(--color-border)]">
+                {/* Este bloco só aparece na vista de admin, por isso "Admin" está
+                    sempre ativo; clicar em "Aluno" muda a vista e esconde o bloco. */}
                 <button
                   onClick={() => setView("aluno")}
-                  className={`flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-semibold py-2 rounded-lg transition-colors ${adminView === "aluno" ? "bg-white text-ink shadow-sm" : "text-ink/55 hover:text-ink"}`}
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-semibold py-2 rounded-lg transition-colors text-ink/55 hover:text-ink"
                 >
                   <Eye size={13} /> Aluno
                 </button>
                 <button
                   onClick={() => setView("admin")}
-                  className={`flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-semibold py-2 rounded-lg transition-colors ${adminView === "admin" ? "bg-white text-ink shadow-sm" : "text-ink/55 hover:text-ink"}`}
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-semibold py-2 rounded-lg transition-colors bg-white text-ink shadow-sm"
                 >
                   <Eye size={13} /> Admin
                 </button>

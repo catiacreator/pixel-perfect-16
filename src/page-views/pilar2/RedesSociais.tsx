@@ -4,7 +4,7 @@ import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import VideoPlaceholder from "../../components/VideoPlaceholder";
 import ColarResultado from "../../components/ColarResultado";
-import { ArrowRight, Smartphone, Copy, Check, ChevronDown, ClipboardPaste, Play, FileText, Eye, EyeOff, MessageSquare, Bot } from "lucide-react";
+import { ArrowRight, Smartphone, Copy, Check, ChevronDown, ClipboardPaste, Play, FileText, Eye, EyeOff, MessageSquare, Bot, Lock } from "lucide-react";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import PillarHeader from "../../components/PillarHeader";
 import PromptCard from "../../components/PromptCard";
@@ -14,6 +14,8 @@ import PlanoConteudo from "../../components/PlanoConteudo";
 import FormatosConteudo from "../../components/FormatosConteudo";
 import Desafio30Dias from "../../components/Desafio30Dias";
 import { CRIAR_CONTEUDO, type Objetivo } from "@/data/criar-conteudo";
+import { useBloqueadoParaAlunos } from "@/lib/admin-view";
+import { useBloqueios } from "@/lib/bloqueios";
 
 const AGENTE_POR_FORMATO: Record<string, string> = {
   reels: "cat.ia — Criação de Reels Virais",
@@ -484,6 +486,9 @@ const escHtml = (s: string) =>
 export default function RedesSociais() {
   const [params] = useSearchParams();
   const aba = params.get("aba") || "boas-vindas";
+  const bloqueadoParaAlunos = useBloqueadoParaAlunos();
+  const { isBloqueado } = useBloqueios();
+  const conteudoBloqueado = bloqueadoParaAlunos && isBloqueado(`redes.${aba}`);
   const [formato, setFormato] = useState<"reels" | "estatico" | null>(null);
   const [objetivo, setObjetivo] = useState<Objetivo>("autoridade");
 
@@ -624,6 +629,24 @@ export default function RedesSociais() {
         </div>
       )}
       <div className={`px-5 md:px-10 max-w-4xl mx-auto ${aba === "boas-vindas" ? "py-10" : "pt-6 pb-12"}`}>
+        {conteudoBloqueado ? (
+          <div className="rounded-2xl border border-border bg-white p-8 text-center">
+            <div className="w-12 h-12 mx-auto rounded-full bg-ink/5 text-ink/50 flex items-center justify-center mb-4">
+              <Lock size={20} />
+            </div>
+            <h2 className="font-serif text-xl text-ink mb-1.5">Disponível em breve</h2>
+            <p className="text-sm text-ink/55 max-w-sm mx-auto">
+              Esta secção está a ser preparada e será libertada em breve. Enquanto isso, avance pelas Boas-vindas, Posicionamento e Bio e pelo Assistente Cat.IA.
+            </p>
+            <Link
+              to="/metodo/pilar-2/redes-sociais?aba=boas-vindas"
+              className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-semibold hover:bg-terracotta transition-colors"
+            >
+              Voltar às Boas-vindas <ArrowRight size={15} />
+            </Link>
+          </div>
+        ) : (
+        <>
         {aba === "boas-vindas" && <BoasVindasInstagram />}
 
         {aba === "formatos" && <FormatosConteudo />}
@@ -703,6 +726,8 @@ export default function RedesSociais() {
               Ir para Instagram →
             </Link>
           </div>
+        )}
+        </>
         )}
       </div>
     </Layout>

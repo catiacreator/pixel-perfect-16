@@ -507,12 +507,138 @@ export const saveMyMasterDoc = createServerFn({ method: "POST" })
   .inputValidator((blob: any) => blob)
   .handler(async ({ context, data }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    // Merge com o que já existe — preserva chaves que o cliente não envia
+    // (ex.: a config global "__bloqueios__" guardada na linha da dona).
+    const { data: existing } = await supabaseAdmin
+      .from("master_documents")
+      .select("data")
+      .eq("user_id", context.userId)
+      .maybeSingle();
+    const merged = { ...((existing?.data as Record<string, unknown>) ?? {}), ...(data ?? {}) };
     const { error } = await supabaseAdmin.from("master_documents").upsert(
-      { user_id: context.userId, data, updated_at: new Date().toISOString() },
+      { user_id: context.userId, data: merged, updated_at: new Date().toISOString() },
       { onConflict: "user_id" },
     );
     if (error) throw error;
     return { ok: true };
+  });
+
+// ───────── Bloqueios globais ("Em breve") — geridos pela dona no painel ─────────
+// Guardados na linha master_documents da dona, sob a chave "__bloqueios__".
+// Lidos por QUALQUER aluno autenticado (via service role) para saber o que ocultar.
+const BLOQUEIOS_KEY = "__bloqueios__";
+
+async function ownerUserId(supabaseAdmin: any): Promise<string | null> {
+  const { data } = await supabaseAdmin
+    .from("profiles")
+    .select("id")
+    .eq("email", OWNER_EMAILS[0])
+    .maybeSingle();
+  return data?.id ?? null;
+}
+
+export const getBloqueios = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async () => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const uid = await ownerUserId(supabaseAdmin);
+    if (!uid) return null;
+    const { data } = await supabaseAdmin
+      .from("master_documents")
+      .select("data")
+      .eq("user_id", uid)
+      .maybeSingle();
+    const blob = (data?.data as Record<string, unknown>) ?? {};
+    const ids = blob[BLOQUEIOS_KEY];
+    // null = nunca configurado (cliente usa os defaults); array = configurado.
+    return Array.isArray(ids) ? (ids as string[]) : null;
+  });
+
+export const setBloqueios = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { ids: string[] }) =>
+    z.object({ ids: z.array(z.string()).max(2000) }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const uid = await ownerUserId(supabaseAdmin);
+    if (!uid) throw new Error("Conta principal não encontrada.");
+    const { data: existing } = await supabaseAdmin
+      .from("master_documents")
+      .select("data")
+      .eq("user_id", uid)
+      .maybeSingle();
+    const blob = { ...((existing?.data as Record<string, unknown>) ?? {}), [BLOQUEIOS_KEY]: data.ids };
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: uid, data: blob, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
+    return { ok: true };
+  });
+
+// ───────── Turmas — grupos de alunos com permissões próprias ─────────
+// Guardadas na linha da dona, sob "__turmas__": [{ id, nome, cor, membros[], acessos[] }].
+// `acessos` = ids da ESTRUTURA que a turma PODE ver (grant; herda para os filhos).
+const TURMAS_KEY = "__turmas__";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function readOwnerBlob(supabaseAdmin: any): Promise<{ uid: string; blob: Record<string, unknown> }> {
+  const uid = await ownerUserId(supabaseAdmin);
+  if (!uid) throw new Error("Conta principal não encontrada.");
+  const { data } = await supabaseAdmin.from("master_documents").select("data").eq("user_id", uid).maybeSingle();
+  return { uid, blob: (data?.data as Record<string, unknown>) ?? {} };
+}
+
+export const getTurmas = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { blob } = await readOwnerBlob(supabaseAdmin);
+    const t = blob[TURMAS_KEY];
+    return Array.isArray(t) ? t : [];
+  });
+
+export const setTurmas = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { turmas: unknown[] }) =>
+    z.object({
+      turmas: z.array(z.object({
+        id: z.string(),
+        nome: z.string().max(120),
+        cor: z.string().max(16).optional(),
+        membros: z.array(z.string()).max(5000),
+        acessos: z.array(z.string()).max(2000),
+      })).max(500),
+    }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { uid, blob } = await readOwnerBlob(supabaseAdmin);
+    const next = { ...blob, [TURMAS_KEY]: data.turmas };
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: uid, data: next, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
+    return { ok: true };
+  });
+
+// O aluno lê a SUA turma: devolve se está restrito e a que tem acesso.
+export const getMinhaTurmaAcessos = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { blob } = await readOwnerBlob(supabaseAdmin);
+    const turmas = (Array.isArray(blob[TURMAS_KEY]) ? blob[TURMAS_KEY] : []) as {
+      membros?: string[]; acessos?: string[];
+    }[];
+    const minha = turmas.find((t) => Array.isArray(t.membros) && t.membros.includes(context.userId));
+    if (!minha) return { restrito: false, acessos: [] as string[] };
+    return { restrito: true, acessos: Array.isArray(minha.acessos) ? minha.acessos : [] };
   });
 
 // Ranking visível a qualquer aluno autenticado (top 50 por pontos).

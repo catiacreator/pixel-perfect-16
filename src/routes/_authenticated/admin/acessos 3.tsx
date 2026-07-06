@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { Search, ChevronDown, Check, Lock, Layers } from "lucide-react";
 import { listMentoradas } from "@/lib/admin.functions";
 
-export const Route = createFileRoute("/_authenticated/admin/acessos")({
+export const Route = createFileRoute("/_authenticated/admin/acessos 3")({
   component: AcessosPage,
 });
 
@@ -23,19 +23,7 @@ const CURSOS: Curso[] = [
       { id: "pilar-2", nome: "Pilar 2 · Criar autoridade" },
       { id: "pilar-3", nome: "Pilar 3 · Criar Soluções Digitais" },
       { id: "pilar-4", nome: "Pilar 4 · Aprender a vender" },
-    ],
-  },
-  {
-    id: "instagram", nome: "Criar para o Instagram", cor: "#F0A766",
-    modulos: [
-      { id: "redes.boas-vindas", nome: "Boas-vindas" },
-      { id: "redes.bio", nome: "Posicionamento e Bio" },
-      { id: "redes.formatos", nome: "Formatos de Conteúdo" },
-      { id: "redes.criar", nome: "Criar Conteúdo" },
-      { id: "redes.plano", nome: "Plano de Posts" },
-      { id: "redes.desafio", nome: "30 posts em 30 dias" },
-      { id: "redes.assistente", nome: "Assistente Cat.IA" },
-      { id: "redes.agendar", nome: "Publicar" },
+      { id: "instagram", nome: "Criar para o Instagram" },
     ],
   },
   {
@@ -119,7 +107,6 @@ function AcessosPage() {
     <div>
       <div className="flex items-start justify-between gap-4 mb-1">
         <div>
-          <p className="text-[10px] font-semibold tracking-[0.24em] uppercase text-terracotta mb-1">Leveza no Digital</p>
           <h1 className="text-2xl font-semibold tracking-tight text-ink">Acessos</h1>
           <p className="text-sm text-ink/55 mt-0.5">Gira o que cada aluno pode ver — por produto e por módulo.</p>
         </div>

@@ -31,8 +31,11 @@ import {
   Instagram,
   Wrench,
   Monitor,
+  Lock,
   type LucideIcon,
 } from "lucide-react";
+import { useBloqueadoParaAlunos } from "@/lib/admin-view";
+import { useBloqueios } from "@/lib/bloqueios";
 
 const TOOL_ICONS: Record<string, LucideIcon> = {
   ChatGPT: CircleDot,
@@ -64,6 +67,7 @@ type Item = {
   enBreve?: boolean;
   badge?: string;
   children?: SubItem[];
+  id?: string; // id na ESTRUTURA — se bloqueado no painel, alunos veem "Em breve"
 };
 
 type SidebarKey = 1 | 2 | 3 | 4 | "academia" | "redes";
@@ -83,6 +87,7 @@ const PILARES: Record<string | number, PilarDef> = {
     items: [
       {
         num: 1,
+        id: "academia.principais",
         label: "Principais IAs",
         to: "/metodo/pilar-1/aprenda-ia/principais-ias",
         icon: Sparkles,
@@ -95,9 +100,10 @@ const PILARES: Record<string | number, PilarDef> = {
           { label: "Lovable", to: "/metodo/pilar-1/aprenda-ia/lovable" },
         ],
       },
-      { num: 2, label: "Vídeos profissionais com IA", to: "/metodo/pilar-1/aprenda-ia/videos", icon: Video },
+      { num: 2, id: "academia.videos", label: "Vídeos profissionais com IA", to: "/metodo/pilar-1/aprenda-ia/videos", icon: Video },
       {
         num: 3,
+        id: "academia.produtividade",
         label: "Ferramentas de produtividade",
         to: "/metodo/pilar-1/aprenda-ia/produtividade",
         icon: Wrench,
@@ -114,10 +120,10 @@ const PILARES: Record<string | number, PilarDef> = {
     title: "Criar para o Instagram",
     enabled: true,
     items: [
-      { num: 1, label: "Boas-vindas", to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas", icon: Compass },
-      { num: 2, label: "Posicionamento e Bio", to: "/metodo/pilar-2/redes-sociais?aba=bio", icon: UserCircle2 },
+      { num: 1, id: "redes.boas-vindas", label: "Boas-vindas", to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas", icon: Compass },
+      { num: 2, id: "redes.bio", label: "Posicionamento e Bio", to: "/metodo/pilar-2/redes-sociais?aba=bio", icon: UserCircle2 },
       {
-        num: 3, label: "Formatos de Conteúdo", to: "/metodo/pilar-2/redes-sociais?aba=formatos", icon: Book,
+        num: 3, id: "redes.formatos", label: "Formatos de Conteúdo", to: "/metodo/pilar-2/redes-sociais?aba=formatos", icon: Book,
         children: [
           { label: "↳ Roteiros simples", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=roteiros" },
           { label: "↳ Reels virais", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=reels" },
@@ -125,11 +131,11 @@ const PILARES: Record<string | number, PilarDef> = {
           { label: "↳ Stories que vendem", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=stories" },
         ],
       },
-      { num: 4, label: "Criar Conteúdo", to: "/metodo/pilar-2/redes-sociais?aba=criar", icon: Sparkle },
-      { num: 5, label: "Plano de Posts", to: "/metodo/pilar-2/redes-sociais?aba=plano", icon: CalendarDays },
-      { num: 6, label: "30 posts em 30 dias", to: "/metodo/pilar-2/redes-sociais?aba=desafio", icon: Zap },
-      { num: 7, label: "Assistente Cat.IA", to: "/metodo/pilar-2/redes-sociais?aba=assistente", icon: Sparkles, badge: "IA" },
-      { num: 8, label: "Publicar", to: "/metodo/pilar-2/redes-sociais?aba=agendar", icon: CalendarClock },
+      { num: 4, id: "redes.criar", label: "Criar Conteúdo", to: "/metodo/pilar-2/redes-sociais?aba=criar", icon: Sparkle },
+      { num: 5, id: "redes.plano", label: "Plano de Posts", to: "/metodo/pilar-2/redes-sociais?aba=plano", icon: CalendarDays },
+      { num: 6, id: "redes.desafio", label: "30 posts em 30 dias", to: "/metodo/pilar-2/redes-sociais?aba=desafio", icon: Zap },
+      { num: 7, id: "redes.assistente", label: "Assistente Cat.IA", to: "/metodo/pilar-2/redes-sociais?aba=assistente", icon: Sparkles, badge: "IA" },
+      { num: 8, id: "redes.agendar", label: "Publicar", to: "/metodo/pilar-2/redes-sociais?aba=agendar", icon: CalendarClock },
     ],
   },
   1: {
@@ -137,8 +143,8 @@ const PILARES: Record<string | number, PilarDef> = {
     title: "Crie com Leveza sem roubar o seu tempo",
     enabled: true,
     items: [
-      { num: 1, label: "Preencha seu Documento Mestre", to: "/doc-mestre", icon: FileText },
-      { num: 2, label: "Revise e celebre", to: "/metodo/pilar-1/conclusao", icon: Trophy },
+      { num: 1, id: "pilar-1.doc", label: "Preencha seu Documento Mestre", to: "/doc-mestre", icon: FileText },
+      { num: 2, id: "pilar-1.conclusao", label: "Revise e celebre", to: "/metodo/pilar-1/conclusao", icon: Trophy },
     ],
   },
   2: {
@@ -146,10 +152,11 @@ const PILARES: Record<string | number, PilarDef> = {
     title: "Criar Autoridade",
     enabled: true,
     items: [
-      { num: 1, label: "Pesquisa de Mercado", to: "/metodo/pilar-2/pesquisa-mercado", icon: Search },
-      { num: 2, label: "Crie o seu método", to: "/metodo/pilar-2/metodo", icon: Compass },
+      { num: 1, id: "pilar-2.pesquisa", label: "Pesquisa de Mercado", to: "/metodo/pilar-2/pesquisa-mercado", icon: Search },
+      { num: 2, id: "pilar-2.metodo", label: "Crie o seu método", to: "/metodo/pilar-2/metodo", icon: Compass },
       {
         num: 3,
+        id: "pilar-2.identidade",
         label: "Identidade de Marca",
         to: "/metodo/pilar-2/identidade",
         icon: Sparkles,
@@ -159,7 +166,7 @@ const PILARES: Record<string | number, PilarDef> = {
           { label: "Consultoria de Imagem", to: "/metodo/pilar-2/consultoria-imagem" },
         ],
       },
-      { num: 4, label: "Conclusão Pilar 2", to: "/metodo/pilar-2/conclusao", icon: Trophy },
+      { num: 4, id: "pilar-2.conclusao", label: "Conclusão Pilar 2", to: "/metodo/pilar-2/conclusao", icon: Trophy },
     ],
   },
   3: {
@@ -167,12 +174,12 @@ const PILARES: Record<string | number, PilarDef> = {
     title: "Criar Soluções Digitais",
     enabled: true,
     items: [
-      { num: 1, label: "Descobrir soluções", to: "/metodo/pilar-3/descobrir", icon: Search },
-      { num: 2, label: "Como entregar", to: "/metodo/pilar-3/como-entregar", icon: Compass },
-      { num: 3, label: "Criar o produto", to: "/metodo/pilar-3/criar-produto", icon: Wrench },
-      { num: 4, label: "Validar o produto", to: "/metodo/pilar-3/validar-produto", icon: CircleDot },
-      { num: 5, label: "Página de vendas", to: "/metodo/pilar-3/pagina-vendas", icon: FileText },
-      { num: 6, label: "Revise e celebre", to: "/metodo/pilar-3/conclusao", icon: Trophy },
+      { num: 1, id: "pilar-3.descobrir", label: "Descobrir soluções", to: "/metodo/pilar-3/descobrir", icon: Search },
+      { num: 2, id: "pilar-3.como-entregar", label: "Como entregar", to: "/metodo/pilar-3/como-entregar", icon: Compass },
+      { num: 3, id: "pilar-3.criar-produto", label: "Criar o produto", to: "/metodo/pilar-3/criar-produto", icon: Wrench },
+      { num: 4, id: "pilar-3.validar-produto", label: "Validar o produto", to: "/metodo/pilar-3/validar-produto", icon: CircleDot },
+      { num: 5, id: "pilar-3.pagina-vendas", label: "Página de vendas", to: "/metodo/pilar-3/pagina-vendas", icon: FileText },
+      { num: 6, id: "pilar-3.conclusao", label: "Revise e celebre", to: "/metodo/pilar-3/conclusao", icon: Trophy },
     ],
   },
   4: {
@@ -181,14 +188,14 @@ const PILARES: Record<string | number, PilarDef> = {
     enabled: true,
     items: [
       { num: 1, label: "Escolha seu Caminho", to: "/metodo/pilar-4", icon: Compass },
-      { num: 2, label: "Fundação da Venda", to: "/metodo/pilar-4/fundacao", icon: CircleDot },
-      { num: 3, label: "Alto Ticket", to: "/metodo/pilar-4/alto-ticket", icon: Zap },
-      { num: 4, label: "Lançamentos", to: "/metodo/pilar-4/lancamentos", icon: Sparkles },
-      { num: 5, label: "Low Ticket", to: "/metodo/pilar-4/low-ticket", icon: CircleDot, enBreve: true },
-      { num: 6, label: "Eventos Presenciais", to: "/metodo/pilar-4/eventos-presenciais", icon: CalendarDays },
-      { num: 7, label: "Copy de Venda", to: "/metodo/pilar-4/copy", icon: FileText },
-      { num: 8, label: "Tráfego Pago", to: "/metodo/pilar-4/trafego-pago", icon: Zap, enBreve: true },
-      { num: 9, label: "Revise e celebre", to: "/metodo/pilar-4/conclusao", icon: Trophy },
+      { num: 2, id: "pilar-4.fundacao", label: "Fundação da Venda", to: "/metodo/pilar-4/fundacao", icon: CircleDot },
+      { num: 3, id: "pilar-4.alto-ticket", label: "Alto Ticket", to: "/metodo/pilar-4/alto-ticket", icon: Zap },
+      { num: 4, id: "pilar-4.lancamentos", label: "Lançamentos", to: "/metodo/pilar-4/lancamentos", icon: Sparkles },
+      { num: 5, id: "pilar-4.low-ticket", label: "Low Ticket", to: "/metodo/pilar-4/low-ticket", icon: CircleDot, enBreve: true },
+      { num: 6, id: "pilar-4.eventos", label: "Eventos Presenciais", to: "/metodo/pilar-4/eventos-presenciais", icon: CalendarDays },
+      { num: 7, id: "pilar-4.copy", label: "Copy de Venda", to: "/metodo/pilar-4/copy", icon: FileText },
+      { num: 8, id: "pilar-4.trafego", label: "Tráfego Pago", to: "/metodo/pilar-4/trafego-pago", icon: Zap, enBreve: true },
+      { num: 9, id: "pilar-4.conclusao", label: "Revise e celebre", to: "/metodo/pilar-4/conclusao", icon: Trophy },
     ],
   },
 };
@@ -202,6 +209,8 @@ const PILAR_SHORT: Record<number, string> = {
 
 function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: () => void }) {
   const def = PILARES[pilar];
+  const bloqueadoParaAlunos = useBloqueadoParaAlunos();
+  const { isBloqueado } = useBloqueios();
   const location = useLocation();
   const pathname = location.pathname;
   // location.search can be an object in TanStack Router
@@ -254,6 +263,27 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
         <ul className="space-y-1">
           {def.items.map((item) => {
             const Icon = item.icon;
+            const locked = !!item.id && isBloqueado(item.id) && bloqueadoParaAlunos;
+
+            // Item bloqueado para alunos — mostra "Em breve", sem link nem submenu.
+            if (locked) {
+              return (
+                <li key={item.to}>
+                  <div className="flex items-center gap-3 pl-2 pr-2 py-2 text-[13px] rounded-2xl opacity-70 cursor-not-allowed select-none">
+                    <span className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-white/10 text-white/60">
+                      <Lock size={14} strokeWidth={2} />
+                    </span>
+                    <span className="truncate flex-1 font-medium leading-tight text-white/60">
+                      <span className="text-white/40">{item.num}.</span> {item.label}
+                    </span>
+                    <span className="ml-1 text-[9px] tracking-[0.14em] uppercase px-2 py-0.5 rounded-full font-semibold bg-white/15 text-white/70">
+                      Em breve
+                    </span>
+                  </div>
+                </li>
+              );
+            }
+
             const active = isActive(item.to);
             const hasChildren = !!item.children?.length;
             // Abre se for o pai ativo OU se uma filha for a página atual (reativo à rota).
