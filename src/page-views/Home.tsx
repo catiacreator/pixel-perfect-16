@@ -20,7 +20,7 @@ const PRODUTOS = [
     pos: "center calc(42% - 10px)",
     cor: "#C8487E",
     icon: Instagram,
-    estruturaId: "protocolo",
+    estruturaId: "jornada",
   },
   {
     key: "academia",
