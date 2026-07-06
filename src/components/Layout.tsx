@@ -113,7 +113,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Link to="/" className="flex items-center gap-2.5 leading-none shrink-0 group">
             <span className="w-2 h-2 rounded-full bg-gold shadow-[0_0_14px_2px_rgba(184,121,74,0.45)]" />
             <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none">
-              Cátia Creator
+              Leveza no Digital
             </span>
           </Link>
 

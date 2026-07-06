@@ -68,7 +68,7 @@ export function AdminShell() {
             </button>
             <Link to="/" className="flex items-center gap-2.5 leading-none shrink-0 group">
               <span className="w-2 h-2 rounded-full bg-gold shadow-[0_0_14px_2px_rgba(184,121,74,0.45)]" />
-              <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none hidden sm:inline">Cátia Creator</span>
+              <span className="font-sans font-semibold text-[16px] tracking-tight text-ink leading-none hidden sm:inline">Leveza no Digital</span>
               <span className="text-[9px] tracking-[0.24em] uppercase text-ink/50 font-semibold border border-ink/15 rounded-full px-2 py-0.5 sm:ml-1">Admin</span>
             </Link>
           </div>
