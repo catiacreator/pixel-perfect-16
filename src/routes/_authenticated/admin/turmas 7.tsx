@@ -1,16 +1,20 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useEffect, useState } from "react";
-import { Plus, Trash2, Users, X } from "lucide-react";
+import { useState } from "react";
+import { Plus, Trash2, Users, Lock, X, Check } from "lucide-react";
 import { notify } from "@/lib/toast";
 import { getTurmas, setTurmas, listMentoradas } from "@/lib/admin.functions";
+import { ESTRUTURA, type Nodo, type NodoTipo } from "@/lib/estrutura";
 import { CORES_TURMA, novoTurmaId, type Turma } from "@/lib/turmas";
-import AcessoArvore from "@/components/admin/AcessoArvore";
 
-export const Route = createFileRoute("/_authenticated/admin/turmas")({
+export const Route = createFileRoute("/_authenticated/admin/turmas 7")({
   component: TurmasPage,
 });
+
+const TIPO_LABEL: Record<NodoTipo, string> = {
+  modulo: "Módulo", pilar: "Pilar", pagina: "Página", subpagina: "Subpágina",
+};
 
 function TurmasPage() {
   const fetchTurmas = useServerFn(getTurmas);
@@ -37,14 +41,6 @@ function TurmasPage() {
   const persist = (next: Turma[]) => mut.mutate(next);
 
   const sel = turmas.find((t) => t.id === selId) || null;
-
-  // Rascunho local do nome — evita gravar a cada tecla (que reiniciava o campo).
-  // Só grava ao sair do campo (blur) ou Enter.
-  const [nomeDraft, setNomeDraft] = useState("");
-  useEffect(() => { setNomeDraft(sel?.nome ?? ""); }, [selId, sel?.nome]);
-  const commitNome = () => {
-    if (sel && nomeDraft.trim() && nomeDraft.trim() !== sel.nome) editar(sel.id, { nome: nomeDraft.trim() });
-  };
 
   function criarTurma() {
     const nome = `Turma ${turmas.length + 1}`;
@@ -110,25 +106,17 @@ function TurmasPage() {
             {turmas.map((t) => {
               const on = t.id === selId;
               return (
-                <div
+                <button
                   key={t.id}
                   onClick={() => setSelId(t.id)}
-                  className={`group w-full flex items-center gap-2.5 px-3.5 py-3 rounded-xl border text-left transition-colors cursor-pointer ${on ? "border-terracotta bg-terracotta/5" : "border-[var(--color-border)] bg-white hover:border-terracotta/40"}`}
+                  className={`w-full flex items-center gap-2.5 px-3.5 py-3 rounded-xl border text-left transition-colors ${on ? "border-terracotta bg-terracotta/5" : "border-[var(--color-border)] bg-white hover:border-terracotta/40"}`}
                 >
                   <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: t.cor || "#999" }} />
                   <span className="flex-1 min-w-0">
                     <span className="block text-sm font-medium text-ink truncate">{t.nome}</span>
                     <span className="block text-[11px] text-ink/45">{t.membros.length} aluno(s) · {t.acessos.length} acesso(s)</span>
                   </span>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); apagarTurma(t.id); }}
-                    className="text-ink/30 hover:text-rose-600 p-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
-                    aria-label={`Apagar ${t.nome}`}
-                    title="Apagar turma"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
+                </button>
               );
             })}
           </div>
@@ -138,11 +126,8 @@ function TurmasPage() {
             <div className="rounded-2xl border border-[var(--color-border)] bg-white p-5">
               <div className="flex items-center gap-3 mb-4">
                 <input
-                  value={nomeDraft}
-                  onChange={(e) => setNomeDraft(e.target.value)}
-                  onBlur={commitNome}
-                  onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
-                  placeholder="Nome da turma"
+                  value={sel.nome}
+                  onChange={(e) => editar(sel.id, { nome: e.target.value })}
                   className="flex-1 text-lg font-semibold text-ink bg-transparent outline-none border-b border-transparent focus:border-terracotta/40 py-1"
                 />
                 <div className="flex items-center gap-1">
@@ -182,12 +167,44 @@ function TurmasPage() {
 
               {/* Permissões (acesso à estrutura) */}
               <p className="text-[10px] tracking-[0.14em] uppercase text-ink/45 mb-2">Permissões — o que esta turma vê</p>
-              <AcessoArvore grants={sel.acessos} onToggle={(nid) => toggleAcesso(sel.id, nid)} />
-              <p className="text-[11px] text-ink/40 mt-2">Dar acesso a um módulo dá acesso às suas páginas. Para escolher página a página, deixe o módulo sem acesso e ligue as que quiser.</p>
+              <div className="rounded-xl border border-[var(--color-border)] px-3 py-1">
+                <AccessTree turma={sel} onToggle={(nid) => toggleAcesso(sel.id, nid)} />
+              </div>
+              <p className="text-[11px] text-ink/40 mt-2">Dar acesso a um módulo/pilar dá acesso também às suas páginas.</p>
             </div>
           )}
         </div>
       )}
     </div>
   );
+}
+
+function AccessTree({ turma, onToggle }: { turma: Turma; onToggle: (id: string) => void }) {
+  const grants = new Set(turma.acessos);
+  const render = (nodos: Nodo[], depth: number, paiConcedido: boolean) =>
+    nodos.map((n) => {
+      const raw = grants.has(n.id);
+      const efetivo = raw || paiConcedido;
+      return (
+        <div key={n.id}>
+          <div className="flex items-center gap-2.5 py-2 border-b border-[var(--color-border)]" style={{ paddingLeft: depth * 20 }}>
+            <span className="text-[8px] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded-full font-semibold bg-ink/5 text-ink/45 shrink-0">{TIPO_LABEL[n.tipo]}</span>
+            <span className={`text-[13px] flex-1 min-w-0 truncate ${efetivo ? "text-ink" : "text-ink/45"}`}>{n.label}</span>
+            {paiConcedido ? (
+              <span className="text-[11px] text-emerald-600/70 italic shrink-0">herdado</span>
+            ) : (
+              <button
+                onClick={() => onToggle(n.id)}
+                className={`inline-flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors shrink-0 ${raw ? "bg-emerald-50 border-emerald-200 text-emerald-700" : "bg-ink/[0.03] border-[var(--color-border)] text-ink/45 hover:text-ink"}`}
+              >
+                {raw ? <Check size={11} /> : <Lock size={11} />}
+                {raw ? "Com acesso" : "Sem acesso"}
+              </button>
+            )}
+          </div>
+          {n.filhos && render(n.filhos, depth + 1, efetivo)}
+        </div>
+      );
+    });
+  return <>{render(ESTRUTURA, 0, false)}</>;
 }

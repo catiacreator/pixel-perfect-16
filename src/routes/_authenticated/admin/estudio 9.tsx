@@ -4,7 +4,7 @@ import { UserPlus, Trash2, Copy, Check, Link2, Phone } from "lucide-react";
 import { PAISES } from "@/data/paises";
 import { readContactos, writeContactos, normalizar, type Contacto } from "@/lib/estudio-contactos";
 
-export const Route = createFileRoute("/_authenticated/admin/estudio")({
+export const Route = createFileRoute("/_authenticated/admin/estudio 9")({
   component: EstudioPage,
 });
 
