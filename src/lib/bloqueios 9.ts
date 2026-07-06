@@ -10,7 +10,6 @@
 import { useEffect, useState } from "react";
 import { getBloqueios, setBloqueios, getMinhaTurmaAcessos } from "@/lib/admin.functions";
 import { ESTRUTURA, BLOQUEIOS_PADRAO, type Nodo } from "@/lib/estrutura";
-import { getPreviewTurma } from "@/lib/admin-view";
 
 const EVENT = "leveza:bloqueios";
 let cacheGlobal: Set<string> | null = null;
@@ -55,17 +54,12 @@ export function useBloqueios() {
     void ensureLoaded();
     const on = () => force((n) => n + 1);
     window.addEventListener(EVENT, on);
-    window.addEventListener("leveza:preview-turma", on);
-    return () => { window.removeEventListener(EVENT, on); window.removeEventListener("leveza:preview-turma", on); };
+    return () => window.removeEventListener(EVENT, on);
   }, []);
 
   // Enquanto não carrega, usa os defaults para não "piscar" conteúdo bloqueado.
   const global = cacheGlobal ?? new Set(BLOQUEIOS_PADRAO);
-  // Se a admin está a pré-visualizar uma turma específica, usa os acessos dela.
-  const preview = getPreviewTurma();
-  const turma = preview
-    ? { restrito: true, grants: new Set(preview.acessos) }
-    : (cacheTurma ?? { restrito: false, grants: new Set<string>() });
+  const turma = cacheTurma ?? { restrito: false, grants: new Set<string>() };
 
   const antep = (id: string) => ANCESTRAIS[id] ?? [];
   const emBreve = (id: string) => global.has(id) || antep(id).some((a) => global.has(a));

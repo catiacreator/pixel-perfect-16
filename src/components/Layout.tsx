@@ -9,8 +9,9 @@ import ThemeToggle from "@/components/ThemeToggle";
 import UserMenu from "@/components/UserMenu";
 import QuickIdeas from "@/components/QuickIdeas";
 import ModulePaywall from "@/components/ModulePaywall";
+import PreviewTurmaModal from "@/components/PreviewTurmaModal";
 import { useAccess } from "@/lib/use-access";
-import { useAdminView, setAdminView } from "@/lib/admin-view";
+import { useAdminView, setAdminView, abrirPreviewTurma, setPreviewTurma } from "@/lib/admin-view";
 import { isAdminEmail, type ModuleKey } from "@/lib/access";
 
 const NAV = [
@@ -193,13 +194,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {isAdmin && (
               <div className="hidden md:inline-flex items-center gap-0.5 p-0.5 rounded-full border border-ink/15 bg-white" title="Pré-visualizar como aluno ou admin (só muda a vista)">
                 <button
-                  onClick={() => setAdminView("aluno")}
+                  onClick={() => abrirPreviewTurma()}
                   className={`inline-flex items-center gap-1.5 text-[12px] font-semibold px-2.5 py-1.5 rounded-full transition-colors ${adminView === "aluno" ? "bg-terracotta text-cream" : "text-ink/60 hover:text-ink"}`}
                 >
                   <Eye size={12} /> Aluno
                 </button>
                 <button
-                  onClick={() => setAdminView("admin")}
+                  onClick={() => { setAdminView("admin"); setPreviewTurma(null); }}
                   className={`inline-flex items-center gap-1.5 text-[12px] font-semibold px-2.5 py-1.5 rounded-full transition-colors ${adminView === "admin" ? "bg-ink text-cream" : "text-ink/60 hover:text-ink"}`}
                 >
                   <Shield size={12} /> Admin
@@ -299,6 +300,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </footer>
 
       {signedIn && <QuickIdeas />}
+      {isAdmin && <PreviewTurmaModal />}
     </div>
   );
 }

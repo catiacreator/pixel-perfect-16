@@ -49,3 +49,46 @@ export function useBloqueadoParaAlunos(): boolean {
   const [view] = useAdminView();
   return !isAdmin || view === "aluno";
 }
+
+// ── Pré-visualização por turma ──
+// Quando a admin escolhe "vista de aluno", pode simular a turma de um aluno para
+// testar as permissões ao longo da app. Guardado localmente.
+const PT_KEY = "leveza.preview-turma.v1";
+const PT_EVENT = "leveza:preview-turma";
+export const ABRIR_PREVIEW_EVENT = "leveza:abrir-preview-turma";
+
+export type PreviewTurma = { nome: string; acessos: string[] } | null;
+
+export function getPreviewTurma(): PreviewTurma {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(PT_KEY);
+    return raw ? (JSON.parse(raw) as PreviewTurma) : null;
+  } catch {
+    return null;
+  }
+}
+
+export function setPreviewTurma(v: PreviewTurma) {
+  try {
+    if (v) window.localStorage.setItem(PT_KEY, JSON.stringify(v));
+    else window.localStorage.removeItem(PT_KEY);
+  } catch { /* ignora */ }
+  window.dispatchEvent(new CustomEvent(PT_EVENT, { detail: v }));
+}
+
+export function usePreviewTurma(): PreviewTurma {
+  const [v, setV] = useState<PreviewTurma>(getPreviewTurma);
+  useEffect(() => {
+    const on = () => setV(getPreviewTurma());
+    window.addEventListener(PT_EVENT, on);
+    window.addEventListener("storage", on);
+    return () => { window.removeEventListener(PT_EVENT, on); window.removeEventListener("storage", on); };
+  }, []);
+  return v;
+}
+
+// Abre a pop-up de escolha de turma (a Layout renderiza o modal e escuta isto).
+export function abrirPreviewTurma() {
+  window.dispatchEvent(new Event(ABRIR_PREVIEW_EVENT));
+}
