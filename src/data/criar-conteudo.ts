@@ -35,7 +35,35 @@ const wrap = (objLine: string, tarefa: string) =>
 
 const REGRAS_REELS = `Regras: fale na minha voz; uma ideia por frase; números concretos em vez de vagos; nunca use "fórmula mágica", "segredo revelado" nem "guia definitivo"; não invente resultados (use "imagine que..." se não houver dado real).`;
 
+const TAREFA_ROTEIROS = (cta: string) => `🎬 TAREFA — ROTEIRO SIMPLES
+Crie 1 roteiro curto e fácil de gravar hoje, ligado a uma dor real do meu público. Entregue:
+1. 3 OPÇÕES DE GANCHO (0–3s) — frases fortes que fazem parar o scroll (escolho uma)
+2. DESENVOLVIMENTO — 3 a 5 falas curtas, passo a passo (o que digo/mostro)
+3. CTA — ${cta}
++ TEXTO NA TELA (1 linha) e 1 DICA DE GRAVAÇÃO.
+
+${REGRAS_REELS}`;
+
 export const CRIAR_CONTEUDO: ConteudoCard[] = [
+  {
+    id: "roteiros",
+    titulo: "Roteiro simples (para gravar já)",
+    descricao: "Um roteiro base — gancho, desenvolvimento e chamada — pronto a gravar sem complicar.",
+    prompts: {
+      autoridade: wrap(
+        "🎯 OBJETIVO DESTE CONTEÚDO: AUTORIDADE — demonstrar domínio e gerar confiança. Priorize clareza técnica e ponto de vista próprio.",
+        TAREFA_ROTEIROS('salvar ("salva para aplicar depois") ou seguir para mais sobre o tema'),
+      ),
+      seguidores: wrap(
+        "🎯 OBJETIVO DESTE CONTEÚDO: SEGUIDORES — atrair e reter público novo. Priorize identificação imediata e partilha.",
+        TAREFA_ROTEIROS('seguir ("me segue para a parte 2") ou marcar alguém que precisa ver'),
+      ),
+      vendas: wrap(
+        "🎯 OBJETIVO DESTE CONTEÚDO: VENDER — conduzir à decisão. Priorize a lógica dor→solução e um CTA claro para o Direct.",
+        TAREFA_ROTEIROS('chamar no Direct ("comenta [PALAVRA] que eu te mando no Direct") — diagnóstico antes de preço'),
+      ),
+    },
+  },
   {
     id: "reels",
     titulo: "Ideias de roteiros para Reels",

@@ -4,7 +4,7 @@ import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import VideoPlaceholder from "../../components/VideoPlaceholder";
 import ColarResultado from "../../components/ColarResultado";
-import { ArrowRight, ArrowUpRight, Smartphone, Copy, Check, ChevronDown, ClipboardPaste, Play, FileText, Eye, EyeOff, MessageSquare, Bot, Lock } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Smartphone, Copy, Check, ChevronDown, ClipboardPaste, Play, FileText, Eye, EyeOff, MessageSquare, Bot, Lock, Film, Sparkles, MessageCircle, LayoutGrid, AlignLeft, Zap, type LucideIcon } from "lucide-react";
 import { agenteUrl } from "@/lib/agentes-catia";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import PillarHeader from "../../components/PillarHeader";
@@ -19,9 +19,20 @@ import { useBloqueadoParaAlunos } from "@/lib/admin-view";
 import { useBloqueios } from "@/lib/bloqueios";
 
 const AGENTE_POR_FORMATO: Record<string, string> = {
+  roteiros: "cat.ia — Criação de Roteiros Simples",
   reels: "cat.ia — Criação de Reels Virais",
   stories: "cat.ia — Criação de Stories que Vendem",
   carrossel: "cat.ia — Criação de Posts que Vendem (Carrossel)",
+};
+
+// Ícone + cor por formato — assinala o objetivo/função de cada card.
+const FORMATO_META: Record<string, { Icon: LucideIcon; cor: string }> = {
+  roteiros: { Icon: Film, cor: "#2E7CB8" },
+  reels: { Icon: Sparkles, cor: "#C8487E" },
+  stories: { Icon: MessageCircle, cor: "#F0A766" },
+  carrossel: { Icon: LayoutGrid, cor: "#9E7FEC" },
+  legendas: { Icon: AlignLeft, cor: "#2FA98A" },
+  ganchos: { Icon: Zap, cor: "#E0567A" },
 };
 
 const TITULOS: Record<string, string> = {
@@ -695,29 +706,23 @@ export default function RedesSociais() {
               </div>
             </div>
 
-            {CRIAR_CONTEUDO.map((c) => (
-              <div key={c.id} className="mb-4">
-                <PromptCard titulo={c.titulo} descricao={c.descricao} prompt={c.prompts[objetivo]} rotuloBotao="Copiar prompt" />
-                {AGENTE_POR_FORMATO[c.id] && (
-                  <div className="flex items-center flex-wrap gap-2 -mt-2.5 mb-1 px-1">
-                    <span className="inline-flex items-center gap-1.5 text-[11px] text-ink/55">
-                      <Bot size={13} className="text-terracotta shrink-0" />
-                      Agente: <b className="text-ink/75">{AGENTE_POR_FORMATO[c.id]}</b>
-                    </span>
-                    {agenteUrl(AGENTE_POR_FORMATO[c.id]) && (
-                      <a
-                        href={agenteUrl(AGENTE_POR_FORMATO[c.id])}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-cream bg-ink hover:bg-terracotta rounded-full px-2.5 py-1 transition-colors"
-                      >
-                        Abrir agente no ChatGPT <ArrowUpRight size={12} />
-                      </a>
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
+            {CRIAR_CONTEUDO.map((c) => {
+              const meta = FORMATO_META[c.id];
+              const agente = AGENTE_POR_FORMATO[c.id];
+              return (
+                <PromptCard
+                  key={c.id}
+                  titulo={c.titulo}
+                  descricao={c.descricao}
+                  prompt={c.prompts[objetivo]}
+                  rotuloBotao="Copiar prompt"
+                  icon={meta ? <meta.Icon size={20} /> : undefined}
+                  cor={meta?.cor}
+                  agente={agente}
+                  agenteUrl={agenteUrl(agente)}
+                />
+              );
+            })}
 
             <Link to="/metodo/pilar-2/redes-sociais?aba=plano" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-semibold mt-2">
               Organizar no Plano de Posts <ArrowRight size={15} />
