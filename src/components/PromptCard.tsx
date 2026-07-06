@@ -12,6 +12,7 @@ export default function PromptCard({
   cor = "#C8487E",
   agente,
   agenteUrl,
+  botaoCor,
 }: {
   numero?: number;
   titulo: string;
@@ -22,6 +23,7 @@ export default function PromptCard({
   cor?: string;
   agente?: string;
   agenteUrl?: string;
+  botaoCor?: string;
 }) {
   const [verPrompt, setVerPrompt] = useState(false);
   const [copiado, setCopiado] = useState(false);
@@ -59,7 +61,8 @@ export default function PromptCard({
       <div className="flex gap-2 flex-wrap">
         <button
           onClick={copiar}
-          className="text-xs font-semibold px-3 py-1.5 rounded-full bg-ink text-cream flex items-center gap-1.5"
+          className={`text-xs font-semibold px-3 py-1.5 rounded-full text-cream flex items-center gap-1.5 transition-opacity ${botaoCor ? "hover:opacity-90" : "bg-ink"}`}
+          style={botaoCor ? { background: botaoCor } : undefined}
         >
           {copiado ? <Check size={13} /> : <Copy size={13} />}{" "}
           {rotuloBotao || `Copiar prompt${numero ? ` ${numero}` : ""}`}
@@ -88,7 +91,8 @@ export default function PromptCard({
               href={agenteUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-cream bg-ink hover:bg-terracotta rounded-full px-2.5 py-1 transition-colors ml-auto"
+              className={`inline-flex items-center gap-1.5 text-[11px] font-semibold text-cream rounded-full px-2.5 py-1 transition-opacity ml-auto ${botaoCor ? "hover:opacity-90" : "bg-ink hover:bg-terracotta"}`}
+              style={botaoCor ? { background: botaoCor } : undefined}
             >
               Abrir agente no ChatGPT <ArrowUpRight size={12} />
             </a>
