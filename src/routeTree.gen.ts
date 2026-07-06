@@ -17,6 +17,7 @@ import { Route as Vitrine5RouteImport } from './routes/vitrine 5'
 import { Route as Vitrine4RouteImport } from './routes/vitrine 4'
 import { Route as Vitrine3RouteImport } from './routes/vitrine 3'
 import { Route as Vitrine2RouteImport } from './routes/vitrine 2'
+import { Route as Vitrine10RouteImport } from './routes/vitrine 10'
 import { Route as VitrineRouteImport } from './routes/vitrine'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as Registo7RouteImport } from './routes/registo 7'
@@ -34,6 +35,7 @@ import { Route as Protocolo5RouteImport } from './routes/protocolo 5'
 import { Route as Protocolo4RouteImport } from './routes/protocolo 4'
 import { Route as Protocolo3RouteImport } from './routes/protocolo 3'
 import { Route as Protocolo2RouteImport } from './routes/protocolo 2'
+import { Route as Protocolo10RouteImport } from './routes/protocolo 10'
 import { Route as ProtocoloRouteImport } from './routes/protocolo'
 import { Route as PendingRouteImport } from './routes/pending'
 import { Route as MinhaBaseRouteImport } from './routes/minha-base'
@@ -89,6 +91,7 @@ import { Route as MetodoPilar2ConclusaoRouteImport } from './routes/metodo.pilar
 import { Route as MetodoPilar1ConclusaoRouteImport } from './routes/metodo.pilar-1.conclusao'
 import { Route as MetodoPilar1AprendaIaRouteImport } from './routes/metodo.pilar-1.aprenda-ia'
 import { Route as MetodoConsultoriaIaComoUsarRouteImport } from './routes/metodo.consultoria-ia.como-usar'
+import { Route as AuthenticatedAdminTurmas8RouteImport } from './routes/_authenticated/admin/turmas 8'
 import { Route as AuthenticatedAdminTurmas7RouteImport } from './routes/_authenticated/admin/turmas 7'
 import { Route as AuthenticatedAdminTurmas6RouteImport } from './routes/_authenticated/admin/turmas 6'
 import { Route as AuthenticatedAdminTurmas5RouteImport } from './routes/_authenticated/admin/turmas 5'
@@ -97,6 +100,7 @@ import { Route as AuthenticatedAdminTurmas3RouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminTurmas2RouteImport } from './routes/_authenticated/admin/turmas 2'
 import { Route as AuthenticatedAdminTurmasRouteImport } from './routes/_authenticated/admin/turmas'
 import { Route as AuthenticatedAdminRankingRouteImport } from './routes/_authenticated/admin/ranking'
+import { Route as AuthenticatedAdminPapeis3RouteImport } from './routes/_authenticated/admin/papeis 3'
 import { Route as AuthenticatedAdminPapeis2RouteImport } from './routes/_authenticated/admin/papeis 2'
 import { Route as AuthenticatedAdminPapeisRouteImport } from './routes/_authenticated/admin/papeis'
 import { Route as AuthenticatedAdminMentoradasRouteImport } from './routes/_authenticated/admin/mentoradas'
@@ -108,6 +112,8 @@ import { Route as AuthenticatedAdminEstudio5RouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminEstudio4RouteImport } from './routes/_authenticated/admin/estudio 4'
 import { Route as AuthenticatedAdminEstudio3RouteImport } from './routes/_authenticated/admin/estudio 3'
 import { Route as AuthenticatedAdminEstudio2RouteImport } from './routes/_authenticated/admin/estudio 2'
+import { Route as AuthenticatedAdminEstudio10RouteImport } from './routes/_authenticated/admin/estudio 10'
+import { Route as AuthenticatedAdminEstrutura8RouteImport } from './routes/_authenticated/admin/estrutura 8'
 import { Route as AuthenticatedAdminEstrutura7RouteImport } from './routes/_authenticated/admin/estrutura 7'
 import { Route as AuthenticatedAdminEstrutura6RouteImport } from './routes/_authenticated/admin/estrutura 6'
 import { Route as AuthenticatedAdminEstrutura5RouteImport } from './routes/_authenticated/admin/estrutura 5'
@@ -116,6 +122,7 @@ import { Route as AuthenticatedAdminEstrutura3RouteImport } from './routes/_auth
 import { Route as AuthenticatedAdminEstrutura2RouteImport } from './routes/_authenticated/admin/estrutura 2'
 import { Route as AuthenticatedAdminEstruturaRouteImport } from './routes/_authenticated/admin/estrutura'
 import { Route as AuthenticatedAdminConteudoRouteImport } from './routes/_authenticated/admin/conteudo'
+import { Route as AuthenticatedAdminCodigos2RouteImport } from './routes/_authenticated/admin/codigos 2'
 import { Route as AuthenticatedAdminCodigosRouteImport } from './routes/_authenticated/admin/codigos'
 import { Route as AuthenticatedAdminAcessos9RouteImport } from './routes/_authenticated/admin/acessos 9'
 import { Route as AuthenticatedAdminAcessos8RouteImport } from './routes/_authenticated/admin/acessos 8'
@@ -125,6 +132,7 @@ import { Route as AuthenticatedAdminAcessos5RouteImport } from './routes/_authen
 import { Route as AuthenticatedAdminAcessos4RouteImport } from './routes/_authenticated/admin/acessos 4'
 import { Route as AuthenticatedAdminAcessos3RouteImport } from './routes/_authenticated/admin/acessos 3'
 import { Route as AuthenticatedAdminAcessos2RouteImport } from './routes/_authenticated/admin/acessos 2'
+import { Route as AuthenticatedAdminAcessos10RouteImport } from './routes/_authenticated/admin/acessos 10'
 import { Route as AuthenticatedAdminAcessosRouteImport } from './routes/_authenticated/admin/acessos'
 import { Route as MetodoPilar3PaginaVendasIndexRouteImport } from './routes/metodo.pilar-3.pagina-vendas.index'
 import { Route as MetodoPilar3CriarProdutoIndexRouteImport } from './routes/metodo.pilar-3.criar-produto.index'
@@ -185,6 +193,11 @@ const Vitrine3Route = Vitrine3RouteImport.update({
 const Vitrine2Route = Vitrine2RouteImport.update({
   id: '/vitrine 2',
   path: '/vitrine 2',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Vitrine10Route = Vitrine10RouteImport.update({
+  id: '/vitrine 10',
+  path: '/vitrine 10',
   getParentRoute: () => rootRouteImport,
 } as any)
 const VitrineRoute = VitrineRouteImport.update({
@@ -270,6 +283,11 @@ const Protocolo3Route = Protocolo3RouteImport.update({
 const Protocolo2Route = Protocolo2RouteImport.update({
   id: '/protocolo 2',
   path: '/protocolo 2',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Protocolo10Route = Protocolo10RouteImport.update({
+  id: '/protocolo 10',
+  path: '/protocolo 10',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProtocoloRoute = ProtocoloRouteImport.update({
@@ -555,6 +573,12 @@ const MetodoConsultoriaIaComoUsarRoute =
     path: '/como-usar',
     getParentRoute: () => MetodoConsultoriaIaRoute,
   } as any)
+const AuthenticatedAdminTurmas8Route =
+  AuthenticatedAdminTurmas8RouteImport.update({
+    id: '/turmas 8',
+    path: '/turmas 8',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminTurmas7Route =
   AuthenticatedAdminTurmas7RouteImport.update({
     id: '/turmas 7',
@@ -601,6 +625,12 @@ const AuthenticatedAdminRankingRoute =
   AuthenticatedAdminRankingRouteImport.update({
     id: '/ranking',
     path: '/ranking',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminPapeis3Route =
+  AuthenticatedAdminPapeis3RouteImport.update({
+    id: '/papeis 3',
+    path: '/papeis 3',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedAdminPapeis2Route =
@@ -669,6 +699,18 @@ const AuthenticatedAdminEstudio2Route =
     path: '/estudio 2',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminEstudio10Route =
+  AuthenticatedAdminEstudio10RouteImport.update({
+    id: '/estudio 10',
+    path: '/estudio 10',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminEstrutura8Route =
+  AuthenticatedAdminEstrutura8RouteImport.update({
+    id: '/estrutura 8',
+    path: '/estrutura 8',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminEstrutura7Route =
   AuthenticatedAdminEstrutura7RouteImport.update({
     id: '/estrutura 7',
@@ -715,6 +757,12 @@ const AuthenticatedAdminConteudoRoute =
   AuthenticatedAdminConteudoRouteImport.update({
     id: '/conteudo',
     path: '/conteudo',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminCodigos2Route =
+  AuthenticatedAdminCodigos2RouteImport.update({
+    id: '/codigos 2',
+    path: '/codigos 2',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedAdminCodigosRoute =
@@ -769,6 +817,12 @@ const AuthenticatedAdminAcessos2Route =
   AuthenticatedAdminAcessos2RouteImport.update({
     id: '/acessos 2',
     path: '/acessos 2',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminAcessos10Route =
+  AuthenticatedAdminAcessos10RouteImport.update({
+    id: '/acessos 10',
+    path: '/acessos 10',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedAdminAcessosRoute =
@@ -912,6 +966,7 @@ export interface FileRoutesByFullPath {
   '/minha-base': typeof MinhaBaseRoute
   '/pending': typeof PendingRoute
   '/protocolo': typeof ProtocoloRoute
+  '/protocolo 10': typeof Protocolo10Route
   '/protocolo 2': typeof Protocolo2Route
   '/protocolo 3': typeof Protocolo3Route
   '/protocolo 4': typeof Protocolo4Route
@@ -929,6 +984,7 @@ export interface FileRoutesByFullPath {
   '/registo 7': typeof Registo7Route
   '/reset-password': typeof ResetPasswordRoute
   '/vitrine': typeof VitrineRoute
+  '/vitrine 10': typeof Vitrine10Route
   '/vitrine 2': typeof Vitrine2Route
   '/vitrine 3': typeof Vitrine3Route
   '/vitrine 4': typeof Vitrine4Route
@@ -948,6 +1004,7 @@ export interface FileRoutesByFullPath {
   '/metodo/saude': typeof MetodoSaudeRoute
   '/metodo/': typeof MetodoIndexRoute
   '/admin/acessos': typeof AuthenticatedAdminAcessosRoute
+  '/admin/acessos 10': typeof AuthenticatedAdminAcessos10Route
   '/admin/acessos 2': typeof AuthenticatedAdminAcessos2Route
   '/admin/acessos 3': typeof AuthenticatedAdminAcessos3Route
   '/admin/acessos 4': typeof AuthenticatedAdminAcessos4Route
@@ -957,6 +1014,7 @@ export interface FileRoutesByFullPath {
   '/admin/acessos 8': typeof AuthenticatedAdminAcessos8Route
   '/admin/acessos 9': typeof AuthenticatedAdminAcessos9Route
   '/admin/codigos': typeof AuthenticatedAdminCodigosRoute
+  '/admin/codigos 2': typeof AuthenticatedAdminCodigos2Route
   '/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
   '/admin/estrutura': typeof AuthenticatedAdminEstruturaRoute
   '/admin/estrutura 2': typeof AuthenticatedAdminEstrutura2Route
@@ -965,6 +1023,8 @@ export interface FileRoutesByFullPath {
   '/admin/estrutura 5': typeof AuthenticatedAdminEstrutura5Route
   '/admin/estrutura 6': typeof AuthenticatedAdminEstrutura6Route
   '/admin/estrutura 7': typeof AuthenticatedAdminEstrutura7Route
+  '/admin/estrutura 8': typeof AuthenticatedAdminEstrutura8Route
+  '/admin/estudio 10': typeof AuthenticatedAdminEstudio10Route
   '/admin/estudio 2': typeof AuthenticatedAdminEstudio2Route
   '/admin/estudio 3': typeof AuthenticatedAdminEstudio3Route
   '/admin/estudio 4': typeof AuthenticatedAdminEstudio4Route
@@ -976,6 +1036,7 @@ export interface FileRoutesByFullPath {
   '/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
   '/admin/papeis': typeof AuthenticatedAdminPapeisRoute
   '/admin/papeis 2': typeof AuthenticatedAdminPapeis2Route
+  '/admin/papeis 3': typeof AuthenticatedAdminPapeis3Route
   '/admin/ranking': typeof AuthenticatedAdminRankingRoute
   '/admin/turmas': typeof AuthenticatedAdminTurmasRoute
   '/admin/turmas 2': typeof AuthenticatedAdminTurmas2Route
@@ -984,6 +1045,7 @@ export interface FileRoutesByFullPath {
   '/admin/turmas 5': typeof AuthenticatedAdminTurmas5Route
   '/admin/turmas 6': typeof AuthenticatedAdminTurmas6Route
   '/admin/turmas 7': typeof AuthenticatedAdminTurmas7Route
+  '/admin/turmas 8': typeof AuthenticatedAdminTurmas8Route
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
   '/metodo/pilar-1/aprenda-ia': typeof MetodoPilar1AprendaIaRouteWithChildren
   '/metodo/pilar-1/conclusao': typeof MetodoPilar1ConclusaoRoute
@@ -1049,6 +1111,7 @@ export interface FileRoutesByTo {
   '/minha-base': typeof MinhaBaseRoute
   '/pending': typeof PendingRoute
   '/protocolo': typeof ProtocoloRoute
+  '/protocolo 10': typeof Protocolo10Route
   '/protocolo 2': typeof Protocolo2Route
   '/protocolo 3': typeof Protocolo3Route
   '/protocolo 4': typeof Protocolo4Route
@@ -1066,6 +1129,7 @@ export interface FileRoutesByTo {
   '/registo 7': typeof Registo7Route
   '/reset-password': typeof ResetPasswordRoute
   '/vitrine': typeof VitrineRoute
+  '/vitrine 10': typeof Vitrine10Route
   '/vitrine 2': typeof Vitrine2Route
   '/vitrine 3': typeof Vitrine3Route
   '/vitrine 4': typeof Vitrine4Route
@@ -1079,6 +1143,7 @@ export interface FileRoutesByTo {
   '/metodo/saude': typeof MetodoSaudeRoute
   '/metodo': typeof MetodoIndexRoute
   '/admin/acessos': typeof AuthenticatedAdminAcessosRoute
+  '/admin/acessos 10': typeof AuthenticatedAdminAcessos10Route
   '/admin/acessos 2': typeof AuthenticatedAdminAcessos2Route
   '/admin/acessos 3': typeof AuthenticatedAdminAcessos3Route
   '/admin/acessos 4': typeof AuthenticatedAdminAcessos4Route
@@ -1088,6 +1153,7 @@ export interface FileRoutesByTo {
   '/admin/acessos 8': typeof AuthenticatedAdminAcessos8Route
   '/admin/acessos 9': typeof AuthenticatedAdminAcessos9Route
   '/admin/codigos': typeof AuthenticatedAdminCodigosRoute
+  '/admin/codigos 2': typeof AuthenticatedAdminCodigos2Route
   '/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
   '/admin/estrutura': typeof AuthenticatedAdminEstruturaRoute
   '/admin/estrutura 2': typeof AuthenticatedAdminEstrutura2Route
@@ -1096,6 +1162,8 @@ export interface FileRoutesByTo {
   '/admin/estrutura 5': typeof AuthenticatedAdminEstrutura5Route
   '/admin/estrutura 6': typeof AuthenticatedAdminEstrutura6Route
   '/admin/estrutura 7': typeof AuthenticatedAdminEstrutura7Route
+  '/admin/estrutura 8': typeof AuthenticatedAdminEstrutura8Route
+  '/admin/estudio 10': typeof AuthenticatedAdminEstudio10Route
   '/admin/estudio 2': typeof AuthenticatedAdminEstudio2Route
   '/admin/estudio 3': typeof AuthenticatedAdminEstudio3Route
   '/admin/estudio 4': typeof AuthenticatedAdminEstudio4Route
@@ -1107,6 +1175,7 @@ export interface FileRoutesByTo {
   '/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
   '/admin/papeis': typeof AuthenticatedAdminPapeisRoute
   '/admin/papeis 2': typeof AuthenticatedAdminPapeis2Route
+  '/admin/papeis 3': typeof AuthenticatedAdminPapeis3Route
   '/admin/ranking': typeof AuthenticatedAdminRankingRoute
   '/admin/turmas': typeof AuthenticatedAdminTurmasRoute
   '/admin/turmas 2': typeof AuthenticatedAdminTurmas2Route
@@ -1115,6 +1184,7 @@ export interface FileRoutesByTo {
   '/admin/turmas 5': typeof AuthenticatedAdminTurmas5Route
   '/admin/turmas 6': typeof AuthenticatedAdminTurmas6Route
   '/admin/turmas 7': typeof AuthenticatedAdminTurmas7Route
+  '/admin/turmas 8': typeof AuthenticatedAdminTurmas8Route
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
   '/metodo/pilar-1/conclusao': typeof MetodoPilar1ConclusaoRoute
   '/metodo/pilar-2/conclusao': typeof MetodoPilar2ConclusaoRoute
@@ -1179,6 +1249,7 @@ export interface FileRoutesById {
   '/minha-base': typeof MinhaBaseRoute
   '/pending': typeof PendingRoute
   '/protocolo': typeof ProtocoloRoute
+  '/protocolo 10': typeof Protocolo10Route
   '/protocolo 2': typeof Protocolo2Route
   '/protocolo 3': typeof Protocolo3Route
   '/protocolo 4': typeof Protocolo4Route
@@ -1196,6 +1267,7 @@ export interface FileRoutesById {
   '/registo 7': typeof Registo7Route
   '/reset-password': typeof ResetPasswordRoute
   '/vitrine': typeof VitrineRoute
+  '/vitrine 10': typeof Vitrine10Route
   '/vitrine 2': typeof Vitrine2Route
   '/vitrine 3': typeof Vitrine3Route
   '/vitrine 4': typeof Vitrine4Route
@@ -1215,6 +1287,7 @@ export interface FileRoutesById {
   '/metodo/saude': typeof MetodoSaudeRoute
   '/metodo/': typeof MetodoIndexRoute
   '/_authenticated/admin/acessos': typeof AuthenticatedAdminAcessosRoute
+  '/_authenticated/admin/acessos 10': typeof AuthenticatedAdminAcessos10Route
   '/_authenticated/admin/acessos 2': typeof AuthenticatedAdminAcessos2Route
   '/_authenticated/admin/acessos 3': typeof AuthenticatedAdminAcessos3Route
   '/_authenticated/admin/acessos 4': typeof AuthenticatedAdminAcessos4Route
@@ -1224,6 +1297,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/acessos 8': typeof AuthenticatedAdminAcessos8Route
   '/_authenticated/admin/acessos 9': typeof AuthenticatedAdminAcessos9Route
   '/_authenticated/admin/codigos': typeof AuthenticatedAdminCodigosRoute
+  '/_authenticated/admin/codigos 2': typeof AuthenticatedAdminCodigos2Route
   '/_authenticated/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
   '/_authenticated/admin/estrutura': typeof AuthenticatedAdminEstruturaRoute
   '/_authenticated/admin/estrutura 2': typeof AuthenticatedAdminEstrutura2Route
@@ -1232,6 +1306,8 @@ export interface FileRoutesById {
   '/_authenticated/admin/estrutura 5': typeof AuthenticatedAdminEstrutura5Route
   '/_authenticated/admin/estrutura 6': typeof AuthenticatedAdminEstrutura6Route
   '/_authenticated/admin/estrutura 7': typeof AuthenticatedAdminEstrutura7Route
+  '/_authenticated/admin/estrutura 8': typeof AuthenticatedAdminEstrutura8Route
+  '/_authenticated/admin/estudio 10': typeof AuthenticatedAdminEstudio10Route
   '/_authenticated/admin/estudio 2': typeof AuthenticatedAdminEstudio2Route
   '/_authenticated/admin/estudio 3': typeof AuthenticatedAdminEstudio3Route
   '/_authenticated/admin/estudio 4': typeof AuthenticatedAdminEstudio4Route
@@ -1243,6 +1319,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
   '/_authenticated/admin/papeis': typeof AuthenticatedAdminPapeisRoute
   '/_authenticated/admin/papeis 2': typeof AuthenticatedAdminPapeis2Route
+  '/_authenticated/admin/papeis 3': typeof AuthenticatedAdminPapeis3Route
   '/_authenticated/admin/ranking': typeof AuthenticatedAdminRankingRoute
   '/_authenticated/admin/turmas': typeof AuthenticatedAdminTurmasRoute
   '/_authenticated/admin/turmas 2': typeof AuthenticatedAdminTurmas2Route
@@ -1251,6 +1328,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/turmas 5': typeof AuthenticatedAdminTurmas5Route
   '/_authenticated/admin/turmas 6': typeof AuthenticatedAdminTurmas6Route
   '/_authenticated/admin/turmas 7': typeof AuthenticatedAdminTurmas7Route
+  '/_authenticated/admin/turmas 8': typeof AuthenticatedAdminTurmas8Route
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
   '/metodo/pilar-1/aprenda-ia': typeof MetodoPilar1AprendaIaRouteWithChildren
   '/metodo/pilar-1/conclusao': typeof MetodoPilar1ConclusaoRoute
@@ -1319,6 +1397,7 @@ export interface FileRouteTypes {
     | '/minha-base'
     | '/pending'
     | '/protocolo'
+    | '/protocolo 10'
     | '/protocolo 2'
     | '/protocolo 3'
     | '/protocolo 4'
@@ -1336,6 +1415,7 @@ export interface FileRouteTypes {
     | '/registo 7'
     | '/reset-password'
     | '/vitrine'
+    | '/vitrine 10'
     | '/vitrine 2'
     | '/vitrine 3'
     | '/vitrine 4'
@@ -1355,6 +1435,7 @@ export interface FileRouteTypes {
     | '/metodo/saude'
     | '/metodo/'
     | '/admin/acessos'
+    | '/admin/acessos 10'
     | '/admin/acessos 2'
     | '/admin/acessos 3'
     | '/admin/acessos 4'
@@ -1364,6 +1445,7 @@ export interface FileRouteTypes {
     | '/admin/acessos 8'
     | '/admin/acessos 9'
     | '/admin/codigos'
+    | '/admin/codigos 2'
     | '/admin/conteudo'
     | '/admin/estrutura'
     | '/admin/estrutura 2'
@@ -1372,6 +1454,8 @@ export interface FileRouteTypes {
     | '/admin/estrutura 5'
     | '/admin/estrutura 6'
     | '/admin/estrutura 7'
+    | '/admin/estrutura 8'
+    | '/admin/estudio 10'
     | '/admin/estudio 2'
     | '/admin/estudio 3'
     | '/admin/estudio 4'
@@ -1383,6 +1467,7 @@ export interface FileRouteTypes {
     | '/admin/mentoradas'
     | '/admin/papeis'
     | '/admin/papeis 2'
+    | '/admin/papeis 3'
     | '/admin/ranking'
     | '/admin/turmas'
     | '/admin/turmas 2'
@@ -1391,6 +1476,7 @@ export interface FileRouteTypes {
     | '/admin/turmas 5'
     | '/admin/turmas 6'
     | '/admin/turmas 7'
+    | '/admin/turmas 8'
     | '/metodo/consultoria-ia/como-usar'
     | '/metodo/pilar-1/aprenda-ia'
     | '/metodo/pilar-1/conclusao'
@@ -1456,6 +1542,7 @@ export interface FileRouteTypes {
     | '/minha-base'
     | '/pending'
     | '/protocolo'
+    | '/protocolo 10'
     | '/protocolo 2'
     | '/protocolo 3'
     | '/protocolo 4'
@@ -1473,6 +1560,7 @@ export interface FileRouteTypes {
     | '/registo 7'
     | '/reset-password'
     | '/vitrine'
+    | '/vitrine 10'
     | '/vitrine 2'
     | '/vitrine 3'
     | '/vitrine 4'
@@ -1486,6 +1574,7 @@ export interface FileRouteTypes {
     | '/metodo/saude'
     | '/metodo'
     | '/admin/acessos'
+    | '/admin/acessos 10'
     | '/admin/acessos 2'
     | '/admin/acessos 3'
     | '/admin/acessos 4'
@@ -1495,6 +1584,7 @@ export interface FileRouteTypes {
     | '/admin/acessos 8'
     | '/admin/acessos 9'
     | '/admin/codigos'
+    | '/admin/codigos 2'
     | '/admin/conteudo'
     | '/admin/estrutura'
     | '/admin/estrutura 2'
@@ -1503,6 +1593,8 @@ export interface FileRouteTypes {
     | '/admin/estrutura 5'
     | '/admin/estrutura 6'
     | '/admin/estrutura 7'
+    | '/admin/estrutura 8'
+    | '/admin/estudio 10'
     | '/admin/estudio 2'
     | '/admin/estudio 3'
     | '/admin/estudio 4'
@@ -1514,6 +1606,7 @@ export interface FileRouteTypes {
     | '/admin/mentoradas'
     | '/admin/papeis'
     | '/admin/papeis 2'
+    | '/admin/papeis 3'
     | '/admin/ranking'
     | '/admin/turmas'
     | '/admin/turmas 2'
@@ -1522,6 +1615,7 @@ export interface FileRouteTypes {
     | '/admin/turmas 5'
     | '/admin/turmas 6'
     | '/admin/turmas 7'
+    | '/admin/turmas 8'
     | '/metodo/consultoria-ia/como-usar'
     | '/metodo/pilar-1/conclusao'
     | '/metodo/pilar-2/conclusao'
@@ -1585,6 +1679,7 @@ export interface FileRouteTypes {
     | '/minha-base'
     | '/pending'
     | '/protocolo'
+    | '/protocolo 10'
     | '/protocolo 2'
     | '/protocolo 3'
     | '/protocolo 4'
@@ -1602,6 +1697,7 @@ export interface FileRouteTypes {
     | '/registo 7'
     | '/reset-password'
     | '/vitrine'
+    | '/vitrine 10'
     | '/vitrine 2'
     | '/vitrine 3'
     | '/vitrine 4'
@@ -1621,6 +1717,7 @@ export interface FileRouteTypes {
     | '/metodo/saude'
     | '/metodo/'
     | '/_authenticated/admin/acessos'
+    | '/_authenticated/admin/acessos 10'
     | '/_authenticated/admin/acessos 2'
     | '/_authenticated/admin/acessos 3'
     | '/_authenticated/admin/acessos 4'
@@ -1630,6 +1727,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/acessos 8'
     | '/_authenticated/admin/acessos 9'
     | '/_authenticated/admin/codigos'
+    | '/_authenticated/admin/codigos 2'
     | '/_authenticated/admin/conteudo'
     | '/_authenticated/admin/estrutura'
     | '/_authenticated/admin/estrutura 2'
@@ -1638,6 +1736,8 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/estrutura 5'
     | '/_authenticated/admin/estrutura 6'
     | '/_authenticated/admin/estrutura 7'
+    | '/_authenticated/admin/estrutura 8'
+    | '/_authenticated/admin/estudio 10'
     | '/_authenticated/admin/estudio 2'
     | '/_authenticated/admin/estudio 3'
     | '/_authenticated/admin/estudio 4'
@@ -1649,6 +1749,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/mentoradas'
     | '/_authenticated/admin/papeis'
     | '/_authenticated/admin/papeis 2'
+    | '/_authenticated/admin/papeis 3'
     | '/_authenticated/admin/ranking'
     | '/_authenticated/admin/turmas'
     | '/_authenticated/admin/turmas 2'
@@ -1657,6 +1758,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/turmas 5'
     | '/_authenticated/admin/turmas 6'
     | '/_authenticated/admin/turmas 7'
+    | '/_authenticated/admin/turmas 8'
     | '/metodo/consultoria-ia/como-usar'
     | '/metodo/pilar-1/aprenda-ia'
     | '/metodo/pilar-1/conclusao'
@@ -1725,6 +1827,7 @@ export interface RootRouteChildren {
   MinhaBaseRoute: typeof MinhaBaseRoute
   PendingRoute: typeof PendingRoute
   ProtocoloRoute: typeof ProtocoloRoute
+  Protocolo10Route: typeof Protocolo10Route
   Protocolo2Route: typeof Protocolo2Route
   Protocolo3Route: typeof Protocolo3Route
   Protocolo4Route: typeof Protocolo4Route
@@ -1742,6 +1845,7 @@ export interface RootRouteChildren {
   Registo7Route: typeof Registo7Route
   ResetPasswordRoute: typeof ResetPasswordRoute
   VitrineRoute: typeof VitrineRoute
+  Vitrine10Route: typeof Vitrine10Route
   Vitrine2Route: typeof Vitrine2Route
   Vitrine3Route: typeof Vitrine3Route
   Vitrine4Route: typeof Vitrine4Route
@@ -1810,6 +1914,13 @@ declare module '@tanstack/react-router' {
       path: '/vitrine 2'
       fullPath: '/vitrine 2'
       preLoaderRoute: typeof Vitrine2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vitrine 10': {
+      id: '/vitrine 10'
+      path: '/vitrine 10'
+      fullPath: '/vitrine 10'
+      preLoaderRoute: typeof Vitrine10RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/vitrine': {
@@ -1929,6 +2040,13 @@ declare module '@tanstack/react-router' {
       path: '/protocolo 2'
       fullPath: '/protocolo 2'
       preLoaderRoute: typeof Protocolo2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/protocolo 10': {
+      id: '/protocolo 10'
+      path: '/protocolo 10'
+      fullPath: '/protocolo 10'
+      preLoaderRoute: typeof Protocolo10RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/protocolo': {
@@ -2316,6 +2434,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MetodoConsultoriaIaComoUsarRouteImport
       parentRoute: typeof MetodoConsultoriaIaRoute
     }
+    '/_authenticated/admin/turmas 8': {
+      id: '/_authenticated/admin/turmas 8'
+      path: '/turmas 8'
+      fullPath: '/admin/turmas 8'
+      preLoaderRoute: typeof AuthenticatedAdminTurmas8RouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/turmas 7': {
       id: '/_authenticated/admin/turmas 7'
       path: '/turmas 7'
@@ -2370,6 +2495,13 @@ declare module '@tanstack/react-router' {
       path: '/ranking'
       fullPath: '/admin/ranking'
       preLoaderRoute: typeof AuthenticatedAdminRankingRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/papeis 3': {
+      id: '/_authenticated/admin/papeis 3'
+      path: '/papeis 3'
+      fullPath: '/admin/papeis 3'
+      preLoaderRoute: typeof AuthenticatedAdminPapeis3RouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/papeis 2': {
@@ -2449,6 +2581,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminEstudio2RouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/estudio 10': {
+      id: '/_authenticated/admin/estudio 10'
+      path: '/estudio 10'
+      fullPath: '/admin/estudio 10'
+      preLoaderRoute: typeof AuthenticatedAdminEstudio10RouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/estrutura 8': {
+      id: '/_authenticated/admin/estrutura 8'
+      path: '/estrutura 8'
+      fullPath: '/admin/estrutura 8'
+      preLoaderRoute: typeof AuthenticatedAdminEstrutura8RouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/estrutura 7': {
       id: '/_authenticated/admin/estrutura 7'
       path: '/estrutura 7'
@@ -2503,6 +2649,13 @@ declare module '@tanstack/react-router' {
       path: '/conteudo'
       fullPath: '/admin/conteudo'
       preLoaderRoute: typeof AuthenticatedAdminConteudoRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/codigos 2': {
+      id: '/_authenticated/admin/codigos 2'
+      path: '/codigos 2'
+      fullPath: '/admin/codigos 2'
+      preLoaderRoute: typeof AuthenticatedAdminCodigos2RouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/codigos': {
@@ -2566,6 +2719,13 @@ declare module '@tanstack/react-router' {
       path: '/acessos 2'
       fullPath: '/admin/acessos 2'
       preLoaderRoute: typeof AuthenticatedAdminAcessos2RouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/acessos 10': {
+      id: '/_authenticated/admin/acessos 10'
+      path: '/acessos 10'
+      fullPath: '/admin/acessos 10'
+      preLoaderRoute: typeof AuthenticatedAdminAcessos10RouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/acessos': {
@@ -2734,6 +2894,7 @@ const AuthenticatedAdminMentoradasRouteWithChildren =
 
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminAcessosRoute: typeof AuthenticatedAdminAcessosRoute
+  AuthenticatedAdminAcessos10Route: typeof AuthenticatedAdminAcessos10Route
   AuthenticatedAdminAcessos2Route: typeof AuthenticatedAdminAcessos2Route
   AuthenticatedAdminAcessos3Route: typeof AuthenticatedAdminAcessos3Route
   AuthenticatedAdminAcessos4Route: typeof AuthenticatedAdminAcessos4Route
@@ -2743,6 +2904,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminAcessos8Route: typeof AuthenticatedAdminAcessos8Route
   AuthenticatedAdminAcessos9Route: typeof AuthenticatedAdminAcessos9Route
   AuthenticatedAdminCodigosRoute: typeof AuthenticatedAdminCodigosRoute
+  AuthenticatedAdminCodigos2Route: typeof AuthenticatedAdminCodigos2Route
   AuthenticatedAdminConteudoRoute: typeof AuthenticatedAdminConteudoRoute
   AuthenticatedAdminEstruturaRoute: typeof AuthenticatedAdminEstruturaRoute
   AuthenticatedAdminEstrutura2Route: typeof AuthenticatedAdminEstrutura2Route
@@ -2751,6 +2913,8 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminEstrutura5Route: typeof AuthenticatedAdminEstrutura5Route
   AuthenticatedAdminEstrutura6Route: typeof AuthenticatedAdminEstrutura6Route
   AuthenticatedAdminEstrutura7Route: typeof AuthenticatedAdminEstrutura7Route
+  AuthenticatedAdminEstrutura8Route: typeof AuthenticatedAdminEstrutura8Route
+  AuthenticatedAdminEstudio10Route: typeof AuthenticatedAdminEstudio10Route
   AuthenticatedAdminEstudio2Route: typeof AuthenticatedAdminEstudio2Route
   AuthenticatedAdminEstudio3Route: typeof AuthenticatedAdminEstudio3Route
   AuthenticatedAdminEstudio4Route: typeof AuthenticatedAdminEstudio4Route
@@ -2762,6 +2926,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminMentoradasRoute: typeof AuthenticatedAdminMentoradasRouteWithChildren
   AuthenticatedAdminPapeisRoute: typeof AuthenticatedAdminPapeisRoute
   AuthenticatedAdminPapeis2Route: typeof AuthenticatedAdminPapeis2Route
+  AuthenticatedAdminPapeis3Route: typeof AuthenticatedAdminPapeis3Route
   AuthenticatedAdminRankingRoute: typeof AuthenticatedAdminRankingRoute
   AuthenticatedAdminTurmasRoute: typeof AuthenticatedAdminTurmasRoute
   AuthenticatedAdminTurmas2Route: typeof AuthenticatedAdminTurmas2Route
@@ -2770,12 +2935,14 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminTurmas5Route: typeof AuthenticatedAdminTurmas5Route
   AuthenticatedAdminTurmas6Route: typeof AuthenticatedAdminTurmas6Route
   AuthenticatedAdminTurmas7Route: typeof AuthenticatedAdminTurmas7Route
+  AuthenticatedAdminTurmas8Route: typeof AuthenticatedAdminTurmas8Route
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
     AuthenticatedAdminAcessosRoute: AuthenticatedAdminAcessosRoute,
+    AuthenticatedAdminAcessos10Route: AuthenticatedAdminAcessos10Route,
     AuthenticatedAdminAcessos2Route: AuthenticatedAdminAcessos2Route,
     AuthenticatedAdminAcessos3Route: AuthenticatedAdminAcessos3Route,
     AuthenticatedAdminAcessos4Route: AuthenticatedAdminAcessos4Route,
@@ -2785,6 +2952,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminAcessos8Route: AuthenticatedAdminAcessos8Route,
     AuthenticatedAdminAcessos9Route: AuthenticatedAdminAcessos9Route,
     AuthenticatedAdminCodigosRoute: AuthenticatedAdminCodigosRoute,
+    AuthenticatedAdminCodigos2Route: AuthenticatedAdminCodigos2Route,
     AuthenticatedAdminConteudoRoute: AuthenticatedAdminConteudoRoute,
     AuthenticatedAdminEstruturaRoute: AuthenticatedAdminEstruturaRoute,
     AuthenticatedAdminEstrutura2Route: AuthenticatedAdminEstrutura2Route,
@@ -2793,6 +2961,8 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminEstrutura5Route: AuthenticatedAdminEstrutura5Route,
     AuthenticatedAdminEstrutura6Route: AuthenticatedAdminEstrutura6Route,
     AuthenticatedAdminEstrutura7Route: AuthenticatedAdminEstrutura7Route,
+    AuthenticatedAdminEstrutura8Route: AuthenticatedAdminEstrutura8Route,
+    AuthenticatedAdminEstudio10Route: AuthenticatedAdminEstudio10Route,
     AuthenticatedAdminEstudio2Route: AuthenticatedAdminEstudio2Route,
     AuthenticatedAdminEstudio3Route: AuthenticatedAdminEstudio3Route,
     AuthenticatedAdminEstudio4Route: AuthenticatedAdminEstudio4Route,
@@ -2805,6 +2975,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
       AuthenticatedAdminMentoradasRouteWithChildren,
     AuthenticatedAdminPapeisRoute: AuthenticatedAdminPapeisRoute,
     AuthenticatedAdminPapeis2Route: AuthenticatedAdminPapeis2Route,
+    AuthenticatedAdminPapeis3Route: AuthenticatedAdminPapeis3Route,
     AuthenticatedAdminRankingRoute: AuthenticatedAdminRankingRoute,
     AuthenticatedAdminTurmasRoute: AuthenticatedAdminTurmasRoute,
     AuthenticatedAdminTurmas2Route: AuthenticatedAdminTurmas2Route,
@@ -2813,6 +2984,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminTurmas5Route: AuthenticatedAdminTurmas5Route,
     AuthenticatedAdminTurmas6Route: AuthenticatedAdminTurmas6Route,
     AuthenticatedAdminTurmas7Route: AuthenticatedAdminTurmas7Route,
+    AuthenticatedAdminTurmas8Route: AuthenticatedAdminTurmas8Route,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   }
 
@@ -3071,6 +3243,7 @@ const rootRouteChildren: RootRouteChildren = {
   MinhaBaseRoute: MinhaBaseRoute,
   PendingRoute: PendingRoute,
   ProtocoloRoute: ProtocoloRoute,
+  Protocolo10Route: Protocolo10Route,
   Protocolo2Route: Protocolo2Route,
   Protocolo3Route: Protocolo3Route,
   Protocolo4Route: Protocolo4Route,
@@ -3088,6 +3261,7 @@ const rootRouteChildren: RootRouteChildren = {
   Registo7Route: Registo7Route,
   ResetPasswordRoute: ResetPasswordRoute,
   VitrineRoute: VitrineRoute,
+  Vitrine10Route: Vitrine10Route,
   Vitrine2Route: Vitrine2Route,
   Vitrine3Route: Vitrine3Route,
   Vitrine4Route: Vitrine4Route,

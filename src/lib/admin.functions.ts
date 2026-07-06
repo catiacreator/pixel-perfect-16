@@ -747,14 +747,15 @@ export const getRanking = createServerFn({ method: "GET" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data } = await supabaseAdmin
       .from("profiles")
-      .select("id, nome, tier, pontos")
+      .select("id, nome, tier, pontos, avatar_url")
       .order("pontos", { ascending: false })
       .limit(50);
-    return (data ?? []).map((r: { id: string; nome: string | null; tier: string | null; pontos: number | null }, i: number) => ({
+    return (data ?? []).map((r: { id: string; nome: string | null; tier: string | null; pontos: number | null; avatar_url: string | null }, i: number) => ({
       pos: i + 1,
       nome: r.nome || "Aluno",
       tier: r.tier || "Início",
       pontos: r.pontos ?? 0,
+      avatar: r.avatar_url || undefined,
       isMe: r.id === context.userId,
     }));
   });

@@ -113,7 +113,7 @@ export default function Conquistas() {
   const [base, setBase] = useState({ streak: 0 });
   const [postsPublicados, setPostsPublicados] = useState(0);
   const [extras, setExtras] = useState({ conclusao: 0, docCampos: 0, pilares: 0 });
-  const [serverRanking, setServerRanking] = useState<{ pos: number; nome: string; tier: string; pontos: number; isMe: boolean }[] | null>(null);
+  const [serverRanking, setServerRanking] = useState<{ pos: number; nome: string; tier: string; pontos: number; isMe: boolean; avatar?: string }[] | null>(null);
 
   const pushFn = useServerFn(setMyPoints);
   const rankingFn = useServerFn(getRanking);
@@ -179,7 +179,7 @@ export default function Conquistas() {
 
   // Ranking real (do servidor) quando disponível; senão mostra só o próprio.
   const listaRanking = useMemo(
-    () => serverRanking ?? [{ pos: 1, nome: `${nome}`, tier: tier.label, pontos, isMe: true }],
+    () => serverRanking ?? [{ pos: 1, nome: `${nome}`, tier: tier.label, pontos, isMe: true, avatar: undefined as string | undefined }],
     [serverRanking, nome, tier.label, pontos],
   );
   const ranking = useMemo(() => {
@@ -328,8 +328,12 @@ export default function Conquistas() {
                   className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${r.isMe ? "bg-terracotta/8 border border-terracotta/25" : ""}`}
                 >
                   <span className="w-6 text-sm text-ink/50 tabular-nums">{r.pos}</span>
-                  <div className="w-8 h-8 rounded-full bg-ink/10 flex items-center justify-center text-[11px] font-medium text-ink/70">
-                    {(r.nome || "?").split(" ").map((p) => p[0]).slice(0, 2).join("")}
+                  <div className="w-8 h-8 rounded-full bg-ink/10 overflow-hidden flex items-center justify-center text-[11px] font-medium text-ink/70 shrink-0">
+                    {r.avatar ? (
+                      <img src={r.avatar} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      (r.nome || "?").split(" ").map((p) => p[0]).slice(0, 2).join("")
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-ink truncate">
