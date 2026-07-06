@@ -8,6 +8,16 @@ export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordPage,
 });
 
+// Traduz as mensagens de erro do link para português claro.
+function traduzErroLink(msg: string): string {
+  const m = msg.toLowerCase();
+  if (m.includes("expired") || m.includes("invalid") || m.includes("otp"))
+    return "Este link já expirou ou foi usado. Peça um novo link em baixo.";
+  if (m.includes("code verifier") || m.includes("verifier"))
+    return "Abra o link no mesmo dispositivo/navegador onde pediu a recuperação, ou peça um novo link em baixo.";
+  return "Não foi possível validar o link. Peça um novo link em baixo.";
+}
+
 function ResetPasswordPage() {
   const navigate = useNavigate();
   const [pronto, setPronto] = useState(false); // sessão de recuperação ativa?
@@ -17,14 +27,45 @@ function ResetPasswordPage() {
   const [erro, setErro] = useState<string | null>(null);
   const [ok, setOk] = useState(false);
 
-  // O link do e-mail traz a sessão de recuperação — confirmamos que existe.
+  // O link do e-mail traz a sessão de recuperação. O Supabase pode devolvê-la de
+  // duas formas: tokens no #hash (fluxo implícito) ou ?code=... (fluxo PKCE).
+  // Também pode devolver um erro (link expirado/já usado) que temos de mostrar.
   useEffect(() => {
     let active = true;
-    supabase.auth.getSession().then(({ data }) => {
-      if (active) setPronto(!!data.session);
-    });
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (active && session) setPronto(true);
+
+    async function init() {
+      const url = new URL(window.location.href);
+      const hash = new URLSearchParams(url.hash.replace(/^#/, ""));
+
+      // 1) Erro explícito no link (expirado, já usado, inválido)
+      const errDesc = url.searchParams.get("error_description") || hash.get("error_description");
+      if (errDesc) {
+        if (active) setErro(traduzErroLink(errDesc));
+        return;
+      }
+
+      // 2) Fluxo PKCE — troca o código por sessão
+      const code = url.searchParams.get("code");
+      if (code) {
+        const { error } = await supabase.auth.exchangeCodeForSession(code);
+        if (!active) return;
+        if (error) setErro(traduzErroLink(error.message));
+        else setPronto(true);
+        return;
+      }
+
+      // 3) Fluxo implícito — o cliente lê os tokens do #hash; confirmamos a sessão
+      const { data } = await supabase.auth.getSession();
+      if (active && data.session) setPronto(true);
+    }
+
+    void init();
+
+    const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+      if (active && session && (event === "PASSWORD_RECOVERY" || event === "SIGNED_IN")) {
+        setErro(null);
+        setPronto(true);
+      }
     });
     return () => { active = false; sub.subscription.unsubscribe(); };
   }, []);
@@ -72,7 +113,8 @@ function ResetPasswordPage() {
         <h1 className="text-2xl font-semibold text-ink">Nova palavra-passe</h1>
         <p className="text-sm text-ink/60 mt-1">Defina a sua nova palavra-passe para entrar.</p>
 
-        {!pronto && !ok && (
+        {/* Aviso genérico só quando não há erro explícito do link */}
+        {!pronto && !ok && !erro && (
           <div className="mt-5 flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-sm text-amber-700">
             <AlertCircle size={16} className="mt-0.5 shrink-0" />
             <span>
@@ -86,9 +128,19 @@ function ResetPasswordPage() {
         )}
 
         {erro && (
-          <div className="mt-5 flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50 px-3.5 py-3 text-sm text-red-700">
-            <AlertCircle size={16} className="mt-0.5 shrink-0" />
-            <span>{erro}</span>
+          <div className="mt-5 rounded-xl border border-red-200 bg-red-50 px-3.5 py-3 text-sm text-red-700">
+            <div className="flex items-start gap-2.5">
+              <AlertCircle size={16} className="mt-0.5 shrink-0" />
+              <span>{erro}</span>
+            </div>
+            {!pronto && !ok && (
+              <button
+                onClick={() => navigate({ to: "/auth" })}
+                className="mt-3 w-full h-10 rounded-full bg-red-600 text-white text-sm font-medium hover:bg-red-700 transition-colors"
+              >
+                Pedir novo link de recuperação
+              </button>
+            )}
           </div>
         )}
 

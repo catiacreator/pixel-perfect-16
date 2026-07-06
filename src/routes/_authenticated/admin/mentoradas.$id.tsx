@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { ArrowLeft } from "lucide-react";
-import { getMentorada } from "@/lib/admin.functions";
+import { useState } from "react";
+import { ArrowLeft, KeyRound, Copy, Check } from "lucide-react";
+import { getMentorada, resetAlunoPassword } from "@/lib/admin.functions";
+import { notify } from "@/lib/toast";
 
 export const Route = createFileRoute("/_authenticated/admin/mentoradas/$id")({
   component: MentoradaDetalhe,
@@ -58,6 +60,84 @@ function MentoradaDetalhe() {
           </div>
         ))}
       </div>
+
+      <ResetPassword userId={id} nome={data.perfil.nome || "este aluno"} />
+    </div>
+  );
+}
+
+function ResetPassword({ userId, nome }: { userId: string; nome: string }) {
+  const reset = useServerFn(resetAlunoPassword);
+  const [password, setPassword] = useState("leveza123");
+  const [loading, setLoading] = useState(false);
+  const [feito, setFeito] = useState(false);
+  const [copiado, setCopiado] = useState(false);
+
+  async function aplicar() {
+    if (password.length < 6) {
+      notify("A palavra-passe deve ter pelo menos 6 caracteres.", "error");
+      return;
+    }
+    if (!window.confirm(`Definir a palavra-passe de ${nome} para "${password}"?\n\nO aluno passa a entrar com esta palavra-passe (pode mudá-la depois).`)) return;
+    setLoading(true);
+    try {
+      await reset({ data: { userId, password } });
+      setFeito(true);
+      notify("Palavra-passe reposta ✓", "success");
+    } catch (e) {
+      notify(e instanceof Error ? e.message : "Não foi possível repor.", "error");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function copiar() {
+    try {
+      await navigator.clipboard?.writeText(password);
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 1500);
+    } catch { /* ignora */ }
+  }
+
+  return (
+    <div className="mt-8 bg-white border border-[var(--color-border)] rounded-2xl p-5">
+      <div className="flex items-center gap-2 mb-1">
+        <KeyRound size={15} className="text-terracotta" />
+        <h2 className="text-sm font-semibold">Repor palavra-passe</h2>
+      </div>
+      <p className="text-[13px] text-ink/55 mb-3">
+        Se o aluno se esqueceu, define aqui uma palavra-passe e partilha-a com ele. Ele pode mudá-la depois nas definições.
+      </p>
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="flex items-center gap-1.5 border border-[var(--color-border)] rounded-full pl-4 pr-1.5 h-11 bg-cream">
+          <input
+            value={password}
+            onChange={(e) => { setPassword(e.target.value); setFeito(false); }}
+            className="bg-transparent outline-none text-sm text-ink w-40"
+            aria-label="Nova palavra-passe"
+          />
+          <button
+            onClick={copiar}
+            type="button"
+            className="w-8 h-8 rounded-full hover:bg-ink/5 flex items-center justify-center text-ink/50"
+            aria-label="Copiar"
+          >
+            {copiado ? <Check size={14} className="text-sage" /> : <Copy size={14} />}
+          </button>
+        </div>
+        <button
+          onClick={aplicar}
+          disabled={loading}
+          className="h-11 px-5 rounded-full bg-terracotta text-cream text-sm font-medium hover:bg-terracotta-dark transition-colors disabled:opacity-50"
+        >
+          {loading ? "A repor..." : feito ? "Repor de novo" : "Repor palavra-passe"}
+        </button>
+      </div>
+      {feito && (
+        <p className="text-[13px] text-sage mt-3">
+          Feito. Partilha com {nome}: entra com o e-mail e a palavra-passe <b>{password}</b>.
+        </p>
+      )}
     </div>
   );
 }

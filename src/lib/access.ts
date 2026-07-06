@@ -3,10 +3,11 @@
 // MODELO: PRODUTO ÚNICO. A plataforma é vendida como UM só produto.
 // Comprar esse produto desbloqueia TODOS os módulos de uma vez.
 
-// Emails de administração — vêem SEMPRE tudo desbloqueado (sem paywall).
+// Admin FIXO no código — só a conta dona, para nunca perder acesso.
+// Todos os outros admins são geridos pelo painel (papel na base de dados,
+// tabela user_roles). Assim, marcar um email como aluno no painel passa a
+// funcionar — deixa de haver emails "presos" como admin no código.
 export const ADMIN_EMAILS = [
-  "catiacreator.oficial@gmail.com",
-  "catiacreator@gmail.com",
   "catiasmgon@gmail.com",
 ];
 
