@@ -5,7 +5,7 @@ import { resetMasterDocSync } from "@/lib/master-doc-sync";
 import { readStoredSession } from "@/lib/session";
 import { notify } from "@/lib/toast";
 import { useAccess } from "@/lib/use-access";
-import { useAdminView } from "@/lib/admin-view";
+import { useAdminView, abrirPreviewTurma, setPreviewTurma } from "@/lib/admin-view";
 
 /** Redimensiona/recorta a imagem para um quadrado de 256px e devolve um data URL JPEG. */
 function fileToAvatar(file: File): Promise<string> {
@@ -163,13 +163,13 @@ export default function UserMenu() {
                 {/* Este bloco só aparece na vista de admin, por isso "Admin" está
                     sempre ativo; clicar em "Aluno" muda a vista e esconde o bloco. */}
                 <button
-                  onClick={() => setView("aluno")}
+                  onClick={() => { setOpen(false); abrirPreviewTurma(); }}
                   className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-semibold py-2 rounded-lg transition-colors text-ink/55 hover:text-ink"
                 >
                   <Eye size={13} /> Aluno
                 </button>
                 <button
-                  onClick={() => setView("admin")}
+                  onClick={() => { setView("admin"); setPreviewTurma(null); }}
                   className="flex-1 inline-flex items-center justify-center gap-1.5 text-xs font-semibold py-2 rounded-lg transition-colors bg-white text-ink shadow-sm"
                 >
                   <Eye size={13} /> Admin
