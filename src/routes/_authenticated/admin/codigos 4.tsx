@@ -4,14 +4,13 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
 import { Ticket, Plus, Trash2, Copy, Check, Wand2 } from "lucide-react";
 import { notify } from "@/lib/toast";
-import { getCodigos, setCodigos, getTurmas } from "@/lib/admin.functions";
-import type { Turma } from "@/lib/turmas";
+import { getCodigos, setCodigos } from "@/lib/admin.functions";
 
-export const Route = createFileRoute("/_authenticated/admin/codigos")({
+export const Route = createFileRoute("/_authenticated/admin/codigos 4")({
   component: CodigosPage,
 });
 
-type Codigo = { codigo: string; ativo: boolean; nota?: string; turmaId?: string };
+type Codigo = { codigo: string; ativo: boolean; nota?: string };
 
 function gerarCodigo(): string {
   const letras = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // sem 0/O/1/I
@@ -23,16 +22,12 @@ function gerarCodigo(): string {
 function CodigosPage() {
   const fetchFn = useServerFn(getCodigos);
   const saveFn = useServerFn(setCodigos);
-  const fetchTurmas = useServerFn(getTurmas);
   const qc = useQueryClient();
   const { data } = useSuspenseQuery({ queryKey: ["admin-codigos"], queryFn: () => fetchFn() });
-  const { data: turmasData } = useSuspenseQuery({ queryKey: ["admin-turmas"], queryFn: () => fetchTurmas() });
   const codigos = (data as Codigo[]) || [];
-  const turmas = (turmasData as Turma[]) || [];
 
   const [novo, setNovo] = useState("");
   const [nota, setNota] = useState("");
-  const [novoTurma, setNovoTurma] = useState("");
   const [copiado, setCopiado] = useState<string | null>(null);
 
   const mut = useMutation({
@@ -47,15 +42,12 @@ function CodigosPage() {
       notify("Esse código já existe.", "error");
       return;
     }
-    persist([{ codigo: cod, ativo: true, nota: nota.trim() || undefined, turmaId: novoTurma || undefined }, ...codigos]);
+    persist([{ codigo: cod, ativo: true, nota: nota.trim() || undefined }, ...codigos]);
     setNovo("");
     setNota("");
-    setNovoTurma("");
   }
   const toggle = (cod: string) =>
     persist(codigos.map((c) => (c.codigo === cod ? { ...c, ativo: !c.ativo } : c)));
-  const mudarTurma = (cod: string, turmaId: string) =>
-    persist(codigos.map((c) => (c.codigo === cod ? { ...c, turmaId: turmaId || undefined } : c)));
   const apagar = (cod: string) => {
     if (!window.confirm(`Apagar o código ${cod}?`)) return;
     persist(codigos.filter((c) => c.codigo !== cod));
@@ -92,24 +84,11 @@ function CodigosPage() {
           </div>
         </div>
         <div className="flex-1 min-w-[140px]">
-          <label className="block text-[10px] tracking-[0.14em] uppercase text-ink/45 mb-1.5">Entra na turma</label>
-          <select
-            value={novoTurma}
-            onChange={(e) => setNovoTurma(e.target.value)}
-            className="w-full h-10 px-3 rounded-lg border border-[var(--color-border)] text-sm bg-white"
-          >
-            <option value="">Iniciante (padrão)</option>
-            {turmas.map((t) => (
-              <option key={t.id} value={t.id}>{t.nome}</option>
-            ))}
-          </select>
-        </div>
-        <div className="flex-1 min-w-[120px]">
           <label className="block text-[10px] tracking-[0.14em] uppercase text-ink/45 mb-1.5">Nota (opcional)</label>
           <input
             value={nota}
             onChange={(e) => setNota(e.target.value)}
-            placeholder="Ex.: Janeiro"
+            placeholder="Ex.: Turma de janeiro"
             className="w-full h-10 px-3 rounded-lg border border-[var(--color-border)] text-sm"
           />
         </div>
@@ -133,19 +112,8 @@ function CodigosPage() {
               <button onClick={() => copiar(c.codigo)} className="text-ink/35 hover:text-ink" aria-label="Copiar">
                 {copiado === c.codigo ? <Check size={14} className="text-sage" /> : <Copy size={14} />}
               </button>
-              {c.nota && <span className="text-[13px] text-ink/50 truncate hidden md:block">{c.nota}</span>}
+              {c.nota && <span className="text-[13px] text-ink/50 truncate hidden sm:block">{c.nota}</span>}
               <div className="flex items-center gap-3 ml-auto">
-                <select
-                  value={c.turmaId ?? ""}
-                  onChange={(e) => mudarTurma(c.codigo, e.target.value)}
-                  className="h-8 rounded-lg border border-[var(--color-border)] bg-white px-2 text-xs max-w-[150px]"
-                  title="Turma em que o aluno entra ao usar este código"
-                >
-                  <option value="">Iniciante (padrão)</option>
-                  {turmas.map((t) => (
-                    <option key={t.id} value={t.id}>{t.nome}</option>
-                  ))}
-                </select>
                 <button
                   onClick={() => toggle(c.codigo)}
                   className={`inline-flex items-center gap-1.5 text-[12px] font-semibold px-3 py-1.5 rounded-full border transition-colors ${

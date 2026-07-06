@@ -599,6 +599,7 @@ export const setCodigos = createServerFn({ method: "POST" })
         codigo: z.string().min(1).max(60),
         ativo: z.boolean(),
         nota: z.string().max(200).optional(),
+        turmaId: z.string().max(120).optional(),
       })).max(1000),
     }).parse(d),
   )
@@ -625,6 +626,54 @@ export const validarCodigo = createServerFn({ method: "POST" })
     const alvo = data.codigo.trim().toLowerCase();
     const valido = codigos.some((c) => c.ativo && String(c.codigo).trim().toLowerCase() === alvo);
     return { valido };
+  });
+
+// Registo público com código: valida o código (ativo), cria a conta (já confirmada)
+// e, se o código tiver turma, mete o novo aluno nessa turma. Tudo no servidor.
+export const registarComCodigo = createServerFn({ method: "POST" })
+  .inputValidator((d: { codigo: string; email: string; nome: string; password: string }) =>
+    z.object({
+      codigo: z.string().min(1).max(60),
+      email: z.string().email(),
+      nome: z.string().min(1).max(120),
+      password: z.string().min(6).max(72),
+    }).parse(d),
+  )
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { uid, blob } = await readOwnerBlob(supabaseAdmin);
+    const codigos = (Array.isArray(blob[CODIGOS_KEY]) ? blob[CODIGOS_KEY] : []) as { codigo: string; ativo: boolean; turmaId?: string }[];
+    const alvo = data.codigo.trim().toLowerCase();
+    const codigo = codigos.find((c) => c.ativo && String(c.codigo).trim().toLowerCase() === alvo);
+    if (!codigo) return { ok: false as const, erro: "codigo" };
+
+    const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
+      email: data.email,
+      password: data.password,
+      email_confirm: true,
+      user_metadata: { full_name: data.nome },
+    });
+    if (error) return { ok: false as const, erro: error.message };
+    const novoId = created.user?.id;
+    if (novoId) {
+      await supabaseAdmin.from("profiles").update({ nome: data.nome, approved: true }).eq("id", novoId);
+      // Atribui à turma do código (se tiver).
+      if (codigo.turmaId) {
+        const turmas = (Array.isArray(blob["__turmas__"]) ? blob["__turmas__"] : []) as { id: string; membros: string[] }[];
+        let mudou = false;
+        const next = turmas.map((t) => {
+          if (t.id === codigo.turmaId) { mudou = true; return { ...t, membros: Array.from(new Set([...(t.membros || []), novoId])) }; }
+          return t;
+        });
+        if (mudou) {
+          await supabaseAdmin.from("master_documents").upsert(
+            { user_id: uid, data: { ...blob, ["__turmas__"]: next }, updated_at: new Date().toISOString() },
+            { onConflict: "user_id" },
+          );
+        }
+      }
+    }
+    return { ok: true as const };
   });
 
 // ───────── Turmas — grupos de alunos com permissões próprias ─────────
