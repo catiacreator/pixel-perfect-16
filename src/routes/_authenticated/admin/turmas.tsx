@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
@@ -17,10 +17,12 @@ function TurmasPage() {
   const fetchAlunos = useServerFn(listMentoradas);
   const save = useServerFn(setTurmas);
   const qc = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: turmasData } = useSuspenseQuery({ queryKey: ["admin-turmas"], queryFn: () => fetchTurmas() });
   const { data: alunosData } = useSuspenseQuery({ queryKey: ["admin-mentoradas"], queryFn: () => fetchAlunos() });
-  const alunos = (alunosData as { id: string; nome?: string; email?: string }[]) || [];
+  type AlunoLinha = { id: string; nome?: string; email?: string; tier?: string; pontos?: number };
+  const alunos = (alunosData as AlunoLinha[]) || [];
   const nomeAluno = (id: string) => {
     const a = alunos.find((x) => x.id === id);
     return a?.nome || a?.email || "Aluno";
@@ -31,6 +33,7 @@ function TurmasPage() {
   const [turmas, setTurmas_] = useState<Turma[]>(serverTurmas);
   const [dirty, setDirty] = useState(false);
   const [selId, setSelId] = useState<string | null>(serverTurmas[0]?.id ?? null);
+  const [tabTurma, setTabTurma] = useState<string | null>(null);
 
   // Re-sincroniza com o servidor quando não há alterações por guardar (carga inicial / após guardar).
   useEffect(() => { if (!dirty) setTurmas_(serverTurmas); /* eslint-disable-next-line */ }, [turmasData, dirty]);
@@ -190,6 +193,68 @@ function TurmasPage() {
           )}
         </div>
       )}
+
+      {/* Alunos por turma — tabs para navegar e ver quem está em cada turma */}
+      {turmas.length > 0 && (() => {
+        const tabAtual = tabTurma ?? turmas[0]?.id ?? null;
+        const membros = turmas.find((t) => t.id === tabAtual)?.membros ?? [];
+        const alunosTab = membros
+          .map((uid) => alunos.find((a) => a.id === uid))
+          .filter((a): a is AlunoLinha => !!a);
+        return (
+          <div className="mt-10">
+            <h2 className="text-base font-semibold text-ink">Alunos por turma</h2>
+            <p className="text-[13px] text-ink/55 mb-3">Clique num aluno para o abrir na tabela de <b>Alunos</b>.</p>
+
+            <div className="flex gap-2 flex-wrap mb-3">
+              {turmas.map((t) => {
+                const on = t.id === tabAtual;
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => setTabTurma(t.id)}
+                    className={`inline-flex items-center gap-2 text-[13px] px-3.5 py-1.5 rounded-full border transition-colors ${on ? "bg-ink text-cream border-transparent" : "bg-white border-[var(--color-border)] text-ink/70 hover:border-terracotta/50"}`}
+                  >
+                    <span className="w-2 h-2 rounded-full shrink-0" style={{ background: t.cor || "#999" }} />
+                    {t.nome} <span className="opacity-60">({t.membros.length})</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="rounded-2xl border border-[var(--color-border)] bg-white overflow-hidden">
+              {alunosTab.length === 0 ? (
+                <p className="p-8 text-sm text-ink/50 text-center">Sem alunos nesta turma. Atribua na tabela de <b>Alunos</b>.</p>
+              ) : (
+                <table className="w-full text-sm">
+                  <thead className="text-[11px] uppercase tracking-wider text-ink/50">
+                    <tr className="border-b border-[var(--color-border)]">
+                      <th className="text-left px-5 py-3 font-medium">Nome</th>
+                      <th className="text-left px-5 py-3 font-medium">E-mail</th>
+                      <th className="text-left px-5 py-3 font-medium">Nível</th>
+                      <th className="text-right px-5 py-3 font-medium">Pontos</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {alunosTab.map((a) => (
+                      <tr
+                        key={a.id}
+                        onClick={() => navigate({ to: "/admin/mentoradas", search: { aluno: a.id } })}
+                        className="border-b border-[var(--color-border)] last:border-0 cursor-pointer hover:bg-terracotta/5 transition-colors"
+                      >
+                        <td className="px-5 py-3 font-medium text-ink">{a.nome || "—"}</td>
+                        <td className="px-5 py-3 text-ink/60">{a.email}</td>
+                        <td className="px-5 py-3 text-ink/60">{a.tier || "Início"}</td>
+                        <td className="px-5 py-3 text-right font-medium tabular-nums">{a.pontos ?? 0}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        );
+      })()}
     </div>
   );
 }
