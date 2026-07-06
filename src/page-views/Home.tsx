@@ -4,6 +4,7 @@ import Layout from "../components/Layout";
 import HeroRobot from "../components/HeroRobot";
 import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock } from "lucide-react";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
+import { useBloqueios } from "@/lib/bloqueios";
 
 // Porta de entrada: dois produtos independentes.
 const PRODUTOS = [
@@ -19,6 +20,7 @@ const PRODUTOS = [
     pos: "center calc(42% - 10px)",
     cor: "#C8487E",
     icon: Instagram,
+    estruturaId: "protocolo",
   },
   {
     key: "academia",
@@ -32,12 +34,13 @@ const PRODUTOS = [
     pos: "center bottom",
     cor: "#2E7CB8",
     icon: GraduationCap,
-    bloqueavel: true,
+    estruturaId: "academia",
   },
 ];
 
 export default function Home() {
   const bloqueado = useBloqueadoParaAlunos();
+  const { isBloqueado } = useBloqueios();
   const orbRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let x = window.innerWidth / 2;
@@ -142,7 +145,8 @@ export default function Home() {
         <div className="grid md:grid-cols-2 gap-5 md:gap-6">
           {PRODUTOS.map((p, i) => {
             const Icon = p.icon;
-            const locked = Boolean((p as { bloqueavel?: boolean }).bloqueavel) && bloqueado;
+            const eid = (p as { estruturaId?: string }).estruturaId;
+            const locked = !!eid && isBloqueado(eid) && bloqueado;
             const Wrapper: any = locked ? "div" : Link;
             const wrapperProps = locked ? { "aria-disabled": true } : { to: p.to };
             return (

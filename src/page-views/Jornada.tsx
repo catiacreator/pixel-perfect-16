@@ -16,6 +16,7 @@ import {
   Lock,
 } from "lucide-react";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
+import { useBloqueios } from "@/lib/bloqueios";
 
 const PILARES = [
   {
@@ -26,6 +27,7 @@ const PILARES = [
     to: "/metodo/pilar-1",
     status: "disponivel" as const,
     minutos: "6 etapas",
+    estruturaId: "pilar-1",
   },
   {
     n: "02",
@@ -35,6 +37,7 @@ const PILARES = [
     to: "/metodo/pilar-2",
     status: "disponivel" as const,
     minutos: "9 etapas",
+    estruturaId: "pilar-2",
   },
   {
     n: "03",
@@ -44,7 +47,7 @@ const PILARES = [
     to: "/metodo/pilar-3",
     status: "disponivel" as const,
     minutos: "6 etapas",
-    lock: true,
+    estruturaId: "pilar-3",
   },
   {
     n: "04",
@@ -54,12 +57,14 @@ const PILARES = [
     to: "/metodo/pilar-4",
     status: "disponivel" as const,
     minutos: "9 etapas",
-    lock: true,
+    estruturaId: "pilar-4",
   },
 ];
 
 export default function Jornada() {
   const bloqueado = useBloqueadoParaAlunos();
+  const { isBloqueado } = useBloqueios();
+  const pilarLocked = (p: { estruturaId?: string }) => !!p.estruturaId && isBloqueado(p.estruturaId) && bloqueado;
   return (
     <Layout>
       <div className="max-w-[1400px] mx-auto px-5 md:px-10 pt-6 flex items-center justify-between gap-3">
@@ -69,7 +74,7 @@ export default function Jornada() {
         >
           <ArrowLeft size={16} /> Voltar ao Protocolo Viral
         </Link>
-        {bloqueado ? (
+        {bloqueado && isBloqueado("redes") ? (
           <span className="inline-flex items-center gap-2 rounded-full bg-ink/5 text-ink/40 border border-border px-4 py-2 text-sm font-semibold cursor-not-allowed">
             <Lock size={14} /> Criar para o Instagram · em breve
           </span>
@@ -97,7 +102,7 @@ export default function Jornada() {
       <div className="max-w-[1400px] mx-auto px-5 md:px-10 pt-8 md:pt-10 pb-20 md:pb-28">
         <div className="flex justify-end mb-6">
           <p className="text-xs text-ink/40">
-            {PILARES.filter((p) => p.status === "disponivel" && !((p as { lock?: boolean }).lock && bloqueado)).length} de {PILARES.length} pilares disponíveis
+            {PILARES.filter((p) => p.status === "disponivel" && !pilarLocked(p)).length} de {PILARES.length} pilares disponíveis
           </p>
         </div>
 
@@ -105,7 +110,7 @@ export default function Jornada() {
         <div className="grid sm:grid-cols-2 gap-4 md:gap-5">
           {PILARES.map((p) => {
             const Icon = p.icon;
-            const locked = Boolean((p as { lock?: boolean }).lock) && bloqueado;
+            const locked = pilarLocked(p);
             const disponivel = p.status === "disponivel" && !locked;
             const Wrapper: any = disponivel ? Link : "div";
             const props = disponivel ? { to: p.to } : {};
@@ -201,7 +206,7 @@ export default function Jornada() {
                 cobre mais, entregue resultados.
               </p>
             </div>
-            {bloqueado ? (
+            {bloqueado && isBloqueado("consultoria") ? (
               <span className="inline-flex items-center gap-2 bg-white/10 text-cream/60 border border-white/25 px-5 py-2.5 rounded-full text-sm font-semibold cursor-not-allowed shrink-0">
                 <Lock size={14} /> Em breve
               </span>
@@ -236,7 +241,7 @@ export default function Jornada() {
                 aplicar Inteligência Artificial com ética e resultado na sua prática.
               </p>
             </div>
-            {bloqueado ? (
+            {bloqueado && isBloqueado("saude") ? (
               <span className="inline-flex items-center gap-2 bg-ink/5 text-ink/40 border border-border px-5 py-2.5 rounded-full text-sm font-semibold cursor-not-allowed shrink-0">
                 <Lock size={14} /> Em breve
               </span>
