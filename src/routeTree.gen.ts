@@ -9,9 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as Vitrine2RouteImport } from './routes/vitrine 2'
 import { Route as VitrineRouteImport } from './routes/vitrine'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as Registo2RouteImport } from './routes/registo 2'
 import { Route as RegistoRouteImport } from './routes/registo'
+import { Route as Protocolo2RouteImport } from './routes/protocolo 2'
 import { Route as ProtocoloRouteImport } from './routes/protocolo'
 import { Route as PendingRouteImport } from './routes/pending'
 import { Route as MinhaBaseRouteImport } from './routes/minha-base'
@@ -69,8 +72,10 @@ import { Route as MetodoPilar1AprendaIaRouteImport } from './routes/metodo.pilar
 import { Route as MetodoConsultoriaIaComoUsarRouteImport } from './routes/metodo.consultoria-ia.como-usar'
 import { Route as AuthenticatedAdminRankingRouteImport } from './routes/_authenticated/admin/ranking'
 import { Route as AuthenticatedAdminMentoradasRouteImport } from './routes/_authenticated/admin/mentoradas'
+import { Route as AuthenticatedAdminEstudio2RouteImport } from './routes/_authenticated/admin/estudio 2'
 import { Route as AuthenticatedAdminEstudioRouteImport } from './routes/_authenticated/admin/estudio'
 import { Route as AuthenticatedAdminConteudoRouteImport } from './routes/_authenticated/admin/conteudo'
+import { Route as AuthenticatedAdminAcessos2RouteImport } from './routes/_authenticated/admin/acessos 2'
 import { Route as AuthenticatedAdminAcessosRouteImport } from './routes/_authenticated/admin/acessos'
 import { Route as MetodoPilar3PaginaVendasIndexRouteImport } from './routes/metodo.pilar-3.pagina-vendas.index'
 import { Route as MetodoPilar3CriarProdutoIndexRouteImport } from './routes/metodo.pilar-3.criar-produto.index'
@@ -93,6 +98,11 @@ import { Route as MetodoPilar2RedesSociaisInstagramFormatoRouteImport } from './
 import { Route as MetodoPilar1AprendaIaClaudeInstalarSkillsRouteImport } from './routes/metodo.pilar-1.aprenda-ia.claude.instalar-skills'
 import { Route as MetodoPilar1AprendaIaToolLessonSlugRouteImport } from './routes/metodo.pilar-1.aprenda-ia.$tool.$lessonSlug'
 
+const Vitrine2Route = Vitrine2RouteImport.update({
+  id: '/vitrine 2',
+  path: '/vitrine 2',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const VitrineRoute = VitrineRouteImport.update({
   id: '/vitrine',
   path: '/vitrine',
@@ -103,9 +113,19 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Registo2Route = Registo2RouteImport.update({
+  id: '/registo 2',
+  path: '/registo 2',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RegistoRoute = RegistoRouteImport.update({
   id: '/registo',
   path: '/registo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Protocolo2Route = Protocolo2RouteImport.update({
+  id: '/protocolo 2',
+  path: '/protocolo 2',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProtocoloRoute = ProtocoloRouteImport.update({
@@ -403,6 +423,12 @@ const AuthenticatedAdminMentoradasRoute =
     path: '/mentoradas',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminEstudio2Route =
+  AuthenticatedAdminEstudio2RouteImport.update({
+    id: '/estudio 2',
+    path: '/estudio 2',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminEstudioRoute =
   AuthenticatedAdminEstudioRouteImport.update({
     id: '/estudio',
@@ -413,6 +439,12 @@ const AuthenticatedAdminConteudoRoute =
   AuthenticatedAdminConteudoRouteImport.update({
     id: '/conteudo',
     path: '/conteudo',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminAcessos2Route =
+  AuthenticatedAdminAcessos2RouteImport.update({
+    id: '/acessos 2',
+    path: '/acessos 2',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedAdminAcessosRoute =
@@ -556,9 +588,12 @@ export interface FileRoutesByFullPath {
   '/minha-base': typeof MinhaBaseRoute
   '/pending': typeof PendingRoute
   '/protocolo': typeof ProtocoloRoute
+  '/protocolo 2': typeof Protocolo2Route
   '/registo': typeof RegistoRoute
+  '/registo 2': typeof Registo2Route
   '/reset-password': typeof ResetPasswordRoute
   '/vitrine': typeof VitrineRoute
+  '/vitrine 2': typeof Vitrine2Route
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/api/hotmart-webhook': typeof ApiHotmartWebhookRoute
@@ -570,8 +605,10 @@ export interface FileRoutesByFullPath {
   '/metodo/saude': typeof MetodoSaudeRoute
   '/metodo/': typeof MetodoIndexRoute
   '/admin/acessos': typeof AuthenticatedAdminAcessosRoute
+  '/admin/acessos 2': typeof AuthenticatedAdminAcessos2Route
   '/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
   '/admin/estudio': typeof AuthenticatedAdminEstudioRoute
+  '/admin/estudio 2': typeof AuthenticatedAdminEstudio2Route
   '/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
   '/admin/ranking': typeof AuthenticatedAdminRankingRoute
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
@@ -639,16 +676,21 @@ export interface FileRoutesByTo {
   '/minha-base': typeof MinhaBaseRoute
   '/pending': typeof PendingRoute
   '/protocolo': typeof ProtocoloRoute
+  '/protocolo 2': typeof Protocolo2Route
   '/registo': typeof RegistoRoute
+  '/registo 2': typeof Registo2Route
   '/reset-password': typeof ResetPasswordRoute
   '/vitrine': typeof VitrineRoute
+  '/vitrine 2': typeof Vitrine2Route
   '/api/chat': typeof ApiChatRoute
   '/api/hotmart-webhook': typeof ApiHotmartWebhookRoute
   '/metodo/saude': typeof MetodoSaudeRoute
   '/metodo': typeof MetodoIndexRoute
   '/admin/acessos': typeof AuthenticatedAdminAcessosRoute
+  '/admin/acessos 2': typeof AuthenticatedAdminAcessos2Route
   '/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
   '/admin/estudio': typeof AuthenticatedAdminEstudioRoute
+  '/admin/estudio 2': typeof AuthenticatedAdminEstudio2Route
   '/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
   '/admin/ranking': typeof AuthenticatedAdminRankingRoute
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
@@ -715,9 +757,12 @@ export interface FileRoutesById {
   '/minha-base': typeof MinhaBaseRoute
   '/pending': typeof PendingRoute
   '/protocolo': typeof ProtocoloRoute
+  '/protocolo 2': typeof Protocolo2Route
   '/registo': typeof RegistoRoute
+  '/registo 2': typeof Registo2Route
   '/reset-password': typeof ResetPasswordRoute
   '/vitrine': typeof VitrineRoute
+  '/vitrine 2': typeof Vitrine2Route
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/api/hotmart-webhook': typeof ApiHotmartWebhookRoute
@@ -729,8 +774,10 @@ export interface FileRoutesById {
   '/metodo/saude': typeof MetodoSaudeRoute
   '/metodo/': typeof MetodoIndexRoute
   '/_authenticated/admin/acessos': typeof AuthenticatedAdminAcessosRoute
+  '/_authenticated/admin/acessos 2': typeof AuthenticatedAdminAcessos2Route
   '/_authenticated/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
   '/_authenticated/admin/estudio': typeof AuthenticatedAdminEstudioRoute
+  '/_authenticated/admin/estudio 2': typeof AuthenticatedAdminEstudio2Route
   '/_authenticated/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
   '/_authenticated/admin/ranking': typeof AuthenticatedAdminRankingRoute
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
@@ -801,9 +848,12 @@ export interface FileRouteTypes {
     | '/minha-base'
     | '/pending'
     | '/protocolo'
+    | '/protocolo 2'
     | '/registo'
+    | '/registo 2'
     | '/reset-password'
     | '/vitrine'
+    | '/vitrine 2'
     | '/admin'
     | '/api/chat'
     | '/api/hotmart-webhook'
@@ -815,8 +865,10 @@ export interface FileRouteTypes {
     | '/metodo/saude'
     | '/metodo/'
     | '/admin/acessos'
+    | '/admin/acessos 2'
     | '/admin/conteudo'
     | '/admin/estudio'
+    | '/admin/estudio 2'
     | '/admin/mentoradas'
     | '/admin/ranking'
     | '/metodo/consultoria-ia/como-usar'
@@ -884,16 +936,21 @@ export interface FileRouteTypes {
     | '/minha-base'
     | '/pending'
     | '/protocolo'
+    | '/protocolo 2'
     | '/registo'
+    | '/registo 2'
     | '/reset-password'
     | '/vitrine'
+    | '/vitrine 2'
     | '/api/chat'
     | '/api/hotmart-webhook'
     | '/metodo/saude'
     | '/metodo'
     | '/admin/acessos'
+    | '/admin/acessos 2'
     | '/admin/conteudo'
     | '/admin/estudio'
+    | '/admin/estudio 2'
     | '/admin/mentoradas'
     | '/admin/ranking'
     | '/metodo/consultoria-ia/como-usar'
@@ -959,9 +1016,12 @@ export interface FileRouteTypes {
     | '/minha-base'
     | '/pending'
     | '/protocolo'
+    | '/protocolo 2'
     | '/registo'
+    | '/registo 2'
     | '/reset-password'
     | '/vitrine'
+    | '/vitrine 2'
     | '/_authenticated/admin'
     | '/api/chat'
     | '/api/hotmart-webhook'
@@ -973,8 +1033,10 @@ export interface FileRouteTypes {
     | '/metodo/saude'
     | '/metodo/'
     | '/_authenticated/admin/acessos'
+    | '/_authenticated/admin/acessos 2'
     | '/_authenticated/admin/conteudo'
     | '/_authenticated/admin/estudio'
+    | '/_authenticated/admin/estudio 2'
     | '/_authenticated/admin/mentoradas'
     | '/_authenticated/admin/ranking'
     | '/metodo/consultoria-ia/como-usar'
@@ -1045,15 +1107,25 @@ export interface RootRouteChildren {
   MinhaBaseRoute: typeof MinhaBaseRoute
   PendingRoute: typeof PendingRoute
   ProtocoloRoute: typeof ProtocoloRoute
+  Protocolo2Route: typeof Protocolo2Route
   RegistoRoute: typeof RegistoRoute
+  Registo2Route: typeof Registo2Route
   ResetPasswordRoute: typeof ResetPasswordRoute
   VitrineRoute: typeof VitrineRoute
+  Vitrine2Route: typeof Vitrine2Route
   ApiChatRoute: typeof ApiChatRoute
   ApiHotmartWebhookRoute: typeof ApiHotmartWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vitrine 2': {
+      id: '/vitrine 2'
+      path: '/vitrine 2'
+      fullPath: '/vitrine 2'
+      preLoaderRoute: typeof Vitrine2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/vitrine': {
       id: '/vitrine'
       path: '/vitrine'
@@ -1068,11 +1140,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/registo 2': {
+      id: '/registo 2'
+      path: '/registo 2'
+      fullPath: '/registo 2'
+      preLoaderRoute: typeof Registo2RouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/registo': {
       id: '/registo'
       path: '/registo'
       fullPath: '/registo'
       preLoaderRoute: typeof RegistoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/protocolo 2': {
+      id: '/protocolo 2'
+      path: '/protocolo 2'
+      fullPath: '/protocolo 2'
+      preLoaderRoute: typeof Protocolo2RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/protocolo': {
@@ -1474,6 +1560,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMentoradasRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/estudio 2': {
+      id: '/_authenticated/admin/estudio 2'
+      path: '/estudio 2'
+      fullPath: '/admin/estudio 2'
+      preLoaderRoute: typeof AuthenticatedAdminEstudio2RouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/estudio': {
       id: '/_authenticated/admin/estudio'
       path: '/estudio'
@@ -1486,6 +1579,13 @@ declare module '@tanstack/react-router' {
       path: '/conteudo'
       fullPath: '/admin/conteudo'
       preLoaderRoute: typeof AuthenticatedAdminConteudoRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/acessos 2': {
+      id: '/_authenticated/admin/acessos 2'
+      path: '/acessos 2'
+      fullPath: '/admin/acessos 2'
+      preLoaderRoute: typeof AuthenticatedAdminAcessos2RouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/acessos': {
@@ -1654,8 +1754,10 @@ const AuthenticatedAdminMentoradasRouteWithChildren =
 
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminAcessosRoute: typeof AuthenticatedAdminAcessosRoute
+  AuthenticatedAdminAcessos2Route: typeof AuthenticatedAdminAcessos2Route
   AuthenticatedAdminConteudoRoute: typeof AuthenticatedAdminConteudoRoute
   AuthenticatedAdminEstudioRoute: typeof AuthenticatedAdminEstudioRoute
+  AuthenticatedAdminEstudio2Route: typeof AuthenticatedAdminEstudio2Route
   AuthenticatedAdminMentoradasRoute: typeof AuthenticatedAdminMentoradasRouteWithChildren
   AuthenticatedAdminRankingRoute: typeof AuthenticatedAdminRankingRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
@@ -1664,8 +1766,10 @@ interface AuthenticatedAdminRouteRouteChildren {
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
     AuthenticatedAdminAcessosRoute: AuthenticatedAdminAcessosRoute,
+    AuthenticatedAdminAcessos2Route: AuthenticatedAdminAcessos2Route,
     AuthenticatedAdminConteudoRoute: AuthenticatedAdminConteudoRoute,
     AuthenticatedAdminEstudioRoute: AuthenticatedAdminEstudioRoute,
+    AuthenticatedAdminEstudio2Route: AuthenticatedAdminEstudio2Route,
     AuthenticatedAdminMentoradasRoute:
       AuthenticatedAdminMentoradasRouteWithChildren,
     AuthenticatedAdminRankingRoute: AuthenticatedAdminRankingRoute,
@@ -1927,9 +2031,12 @@ const rootRouteChildren: RootRouteChildren = {
   MinhaBaseRoute: MinhaBaseRoute,
   PendingRoute: PendingRoute,
   ProtocoloRoute: ProtocoloRoute,
+  Protocolo2Route: Protocolo2Route,
   RegistoRoute: RegistoRoute,
+  Registo2Route: Registo2Route,
   ResetPasswordRoute: ResetPasswordRoute,
   VitrineRoute: VitrineRoute,
+  Vitrine2Route: Vitrine2Route,
   ApiChatRoute: ApiChatRoute,
   ApiHotmartWebhookRoute: ApiHotmartWebhookRoute,
 }

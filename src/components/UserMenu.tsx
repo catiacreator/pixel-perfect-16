@@ -152,7 +152,9 @@ export default function UserMenu() {
             {email && <p className="text-xs text-ink/50 truncate">{email}</p>}
           </div>
 
-          {isAdmin && (
+          {/* Só para admin E apenas na vista de admin — na pré-visualização como
+              aluno o perfil fica igual ao de um aluno (sem vistas nem link admin). */}
+          {isAdmin && adminView === "admin" && (
             <div className="px-1.5 pb-2 mb-1 border-b border-[var(--color-border)]">
               <p className="text-[10px] tracking-[0.14em] uppercase text-ink/40 px-1.5 pt-1 pb-1.5">Pré-visualizar como</p>
               <div className="flex gap-1 p-1 rounded-xl bg-cream-warm/60 border border-[var(--color-border)]">

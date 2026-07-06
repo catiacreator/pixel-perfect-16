@@ -241,6 +241,24 @@ export const deleteMentorada = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+// Repor a palavra-passe de um aluno (só a dona). Útil quando o aluno se esquece
+// e o e-mail de recuperação não é prático — a mentora define uma password e
+// partilha-a com o aluno, que a pode mudar depois.
+export const resetAlunoPassword = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { userId: string; password: string }) =>
+    z.object({ userId: z.string().uuid(), password: z.string().min(6).max(72) }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertOwner(context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(data.userId, {
+      password: data.password,
+    });
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
 // Adicionar aluno (só a dona). Cria a conta já confirmada; o trigger cria o perfil.
 export const createMentorada = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
