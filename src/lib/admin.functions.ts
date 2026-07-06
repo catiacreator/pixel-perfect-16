@@ -502,6 +502,22 @@ export const getMyMasterDoc = createServerFn({ method: "GET" })
     return (data?.data ?? null) as any;
   });
 
+// A dona lê o Documento Mestre de qualquer aluno (para descarregar).
+export const getMasterDocDeAluno = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { userId: string }) => z.object({ userId: z.string().uuid() }).parse(d))
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row } = await supabaseAdmin
+      .from("master_documents")
+      .select("data")
+      .eq("user_id", data.userId)
+      .maybeSingle();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (row?.data ?? null) as any;
+  });
+
 export const saveMyMasterDoc = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

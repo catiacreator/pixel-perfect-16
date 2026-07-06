@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useMemo } from "react";
-import { Search, Trash2, Coins, Check, Clock, UserPlus, ShieldCheck, Shield } from "lucide-react";
+import { Search, Trash2, Coins, Check, Clock, UserPlus, ShieldCheck, Shield, FileDown } from "lucide-react";
 import { notify } from "@/lib/toast";
 import {
   listMentoradas,
@@ -14,8 +14,10 @@ import {
   checkIsAdmin,
   getTurmas,
   setTurmas,
+  getMasterDocDeAluno,
 } from "@/lib/admin.functions";
 import { SEM_TURMA_LABEL, type Turma } from "@/lib/turmas";
+import { formatarDocMestre, baixarTexto } from "@/lib/doc-mestre-export";
 
 export const Route = createFileRoute("/_authenticated/admin/mentoradas")({
   component: MentoradasPage,
@@ -33,7 +35,25 @@ function MentoradasPage() {
   const ctxFn = useServerFn(checkIsAdmin);
   const fetchTurmas = useServerFn(getTurmas);
   const saveTurmas = useServerFn(setTurmas);
+  const fetchDoc = useServerFn(getMasterDocDeAluno);
   const qc = useQueryClient();
+  const [baixando, setBaixando] = useState<string | null>(null);
+
+  async function baixarDoc(m: { id: string; nome?: string; email?: string }) {
+    setBaixando(m.id);
+    try {
+      const blob = await fetchDoc({ data: { userId: m.id } });
+      const nome = m.nome || m.email || "Aluno";
+      const texto = formatarDocMestre(blob as Record<string, unknown> | null, nome);
+      if (!texto) { notify("Este aluno ainda não preencheu o Documento Mestre.", "error"); return; }
+      const ficheiro = `Documento Mestre - ${nome}`.replace(/[^\w\sÀ-ÿ.-]/g, "").trim() + ".txt";
+      baixarTexto(ficheiro, texto);
+    } catch (e) {
+      notify(e instanceof Error ? e.message : "Não foi possível descarregar.", "error");
+    } finally {
+      setBaixando(null);
+    }
+  }
 
   const { data } = useSuspenseQuery({ queryKey: ["admin-mentoradas"], queryFn: () => fetch() });
   const { data: ctx } = useSuspenseQuery({ queryKey: ["admin-check"], queryFn: () => ctxFn() });
@@ -237,9 +257,19 @@ function MentoradasPage() {
                   />
                 </td>
                 <td className="px-5 py-3">
-                  <Link to="/admin/mentoradas/$id" params={{ id: m.id }} className="hover:underline">
-                    {m.nome ?? "—"}
-                  </Link>
+                  <div className="flex items-center gap-2">
+                    <Link to="/admin/mentoradas/$id" params={{ id: m.id }} className="hover:underline">
+                      {m.nome ?? "—"}
+                    </Link>
+                    <button
+                      onClick={() => baixarDoc(m)}
+                      disabled={baixando === m.id}
+                      title="Baixar Documento Mestre"
+                      className="inline-flex items-center gap-1 text-[11px] font-medium text-ink/55 hover:text-terracotta border border-[var(--color-border)] rounded-full px-2 py-0.5 disabled:opacity-50 transition-colors"
+                    >
+                      <FileDown size={12} /> {baixando === m.id ? "…" : "Doc. Mestre"}
+                    </button>
+                  </div>
                 </td>
                 <td className="px-5 py-3 text-ink/60">{m.email}</td>
                 <td className="px-5 py-3">
