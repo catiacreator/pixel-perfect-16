@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
-import { Plus, Trash2, Users, X } from "lucide-react";
+import { Plus, Trash2, Users, X, Save } from "lucide-react";
 import { notify } from "@/lib/toast";
 import { getTurmas, setTurmas, listMentoradas } from "@/lib/admin.functions";
 import { CORES_TURMA, novoTurmaId, type Turma } from "@/lib/turmas";
@@ -26,25 +26,25 @@ function TurmasPage() {
     return a?.nome || a?.email || "Aluno";
   };
 
-  const turmas = (turmasData as Turma[]) || [];
-  const [selId, setSelId] = useState<string | null>(turmas[0]?.id ?? null);
+  const serverTurmas = (turmasData as Turma[]) || [];
+  // Edição local — só grava quando clica em "Guardar alterações".
+  const [turmas, setTurmas_] = useState<Turma[]>(serverTurmas);
+  const [dirty, setDirty] = useState(false);
+  const [selId, setSelId] = useState<string | null>(serverTurmas[0]?.id ?? null);
+
+  // Re-sincroniza com o servidor quando não há alterações por guardar (carga inicial / após guardar).
+  useEffect(() => { if (!dirty) setTurmas_(serverTurmas); /* eslint-disable-next-line */ }, [turmasData, dirty]);
 
   const mut = useMutation({
     mutationFn: (next: Turma[]) => save({ data: { turmas: next } }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ["admin-turmas"] }),
+    onSuccess: () => { setDirty(false); notify("Alterações guardadas ✓", "success"); qc.invalidateQueries({ queryKey: ["admin-turmas"] }); },
     onError: (e: unknown) => notify(e instanceof Error ? e.message : "Erro ao guardar", "error"),
   });
-  const persist = (next: Turma[]) => mut.mutate(next);
+  const guardar = () => mut.mutate(turmas);
+
+  const editarLocal = (fn: (ts: Turma[]) => Turma[]) => { setTurmas_((ts) => fn(ts)); setDirty(true); };
 
   const sel = turmas.find((t) => t.id === selId) || null;
-
-  // Rascunho local do nome — evita gravar a cada tecla (que reiniciava o campo).
-  // Só grava ao sair do campo (blur) ou Enter.
-  const [nomeDraft, setNomeDraft] = useState("");
-  useEffect(() => { setNomeDraft(sel?.nome ?? ""); }, [selId, sel?.nome]);
-  const commitNome = () => {
-    if (sel && nomeDraft.trim() && nomeDraft.trim() !== sel.nome) editar(sel.id, { nome: nomeDraft.trim() });
-  };
 
   function criarTurma() {
     const nome = `Turma ${turmas.length + 1}`;
@@ -55,25 +55,22 @@ function TurmasPage() {
       membros: [],
       acessos: [],
     };
-    persist([...turmas, nova]);
+    editarLocal((ts) => [...ts, nova]);
     setSelId(nova.id);
   }
   function apagarTurma(id: string) {
     if (!window.confirm("Apagar esta turma? Os alunos deixam de ter as permissões dela.")) return;
-    const next = turmas.filter((t) => t.id !== id);
-    persist(next);
-    if (selId === id) setSelId(next[0]?.id ?? null);
+    editarLocal((ts) => ts.filter((t) => t.id !== id));
+    if (selId === id) setSelId(turmas.find((t) => t.id !== id)?.id ?? null);
   }
   function editar(id: string, patch: Partial<Turma>) {
-    persist(turmas.map((t) => (t.id === id ? { ...t, ...patch } : t)));
+    editarLocal((ts) => ts.map((t) => (t.id === id ? { ...t, ...patch } : t)));
   }
   function setAcessos(id: string, next: string[]) {
     editar(id, { acessos: next });
   }
   function removerMembro(id: string, uid: string) {
-    const t = turmas.find((x) => x.id === id);
-    if (!t) return;
-    editar(id, { membros: t.membros.filter((m) => m !== uid) });
+    editarLocal((ts) => ts.map((t) => (t.id === id ? { ...t, membros: t.membros.filter((m) => m !== uid) } : t)));
   }
 
   return (
@@ -87,12 +84,22 @@ function TurmasPage() {
             <b>Alunos</b>. Um aluno numa turma só vê o que a turma permite.
           </p>
         </div>
-        <button
-          onClick={criarTurma}
-          className="inline-flex items-center gap-2 h-10 px-4 rounded-full bg-ink text-cream text-sm font-semibold hover:bg-terracotta transition-colors shrink-0"
-        >
-          <Plus size={16} /> Nova turma
-        </button>
+        <div className="flex items-center gap-2 shrink-0">
+          {dirty && <span className="text-[12px] text-amber-600 font-medium hidden sm:inline">Alterações por guardar</span>}
+          <button
+            onClick={criarTurma}
+            className="inline-flex items-center gap-2 h-10 px-4 rounded-full border border-[var(--color-border)] bg-white text-ink text-sm font-semibold hover:border-terracotta/50 transition-colors"
+          >
+            <Plus size={16} /> Nova turma
+          </button>
+          <button
+            onClick={guardar}
+            disabled={!dirty || mut.isPending}
+            className="inline-flex items-center gap-2 h-10 px-5 rounded-full bg-ink text-cream text-sm font-semibold hover:bg-terracotta transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            <Save size={15} /> {mut.isPending ? "A guardar…" : "Guardar alterações"}
+          </button>
+        </div>
       </div>
 
       {turmas.length === 0 ? (
@@ -135,10 +142,8 @@ function TurmasPage() {
             <div className="rounded-2xl border border-[var(--color-border)] bg-white p-5">
               <div className="flex items-center gap-3 mb-4">
                 <input
-                  value={nomeDraft}
-                  onChange={(e) => setNomeDraft(e.target.value)}
-                  onBlur={commitNome}
-                  onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
+                  value={sel.nome}
+                  onChange={(e) => editar(sel.id, { nome: e.target.value })}
                   placeholder="Nome da turma"
                   className="flex-1 text-lg font-semibold text-ink bg-transparent outline-none border-b border-transparent focus:border-terracotta/40 py-1"
                 />
