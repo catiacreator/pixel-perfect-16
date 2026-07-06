@@ -1,18 +1,18 @@
 import { Link } from "@/lib/router-compat";
-import { Lock, ArrowLeft } from "lucide-react";
+import { Wrench, ArrowLeft } from "lucide-react";
 
-// Ecrã mostrado quando a rota atual está bloqueada ("Em breve") para o aluno —
-// esconde o conteúdo da página (cards, etapas, aulas) e impede o acesso.
+// Ecrã mostrado quando a rota atual está bloqueada ("Em breve"/manutenção) para
+// o aluno — esconde o conteúdo da página (cards, etapas, aulas) e impede o acesso.
 export default function EmManutencao() {
   return (
     <div className="min-h-[60vh] flex items-center justify-center px-5 py-16">
       <div className="max-w-md text-center">
         <div className="w-16 h-16 mx-auto rounded-2xl bg-terracotta/10 text-terracotta flex items-center justify-center mb-5">
-          <Lock size={26} />
+          <Wrench size={26} />
         </div>
-        <h1 className="font-serif text-3xl text-ink mb-2">Em breve</h1>
+        <h1 className="font-serif text-3xl text-ink mb-2">Em manutenção</h1>
         <p className="text-sm text-ink/60 leading-relaxed max-w-sm mx-auto">
-          Esta secção ainda não está disponível. Fica disponível em breve — continue a avançar pelo que já está aberto.
+          Esta secção está a ser preparada e fica disponível em breve. Continue a avançar pelo que já está aberto.
         </p>
         <Link
           to="/metodo"
