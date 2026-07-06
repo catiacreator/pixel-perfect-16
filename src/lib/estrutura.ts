@@ -181,3 +181,18 @@ export function achatarEstrutura(nodos: Nodo[] = ESTRUTURA): Nodo[] {
   walk(nodos);
   return out;
 }
+
+// Dado um caminho (pathname), devolve o id do nó mais específico que lhe
+// corresponde — para bloquear a PÁGINA (não só o menu). Ignora nós com query
+// (?aba=…, como o "redes"), que têm o seu próprio guarda interno.
+export function nodeIdParaRota(pathname: string): string | null {
+  let best: { id: string; len: number } | null = null;
+  for (const n of achatarEstrutura()) {
+    if (!n.to || n.to.includes("?")) continue;
+    const p = n.to;
+    if (pathname === p || pathname.startsWith(p + "/")) {
+      if (!best || p.length > best.len) best = { id: n.id, len: p.length };
+    }
+  }
+  return best?.id ?? null;
+}
