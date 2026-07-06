@@ -122,8 +122,10 @@ import { Route as AuthenticatedAdminPapeis5RouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminPapeis4RouteImport } from './routes/_authenticated/admin/papeis 4'
 import { Route as AuthenticatedAdminPapeis3RouteImport } from './routes/_authenticated/admin/papeis 3'
 import { Route as AuthenticatedAdminPapeis2RouteImport } from './routes/_authenticated/admin/papeis 2'
+import { Route as AuthenticatedAdminPapeis10RouteImport } from './routes/_authenticated/admin/papeis 10'
 import { Route as AuthenticatedAdminPapeisRouteImport } from './routes/_authenticated/admin/papeis'
 import { Route as AuthenticatedAdminMentoradasRouteImport } from './routes/_authenticated/admin/mentoradas'
+import { Route as AuthenticatedAdminLinksRouteImport } from './routes/_authenticated/admin/links'
 import { Route as AuthenticatedAdminEstudio9RouteImport } from './routes/_authenticated/admin/estudio 9'
 import { Route as AuthenticatedAdminEstudio8RouteImport } from './routes/_authenticated/admin/estudio 8'
 import { Route as AuthenticatedAdminEstudio7RouteImport } from './routes/_authenticated/admin/estudio 7'
@@ -787,6 +789,12 @@ const AuthenticatedAdminPapeis2Route =
     path: '/papeis 2',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminPapeis10Route =
+  AuthenticatedAdminPapeis10RouteImport.update({
+    id: '/papeis 10',
+    path: '/papeis 10',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminPapeisRoute =
   AuthenticatedAdminPapeisRouteImport.update({
     id: '/papeis',
@@ -799,6 +807,11 @@ const AuthenticatedAdminMentoradasRoute =
     path: '/mentoradas',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminLinksRoute = AuthenticatedAdminLinksRouteImport.update({
+  id: '/links',
+  path: '/links',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
 const AuthenticatedAdminEstudio9Route =
   AuthenticatedAdminEstudio9RouteImport.update({
     id: '/estudio 9',
@@ -1333,8 +1346,10 @@ export interface FileRoutesByFullPath {
   '/admin/estudio 7': typeof AuthenticatedAdminEstudio7Route
   '/admin/estudio 8': typeof AuthenticatedAdminEstudio8Route
   '/admin/estudio 9': typeof AuthenticatedAdminEstudio9Route
+  '/admin/links': typeof AuthenticatedAdminLinksRoute
   '/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
   '/admin/papeis': typeof AuthenticatedAdminPapeisRoute
+  '/admin/papeis 10': typeof AuthenticatedAdminPapeis10Route
   '/admin/papeis 2': typeof AuthenticatedAdminPapeis2Route
   '/admin/papeis 3': typeof AuthenticatedAdminPapeis3Route
   '/admin/papeis 4': typeof AuthenticatedAdminPapeis4Route
@@ -1512,8 +1527,10 @@ export interface FileRoutesByTo {
   '/admin/estudio 7': typeof AuthenticatedAdminEstudio7Route
   '/admin/estudio 8': typeof AuthenticatedAdminEstudio8Route
   '/admin/estudio 9': typeof AuthenticatedAdminEstudio9Route
+  '/admin/links': typeof AuthenticatedAdminLinksRoute
   '/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
   '/admin/papeis': typeof AuthenticatedAdminPapeisRoute
+  '/admin/papeis 10': typeof AuthenticatedAdminPapeis10Route
   '/admin/papeis 2': typeof AuthenticatedAdminPapeis2Route
   '/admin/papeis 3': typeof AuthenticatedAdminPapeis3Route
   '/admin/papeis 4': typeof AuthenticatedAdminPapeis4Route
@@ -1696,8 +1713,10 @@ export interface FileRoutesById {
   '/_authenticated/admin/estudio 7': typeof AuthenticatedAdminEstudio7Route
   '/_authenticated/admin/estudio 8': typeof AuthenticatedAdminEstudio8Route
   '/_authenticated/admin/estudio 9': typeof AuthenticatedAdminEstudio9Route
+  '/_authenticated/admin/links': typeof AuthenticatedAdminLinksRoute
   '/_authenticated/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
   '/_authenticated/admin/papeis': typeof AuthenticatedAdminPapeisRoute
+  '/_authenticated/admin/papeis 10': typeof AuthenticatedAdminPapeis10Route
   '/_authenticated/admin/papeis 2': typeof AuthenticatedAdminPapeis2Route
   '/_authenticated/admin/papeis 3': typeof AuthenticatedAdminPapeis3Route
   '/_authenticated/admin/papeis 4': typeof AuthenticatedAdminPapeis4Route
@@ -1884,8 +1903,10 @@ export interface FileRouteTypes {
     | '/admin/estudio 7'
     | '/admin/estudio 8'
     | '/admin/estudio 9'
+    | '/admin/links'
     | '/admin/mentoradas'
     | '/admin/papeis'
+    | '/admin/papeis 10'
     | '/admin/papeis 2'
     | '/admin/papeis 3'
     | '/admin/papeis 4'
@@ -2063,8 +2084,10 @@ export interface FileRouteTypes {
     | '/admin/estudio 7'
     | '/admin/estudio 8'
     | '/admin/estudio 9'
+    | '/admin/links'
     | '/admin/mentoradas'
     | '/admin/papeis'
+    | '/admin/papeis 10'
     | '/admin/papeis 2'
     | '/admin/papeis 3'
     | '/admin/papeis 4'
@@ -2246,8 +2269,10 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/estudio 7'
     | '/_authenticated/admin/estudio 8'
     | '/_authenticated/admin/estudio 9'
+    | '/_authenticated/admin/links'
     | '/_authenticated/admin/mentoradas'
     | '/_authenticated/admin/papeis'
+    | '/_authenticated/admin/papeis 10'
     | '/_authenticated/admin/papeis 2'
     | '/_authenticated/admin/papeis 3'
     | '/_authenticated/admin/papeis 4'
@@ -3171,6 +3196,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPapeis2RouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/papeis 10': {
+      id: '/_authenticated/admin/papeis 10'
+      path: '/papeis 10'
+      fullPath: '/admin/papeis 10'
+      preLoaderRoute: typeof AuthenticatedAdminPapeis10RouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/papeis': {
       id: '/_authenticated/admin/papeis'
       path: '/papeis'
@@ -3183,6 +3215,13 @@ declare module '@tanstack/react-router' {
       path: '/mentoradas'
       fullPath: '/admin/mentoradas'
       preLoaderRoute: typeof AuthenticatedAdminMentoradasRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/links': {
+      id: '/_authenticated/admin/links'
+      path: '/links'
+      fullPath: '/admin/links'
+      preLoaderRoute: typeof AuthenticatedAdminLinksRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/estudio 9': {
@@ -3743,8 +3782,10 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminEstudio7Route: typeof AuthenticatedAdminEstudio7Route
   AuthenticatedAdminEstudio8Route: typeof AuthenticatedAdminEstudio8Route
   AuthenticatedAdminEstudio9Route: typeof AuthenticatedAdminEstudio9Route
+  AuthenticatedAdminLinksRoute: typeof AuthenticatedAdminLinksRoute
   AuthenticatedAdminMentoradasRoute: typeof AuthenticatedAdminMentoradasRouteWithChildren
   AuthenticatedAdminPapeisRoute: typeof AuthenticatedAdminPapeisRoute
+  AuthenticatedAdminPapeis10Route: typeof AuthenticatedAdminPapeis10Route
   AuthenticatedAdminPapeis2Route: typeof AuthenticatedAdminPapeis2Route
   AuthenticatedAdminPapeis3Route: typeof AuthenticatedAdminPapeis3Route
   AuthenticatedAdminPapeis4Route: typeof AuthenticatedAdminPapeis4Route
@@ -3819,9 +3860,11 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminEstudio7Route: AuthenticatedAdminEstudio7Route,
     AuthenticatedAdminEstudio8Route: AuthenticatedAdminEstudio8Route,
     AuthenticatedAdminEstudio9Route: AuthenticatedAdminEstudio9Route,
+    AuthenticatedAdminLinksRoute: AuthenticatedAdminLinksRoute,
     AuthenticatedAdminMentoradasRoute:
       AuthenticatedAdminMentoradasRouteWithChildren,
     AuthenticatedAdminPapeisRoute: AuthenticatedAdminPapeisRoute,
+    AuthenticatedAdminPapeis10Route: AuthenticatedAdminPapeis10Route,
     AuthenticatedAdminPapeis2Route: AuthenticatedAdminPapeis2Route,
     AuthenticatedAdminPapeis3Route: AuthenticatedAdminPapeis3Route,
     AuthenticatedAdminPapeis4Route: AuthenticatedAdminPapeis4Route,
