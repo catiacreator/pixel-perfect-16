@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Search, Trash2, Coins, Check, Clock, UserPlus, ShieldCheck, Shield, FileDown } from "lucide-react";
 import { notify } from "@/lib/toast";
 import {
@@ -20,12 +20,14 @@ import { SEM_TURMA_LABEL, type Turma } from "@/lib/turmas";
 import { formatarDocMestre, baixarTexto } from "@/lib/doc-mestre-export";
 
 export const Route = createFileRoute("/_authenticated/admin/mentoradas")({
+  validateSearch: (s: Record<string, unknown>): { aluno?: string } => (typeof s.aluno === "string" ? { aluno: s.aluno } : {}),
   component: MentoradasPage,
 });
 
 const ROLE_LABEL: Record<string, string> = { admin: "Admin", moderator: "Moderador", user: "Aluno" };
 
 function MentoradasPage() {
+  const { aluno: alunoParam } = Route.useSearch();
   const fetch = useServerFn(listMentoradas);
   const del = useServerFn(deleteMentorada);
   const adjust = useServerFn(adjustPoints);
@@ -143,6 +145,14 @@ function MentoradasPage() {
     onError: (e) => notify(e.message, "error"),
   });
 
+  // Vindo das Turmas com ?aluno=<id> — destaca e desliza até à linha do aluno.
+  const alunoRef = useRef<HTMLTableRowElement>(null);
+  useEffect(() => {
+    if (alunoParam && alunoRef.current) {
+      alunoRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [alunoParam]);
+
   return (
     <div className="p-8 max-w-6xl mx-auto">
       <div className="flex items-start justify-between gap-4">
@@ -246,7 +256,13 @@ function MentoradasPage() {
           </thead>
           <tbody>
             {filtered.map((m: any) => (
-              <tr key={m.id} className={`border-b border-[var(--color-border)] last:border-0 ${selectedIds.has(m.id) ? "bg-terracotta/5" : ""}`}>
+              <tr
+                key={m.id}
+                ref={m.id === alunoParam ? alunoRef : undefined}
+                className={`border-b border-[var(--color-border)] last:border-0 transition-colors ${
+                  m.id === alunoParam ? "bg-terracotta/10 ring-2 ring-inset ring-terracotta/40" : selectedIds.has(m.id) ? "bg-terracotta/5" : ""
+                }`}
+              >
                 <td className="px-4 py-3">
                   <input
                     type="checkbox"
