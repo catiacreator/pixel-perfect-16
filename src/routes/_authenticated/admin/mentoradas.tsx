@@ -287,7 +287,12 @@ function MentoradasPage() {
                     </button>
                   </div>
                 </td>
-                <td className="px-5 py-3 text-ink/60">{m.email}</td>
+                <td className="px-5 py-3 text-ink/60">
+                  <span>{m.email}</span>
+                  {m.codigo && (
+                    <span className="block text-[11px] text-ink/40 mt-0.5">Código: <span className="font-mono text-ink/55">{m.codigo}</span></span>
+                  )}
+                </td>
                 <td className="px-5 py-3">
                   {isOwner ? (
                     <select

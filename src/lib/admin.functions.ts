@@ -143,9 +143,13 @@ export const listMentoradas = createServerFn({ method: "GET" })
       const cur = roleByUser.get(r.user_id);
       if (!cur || rank(r.role) > rank(cur)) roleByUser.set(r.user_id, r.role);
     }
+    // Código de registo usado por cada aluno (guardado na linha da dona).
+    const { blob } = await readOwnerBlob(supabaseAdmin);
+    const mapaCodigos = (blob["__codigo-aluno__"] as Record<string, string>) ?? {};
     return (data ?? []).map((m: { id: string }) => ({
       ...m,
       role: roleByUser.get(m.id) ?? "user",
+      codigo: mapaCodigos[m.id] ?? null,
     }));
   });
 
@@ -674,21 +678,18 @@ export const registarComCodigo = createServerFn({ method: "POST" })
     const novoId = created.user?.id;
     if (novoId) {
       await supabaseAdmin.from("profiles").update({ nome: data.nome, approved: true }).eq("id", novoId);
-      // Atribui à turma do código (se tiver).
+      // Regista o código usado + atribui à turma do código — numa só escrita.
+      const mapaCodigos = { ...((blob["__codigo-aluno__"] as Record<string, string>) ?? {}), [novoId]: codigo.codigo };
+      let turmas = (Array.isArray(blob["__turmas__"]) ? blob["__turmas__"] : []) as { id: string; membros: string[] }[];
       if (codigo.turmaId) {
-        const turmas = (Array.isArray(blob["__turmas__"]) ? blob["__turmas__"] : []) as { id: string; membros: string[] }[];
-        let mudou = false;
-        const next = turmas.map((t) => {
-          if (t.id === codigo.turmaId) { mudou = true; return { ...t, membros: Array.from(new Set([...(t.membros || []), novoId])) }; }
-          return t;
-        });
-        if (mudou) {
-          await supabaseAdmin.from("master_documents").upsert(
-            { user_id: uid, data: { ...blob, ["__turmas__"]: next }, updated_at: new Date().toISOString() },
-            { onConflict: "user_id" },
-          );
-        }
+        turmas = turmas.map((t) =>
+          t.id === codigo.turmaId ? { ...t, membros: Array.from(new Set([...(t.membros || []), novoId])) } : t,
+        );
       }
+      await supabaseAdmin.from("master_documents").upsert(
+        { user_id: uid, data: { ...blob, ["__turmas__"]: turmas, ["__codigo-aluno__"]: mapaCodigos }, updated_at: new Date().toISOString() },
+        { onConflict: "user_id" },
+      );
     }
     return { ok: true as const };
   });
