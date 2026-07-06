@@ -10,8 +10,11 @@ import UserMenu from "@/components/UserMenu";
 import QuickIdeas from "@/components/QuickIdeas";
 import ModulePaywall from "@/components/ModulePaywall";
 import PreviewTurmaModal from "@/components/PreviewTurmaModal";
+import EmManutencao from "@/components/EmManutencao";
 import { useAccess } from "@/lib/use-access";
-import { useAdminView, setAdminView, abrirPreviewTurma, setPreviewTurma } from "@/lib/admin-view";
+import { useAdminView, setAdminView, abrirPreviewTurma, setPreviewTurma, useBloqueadoParaAlunos } from "@/lib/admin-view";
+import { useBloqueios } from "@/lib/bloqueios";
+import { nodeIdParaRota } from "@/lib/estrutura";
 import { isAdminEmail, type ModuleKey } from "@/lib/access";
 
 const NAV = [
@@ -86,6 +89,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const jornada = !academia && !redes && (path.startsWith("/metodo") || path.startsWith("/doc-mestre"));
   const roxo = path.startsWith("/minha-base") || path.startsWith("/agenda") || path.startsWith("/conquistas");
   const headerMod = academia ? "academia" : redes ? "redes" : jornada ? "jornada" : roxo ? "roxo" : "default";
+
+  // Guarda da PÁGINA: se a rota atual corresponde a um nó bloqueado ("Em breve" /
+  // sem permissão da turma), esconde o conteúdo e mostra "Em manutenção".
+  const { isBloqueado } = useBloqueios();
+  const bloqueadoParaAlunos = useBloqueadoParaAlunos();
+  const nodeRota = nodeIdParaRota(path);
+  const rotaBloqueada = !!nodeRota && bloqueadoParaAlunos && isBloqueado(nodeRota);
 
   // Paywall por módulo: bloqueia o acesso direto às rotas dos produtos.
   const gateModule: ModuleKey | null = academia ? "academia" : redes ? "redes" : jornada ? "jornada" : null;
@@ -275,6 +285,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <main className="flex-1 w-full">
         {gateModule && accessLoading ? (
           <div className="px-5 py-20 text-center text-ink/45 text-sm">A verificar acesso…</div>
+        ) : rotaBloqueada ? (
+          <EmManutencao />
         ) : blocked && gateModule ? (
           <ModulePaywall module={gateModule} signedIn={hasAccessSignedIn} />
         ) : (
