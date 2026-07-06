@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Plus, Trash2, Users, Lock, X, Check } from "lucide-react";
 import { notify } from "@/lib/toast";
 import { getTurmas, setTurmas, listMentoradas } from "@/lib/admin.functions";
 import { ESTRUTURA, type Nodo, type NodoTipo } from "@/lib/estrutura";
-import { CORES_TURMA, novoTurmaId, INICIANTE_ID, type Turma } from "@/lib/turmas";
+import { CORES_TURMA, novoTurmaId, type Turma } from "@/lib/turmas";
 
-export const Route = createFileRoute("/_authenticated/admin/turmas")({
+export const Route = createFileRoute("/_authenticated/admin/turmas 4")({
   component: TurmasPage,
 });
 
@@ -42,14 +42,6 @@ function TurmasPage() {
 
   const sel = turmas.find((t) => t.id === selId) || null;
 
-  // Rascunho local do nome — evita gravar a cada tecla (que reiniciava o campo).
-  // Só grava ao sair do campo (blur) ou Enter.
-  const [nomeDraft, setNomeDraft] = useState("");
-  useEffect(() => { setNomeDraft(sel?.nome ?? ""); }, [selId, sel?.nome]);
-  const commitNome = () => {
-    if (sel && nomeDraft.trim() && nomeDraft.trim() !== sel.nome) editar(sel.id, { nome: nomeDraft.trim() });
-  };
-
   function criarTurma() {
     const nome = `Turma ${turmas.length + 1}`;
     const nova: Turma = {
@@ -63,7 +55,6 @@ function TurmasPage() {
     setSelId(nova.id);
   }
   function apagarTurma(id: string) {
-    if (id === INICIANTE_ID) return; // a Iniciante é fixa
     if (!window.confirm("Apagar esta turma? Os alunos deixam de ter as permissões dela.")) return;
     const next = turmas.filter((t) => t.id !== id);
     persist(next);
@@ -114,32 +105,18 @@ function TurmasPage() {
           <div className="space-y-2">
             {turmas.map((t) => {
               const on = t.id === selId;
-              const iniciante = t.id === INICIANTE_ID;
               return (
-                <div
+                <button
                   key={t.id}
                   onClick={() => setSelId(t.id)}
-                  className={`group w-full flex items-center gap-2.5 px-3.5 py-3 rounded-xl border text-left transition-colors cursor-pointer ${on ? "border-terracotta bg-terracotta/5" : "border-[var(--color-border)] bg-white hover:border-terracotta/40"}`}
+                  className={`w-full flex items-center gap-2.5 px-3.5 py-3 rounded-xl border text-left transition-colors ${on ? "border-terracotta bg-terracotta/5" : "border-[var(--color-border)] bg-white hover:border-terracotta/40"}`}
                 >
                   <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: t.cor || "#999" }} />
                   <span className="flex-1 min-w-0">
-                    <span className="flex items-center gap-1.5">
-                      <span className="text-sm font-medium text-ink truncate">{t.nome}</span>
-                      {iniciante && <span className="text-[9px] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-semibold shrink-0">Padrão</span>}
-                    </span>
-                    <span className="block text-[11px] text-ink/45">{iniciante ? "Novos alunos" : `${t.membros.length} aluno(s)`} · {t.acessos.length} acesso(s)</span>
+                    <span className="block text-sm font-medium text-ink truncate">{t.nome}</span>
+                    <span className="block text-[11px] text-ink/45">{t.membros.length} aluno(s) · {t.acessos.length} acesso(s)</span>
                   </span>
-                  {!iniciante && (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); apagarTurma(t.id); }}
-                      className="text-ink/30 hover:text-rose-600 p-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
-                      aria-label={`Apagar ${t.nome}`}
-                      title="Apagar turma"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  )}
-                </div>
+                </button>
               );
             })}
           </div>
@@ -149,11 +126,8 @@ function TurmasPage() {
             <div className="rounded-2xl border border-[var(--color-border)] bg-white p-5">
               <div className="flex items-center gap-3 mb-4">
                 <input
-                  value={nomeDraft}
-                  onChange={(e) => setNomeDraft(e.target.value)}
-                  onBlur={commitNome}
-                  onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }}
-                  placeholder="Nome da turma"
+                  value={sel.nome}
+                  onChange={(e) => editar(sel.id, { nome: e.target.value })}
                   className="flex-1 text-lg font-semibold text-ink bg-transparent outline-none border-b border-transparent focus:border-terracotta/40 py-1"
                 />
                 <div className="flex items-center gap-1">
@@ -167,28 +141,15 @@ function TurmasPage() {
                     />
                   ))}
                 </div>
-                {sel.id !== INICIANTE_ID && (
-                  <button onClick={() => apagarTurma(sel.id)} className="text-ink/40 hover:text-rose-600 p-1.5" aria-label="Apagar turma">
-                    <Trash2 size={16} />
-                  </button>
-                )}
+                <button onClick={() => apagarTurma(sel.id)} className="text-ink/40 hover:text-rose-600 p-1.5" aria-label="Apagar turma">
+                  <Trash2 size={16} />
+                </button>
               </div>
-
-              {sel.id === INICIANTE_ID && (
-                <div className="mb-4 flex items-start gap-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-[13px] text-emerald-800">
-                  <Users size={14} className="mt-0.5 shrink-0" />
-                  <span>Turma por defeito. Todos os que se registam entram aqui até você os mover para outra turma. Ajuste em baixo o que os iniciantes podem ver.</span>
-                </div>
-              )}
 
               {/* Membros */}
               <div className="mb-5">
-                <p className="text-[10px] tracking-[0.14em] uppercase text-ink/45 mb-2">
-                  {sel.id === INICIANTE_ID ? "Alunos sem turma atribuída (contam como Iniciante)" : `Alunos (${sel.membros.length})`}
-                </p>
-                {sel.id === INICIANTE_ID ? (
-                  <p className="text-[13px] text-ink/45">Os alunos entram aqui automaticamente. Para os mover, use a coluna <b>Turma</b> na tabela <b>Alunos</b>.</p>
-                ) : sel.membros.length === 0 ? (
+                <p className="text-[10px] tracking-[0.14em] uppercase text-ink/45 mb-2">Alunos ({sel.membros.length})</p>
+                {sel.membros.length === 0 ? (
                   <p className="text-[13px] text-ink/45">Sem alunos. Atribua alunos a esta turma na tabela <b>Alunos</b>.</p>
                 ) : (
                   <div className="flex flex-wrap gap-1.5">
