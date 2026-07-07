@@ -608,33 +608,6 @@ export default function DocMestre() {
                 </p>
               </div>
 
-              {/* Ações */}
-              <div className="flex flex-col items-stretch lg:items-end gap-2 shrink-0">
-                <div className="flex gap-2">
-                  <button
-                    onClick={resetAll}
-                    className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-2xl border border-border bg-white text-ink hover:border-terracotta transition-colors"
-                  >
-                    <RotateCcw size={15} /> Zerar tudo
-                  </button>
-                  <button
-                    onClick={printPDF}
-                    className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-2xl bg-gradient-to-br from-terracotta to-terracotta-dark text-cream hover:opacity-95 transition-opacity"
-                  >
-                    <Eye size={15} /> Visualizar PDF
-                  </button>
-                  <button
-                    onClick={baixarSkill}
-                    className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-2xl bg-ink text-cream hover:bg-terracotta transition-colors"
-                    title="Gera um ficheiro .md com o seu Documento Mestre, pronto a instalar no Claude"
-                  >
-                    <Sparkles size={15} /> Baixar minha Skill Personalizada
-                  </button>
-                </div>
-                <span className="self-end inline-flex items-center gap-1.5 text-xs text-ink/60 px-3 py-1.5 rounded-full border border-border bg-white">
-                  <Save size={12} /> {savedAt ? `Salvo às ${savedAt}` : "Autosave activo"}
-                </span>
-              </div>
             </div>
           </div>
         </div>
@@ -647,6 +620,32 @@ export default function DocMestre() {
             </div>
             <p className="text-sm opacity-80">Vídeo de explicação (3 min)</p>
           </div>
+        </div>
+
+        {/* Ações — abaixo do vídeo */}
+        <div className="print:hidden mb-8 flex flex-wrap items-center gap-2">
+          <button
+            onClick={resetAll}
+            className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-2xl border border-border bg-white text-ink hover:border-terracotta transition-colors"
+          >
+            <RotateCcw size={15} /> Zerar tudo
+          </button>
+          <button
+            onClick={printPDF}
+            className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-2xl bg-gradient-to-br from-terracotta to-terracotta-dark text-cream hover:opacity-95 transition-opacity"
+          >
+            <Eye size={15} /> Visualizar PDF
+          </button>
+          <button
+            onClick={baixarSkill}
+            className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-2xl bg-ink text-cream hover:bg-terracotta transition-colors"
+            title="Gera um ficheiro .md com o seu Documento Mestre, pronto a instalar no Claude"
+          >
+            <Sparkles size={15} /> Baixar minha Skill Personalizada
+          </button>
+          <span className="ml-auto inline-flex items-center gap-1.5 text-xs text-ink/60 px-3 py-1.5 rounded-full border border-border bg-white">
+            <Save size={12} /> {savedAt ? `Salvo às ${savedAt}` : "Autosave activo"}
+          </span>
         </div>
 
         {/* Import card */}
