@@ -38,6 +38,7 @@ const PRODUTOS = [
     cor: "#C8487E",
     icon: Instagram,
     estruturaId: "jornada",
+    sombraTitulo: true,
   },
   {
     key: "academia",
@@ -53,6 +54,7 @@ const PRODUTOS = [
     cor: "#2E7CB8",
     icon: GraduationCap,
     estruturaId: "academia",
+    sombraTitulo: true,
   },
 ];
 
@@ -122,8 +124,14 @@ export default function Home() {
           className="absolute inset-0 bg-cover transition-transform duration-700 group-hover:scale-105"
           style={{ backgroundImage: `url(${p.img})`, backgroundColor: p.cor, backgroundPosition: p.pos, backgroundSize: (p as { zoom?: string }).zoom || undefined }}
         />
-        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
-        <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
+        {(p as { sombraTitulo?: boolean }).sombraTitulo ? (
+          <div aria-hidden className="absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
+        ) : (
+          <>
+            <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+            <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
+          </>
+        )}
         <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5" style={{ background: p.cor }} />
         {locked && <div aria-hidden className="absolute inset-0 bg-black/35" />}
 
@@ -225,7 +233,7 @@ export default function Home() {
       {/* Dois caminhos */}
       <section className="max-w-[1200px] mx-auto px-5 md:px-10 pt-8 md:pt-12 pb-20 md:pb-28">
         {/* Cursos principais */}
-        <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-5">
+        <div className="flex flex-col sm:flex-row gap-4 md:gap-5">
           {PRODUTOS.filter((p) => p.key !== "conteudo-ia").map((p, i) => renderCard(p, i))}
         </div>
 
