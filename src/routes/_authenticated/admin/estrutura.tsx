@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { Lock, Eye, ListTree } from "lucide-react";
 import { notify } from "@/lib/toast";
 import { ESTRUTURA, type Nodo, type NodoTipo } from "@/lib/estrutura";
 import { useBloqueios, guardarBloqueios } from "@/lib/bloqueios";
+import { getModoBloqueio, setModoBloqueio } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/_authenticated/admin/estrutura")({
   component: EstruturaPage,
@@ -21,6 +23,21 @@ function EstruturaPage() {
   const [sel, setSel] = useState<Set<string>>(new Set(ids));
   const [seeded, setSeeded] = useState(false);
   const [savingId, setSavingId] = useState<string | null>(null);
+
+  // Modo por módulo: "em-breve" (nada a fazer) ou "bloqueado" (mostra contacto da Cátia).
+  const getModoFn = useServerFn(getModoBloqueio);
+  const saveModoFn = useServerFn(setModoBloqueio);
+  const [modos, setModos] = useState<Record<string, string>>({});
+  useEffect(() => {
+    getModoFn().then((m) => setModos((m as Record<string, string>) || {})).catch(() => {});
+  }, [getModoFn]);
+  const mudarModo = (id: string, v: string) => {
+    const next = { ...modos, [id]: v };
+    setModos(next);
+    saveModoFn({ data: { modos: next } }).catch((e: unknown) =>
+      notify(e instanceof Error ? e.message : "Não foi possível guardar.", "error"),
+    );
+  };
 
   // Semeia o estado local assim que a config global carrega do servidor.
   useEffect(() => {
@@ -65,6 +82,18 @@ function EstruturaPage() {
             <span className={`text-sm flex-1 min-w-0 truncate ${efetivo ? "text-ink/40" : "text-ink"}`}>
               {n.label}
             </span>
+
+            {n.tipo === "modulo" && (
+              <select
+                value={modos[n.id] === "bloqueado" ? "bloqueado" : "em-breve"}
+                onChange={(e) => mudarModo(n.id, e.target.value)}
+                className="shrink-0 h-8 rounded-lg border border-[var(--color-border)] bg-white px-2 text-[12px]"
+                title="Tag mostrada no card quando o módulo está bloqueado para o aluno"
+              >
+                <option value="em-breve">Tag: Em breve</option>
+                <option value="bloqueado">Tag: Bloqueado (contacto)</option>
+              </select>
+            )}
 
             {paiBloqueado ? (
               <span className="text-[11px] text-ink/40 italic shrink-0">herdado (pai bloqueado)</span>

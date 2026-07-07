@@ -602,6 +602,42 @@ export const setBloqueios = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+// ── Modo de bloqueio por módulo: "em-breve" (nada a fazer) ou "bloqueado"
+// (mostra o contacto da Cátia). Guardado em "__modo-bloqueio__" na conta dona.
+const MODO_KEY = "__modo-bloqueio__";
+
+export const getModoBloqueio = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async () => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const uid = await ownerUserId(supabaseAdmin);
+    if (!uid) return {} as Record<string, string>;
+    const { data } = await supabaseAdmin.from("master_documents").select("data").eq("user_id", uid).maybeSingle();
+    const blob = (data?.data as Record<string, unknown>) ?? {};
+    const m = blob[MODO_KEY];
+    return (m && typeof m === "object" ? m : {}) as Record<string, string>;
+  });
+
+export const setModoBloqueio = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { modos: Record<string, string> }) =>
+    z.object({ modos: z.record(z.string(), z.enum(["em-breve", "bloqueado"])) }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const uid = await ownerUserId(supabaseAdmin);
+    if (!uid) throw new Error("Conta principal não encontrada.");
+    const { data: existing } = await supabaseAdmin.from("master_documents").select("data").eq("user_id", uid).maybeSingle();
+    const blob = { ...((existing?.data as Record<string, unknown>) ?? {}), [MODO_KEY]: data.modos };
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: uid, data: blob, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
+    return { ok: true };
+  });
+
 // ───────── Códigos de acesso — a mentora cria; usados para criar conta ─────────
 const CODIGOS_KEY = "__codigos__";
 

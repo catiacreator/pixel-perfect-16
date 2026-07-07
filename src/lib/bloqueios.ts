@@ -8,13 +8,14 @@
 // Combina-se sempre com useBloqueadoParaAlunos(): o admin (vista admin) vê tudo.
 
 import { useEffect, useState } from "react";
-import { getBloqueios, setBloqueios, getMinhaTurmaAcessos } from "@/lib/admin.functions";
+import { getBloqueios, setBloqueios, getMinhaTurmaAcessos, getModoBloqueio } from "@/lib/admin.functions";
 import { ESTRUTURA, BLOQUEIOS_PADRAO, type Nodo } from "@/lib/estrutura";
 import { getPreviewTurma } from "@/lib/admin-view";
 
 const EVENT = "leveza:bloqueios";
 let cacheGlobal: Set<string> | null = null;
 let cacheTurma: { restrito: boolean; grants: Set<string>; categoria: string | null } | null = null;
+let cacheModo: Record<string, string> = {};
 let loading = false;
 
 // mapa id -> ids dos antecessores (para propagar o "Em breve" aos filhos)
@@ -57,12 +58,14 @@ async function ensureLoaded() {
   if ((cacheGlobal && cacheTurma) || loading || typeof window === "undefined") return;
   loading = true;
   try {
-    const [ids, turma] = await Promise.all([
+    const [ids, turma, modos] = await Promise.all([
       getBloqueios().catch(() => null),
       getMinhaTurmaAcessos().catch(() => ({ restrito: false, acessos: [] as string[], categoria: null as string | null })),
+      getModoBloqueio().catch(() => ({} as Record<string, string>)),
     ]);
     cacheGlobal = new Set(ids ?? BLOQUEIOS_PADRAO);
     cacheTurma = { restrito: !!turma?.restrito, grants: new Set(turma?.acessos ?? []), categoria: (turma as { categoria?: string | null })?.categoria ?? null };
+    cacheModo = modos ?? {};
   } catch {
     cacheGlobal = new Set(BLOQUEIOS_PADRAO);
     cacheTurma = { restrito: false, grants: new Set(), categoria: null };
@@ -100,7 +103,11 @@ export function useBloqueios() {
   // Bloqueado para o aluno: "Em breve" global OU (restrito por turma e sem grant).
   const isBloqueado = (id: string) => emBreve(id) || (turma.restrito && !turmaConcede(id));
 
-  return { carregado: !!cacheGlobal, isBloqueado, isBloqueadoRaw: (id: string) => global.has(id), ids: [...global], categoriaTurma: turma.categoria ?? null };
+  // Modo por módulo: "bloqueado" (mostra contacto) ou "em-breve" (nada a fazer).
+  const modoBloqueio = (id: string): "em-breve" | "bloqueado" =>
+    cacheModo[id] === "bloqueado" ? "bloqueado" : "em-breve";
+
+  return { carregado: !!cacheGlobal, isBloqueado, isBloqueadoRaw: (id: string) => global.has(id), ids: [...global], categoriaTurma: turma.categoria ?? null, modoBloqueio };
 }
 
 // Guarda a nova lista de bloqueios globais (admin) e atualiza a cache local.

@@ -7,7 +7,6 @@ import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, 
 const WHATSAPP_CATIA = "https://wa.link/jwr3yp";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
 import { useBloqueios } from "@/lib/bloqueios";
-import { categoriaDesativaLinks } from "@/lib/turmas";
 
 // Porta de entrada: dois produtos independentes.
 const PRODUTOS = [
@@ -60,10 +59,8 @@ const PRODUTOS = [
 
 export default function Home() {
   const bloqueado = useBloqueadoParaAlunos();
-  const { isBloqueado, categoriaTurma } = useBloqueios();
+  const { isBloqueado, modoBloqueio } = useBloqueios();
   const [desbloquearOpen, setDesbloquearOpen] = useState(false);
-  // Turmas de categoria Cursos/Mini-cursos: os outros cursos mostram "Desbloquear".
-  const soMiniCurso = bloqueado && categoriaDesativaLinks(categoriaTurma);
   const orbRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let x = window.innerWidth / 2;
@@ -104,8 +101,8 @@ export default function Home() {
     const Icon = p.icon;
     const eid = (p as { estruturaId?: string }).estruturaId;
     const locked = !!eid && isBloqueado(eid) && bloqueado;
-    // Turma mini-curso: o card fica clicável e abre a pop-up de contacto.
-    const modoDesbloquear = locked && soMiniCurso;
+    // Módulo marcado como "bloqueado" no admin → clicável, abre o contacto da Cátia.
+    const modoDesbloquear = locked && !!eid && modoBloqueio(eid) === "bloqueado";
     const Wrapper: any = modoDesbloquear ? "button" : locked ? "div" : Link;
     const wrapperProps = modoDesbloquear
       ? { type: "button" as const, onClick: () => setDesbloquearOpen(true) }
@@ -140,7 +137,7 @@ export default function Home() {
         </span>
         {locked && (
           <span className={`absolute top-6 right-6 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] rounded-full px-3 py-1.5 backdrop-blur-sm ${modoDesbloquear ? "text-ink bg-white/90 border border-white" : "text-white bg-white/15 border border-white/30"}`}>
-            <Lock size={12} /> {modoDesbloquear ? "Desbloquear" : "Em breve"}
+            <Lock size={12} /> {modoDesbloquear ? "Bloqueado" : "Em breve"}
           </span>
         )}
 
