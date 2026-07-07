@@ -94,7 +94,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   // Guarda da PÁGINA: se a rota atual corresponde a um nó bloqueado ("Em breve" /
   // sem permissão da turma), esconde o conteúdo e mostra "Em manutenção".
-  const { isBloqueado, categoriaTurma } = useBloqueios();
+  const { isBloqueado, categoriaTurma, modoBloqueio } = useBloqueios();
   const bloqueadoParaAlunos = useBloqueadoParaAlunos();
   const nodeRota = nodeIdParaRota(path);
   const rotaBloqueada = !!nodeRota && bloqueadoParaAlunos && isBloqueado(nodeRota);
@@ -307,7 +307,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {gateModule && accessLoading ? (
           <div className="px-5 py-20 text-center text-ink/45 text-sm">A verificar acesso…</div>
         ) : rotaBloqueada ? (
-          <EmManutencao />
+          <EmManutencao modo={nodeRota ? modoBloqueio(nodeRota) : "em-breve"} />
         ) : blocked && gateModule ? (
           <ModulePaywall module={gateModule} signedIn={hasAccessSignedIn} />
         ) : (

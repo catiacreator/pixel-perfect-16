@@ -14,7 +14,7 @@ import { getPreviewTurma } from "@/lib/admin-view";
 
 const EVENT = "leveza:bloqueios";
 let cacheGlobal: Set<string> | null = null;
-let cacheTurma: { restrito: boolean; grants: Set<string>; categoria: string | null } | null = null;
+let cacheTurma: { restrito: boolean; grants: Set<string>; categoria: string | null; modos: Record<string, string> } | null = null;
 let cacheModo: Record<string, string> = {};
 let cacheGeralAtivo = true;
 let loading = false;
@@ -66,12 +66,12 @@ async function ensureLoaded() {
       getGeralAtivo().catch(() => true),
     ]);
     cacheGlobal = new Set(ids ?? BLOQUEIOS_PADRAO);
-    cacheTurma = { restrito: !!turma?.restrito, grants: new Set(turma?.acessos ?? []), categoria: (turma as { categoria?: string | null })?.categoria ?? null };
+    cacheTurma = { restrito: !!turma?.restrito, grants: new Set(turma?.acessos ?? []), categoria: (turma as { categoria?: string | null })?.categoria ?? null, modos: (turma as { modos?: Record<string, string> })?.modos ?? {} };
     cacheModo = modos ?? {};
     cacheGeralAtivo = geral !== false;
   } catch {
     cacheGlobal = new Set(BLOQUEIOS_PADRAO);
-    cacheTurma = { restrito: false, grants: new Set(), categoria: null };
+    cacheTurma = { restrito: false, grants: new Set(), categoria: null, modos: {} };
   } finally {
     loading = false;
     window.dispatchEvent(new Event(EVENT));
@@ -93,8 +93,8 @@ export function useBloqueios() {
   // Se a admin está a pré-visualizar uma turma específica, usa os acessos dela.
   const preview = getPreviewTurma();
   const turma = preview
-    ? { restrito: true, grants: new Set(preview.acessos), categoria: (preview as { categoria?: string | null }).categoria ?? null }
-    : (cacheTurma ?? { restrito: false, grants: new Set<string>(), categoria: null });
+    ? { restrito: true, grants: new Set(preview.acessos), categoria: (preview as { categoria?: string | null }).categoria ?? null, modos: (preview as { modos?: Record<string, string> }).modos ?? {} }
+    : (cacheTurma ?? { restrito: false, grants: new Set<string>(), categoria: null, modos: {} as Record<string, string> });
 
   const antep = (id: string) => ANCESTRAIS[id] ?? [];
   const desc = (id: string) => DESCENDENTES[id] ?? [];
@@ -107,9 +107,16 @@ export function useBloqueios() {
   // Bloqueado para o aluno: "Em breve" global OU (restrito por turma e sem grant).
   const isBloqueado = (id: string) => emBreve(id) || (turma.restrito && !turmaConcede(id));
 
-  // Modo por módulo: "bloqueado" (mostra contacto) ou "em-breve" (nada a fazer).
-  const modoBloqueio = (id: string): "em-breve" | "bloqueado" =>
-    cacheModo[id] === "bloqueado" ? "bloqueado" : "em-breve";
+  // Modo do nó bloqueado: "bloqueado" (mostra contacto) ou "em-breve" (nada a
+  // fazer). Prioridade: modo da turma para o nó → modo geral do nó/módulo → em-breve.
+  const moduloDe = (id: string) => antep(id)[0] ?? id;
+  const modoBloqueio = (id: string): "em-breve" | "bloqueado" => {
+    const t = turma.modos?.[id];
+    if (t === "bloqueado") return "bloqueado";
+    if (t === "em-breve") return "em-breve";
+    const g = cacheModo[id] ?? cacheModo[moduloDe(id)];
+    return g === "bloqueado" ? "bloqueado" : "em-breve";
+  };
 
   return { carregado: !!cacheGlobal, isBloqueado, isBloqueadoRaw: (id: string) => global.has(id), ids: [...global], categoriaTurma: turma.categoria ?? null, modoBloqueio };
 }

@@ -57,6 +57,13 @@ function EstruturaPage() {
       notify(e instanceof Error ? e.message : "Não foi possível guardar.", "error"),
     );
   };
+  const salvarModoTurma = (turmaId: string, nodeId: string, v: string) => {
+    const next = turmas.map((t) => (t.id === turmaId ? { ...t, modos: { ...(t.modos || {}), [nodeId]: v } } : t));
+    setTurmas_(next);
+    saveTurmasFn({ data: { turmas: next } }).catch((e: unknown) =>
+      notify(e instanceof Error ? e.message : "Não foi possível guardar.", "error"),
+    );
+  };
 
   // Interruptor mestre do Geral. Se desligado, o "Em breve" global não se aplica.
   const getGeralFn = useServerFn(getGeralAtivo);
@@ -229,7 +236,13 @@ function EstruturaPage() {
             Visibilidade da turma <b className="text-ink">{turmaSel.nome}</b> — ligue/desligue cada módulo, página ou subpágina.
             O <b>Em breve</b> do Geral continua a esconder para todos (predominante).
           </p>
-          <AcessoArvore grants={turmaSel.acessos} onChange={(next) => salvarTurma(turmaSel.id, next)} globalBloqueado={sel} />
+          <AcessoArvore
+            grants={turmaSel.acessos}
+            onChange={(next) => salvarTurma(turmaSel.id, next)}
+            globalBloqueado={sel}
+            modos={turmaSel.modos}
+            onModo={(id, v) => salvarModoTurma(turmaSel.id, id, v)}
+          />
         </>
       ) : (
         <p className="text-sm text-ink/50 mt-4">Ainda não há turmas — crie em Admin → Turmas.</p>
