@@ -1,4 +1,5 @@
 import Layout from "../components/Layout";
+import PilarSidebar from "../components/PilarSidebar";
 import { Link } from "@/lib/router-compat";
 import { Sparkles, ArrowRight, PlayCircle, Check, ListChecks } from "lucide-react";
 import TarefaCompleta from "../components/TarefaCompleta";
@@ -28,8 +29,10 @@ function SecaoView({ s }: { s: Secao }) {
 
 export default function MiniCurso() {
   return (
-    <Layout>
-      <div className="theme-roxo">
+    <div className="theme-roxo">
+      <PilarSidebar pilar="conteudo-ia" />
+      <div className="lg:pl-[280px]">
+      <Layout>
         {/* Hero */}
         <section className="px-5 md:px-10 pt-10 md:pt-14 max-w-4xl mx-auto">
           <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.24em] uppercase text-terracotta font-semibold mb-3">
@@ -61,14 +64,6 @@ export default function MiniCurso() {
             </ul>
           </div>
 
-          {/* Índice dos módulos */}
-          <div className="mt-6 flex flex-wrap gap-2">
-            {AULAS.map((a) => (
-              <a key={a.id} href={`#${a.id}`} className="text-[13px] font-semibold px-3 py-1.5 rounded-full border border-border text-ink/70 hover:border-terracotta hover:text-terracotta transition-colors">
-                {a.numero}
-              </a>
-            ))}
-          </div>
         </section>
 
         {/* Módulos */}
@@ -128,7 +123,8 @@ export default function MiniCurso() {
             </Link>
           </div>
         </section>
+      </Layout>
       </div>
-    </Layout>
+    </div>
   );
 }

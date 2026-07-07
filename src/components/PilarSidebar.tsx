@@ -70,7 +70,7 @@ type Item = {
   id?: string; // id na ESTRUTURA — se bloqueado no painel, alunos veem "Em breve"
 };
 
-type SidebarKey = 1 | 2 | 3 | 4 | "academia" | "redes";
+type SidebarKey = 1 | 2 | 3 | 4 | "academia" | "redes" | "conteudo-ia";
 
 type PilarDef = {
   pilar: SidebarKey;
@@ -80,6 +80,19 @@ type PilarDef = {
 };
 
 const PILARES: Record<string | number, PilarDef> = {
+  "conteudo-ia": {
+    pilar: "conteudo-ia",
+    title: "Curso · Conteúdo com IA",
+    enabled: true,
+    items: [
+      { num: 1, label: "NotebookLM", to: "/conteudo-ia#m1", icon: Search },
+      { num: 2, label: "Grok", to: "/conteudo-ia#m2", icon: Zap },
+      { num: 3, label: "Claude", to: "/conteudo-ia#m3", icon: Sparkles },
+      { num: 4, label: "ChatGPT", to: "/conteudo-ia#m4", icon: Video },
+      { num: 5, label: "Fluxo + projeto final", to: "/conteudo-ia#m5", icon: Wrench },
+      { num: 6, label: "Automação", to: "/conteudo-ia#m6", icon: CalendarClock },
+    ],
+  },
   academia: {
     pilar: "academia",
     title: "Domine as principais IAs",

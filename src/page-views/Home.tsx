@@ -124,16 +124,7 @@ export default function Home() {
           className="absolute inset-0 bg-cover transition-transform duration-700 group-hover:scale-105"
           style={{ backgroundImage: `url(${p.img})`, backgroundColor: p.cor, backgroundPosition: p.pos, backgroundSize: (p as { zoom?: string }).zoom || undefined }}
         />
-        {(p as { sombraTitulo?: boolean }).sombraTitulo ? (
-          <div aria-hidden className="absolute inset-x-0 bottom-0 h-[46%] bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
-        ) : (
-          <>
-            <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
-            <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
-          </>
-        )}
         <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5" style={{ background: p.cor }} />
-        {locked && <div aria-hidden className="absolute inset-0 bg-black/35" />}
 
         <span className="absolute top-6 left-6 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 bg-white/12 border border-white/25 rounded-full px-3 py-1.5 backdrop-blur-sm">
           <Icon size={13} /> {p.tag}
@@ -144,7 +135,7 @@ export default function Home() {
           </span>
         )}
 
-        <div className="relative [text-shadow:0_2px_18px_rgba(0,0,0,0.6)]">
+        <div className="relative bg-black/80 rounded-2xl px-4 py-4">
           <p className="text-[11px] tracking-[0.22em] uppercase text-white/85 mb-1.5">{p.assinatura}</p>
           <h2 className="font-display text-2xl md:text-3xl leading-[1.05] tracking-[-0.02em] text-white">
             {p.titulo}
