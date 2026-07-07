@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import Layout from "../components/Layout";
 import { getRanking } from "@/lib/admin.functions";
+import { getRankingMes } from "@/lib/gamificacao.functions";
 import { useProgresso } from "@/lib/use-progresso";
 import {
   Trophy,
@@ -115,6 +116,7 @@ export default function Conquistas() {
   const [postsPublicados, setPostsPublicados] = useState(0);
   const [extras, setExtras] = useState({ conclusao: 0, docCampos: 0, pilares: 0 });
   const [serverRanking, setServerRanking] = useState<{ pos: number; nome: string; tier: string; pontos: number; isMe: boolean; avatar?: string }[] | null>(null);
+  const [rankingMes, setRankingMes] = useState<{ ranking: { pos: number; nome: string; posts: number; isMe: boolean }[] } | null>(null);
 
   const rankingFn = useServerFn(getRanking);
   // Pontos são a fonte de verdade do servidor (gamificação).
@@ -147,6 +149,10 @@ export default function Conquistas() {
         const rows = (await rankingFn()) as typeof serverRanking;
         if (active && Array.isArray(rows) && rows.length) setServerRanking(rows);
       } catch { /* ranking indisponível — mostra só os teus pontos */ }
+      try {
+        const rm = (await getRankingMes()) as any;
+        if (active && rm) setRankingMes(rm);
+      } catch { /* competição indisponível */ }
     })();
     return () => { active = false; };
   }, [mounted, rankingFn]);
@@ -263,22 +269,37 @@ export default function Conquistas() {
           </div>
         </div>
 
-        {/* Pódio do Mês */}
+        {/* Competição do Mês — quem publica mais posts */}
         <section className="bg-white rounded-2xl border border-[var(--color-border)] p-6 mb-8">
           <div className="flex items-center justify-between gap-3 mb-1">
             <h2 className="font-serif text-lg text-ink flex items-center gap-2">
-              <Trophy size={18} className="text-amber-500" /> Pódio do Mês
+              <Trophy size={18} className="text-amber-500" /> Competição do Mês
             </h2>
             <span className="text-[11px] uppercase tracking-[0.2em] text-ink/45">{mesAno}</span>
           </div>
           <p className="text-xs text-ink/55 mb-5 leading-relaxed">
-            Ranking de <strong className="text-ink">presença + conteúdo</strong> (as aulas não contam aqui).
-            No fim do mês, as duas primeiras ganham:
+            Quem <strong className="text-ink">publicar mais posts no mês</strong> (no Plano de Posts) ganha uma{" "}
+            <strong className="text-terracotta">sessão de 30 min com a Cátia</strong>.
           </p>
-          <div className="grid sm:grid-cols-2 gap-4">
-            <PodiumSpot emoji="🥇" lugar="1.º lugar" premio="Sessão de 40 min com a mentora + menção nos stories" />
-            <PodiumSpot emoji="🥈" lugar="2.º lugar" premio="Menção nos stories" />
-          </div>
+
+          {rankingMes && rankingMes.ranking.length > 0 ? (
+            <ul className="space-y-1.5">
+              {rankingMes.ranking.slice(0, 3).map((r) => (
+                <li
+                  key={r.pos}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-xl ${r.isMe ? "bg-terracotta/8 border border-terracotta/25" : "bg-cream-warm/40"}`}
+                >
+                  <span className="text-lg w-7 text-center shrink-0">{r.pos === 1 ? "🥇" : r.pos === 2 ? "🥈" : "🥉"}</span>
+                  <span className="text-sm text-ink flex-1 truncate">{r.nome}{r.isMe ? " (você)" : ""}</span>
+                  <span className="text-sm font-semibold text-ink tabular-nums">{r.posts} <span className="text-ink/50 font-normal text-xs">posts</span></span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="rounded-xl border border-dashed border-[var(--color-border)] bg-cream-warm/30 p-5 text-center">
+              <p className="text-sm text-ink/60">Ainda ninguém publicou este mês. Publique no <strong className="text-ink">Plano de Posts</strong> e lidere! 🚀</p>
+            </div>
+          )}
         </section>
 
 
