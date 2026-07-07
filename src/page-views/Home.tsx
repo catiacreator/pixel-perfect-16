@@ -152,7 +152,7 @@ export default function Home() {
 
       {/* Dois caminhos */}
       <section className="max-w-[1200px] mx-auto px-5 md:px-10 pt-8 md:pt-12 pb-20 md:pb-28">
-        <div className="grid md:grid-cols-2 gap-5 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
           {PRODUTOS.map((p, i) => {
             const Icon = p.icon;
             const eid = (p as { estruturaId?: string }).estruturaId;
@@ -169,7 +169,7 @@ export default function Home() {
               <Wrapper
                 key={p.key}
                 {...wrapperProps}
-                className={`fade-up group relative overflow-hidden rounded-[28px] border border-white/60 flex flex-col justify-end min-h-[440px] md:min-h-[520px] p-7 md:p-9 text-left transition-all duration-300 ${locked && !modoDesbloquear ? "cursor-not-allowed" : "hover:-translate-y-1.5 hover:shadow-[0_34px_70px_-30px_rgba(40,20,15,0.55)]"}`}
+                className={`fade-up group relative overflow-hidden rounded-[24px] border border-white/60 flex flex-col justify-end aspect-[9/16] p-6 md:p-6 text-left transition-all duration-300 ${locked && !modoDesbloquear ? "cursor-not-allowed" : "hover:-translate-y-1.5 hover:shadow-[0_34px_70px_-30px_rgba(40,20,15,0.55)]"}`}
                 style={{ animationDelay: `${i * 100}ms` }}
               >
                 <div
@@ -177,8 +177,8 @@ export default function Home() {
                   className="absolute inset-0 bg-cover transition-transform duration-700 group-hover:scale-105"
                   style={{ backgroundImage: `url(${p.img})`, backgroundColor: p.cor, backgroundPosition: p.pos }}
                 />
-                <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/25" />
-                <div aria-hidden className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/92 via-black/62 to-transparent" />
+                <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+                <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
                 <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5" style={{ background: p.cor }} />
                 {locked && <div aria-hidden className="absolute inset-0 bg-black/35" />}
 
@@ -192,11 +192,11 @@ export default function Home() {
                 )}
 
                 <div className="relative [text-shadow:0_2px_18px_rgba(0,0,0,0.6)]">
-                  <p className="text-[12px] tracking-[0.24em] uppercase text-white/85 mb-2">{p.assinatura}</p>
-                  <h2 className="font-display text-3xl md:text-[2.6rem] leading-[1.02] tracking-[-0.02em] text-white">
+                  <p className="text-[11px] tracking-[0.22em] uppercase text-white/85 mb-1.5">{p.assinatura}</p>
+                  <h2 className="font-display text-2xl md:text-3xl leading-[1.05] tracking-[-0.02em] text-white">
                     {p.titulo}
                   </h2>
-                  <p className="text-sm md:text-[15px] text-white/90 mt-3 leading-relaxed max-w-md">{p.desc}</p>
+                  <p className="text-[13px] md:text-sm text-white/90 mt-2.5 leading-relaxed">{p.desc}</p>
 
                   {locked ? (
                     modoDesbloquear ? (
