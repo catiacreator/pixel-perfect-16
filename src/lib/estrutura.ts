@@ -153,6 +153,15 @@ export const ESTRUTURA: Nodo[] = [
       },
     ],
   },
+  {
+    id: "conteudo-ia",
+    label: "Conteúdo com IA (Mini-curso)",
+    tipo: "modulo",
+    to: "/conteudo-ia",
+    filhos: [
+      { id: "conteudo-ia.aulas", label: "Mini-curso — aulas grátis", tipo: "pagina", to: "/conteudo-ia" },
+    ],
+  },
 ];
 
 // Bloqueios "Em breve" por defeito (enquanto a mentora não mexer no painel).

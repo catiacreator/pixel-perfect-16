@@ -98,6 +98,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const nodeRota = nodeIdParaRota(path);
   const rotaBloqueada = !!nodeRota && bloqueadoParaAlunos && isBloqueado(nodeRota);
 
+  // Modo "só mini-curso": aluno restrito que só tem acesso ao Conteúdo com IA
+  // (sem jornada nem academia). Esconde Robot/Skills/Documento/Jornada/Vitórias
+  // para ele ver a plataforma e ficar a desejar entrar no método completo.
+  const soMiniCurso =
+    bloqueadoParaAlunos &&
+    !isBloqueado("conteudo-ia") &&
+    isBloqueado("jornada") &&
+    isBloqueado("academia");
+
   // Paywall por módulo: bloqueia o acesso direto às rotas dos produtos.
   const gateModule: ModuleKey | null = academia ? "academia" : redes ? "redes" : jornada ? "jornada" : null;
   const { has, loading: accessLoading, signedIn: hasAccessSignedIn } = useAccess();
@@ -161,7 +170,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               )}
             </div>
 
-            {NAV.map((item) => {
+            {NAV.filter((item) => !soMiniCurso || item.to === "/").map((item) => {
               const active = isActive(item.to);
               // Sem login: itens visíveis mas desativados.
               if (!signedIn) {
@@ -193,7 +202,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
           {/* Direita */}
           <div className="flex items-center gap-2 justify-end">
-            {signedIn && (
+            {signedIn && !soMiniCurso && (
               <Link
                 to="/doc-mestre"
                 className="hidden md:inline-flex items-center gap-1.5 text-[13px] pl-4 pr-3 py-2 bg-ink text-cream rounded-full font-medium transition-all hover:-translate-y-0.5 active:scale-[0.97]"
@@ -251,7 +260,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {/* Navegação mobile */}
         {open && (
           <nav className="lg:hidden border-t border-[var(--color-border)] bg-white px-5 py-3 flex flex-col gap-1">
-            {NAV.map((item) => {
+            {NAV.filter((item) => !soMiniCurso || item.to === "/").map((item) => {
               const Icon = item.icon;
               const active = isActive(item.to);
               if (!signedIn) {

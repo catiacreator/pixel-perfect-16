@@ -9,6 +9,20 @@ import { useBloqueios } from "@/lib/bloqueios";
 // Porta de entrada: dois produtos independentes.
 const PRODUTOS = [
   {
+    key: "conteudo-ia",
+    tag: "Mini-curso · grátis",
+    titulo: "Conteúdo com IA",
+    assinatura: "o teu primeiro mês de posts",
+    desc: "Aulas grátis para criares conteúdo com IA e publicares com consistência. A porta de entrada para o método completo.",
+    to: "/conteudo-ia",
+    cta: "Começar o mini-curso",
+    img: "/academia-ia.png",
+    pos: "center bottom",
+    cor: "#7C56C9",
+    icon: Sparkles,
+    estruturaId: "conteudo-ia",
+  },
+  {
     key: "protocolo",
     tag: "Mentoria · Instagram",
     titulo: "Protocolo Viral",
