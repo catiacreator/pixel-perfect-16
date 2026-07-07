@@ -9,34 +9,62 @@ import PromptCard from "./PromptCard";
 const POSTS_KEY = "leveza.posts-publicados.v1";
 const META = 30;
 
-const PROMPT_30 = `🎯 DESAFIO: 30 POSTS EM 30 DIAS
-
-Você é o meu estrategista de conteúdo para Instagram. Use SEMPRE o meu contexto e fale na minha voz.
-
-📋 MEU CONTEXTO (Documento Mestre)
+// Contexto do Documento Mestre (partilhado pela skill e pelo prompt).
+const CONTEXTO_DM = `📋 MEU CONTEXTO (Documento Mestre) — usa isto em tudo
 - Nome: [nome]
-- Especialidade: [profissao]
+- Especialidade / profissão: [profissao]
 - O que faço: [o_que_faz]
 - Como resolvo: [como_resolve]
-- Público: [publico]
+- Público / cliente ideal: [publico]
 - Dores do público:
 [dores_lista]
-- Promessa: [promessa]
+- Desejos do público:
+[desejos_lista]
+- Promessa / oferta: [promessa]
+- Prova social: [prova_social]
+- Arquétipo da marca: [arquetipo_dominante] (secundário: [arquetipo_secundario])
 - Tom de voz: [tom_de_voz]
+- Palavras a usar: [palavras_usar]
+- Palavras a evitar: [palavras_evitar]`;
 
-🗓️ TAREFA
-Monte um plano de 30 posts para 30 dias (1 por dia), pronto a publicar. Equilibre o funil ao longo do mês:
-- Reels para ATRAIR (novos seguidores)
-- Carrosséis para DOUTRINAR (autoridade)
-- Stories para CONVERTER (vendas)
-Faça um rodízio dos 3 objetivos (autoridade, seguidores, vendas), sempre ligados às minhas dores do público.
+const TAREFA_30 = `🗓️ TAREFA — 30 DIAS DE CONTEÚDO (REELS + CARROSSÉIS)
+Monte um plano de 30 dias (1 post por dia), pronto a publicar, alternando REELS e CARROSSÉIS e fazendo rodízio dos objetivos (autoridade, seguidores, vendas), sempre ligado às minhas dores e desejos do público.
 
-Para CADA dia (1 a 30), entregue numa linha, neste formato:
-Dia N — [Formato: Reel / Carrossel / Stories] — [Objetivo] — Tema: … — Gancho: …
+1) CALENDÁRIO (Dia 1 a 30) — uma linha por dia, neste formato:
+Dia N — [Reel | Carrossel] — [Objetivo] — Tema: … — Gancho (0–3s): …
 
-No fim, escolha os 4 posts com maior potencial do mês e desenvolva-os por completo (gancho, desenvolvimento e CTA).
+2) DESENVOLVIMENTO COMPLETO de cada peça:
+- REEL: 3–4 opções de gancho, desenvolvimento curto (falas), 1 CTA e 1 linha de texto na tela.
+- CARROSSEL: 8 slides (capa/gancho → desenvolvimento 1 ideia/slide → CTA), legenda em PAS (Problema→Agitação→Solução) e 5–8 hashtags.
 
-Regras: fale na minha voz; números concretos em vez de vagos; nunca use "fórmula mágica", "segredo revelado" nem "guia definitivo"; não invente resultados.`;
+Regras: fale na minha voz e no meu tom; uma ideia por frase; números concretos em vez de vagos; nunca use "fórmula mágica", "segredo revelado" nem "guia definitivo"; não invente resultados nem prometa ganho garantido.`;
+
+// Prompt para o ChatGPT (colar diretamente).
+const PROMPT_30 = `🎯 DESAFIO: 30 POSTS EM 30 DIAS
+
+Você é o meu estrategista de conteúdo para Instagram. Use SEMPRE o meu Documento Mestre (abaixo) e fale na minha voz.
+
+${CONTEXTO_DM}
+
+${TAREFA_30}`;
+
+// Skill para o Claude (instalar no Project Knowledge de um Projeto).
+const SKILL_30 = `# Skill Cat.IA — 30 Dias de Conteúdo (Reels + Carrosséis)
+
+> Adaptada a [nome] pelo Documento Mestre. Instale este ficheiro no *Project Knowledge* de um Projeto no Claude (ou cole nas instruções personalizadas). Depois peça: "gera o meu mês de conteúdo".
+
+## 🎯 Objetivo
+Você é o meu estrategista de conteúdo para Instagram. Gere sempre na minha voz e no contexto do meu negócio, nunca de forma genérica.
+
+## 🧭 Contexto do negócio (Documento Mestre)
+${CONTEXTO_DM}
+
+## ${TAREFA_30}
+
+## ⚙️ Como usar
+1. No Claude, crie um Projeto e carregue este ficheiro no Project Knowledge.
+2. Peça "gera o meu mês de conteúdo" — recebe os 30 dias (Reels + Carrosséis) prontos.
+3. Leve o resultado para o Plano de Posts e publique 1 por dia.`;
 
 export default function Desafio30Dias() {
   const [publicados, setPublicados] = useState(0);
@@ -86,14 +114,29 @@ export default function Desafio30Dias() {
         <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">Passo 1 · Gerar o mês</p>
         <h3 className="font-serif text-xl text-ink mb-1.5">Gere os 30 posts com a Cat.IA</h3>
         <p className="text-sm text-ink/60 leading-relaxed max-w-2xl mb-4">
-          Copie o prompt (já vem preenchido com o seu Documento Mestre), cole no ChatGPT e receba os 30 dias de conteúdo na sua voz.
+          Escolha o seu caminho — ambos já vêm preenchidos com o seu <b>Documento Mestre</b> e geram <b>30 dias de Reels e Carrosséis</b> adaptados a si.
         </p>
-        <PromptCard
-          titulo="Plano de 30 posts (adaptado a si)"
-          descricao="1 post por dia, com rodízio de formatos e objetivos, ligado às suas dores do público."
-          prompt={PROMPT_30}
-          rotuloBotao="Copiar prompt do desafio"
-        />
+
+        <div className="grid md:grid-cols-2 gap-4">
+          <div className="rounded-2xl border border-terracotta/25 bg-terracotta/5 p-4">
+            <p className="text-[10px] tracking-[0.16em] uppercase text-terracotta font-semibold mb-2">No Claude · Skill</p>
+            <PromptCard
+              titulo="Skill Cat.IA — 30 dias (Claude)"
+              descricao="Copie e cole no Project Knowledge de um Projeto no Claude. Depois peça 'gera o meu mês de conteúdo'."
+              prompt={SKILL_30}
+              rotuloBotao="Copiar skill"
+            />
+          </div>
+          <div className="rounded-2xl border border-border bg-white p-4">
+            <p className="text-[10px] tracking-[0.16em] uppercase text-ink/45 font-semibold mb-2">No ChatGPT · Prompt</p>
+            <PromptCard
+              titulo="Prompt — 30 dias (ChatGPT)"
+              descricao="Copie e cole diretamente no ChatGPT para receber o mês completo."
+              prompt={PROMPT_30}
+              rotuloBotao="Copiar prompt"
+            />
+          </div>
+        </div>
       </div>
 
       {/* Passo 2 — organizar */}
