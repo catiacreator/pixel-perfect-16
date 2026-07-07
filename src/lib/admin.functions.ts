@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { isAdminEmail } from "@/lib/access";
 import { achatarEstrutura } from "@/lib/estrutura";
+import { mesCorrente, chaveMes, contarPor, type PostPublicado } from "@/lib/gamificacao";
 import { z } from "zod";
 
 // A administradora principal (dona) — só ela pode adicionar/eliminar alunos e atribuir papéis.
@@ -558,7 +559,9 @@ async function ownerUserId(supabaseAdmin: any): Promise<string | null> {
   return data?.id ?? null;
 }
 
-export const getBloqueios = createServerFn({ method: "GET" })
+// POST (não GET) de propósito: respostas GET podem ser cacheadas pelo
+// browser/CDN em produção — o que faria os alunos verem bloqueios desatualizados.
+export const getBloqueios = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async () => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -602,7 +605,7 @@ export const setBloqueios = createServerFn({ method: "POST" })
 // ───────── Códigos de acesso — a mentora cria; usados para criar conta ─────────
 const CODIGOS_KEY = "__codigos__";
 
-export const getCodigos = createServerFn({ method: "GET" })
+export const getCodigos = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context);
@@ -707,7 +710,7 @@ async function readOwnerBlob(supabaseAdmin: any): Promise<{ uid: string; blob: R
   return { uid, blob: (data?.data as Record<string, unknown>) ?? {} };
 }
 
-export const getTurmas = createServerFn({ method: "GET" })
+export const getTurmas = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context);
@@ -723,7 +726,7 @@ const PAPEIS_KEY = "__papeis__";
 // Por defeito: TODOS os nós (acesso a tudo). Acesso é por nó (página/subpágina).
 const PAPEIS_PADRAO: string[] = achatarEstrutura().map((n) => n.id);
 
-export const getPapeis = createServerFn({ method: "GET" })
+export const getPapeis = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await assertAdmin(context);
@@ -785,7 +788,8 @@ export const setTurmas = createServerFn({ method: "POST" })
 //  - moderador       → permissões do papel Moderador
 //  - aluno numa turma→ permissões dessa turma (sobrepõe o papel)
 //  - aluno sem turma → permissões do papel Aluno (o "Iniciante" por defeito)
-export const getMinhaTurmaAcessos = createServerFn({ method: "GET" })
+// POST de propósito (evita cache de GET em produção — ver getBloqueios).
+export const getMinhaTurmaAcessos = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
@@ -806,6 +810,152 @@ export const getMinhaTurmaAcessos = createServerFn({ method: "GET" })
     const turma = turmas.find((t) => Array.isArray(t.membros) && t.membros.includes(context.userId));
     if (turma) return { restrito: true, acessos: Array.isArray(turma.acessos) ? turma.acessos : [] };
     return { restrito: true, acessos: Array.isArray(papeis.aluno) ? papeis.aluno : [...PAPEIS_PADRAO] };
+  });
+
+// ───────── Mensagens da mentora — a admin escreve; os alunos leem ─────────
+// Guardadas em "__mensagens__" (array na linha da dona). Cada mensagem pode ser
+// para "todas" as turmas ou dirigida a uma turma específica.
+const MENSAGENS_KEY = "__mensagens__";
+
+type MensagemRow = {
+  id: string;
+  titulo: string;
+  corpo: string;
+  turmaId: string; // "todas" ou o id de uma turma
+  data: string; // ISO
+  autor: string;
+};
+
+// Resolve a turma (id) do utilizador atual, se for aluno numa turma.
+function turmaDoUtilizador(blob: Record<string, unknown>, userId: string): string | null {
+  const turmas = (Array.isArray(blob[TURMAS_KEY]) ? blob[TURMAS_KEY] : []) as {
+    id?: string; membros?: string[];
+  }[];
+  const t = turmas.find((x) => Array.isArray(x.membros) && x.membros.includes(userId));
+  return t?.id ?? null;
+}
+
+function ordenarMensagens(ms: MensagemRow[]): MensagemRow[] {
+  return [...ms].sort((a, b) => (b.data || "").localeCompare(a.data || ""));
+}
+
+// Qualquer aluno autenticado lê as mensagens que lhe são dirigidas.
+// POST de propósito (evita cache de GET em produção — ver getBloqueios).
+export const getMensagens = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { blob } = await readOwnerBlob(supabaseAdmin);
+    const todas = (Array.isArray(blob[MENSAGENS_KEY]) ? blob[MENSAGENS_KEY] : []) as MensagemRow[];
+    const roles = await rolesOf(supabaseAdmin, context.userId);
+    // Admin/owner recebe todas (para gerir).
+    if (roles.includes("admin")) return ordenarMensagens(todas);
+    const minhaTurma = turmaDoUtilizador(blob, context.userId);
+    const visiveis = todas.filter(
+      (m) => m.turmaId === "todas" || (minhaTurma !== null && m.turmaId === minhaTurma),
+    );
+    return ordenarMensagens(visiveis);
+  });
+
+// A admin grava a lista completa de mensagens (adiciona/edita/remove no cliente).
+export const setMensagens = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { mensagens: unknown[] }) =>
+    z.object({
+      mensagens: z.array(z.object({
+        id: z.string(),
+        titulo: z.string().max(200),
+        corpo: z.string().max(8000),
+        turmaId: z.string().max(80),
+        data: z.string().max(40),
+        autor: z.string().max(120),
+      })).max(1000),
+    }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { uid, blob } = await readOwnerBlob(supabaseAdmin);
+    const next = { ...blob, [MENSAGENS_KEY]: data.mensagens };
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: uid, data: next, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
+    return { ok: true };
+  });
+
+// ───────── Competição mensal de posts (admin) ─────────
+const POSTS_KEY_G = "__posts__";
+const PREMIOS_KEY_G = "__premios-mes__";
+
+// Vencedor do mês + se deve alertar a admin (a partir do dia 30).
+export const getAlertaVencedor = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const agora = new Date();
+    const mes = mesCorrente(agora);
+    const dia = agora.getDate();
+    const { data: docs } = await supabaseAdmin.from("master_documents").select("user_id, data");
+    const { data: perfis } = await supabaseAdmin.from("profiles").select("id, nome");
+    const { data: roles } = await supabaseAdmin.from("user_roles").select("user_id, role").in("role", ["admin", "moderator"]);
+    const excluir = new Set((roles ?? []).map((r: { user_id: string }) => r.user_id));
+    const nomePorId = new Map((perfis ?? []).map((p: { id: string; nome: string | null }) => [p.id, p.nome || "Aluno"]));
+    const linhas = (docs ?? [])
+      .map((row: { user_id: string; data: Record<string, unknown> }) => {
+        const posts = (row.data?.[POSTS_KEY_G] as PostPublicado[]) ?? [];
+        const n = contarPor(posts, chaveMes)[mes] ?? 0;
+        const premios = row.data?.[PREMIOS_KEY_G];
+        const jaPremiado = Array.isArray(premios) && premios.includes(mes);
+        return { userId: row.user_id, nome: nomePorId.get(row.user_id) ?? "Aluno", posts: n, jaPremiado };
+      })
+      .filter((l) => l.posts > 0 && nomePorId.has(l.userId) && !excluir.has(l.userId))
+      .sort((a, b) => b.posts - a.posts);
+    const lider = linhas[0] ?? null;
+    return {
+      mes,
+      dia,
+      alertar: dia >= 30 && !!lider && !lider.jaPremiado,
+      lider,
+      ranking: linhas.slice(0, 10),
+    };
+  });
+
+// Premiar o vencedor do mês: marca o mês, soma +300 e regista no log.
+export const premiarVencedor = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { userId: string; mes: string }) =>
+    z.object({ userId: z.string().uuid(), mes: z.string().regex(/^\d{4}-\d{2}$/) }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row } = await supabaseAdmin
+      .from("master_documents")
+      .select("data")
+      .eq("user_id", data.userId)
+      .maybeSingle();
+    const blob = (row?.data as Record<string, unknown>) ?? {};
+    const premios = Array.isArray(blob[PREMIOS_KEY_G]) ? (blob[PREMIOS_KEY_G] as string[]) : [];
+    if (premios.includes(data.mes)) return { ok: true, jaPremiado: true };
+    premios.push(data.mes);
+    await supabaseAdmin.from("master_documents").upsert(
+      { user_id: data.userId, data: { ...blob, [PREMIOS_KEY_G]: premios }, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    // Soma +300 já (a recompute do aluno mantém o total consistente: base + prémios×300).
+    const { data: prof } = await supabaseAdmin.from("profiles").select("pontos").eq("id", data.userId).maybeSingle();
+    const novo = (prof?.pontos ?? 0) + 300;
+    await supabaseAdmin.from("profiles").update({ pontos: novo, updated_at: new Date().toISOString() }).eq("id", data.userId);
+    await supabaseAdmin.from("pontos_log").insert({
+      user_id: data.userId,
+      delta: 300,
+      motivo: `Vencedor do mês ${data.mes} — sessão de 30 min`,
+      criado_por: context.userId,
+    });
+    return { ok: true, novoTotal: novo };
   });
 
 // Ranking visível a qualquer aluno autenticado (top 50 por pontos).

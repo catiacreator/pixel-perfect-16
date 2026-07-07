@@ -27,6 +27,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { extractDocMestre } from "@/lib/doc-mestre.functions";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import DocMestrePreview from "@/components/DocMestrePreview";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import { HYDRATED_EVENT } from "@/lib/master-doc-sync";
 
 // ------------------------------------------------------------------
@@ -333,6 +334,78 @@ TOM DE COMUNICAÇÃO:`;
 }
 
 // ------------------------------------------------------------------
+// Skill Personalizada — gera um ficheiro .md (protocolo) já calibrado
+// com o Documento Mestre, pronto a instalar no Project Knowledge do Claude.
+// ------------------------------------------------------------------
+function buildSkillPersonalizada(d: DocState): string {
+  const nome = d.nome.trim() || "o meu negócio";
+  const lista = (arr: string[]) => {
+    const its = arr.map((s) => s.trim()).filter(Boolean);
+    return its.length ? its.map((s) => `- ${s}`).join("\n") : "- (por preencher)";
+  };
+  const linha = (label: string, v: string) => (v.trim() ? `- **${label}:** ${v.trim()}` : "");
+  const quemSou = [
+    d.profissao.trim(),
+    d.tempoAtuacao.trim() ? `há ${d.tempoAtuacao.trim()}` : "",
+    d.localizacao.trim(),
+  ].filter(Boolean).join(" · ");
+  const produtos = d.produtos.filter((p) => p.nome.trim() || p.descricao.trim()).length
+    ? d.produtos
+        .filter((p) => p.nome.trim() || p.descricao.trim())
+        .map((p) => `- **${p.nome.trim() || "(sem nome)"}**${p.descricao.trim() ? ` — ${p.descricao.trim()}` : ""}${p.ticketMedio.trim() ? ` (ticket: ${p.ticketMedio.trim()})` : ""}`)
+        .join("\n")
+    : "- (por preencher)";
+
+  return `# Skill Personalizada — ${nome}
+
+> Assistente de IA calibrado com o Documento Mestre de **${nome}**.
+> Instale este ficheiro no *Project Knowledge* de um Projeto no Claude (ou como instrução personalizada). A partir daí, todas as conversas desse Projeto seguem este protocolo — na minha voz e no contexto do meu negócio.
+
+## 🎯 Objetivo
+Você é o meu estrategista e copywriter pessoal. Aja **sempre** a partir do contexto de negócio abaixo, na minha voz e no meu tom. Nunca responda de forma genérica: cada resposta deve soar como se fosse eu.
+
+## 🧭 Contexto do negócio (Documento Mestre)
+${[
+    linha("Quem sou", `${d.nome.trim()}${quemSou ? ` — ${quemSou}` : ""}`),
+    linha("O que faço", d.oQueFaz),
+    linha("Como resolvo", d.comoResolve),
+    linha("Público / cliente ideal", d.publico),
+    linha("Tom de voz", d.tomDeVoz),
+  ].filter(Boolean).join("\n")}
+
+### Dores do público
+${lista(d.dores)}
+
+### Desejos do público
+${lista(d.desejos)}
+
+### Produtos / serviços
+${produtos}
+
+## 🛠️ Protocolo (como agir)
+1. Antes de responder, ancore-se no contexto acima — quem é o público, que dor sente e que desejo tem.
+2. Fale sempre na minha voz e no meu tom${d.tomDeVoz.trim() ? ` (${d.tomDeVoz.trim()})` : ""}; evite jargão e frases feitas.
+3. Estruture cada entrega pela lógica **dor → solução → transformação** (do ponto A ao ponto B do cliente).
+4. Use exemplos concretos e linguagem do meu público — nada de conselhos genéricos.
+5. Termine sempre com um próximo passo claro (o que fazer a seguir).
+6. Nunca invente resultados, números ou promessas de ganho garantido. Se faltar informação, pergunte antes de assumir.
+
+## 📤 Formato de saída
+- Respostas diretas e organizadas (títulos e listas quando ajudar).
+- Quando eu pedir conteúdo (post, roteiro, copy), entregue pronto a usar + uma linha a explicar a estratégia por trás.
+- Quando eu pedir estratégia, entregue passos priorizados.
+
+## ⚙️ Como instalar
+1. No Claude, crie um **Projeto** (Projects).
+2. Em **Project Knowledge**, carregue este ficheiro \`.md\` (ou cole o conteúdo nas instruções personalizadas do Projeto).
+3. Converse dentro desse Projeto — o assistente segue automaticamente este protocolo.
+
+---
+*Gerado a partir do meu Documento Mestre na plataforma Leveza no Digital.*
+`;
+}
+
+// ------------------------------------------------------------------
 // Página principal
 // ------------------------------------------------------------------
 
@@ -381,13 +454,30 @@ export default function DocMestre() {
   const set = <K extends keyof DocState>(k: K, v: DocState[K]) =>
     setDoc((p) => ({ ...p, [k]: v }));
 
-  const resetAll = () => {
-    if (!confirm("Apagar todos os campos do Documento Mestre?")) return;
-    setDoc(EMPTY);
-  };
+  const [confirmarReset, setConfirmarReset] = useState(false);
+  const resetAll = () => setConfirmarReset(true);
 
   const [previewOpen, setPreviewOpen] = useState(false);
   const printPDF = () => setPreviewOpen(true);
+
+  const baixarSkill = () => {
+    const md = buildSkillPersonalizada(doc);
+    const slug = (doc.nome || "leveza")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, "") || "leveza";
+    const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `skill-personalizada-${slug}.md`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
 
   // Produtos
   const addProduto = () =>
@@ -518,26 +608,6 @@ export default function DocMestre() {
                 </p>
               </div>
 
-              {/* Ações */}
-              <div className="flex flex-col items-stretch lg:items-end gap-2 shrink-0">
-                <div className="flex gap-2">
-                  <button
-                    onClick={resetAll}
-                    className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-2xl border border-border bg-white text-ink hover:border-terracotta transition-colors"
-                  >
-                    <RotateCcw size={15} /> Zerar tudo
-                  </button>
-                  <button
-                    onClick={printPDF}
-                    className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-2xl bg-gradient-to-br from-terracotta to-terracotta-dark text-cream hover:opacity-95 transition-opacity"
-                  >
-                    <Eye size={15} /> Visualizar PDF
-                  </button>
-                </div>
-                <span className="self-end inline-flex items-center gap-1.5 text-xs text-ink/60 px-3 py-1.5 rounded-full border border-border bg-white">
-                  <Save size={12} /> {savedAt ? `Salvo às ${savedAt}` : "Autosave activo"}
-                </span>
-              </div>
             </div>
           </div>
         </div>
@@ -550,6 +620,32 @@ export default function DocMestre() {
             </div>
             <p className="text-sm opacity-80">Vídeo de explicação (3 min)</p>
           </div>
+        </div>
+
+        {/* Ações — abaixo do vídeo */}
+        <div className="print:hidden mb-8 flex flex-wrap items-center gap-2">
+          <button
+            onClick={resetAll}
+            className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-2xl border border-border bg-white text-ink hover:border-terracotta transition-colors"
+          >
+            <RotateCcw size={15} /> Zerar tudo
+          </button>
+          <button
+            onClick={printPDF}
+            className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-2xl bg-gradient-to-br from-terracotta to-terracotta-dark text-cream hover:opacity-95 transition-opacity"
+          >
+            <Eye size={15} /> Visualizar PDF
+          </button>
+          <button
+            onClick={baixarSkill}
+            className="flex items-center gap-2 text-sm font-medium px-4 py-2.5 rounded-2xl bg-ink text-cream hover:bg-terracotta transition-colors"
+            title="Gera um ficheiro .md com o seu Documento Mestre, pronto a instalar no Claude"
+          >
+            <Sparkles size={15} /> Baixar minha Skill Personalizada
+          </button>
+          <span className="ml-auto inline-flex items-center gap-1.5 text-xs text-ink/60 px-3 py-1.5 rounded-full border border-border bg-white">
+            <Save size={12} /> {savedAt ? `Salvo às ${savedAt}` : "Autosave activo"}
+          </span>
         </div>
 
         {/* Import card */}
@@ -927,6 +1023,16 @@ export default function DocMestre() {
       {previewOpen && (
         <DocMestrePreview doc={doc} metodo={metodo} onClose={() => setPreviewOpen(false)} />
       )}
+
+      <ConfirmDialog
+        open={confirmarReset}
+        titulo="Apagar todos os campos?"
+        descricao={<>Vai limpar <b className="text-ink">todo o Documento Mestre</b>. Esta ação não pode ser anulada.</>}
+        confirmarLabel="Zerar tudo"
+        Icone={RotateCcw}
+        onConfirmar={() => { setDoc(EMPTY); setConfirmarReset(false); }}
+        onCancelar={() => setConfirmarReset(false)}
+      />
     </Layout>
   );
 }

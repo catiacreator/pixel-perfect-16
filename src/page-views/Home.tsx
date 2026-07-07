@@ -132,16 +132,6 @@ export default function Home() {
 
       {/* Dois caminhos */}
       <section className="max-w-[1200px] mx-auto px-5 md:px-10 pt-8 md:pt-12 pb-20 md:pb-28">
-        <div className="text-center max-w-2xl mx-auto mb-10 md:mb-14 fade-up">
-          <p className="text-[11px] tracking-[0.3em] uppercase text-terracotta mb-4">Escolhe por onde entrar</p>
-          <h2 className="font-display text-2xl md:text-4xl tracking-[-0.02em] text-ink leading-[1.1]">
-            Dois caminhos para <span className="text-ink/35">crescer com IA.</span>
-          </h2>
-          <p className="text-ink/55 mt-4 leading-relaxed">
-            A mentoria que torna o teu Instagram imparável, e a academia que te dá as ferramentas. Entra no que precisas.
-          </p>
-        </div>
-
         <div className="grid md:grid-cols-2 gap-5 md:gap-6">
           {PRODUTOS.map((p, i) => {
             const Icon = p.icon;

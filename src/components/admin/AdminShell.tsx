@@ -1,7 +1,7 @@
 import { Link, useRouterState, useNavigate, Outlet } from "@tanstack/react-router";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
-import { LayoutDashboard, Users, Trophy, FileText, LogOut, Eye, KeyRound, Home, ChevronDown, ChevronLeft, ListTree, GraduationCap, ShieldCheck, Ticket, Link2 } from "lucide-react";
+import { LayoutDashboard, Users, Trophy, FileText, LogOut, Eye, KeyRound, Home, ChevronDown, ChevronLeft, ListTree, GraduationCap, ShieldCheck, Ticket, Link2, Mail } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { checkIsAdmin, getAdminConfig } from "@/lib/admin.functions";
@@ -12,6 +12,7 @@ type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?
 const ITEMS: NavItem[] = [
   { to: "/admin", label: "Visão geral", icon: LayoutDashboard, exact: true },
   { to: "/admin/mentoradas", label: "Alunos", icon: Users },
+  { to: "/admin/mensagens", label: "Mensagens", icon: Mail },
   { to: "/admin/turmas", label: "Turmas", icon: GraduationCap },
   { to: "/admin/codigos", label: "Códigos de acesso", icon: Ticket },
   { to: "/admin/estrutura", label: "Estrutura", icon: ListTree },

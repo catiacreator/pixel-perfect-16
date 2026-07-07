@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import Layout from "../components/Layout";
-import { setMyPoints, getRanking } from "@/lib/admin.functions";
+import { getRanking } from "@/lib/admin.functions";
+import { useProgresso } from "@/lib/use-progresso";
 import {
   Trophy,
   Sparkles,
@@ -115,8 +116,9 @@ export default function Conquistas() {
   const [extras, setExtras] = useState({ conclusao: 0, docCampos: 0, pilares: 0 });
   const [serverRanking, setServerRanking] = useState<{ pos: number; nome: string; tier: string; pontos: number; isMe: boolean; avatar?: string }[] | null>(null);
 
-  const pushFn = useServerFn(setMyPoints);
   const rankingFn = useServerFn(getRanking);
+  // Pontos são a fonte de verdade do servidor (gamificação).
+  const { pontos: pontosServidor } = useProgresso();
 
   useEffect(() => {
     setMounted(true);
@@ -133,31 +135,21 @@ export default function Conquistas() {
     [aulasMap],
   );
 
-  const pontos = useMemo(() => {
-    const feito = aulasFeitas + postsPublicados + extras.conclusao + extras.docCampos + extras.pilares;
-    return (
-      aulasFeitas * 10 +
-      postsPublicados * PONTOS_POR_POST +
-      extras.conclusao * PONTOS_POR_ETAPA +
-      extras.docCampos * PONTOS_POR_CAMPO_DOC +
-      extras.pilares * PONTOS_POR_PILAR +
-      (feito > 0 ? 20 : 0) // bónus de arranque
-    );
-  }, [aulasFeitas, postsPublicados, extras]);
+  // Total autoritativo (servidor): tarefas + posts + Documento Mestre + prémios.
+  const pontos = pontosServidor;
 
-  // Guarda os pontos no perfil (para o ranking) e carrega o ranking de todos.
+  // Carrega o ranking de todos os alunos.
   useEffect(() => {
     if (!mounted) return;
     let active = true;
     (async () => {
-      try { await pushFn({ data: { pontos } }); } catch { /* offline/sem sessão — segue local */ }
       try {
         const rows = (await rankingFn()) as typeof serverRanking;
         if (active && Array.isArray(rows) && rows.length) setServerRanking(rows);
       } catch { /* ranking indisponível — mostra só os teus pontos */ }
     })();
     return () => { active = false; };
-  }, [mounted, pontos, pushFn, rankingFn]);
+  }, [mounted, rankingFn]);
 
   const tier = tierFor(pontos);
   const nextLabel = tier.next
@@ -262,12 +254,12 @@ export default function Conquistas() {
         <div className="bg-white rounded-2xl border border-[var(--color-border)] p-6 mb-8">
           <h2 className="font-serif text-lg text-ink mb-4">Como ganhar pontos</h2>
           <div className="grid md:grid-cols-2 gap-x-10 gap-y-3 text-sm">
+            <PointRow emoji="🎒" label="Concluir uma aula ou etapa" pts="+15 pts" />
+            <PointRow emoji="✅" label="Marcar tarefa em ‘Revise e celebre’" pts="+10 pts" />
             <PointRow emoji="📄" label="Preencher um campo do Documento Mestre" pts="+10 pts" />
-            <PointRow emoji="🚀" label="Publicar um post (com link no Plano)" pts="+15 pts" />
-            <PointRow emoji="🎒" label="Concluir uma aula" pts="+10 pts" />
-            <PointRow emoji="✅" label="Marcar um passo em ‘Revise e celebre’" pts="+5 pts" />
-            <PointRow emoji="🧭" label="Definir um pilar de conteúdo" pts="+5 pts" />
-            <PointRow emoji="🔥" label="Streak de 7 dias seguidos" pts="+5 pts bónus" />
+            <PointRow emoji="🚀" label="Publicar um post no Plano" pts="+10 pts" />
+            <PointRow emoji="🗓️" label="5 posts numa semana / 20 num mês" pts="+30 / +150" />
+            <PointRow emoji="👑" label="Publicar mais posts no mês" pts="sessão 30 min + 300" />
           </div>
         </div>
 

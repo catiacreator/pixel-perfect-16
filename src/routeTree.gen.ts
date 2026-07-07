@@ -125,6 +125,7 @@ import { Route as AuthenticatedAdminPapeis2RouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminPapeis10RouteImport } from './routes/_authenticated/admin/papeis 10'
 import { Route as AuthenticatedAdminPapeisRouteImport } from './routes/_authenticated/admin/papeis'
 import { Route as AuthenticatedAdminMentoradasRouteImport } from './routes/_authenticated/admin/mentoradas'
+import { Route as AuthenticatedAdminMensagensRouteImport } from './routes/_authenticated/admin/mensagens'
 import { Route as AuthenticatedAdminLinksRouteImport } from './routes/_authenticated/admin/links'
 import { Route as AuthenticatedAdminEstudio9RouteImport } from './routes/_authenticated/admin/estudio 9'
 import { Route as AuthenticatedAdminEstudio8RouteImport } from './routes/_authenticated/admin/estudio 8'
@@ -807,6 +808,12 @@ const AuthenticatedAdminMentoradasRoute =
     path: '/mentoradas',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminMensagensRoute =
+  AuthenticatedAdminMensagensRouteImport.update({
+    id: '/mensagens',
+    path: '/mensagens',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminLinksRoute = AuthenticatedAdminLinksRouteImport.update({
   id: '/links',
   path: '/links',
@@ -1347,6 +1354,7 @@ export interface FileRoutesByFullPath {
   '/admin/estudio 8': typeof AuthenticatedAdminEstudio8Route
   '/admin/estudio 9': typeof AuthenticatedAdminEstudio9Route
   '/admin/links': typeof AuthenticatedAdminLinksRoute
+  '/admin/mensagens': typeof AuthenticatedAdminMensagensRoute
   '/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
   '/admin/papeis': typeof AuthenticatedAdminPapeisRoute
   '/admin/papeis 10': typeof AuthenticatedAdminPapeis10Route
@@ -1528,6 +1536,7 @@ export interface FileRoutesByTo {
   '/admin/estudio 8': typeof AuthenticatedAdminEstudio8Route
   '/admin/estudio 9': typeof AuthenticatedAdminEstudio9Route
   '/admin/links': typeof AuthenticatedAdminLinksRoute
+  '/admin/mensagens': typeof AuthenticatedAdminMensagensRoute
   '/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
   '/admin/papeis': typeof AuthenticatedAdminPapeisRoute
   '/admin/papeis 10': typeof AuthenticatedAdminPapeis10Route
@@ -1714,6 +1723,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/estudio 8': typeof AuthenticatedAdminEstudio8Route
   '/_authenticated/admin/estudio 9': typeof AuthenticatedAdminEstudio9Route
   '/_authenticated/admin/links': typeof AuthenticatedAdminLinksRoute
+  '/_authenticated/admin/mensagens': typeof AuthenticatedAdminMensagensRoute
   '/_authenticated/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
   '/_authenticated/admin/papeis': typeof AuthenticatedAdminPapeisRoute
   '/_authenticated/admin/papeis 10': typeof AuthenticatedAdminPapeis10Route
@@ -1904,6 +1914,7 @@ export interface FileRouteTypes {
     | '/admin/estudio 8'
     | '/admin/estudio 9'
     | '/admin/links'
+    | '/admin/mensagens'
     | '/admin/mentoradas'
     | '/admin/papeis'
     | '/admin/papeis 10'
@@ -2085,6 +2096,7 @@ export interface FileRouteTypes {
     | '/admin/estudio 8'
     | '/admin/estudio 9'
     | '/admin/links'
+    | '/admin/mensagens'
     | '/admin/mentoradas'
     | '/admin/papeis'
     | '/admin/papeis 10'
@@ -2270,6 +2282,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/estudio 8'
     | '/_authenticated/admin/estudio 9'
     | '/_authenticated/admin/links'
+    | '/_authenticated/admin/mensagens'
     | '/_authenticated/admin/mentoradas'
     | '/_authenticated/admin/papeis'
     | '/_authenticated/admin/papeis 10'
@@ -3217,6 +3230,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminMentoradasRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/mensagens': {
+      id: '/_authenticated/admin/mensagens'
+      path: '/mensagens'
+      fullPath: '/admin/mensagens'
+      preLoaderRoute: typeof AuthenticatedAdminMensagensRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/links': {
       id: '/_authenticated/admin/links'
       path: '/links'
@@ -3783,6 +3803,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminEstudio8Route: typeof AuthenticatedAdminEstudio8Route
   AuthenticatedAdminEstudio9Route: typeof AuthenticatedAdminEstudio9Route
   AuthenticatedAdminLinksRoute: typeof AuthenticatedAdminLinksRoute
+  AuthenticatedAdminMensagensRoute: typeof AuthenticatedAdminMensagensRoute
   AuthenticatedAdminMentoradasRoute: typeof AuthenticatedAdminMentoradasRouteWithChildren
   AuthenticatedAdminPapeisRoute: typeof AuthenticatedAdminPapeisRoute
   AuthenticatedAdminPapeis10Route: typeof AuthenticatedAdminPapeis10Route
@@ -3861,6 +3882,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminEstudio8Route: AuthenticatedAdminEstudio8Route,
     AuthenticatedAdminEstudio9Route: AuthenticatedAdminEstudio9Route,
     AuthenticatedAdminLinksRoute: AuthenticatedAdminLinksRoute,
+    AuthenticatedAdminMensagensRoute: AuthenticatedAdminMensagensRoute,
     AuthenticatedAdminMentoradasRoute:
       AuthenticatedAdminMentoradasRouteWithChildren,
     AuthenticatedAdminPapeisRoute: AuthenticatedAdminPapeisRoute,

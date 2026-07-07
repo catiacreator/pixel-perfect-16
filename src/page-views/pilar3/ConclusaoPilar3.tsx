@@ -1,33 +1,18 @@
-import { useEffect, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import PillarHeader from "../../components/PillarHeader";
 import { Trophy, Check, ArrowRight } from "lucide-react";
 import { CHECKLIST_PILAR3 } from "@/data/pilar3";
-
-const KEY = "leveza.pilar3.checklist.v1";
+import { useProgresso } from "@/lib/use-progresso";
 
 export default function ConclusaoPilar3() {
-  const [done, setDone] = useState<Set<number>>(new Set());
-  const [hydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    try {
-      const raw = JSON.parse(localStorage.getItem(KEY) || "[]");
-      setDone(new Set(Array.isArray(raw) ? raw : []));
-    } catch { /* ignore */ }
-    setHydrated(true);
-  }, []);
-
-  const toggle = (i: number) => {
-    setDone((prev) => {
-      const next = new Set(prev);
-      next.has(i) ? next.delete(i) : next.add(i);
-      localStorage.setItem(KEY, JSON.stringify([...next]));
-      return next;
-    });
-  };
+  const { isFeita, marcar, carregado } = useProgresso();
+  const idDe = (i: number) => `celebrar:p3:${i}`;
+  const done = (i: number) => isFeita(idDe(i));
+  const toggle = (i: number) => marcar(idDe(i), "celebrar", !done(i));
+  const hydrated = carregado;
+  const doneCount = CHECKLIST_PILAR3.filter((_, i) => done(i)).length;
 
   return (
     <Layout>
@@ -43,11 +28,11 @@ export default function ConclusaoPilar3() {
       <div className="max-w-[900px] mx-auto px-5 md:px-10 pt-8 md:pt-10 pb-20">
         <div className="rounded-2xl border border-border bg-white p-5 md:p-6 mb-6">
           <p className="text-lg font-semibold tracking-tight text-ink mb-4">
-            {hydrated ? done.size : 0} de {CHECKLIST_PILAR3.length} concluídos
+            {hydrated ? doneCount : 0} de {CHECKLIST_PILAR3.length} concluídos
           </p>
           <ul className="space-y-2">
             {CHECKLIST_PILAR3.map((item, i) => {
-              const isDone = done.has(i);
+              const isDone = done(i);
               return (
                 <li key={i} className="flex items-center gap-3">
                   <button

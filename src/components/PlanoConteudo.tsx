@@ -4,6 +4,9 @@ import {
   ClipboardPaste, Plus, Trash2, ChevronDown, ChevronLeft, ChevronRight, Check, Link2,
   Trophy, CalendarDays, Clock, Sparkles, ArrowRight,
 } from "lucide-react";
+import { useProgresso } from "@/lib/use-progresso";
+import { chaveMes, chaveSemana } from "@/lib/gamificacao";
+import { getRankingMes } from "@/lib/gamificacao.functions";
 
 // Plano de Conteúdo — a aluna cola até 4 resultados do ChatGPT; a plataforma
 // parte-os em posts, ela agenda dia/mês/hora, e tudo aparece no calendário
@@ -14,7 +17,7 @@ const KEY = "leveza.plano-conteudo.v1";
 const PONTOS_KEY = "leveza.posts-publicados.v1";
 const PONTOS_POR_POST = 15;
 
-type Post = { id: string; tipo: string; titulo: string; conteudo: string; link: string; data: string; hora: string };
+type Post = { id: string; tipo: string; titulo: string; conteudo: string; link: string; data: string; hora: string; pubId?: string };
 
 const FONTES = [
   { id: "roteiros-simples", label: "Roteiros simples", cor: "#2E7CB8", multi: true },
@@ -53,6 +56,28 @@ export default function PlanoConteudo() {
   const [aviso, setAviso] = useState("");
   const [mes, setMes] = useState(() => { const d = new Date(); return { y: d.getFullYear(), m: d.getMonth() }; });
 
+  // Gamificação: publicar um post grava-o no servidor (conta para pontos e para
+  // a competição mensal). postsServidor = posts publicados (fonte de verdade).
+  const { registar, remover: removerPostServidor, posts: postsServidor } = useProgresso();
+  const hojeD = new Date();
+  const hojeYMD = iso(hojeD.getFullYear(), hojeD.getMonth(), hojeD.getDate());
+  const semanaAtual = chaveSemana(hojeYMD);
+  const mesAtual = chaveMes(hojeYMD);
+  const nHoje = postsServidor.filter((p) => p.data === hojeYMD).length;
+  const nSemana = postsServidor.filter((p) => chaveSemana(p.data) === semanaAtual).length;
+  const nMes = postsServidor.filter((p) => chaveMes(p.data) === mesAtual).length;
+
+  const togglePublicado = async (p: Post) => {
+    if (p.pubId) {
+      await removerPostServidor(p.pubId);
+      setPost(p.id, { pubId: "" });
+    } else {
+      const dataYMD = p.data || hojeYMD;
+      const novoId = await registar(dataYMD, p.titulo, p.tipo);
+      if (novoId) setPost(p.id, { pubId: novoId, data: dataYMD });
+    }
+  };
+
   // Carrega uma vez (só leitura).
   useEffect(() => {
     try {
@@ -66,7 +91,7 @@ export default function PlanoConteudo() {
   const persist = (next: Post[]) => {
     try {
       localStorage.setItem(KEY, JSON.stringify({ posts: next }));
-      localStorage.setItem(PONTOS_KEY, String(next.filter((p) => p.link.trim()).length));
+      localStorage.setItem(PONTOS_KEY, String(next.filter((p) => !!p.pubId).length));
     } catch { /* ignora */ }
   };
   const update = (fn: (prev: Post[]) => Post[]) => setPosts((prev) => { const next = fn(prev); persist(next); return next; });
@@ -86,10 +111,9 @@ export default function PlanoConteudo() {
   const remover = (id: string) => update((prev) => prev.filter((p) => p.id !== id));
 
   const corDe = (label: string) => FONTES.find((f) => f.label === label)?.cor || "#C8487E";
-  const publicado = (p: Post) => !!p.link.trim();
+  const publicado = (p: Post) => !!p.pubId;
 
   const publicados = posts.filter(publicado).length;
-  const pontos = publicados * PONTOS_POR_POST;
 
   // ordem cronológica (sem data vai para o fim)
   const ordenados = [...posts].sort((a, b) => (a.data || "9999").localeCompare(b.data || "9999") || (a.hora || "99").localeCompare(b.hora || "99"));
@@ -127,14 +151,20 @@ export default function PlanoConteudo() {
         </p>
       </div>
 
-      {/* Progresso */}
-      <div className="rounded-2xl border border-border bg-white shadow-sm p-5 flex flex-wrap items-center gap-5">
-        <Stat icon={<CalendarDays size={20} />} n={posts.length} label="posts no plano" tint="terracotta" />
-        <Stat icon={<Check size={20} />} n={publicados} label="já publicados" tint="sage" />
-        <Stat icon={<Trophy size={20} />} n={pontos} label="pontos ganhos" tint="gold" />
-        <p className="text-xs text-ink/50 ml-auto max-w-[220px] leading-relaxed">
-          Meta: <b className="text-ink">1 post por dia</b>. Quanto mais publicar, mais pontos ganha nas <Link to="/conquistas" className="text-terracotta font-semibold">Vitórias</Link>.
-        </p>
+      {/* Progresso + histórico (dia / semana / mês) */}
+      <div className="rounded-2xl border border-border bg-white shadow-sm p-5">
+        <div className="flex flex-wrap items-center gap-5">
+          <Stat icon={<CalendarDays size={20} />} n={posts.length} label="posts no plano" tint="terracotta" />
+          <Stat icon={<Check size={20} />} n={publicados} label="já publicados" tint="sage" />
+          <p className="text-xs text-ink/50 ml-auto max-w-[240px] leading-relaxed">
+            Quem publicar <b className="text-ink">mais posts no mês</b> ganha uma <b className="text-terracotta">sessão de 30 min</b> com a Cátia. Pontos nas <Link to="/conquistas" className="text-terracotta font-semibold">Vitórias</Link>.
+          </p>
+        </div>
+        <div className="grid grid-cols-3 gap-2.5 mt-4 pt-4 border-t border-border">
+          <Resumo n={nHoje} label="hoje" />
+          <Resumo n={nSemana} label="esta semana" meta={5} bonus={30} />
+          <Resumo n={nMes} label="este mês" meta={20} bonus={150} destaque />
+        </div>
       </div>
 
       {/* Colar resultados */}
@@ -220,15 +250,30 @@ export default function PlanoConteudo() {
                         </div>
                       </div>
 
-                      <label className="text-[11px] tracking-[0.1em] uppercase text-ink/45 mb-1.5 block">Link do post (depois de publicar)</label>
+                      <label className="text-[11px] tracking-[0.1em] uppercase text-ink/45 mb-1.5 block">Link do post (opcional)</label>
                       <div className="flex items-center gap-2 mb-3">
                         <span className="text-ink/30"><Link2 size={15} /></span>
                         <input value={p.link} onChange={(e) => setPost(p.id, { link: e.target.value })} placeholder="https://instagram.com/p/…"
                           className="flex-1 rounded-lg border border-border p-2 text-sm outline-none focus:border-terracotta transition-colors" />
                       </div>
-                      <button onClick={() => remover(p.id)} className="inline-flex items-center gap-1 text-xs text-ink/50 hover:text-terracotta">
-                        <Trash2 size={13} /> Remover
-                      </button>
+
+                      <div className="flex items-center justify-between gap-3 flex-wrap">
+                        <button
+                          onClick={() => togglePublicado(p)}
+                          className={`inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full border transition-colors ${
+                            publicado(p)
+                              ? "bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100"
+                              : "bg-ink text-cream border-transparent hover:bg-terracotta"
+                          }`}
+                          title={p.data ? `Conta no dia ${p.data}` : "Conta no dia de hoje"}
+                        >
+                          <Check size={14} /> {publicado(p) ? "Publicado ✓ (desfazer)" : "Marcar como publicado"}
+                          {!publicado(p) && <span className="text-[11px] text-cream/70">+10</span>}
+                        </button>
+                        <button onClick={() => remover(p.id)} className="inline-flex items-center gap-1 text-xs text-ink/50 hover:text-terracotta">
+                          <Trash2 size={13} /> Remover
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -287,9 +332,45 @@ export default function PlanoConteudo() {
         </div>
       </div>
 
+      <RankingMes />
+
       <Link to="/metodo/pilar-2/redes-sociais?aba=criar" className="inline-flex items-center gap-2 text-sm font-semibold text-terracotta hover:text-terracotta-dark transition-colors">
         <Sparkles size={15} /> Criar mais conteúdo com os agentes <ArrowRight size={14} />
       </Link>
+    </div>
+  );
+}
+
+// Ranking do mês por nº de posts publicados. Quem lidera ganha uma sessão de 30 min.
+function RankingMes() {
+  const [dados, setDados] = useState<{ mes: string; ranking: { pos: number; nome: string; posts: number; isMe: boolean }[] } | null>(null);
+  useEffect(() => {
+    let vivo = true;
+    getRankingMes().then((r: any) => { if (vivo) setDados(r); }).catch(() => {});
+    return () => { vivo = false; };
+  }, []);
+
+  if (!dados || dados.ranking.length === 0) return null;
+
+  return (
+    <div className="rounded-2xl border border-terracotta/25 bg-terracotta/5 p-5">
+      <div className="flex items-center gap-2 mb-1">
+        <Trophy size={16} className="text-terracotta" />
+        <p className="text-sm font-semibold text-ink">Ranking do mês · quem publica mais ganha</p>
+      </div>
+      <p className="text-xs text-ink/55 mb-3">O 1.º lugar ganha uma <b className="text-terracotta">sessão de 30 min</b> com a Cátia.</p>
+      <div className="space-y-1">
+        {dados.ranking.slice(0, 5).map((r) => (
+          <div
+            key={r.pos}
+            className={`flex items-center gap-3 px-3 py-2 rounded-xl ${r.isMe ? "bg-terracotta/10" : "bg-white/60"}`}
+          >
+            <span className={`text-sm font-bold tabular-nums w-6 ${r.pos === 1 ? "text-terracotta" : "text-ink/40"}`}>{r.pos}º</span>
+            <span className="text-sm text-ink flex-1 truncate">{r.nome}{r.isMe ? " (você)" : ""}</span>
+            <span className="text-sm font-semibold text-ink tabular-nums">{r.posts} <span className="text-ink/50 font-normal text-xs">posts</span></span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -303,6 +384,22 @@ function Stat({ icon, n, label, tint }: { icon: React.ReactNode; n: number; labe
         <p className="text-2xl font-bold text-ink tabular-nums leading-none">{n}</p>
         <p className="text-xs text-ink/55 mt-1">{label}</p>
       </div>
+    </div>
+  );
+}
+
+// Contagem de posts publicados numa janela (hoje / semana / mês), com o bónus.
+function Resumo({ n, label, meta, bonus, destaque }: { n: number; label: string; meta?: number; bonus?: number; destaque?: boolean }) {
+  const atingiu = meta != null && n >= meta;
+  return (
+    <div className={`rounded-xl border p-3 text-center ${destaque ? "border-terracotta/30 bg-terracotta/5" : "border-border bg-cream-warm/30"}`}>
+      <p className="text-2xl font-bold text-ink tabular-nums leading-none">{n}</p>
+      <p className="text-[11px] text-ink/55 mt-1">posts {label}</p>
+      {meta != null && (
+        <p className={`text-[10px] mt-1.5 font-semibold ${atingiu ? "text-emerald-600" : "text-ink/40"}`}>
+          {atingiu ? `✓ bónus +${bonus}` : `${meta} → +${bonus}`}
+        </p>
+      )}
     </div>
   );
 }
