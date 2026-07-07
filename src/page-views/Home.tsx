@@ -1,8 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import HeroRobot from "../components/HeroRobot";
-import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock } from "lucide-react";
+import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, X } from "lucide-react";
+
+const WHATSAPP_CATIA = "https://wa.link/jwr3yp";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
 import { useBloqueios } from "@/lib/bloqueios";
 
@@ -30,8 +32,8 @@ const PRODUTOS = [
     desc: "O método de IA para transformar o teu perfil numa máquina de crescimento.",
     to: "/protocolo",
     cta: "Entrar no Protocolo",
-    img: "/redes-sociais.png?v=3",
-    pos: "center calc(42% - 10px)",
+    img: "/protocolo-viral.png?v=1",
+    pos: "center 30%",
     cor: "#C8487E",
     icon: Instagram,
     estruturaId: "jornada",
@@ -55,6 +57,10 @@ const PRODUTOS = [
 export default function Home() {
   const bloqueado = useBloqueadoParaAlunos();
   const { isBloqueado } = useBloqueios();
+  const [desbloquearOpen, setDesbloquearOpen] = useState(false);
+  // Turma "Conteúdo com IA": só tem o mini-curso; os outros cursos mostram "Desbloquear".
+  const soMiniCurso =
+    bloqueado && !isBloqueado("conteudo-ia") && isBloqueado("jornada") && isBloqueado("academia");
   const orbRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let x = window.innerWidth / 2;
@@ -151,13 +157,19 @@ export default function Home() {
             const Icon = p.icon;
             const eid = (p as { estruturaId?: string }).estruturaId;
             const locked = !!eid && isBloqueado(eid) && bloqueado;
-            const Wrapper: any = locked ? "div" : Link;
-            const wrapperProps = locked ? { "aria-disabled": true } : { to: p.to };
+            // Turma mini-curso: o card fica clicável e abre a pop-up de contacto.
+            const modoDesbloquear = locked && soMiniCurso;
+            const Wrapper: any = modoDesbloquear ? "button" : locked ? "div" : Link;
+            const wrapperProps = modoDesbloquear
+              ? { type: "button" as const, onClick: () => setDesbloquearOpen(true) }
+              : locked
+                ? { "aria-disabled": true }
+                : { to: p.to };
             return (
               <Wrapper
                 key={p.key}
                 {...wrapperProps}
-                className={`fade-up group relative overflow-hidden rounded-[28px] border border-white/60 flex flex-col justify-end min-h-[440px] md:min-h-[520px] p-7 md:p-9 transition-all duration-300 ${locked ? "cursor-not-allowed" : "hover:-translate-y-1.5 hover:shadow-[0_34px_70px_-30px_rgba(40,20,15,0.55)]"}`}
+                className={`fade-up group relative overflow-hidden rounded-[28px] border border-white/60 flex flex-col justify-end min-h-[440px] md:min-h-[520px] p-7 md:p-9 text-left transition-all duration-300 ${locked && !modoDesbloquear ? "cursor-not-allowed" : "hover:-translate-y-1.5 hover:shadow-[0_34px_70px_-30px_rgba(40,20,15,0.55)]"}`}
                 style={{ animationDelay: `${i * 100}ms` }}
               >
                 <div
@@ -174,8 +186,8 @@ export default function Home() {
                   <Icon size={13} /> {p.tag}
                 </span>
                 {locked && (
-                  <span className="absolute top-6 right-7 md:right-9 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white bg-white/15 border border-white/30 rounded-full px-3 py-1.5 backdrop-blur-sm">
-                    <Lock size={12} /> Em breve
+                  <span className={`absolute top-6 right-7 md:right-9 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] rounded-full px-3 py-1.5 backdrop-blur-sm ${modoDesbloquear ? "text-ink bg-white/90 border border-white" : "text-white bg-white/15 border border-white/30"}`}>
+                    <Lock size={12} /> {modoDesbloquear ? "Desbloquear" : "Em breve"}
                   </span>
                 )}
 
@@ -187,9 +199,18 @@ export default function Home() {
                   <p className="text-sm md:text-[15px] text-white/90 mt-3 leading-relaxed max-w-md">{p.desc}</p>
 
                   {locked ? (
-                    <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white/85">
-                      <Lock size={15} /> Disponível em breve
-                    </span>
+                    modoDesbloquear ? (
+                      <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white">
+                        Desbloquear este curso
+                        <span className="w-9 h-9 rounded-full border border-white/60 flex items-center justify-center transition-all duration-300 group-hover:bg-white group-hover:text-ink group-hover:translate-x-0.5">
+                          <ArrowUpRight size={15} strokeWidth={2.25} />
+                        </span>
+                      </span>
+                    ) : (
+                      <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white/85">
+                        <Lock size={15} /> Disponível em breve
+                      </span>
+                    )
                   ) : (
                     <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white">
                       {p.cta}
@@ -204,6 +225,42 @@ export default function Home() {
           })}
         </div>
       </section>
+
+      {desbloquearOpen && (
+        <div
+          className="fixed inset-0 z-[80] bg-black/50 flex items-center justify-center p-4"
+          onClick={() => setDesbloquearOpen(false)}
+        >
+          <div
+            className="bg-white w-full max-w-md rounded-3xl p-6 md:p-7 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)] relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setDesbloquearOpen(false)}
+              className="absolute top-4 right-4 text-ink/35 hover:text-ink transition-colors"
+              aria-label="Fechar"
+            >
+              <X size={18} />
+            </button>
+            <div className="w-12 h-12 rounded-2xl bg-terracotta/10 text-terracotta flex items-center justify-center mb-4">
+              <Lock size={22} />
+            </div>
+            <h2 className="font-serif text-xl text-ink mb-2">Queres desbloquear este curso?</h2>
+            <p className="text-sm text-ink/60 leading-relaxed mb-6">
+              Este curso faz parte do método completo. Para teres acesso, entra em contacto com a
+              <b> Cátia Creator</b> — ela ajuda-te a escolher o melhor caminho para ti.
+            </p>
+            <a
+              href={WHATSAPP_CATIA}
+              target="_blank"
+              rel="noreferrer"
+              className="w-full inline-flex items-center justify-center gap-2 h-12 rounded-full bg-[#25D366] text-white text-sm font-semibold hover:bg-[#1FB855] transition-colors"
+            >
+              <MessageCircle size={18} /> Falar com a Cátia no WhatsApp
+            </a>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }
