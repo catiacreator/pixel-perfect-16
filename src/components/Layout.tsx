@@ -170,14 +170,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               )}
             </div>
 
-            {NAV.filter((item) => !soMiniCurso || item.to === "/").map((item) => {
+            {NAV.map((item) => {
               const active = isActive(item.to);
-              // Sem login: itens visíveis mas desativados.
-              if (!signedIn) {
+              // Visíveis mas desativados: sem login, ou turma só mini-curso (exceto Início).
+              const disabled = !signedIn || (soMiniCurso && item.to !== "/");
+              if (disabled) {
                 return (
                   <span
                     key={item.to}
-                    title="Entra para aceder"
+                    title={signedIn ? "Disponível no método completo" : "Entra para aceder"}
                     className="relative px-3.5 py-2 rounded-full text-[13px] text-ink/30 cursor-not-allowed"
                   >
                     {item.label}
@@ -202,14 +203,24 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
           {/* Direita */}
           <div className="flex items-center gap-2 justify-end">
-            {signedIn && !soMiniCurso && (
-              <Link
-                to="/doc-mestre"
-                className="hidden md:inline-flex items-center gap-1.5 text-[13px] pl-4 pr-3 py-2 bg-ink text-cream rounded-full font-medium transition-all hover:-translate-y-0.5 active:scale-[0.97]"
-              >
-                <FileText size={13} strokeWidth={2.25} /> Documento
-                <ArrowUpRight size={13} strokeWidth={2.25} />
-              </Link>
+            {signedIn && (
+              soMiniCurso ? (
+                <span
+                  title="Disponível no método completo"
+                  className="hidden md:inline-flex items-center gap-1.5 text-[13px] pl-4 pr-3 py-2 bg-ink/20 text-ink/40 rounded-full font-medium cursor-not-allowed"
+                >
+                  <FileText size={13} strokeWidth={2.25} /> Documento
+                  <ArrowUpRight size={13} strokeWidth={2.25} />
+                </span>
+              ) : (
+                <Link
+                  to="/doc-mestre"
+                  className="hidden md:inline-flex items-center gap-1.5 text-[13px] pl-4 pr-3 py-2 bg-ink text-cream rounded-full font-medium transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+                >
+                  <FileText size={13} strokeWidth={2.25} /> Documento
+                  <ArrowUpRight size={13} strokeWidth={2.25} />
+                </Link>
+              )
             )}
             {isAdmin && (
               <div className="hidden md:inline-flex items-center gap-0.5 p-0.5 rounded-full border border-ink/15 bg-white" title="Pré-visualizar como aluno ou admin (só muda a vista)">
@@ -260,13 +271,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {/* Navegação mobile */}
         {open && (
           <nav className="lg:hidden border-t border-[var(--color-border)] bg-white px-5 py-3 flex flex-col gap-1">
-            {NAV.filter((item) => !soMiniCurso || item.to === "/").map((item) => {
+            {NAV.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.to);
-              if (!signedIn) {
+              const disabled = !signedIn || (soMiniCurso && item.to !== "/");
+              if (disabled) {
                 return (
                   <span
                     key={item.to}
+                    title={signedIn ? "Disponível no método completo" : undefined}
                     className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm text-ink/30 cursor-not-allowed"
                   >
                     <Icon size={18} strokeWidth={1.75} />
