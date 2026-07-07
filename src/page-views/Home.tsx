@@ -15,7 +15,7 @@ const PRODUTOS = [
     tag: "Mini-curso",
     titulo: "Conteúdo com IA",
     assinatura: "o teu primeiro mês de posts",
-    desc: "Aulas grátis para criares conteúdo com IA e publicares com consistência. A porta de entrada para o método completo.",
+    desc: "Aprende a criar conteúdo com IA e a publicar com consistência. A porta de entrada para o método completo.",
     to: "/conteudo-ia",
     cta: "Começar o mini-curso",
     img: "/conteudo-com-ia.png?v=1",
