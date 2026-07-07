@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import { Link } from "@/lib/router-compat";
+import { useProgresso } from "@/lib/use-progresso";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import PillarHeader from "../../components/PillarHeader";
@@ -16,8 +16,6 @@ import {
   PartyPopper,
 } from "lucide-react";
 
-const KEY = "leveza.conclusao.p1";
-
 const ITENS = [
   { icon: UserRound, label: "Preenchi quem sou — nome, profissão e há quanto tempo atuo", to: "/doc-mestre" },
   { icon: Target, label: "Defini o que entrego e como resolvo (em 1 frase)", to: "/doc-mestre" },
@@ -27,26 +25,12 @@ const ITENS = [
 ];
 
 export default function ConclusaoPilar1() {
-  const [done, setDone] = useState<Set<number>>(new Set());
-  const [hydrated, setHydrated] = useState(false);
+  const { isFeita, marcar, carregado } = useProgresso();
+  const idDe = (i: number) => `celebrar:p1:${i}`;
+  const done = (i: number) => isFeita(idDe(i));
+  const toggle = (i: number) => marcar(idDe(i), "celebrar", !done(i));
 
-  useEffect(() => {
-    try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) setDone(new Set(JSON.parse(raw)));
-    } catch { /* ignora */ }
-    setHydrated(true);
-  }, []);
-
-  const toggle = (i: number) =>
-    setDone((prev) => {
-      const next = new Set(prev);
-      next.has(i) ? next.delete(i) : next.add(i);
-      try { localStorage.setItem(KEY, JSON.stringify([...next])); } catch { /* ignora */ }
-      return next;
-    });
-
-  const count = hydrated ? done.size : 0;
+  const count = carregado ? ITENS.filter((_, i) => done(i)).length : 0;
   const pct = Math.round((count / ITENS.length) * 100);
   const completo = count === ITENS.length;
 
@@ -89,7 +73,7 @@ export default function ConclusaoPilar1() {
         <div className="space-y-2.5">
           {ITENS.map((item, i) => {
             const Icon = item.icon;
-            const isDone = done.has(i);
+            const isDone = done(i);
             return (
               <div key={i} className="rounded-2xl border border-border bg-white shadow-sm p-3.5 flex items-center gap-3">
                 <button
