@@ -85,12 +85,13 @@ const PILARES: Record<string | number, PilarDef> = {
     title: "Curso · Conteúdo com IA",
     enabled: true,
     items: [
-      { num: 1, label: "NotebookLM", to: "/conteudo-ia#m1", icon: Search },
-      { num: 2, label: "Grok", to: "/conteudo-ia#m2", icon: Zap },
-      { num: 3, label: "Claude", to: "/conteudo-ia#m3", icon: Sparkles },
-      { num: 4, label: "ChatGPT", to: "/conteudo-ia#m4", icon: Video },
-      { num: 5, label: "Fluxo + projeto final", to: "/conteudo-ia#m5", icon: Wrench },
-      { num: 6, label: "Automação", to: "/conteudo-ia#m6", icon: CalendarClock },
+      { num: 0, label: "Introdução", to: "/conteudo-ia", icon: Compass },
+      { num: 1, label: "NotebookLM", to: "/conteudo-ia?aula=m1", icon: Search },
+      { num: 2, label: "Grok", to: "/conteudo-ia?aula=m2", icon: Zap },
+      { num: 3, label: "Claude", to: "/conteudo-ia?aula=m3", icon: Sparkles },
+      { num: 4, label: "ChatGPT", to: "/conteudo-ia?aula=m4", icon: Video },
+      { num: 5, label: "Fluxo + projeto final", to: "/conteudo-ia?aula=m5", icon: Wrench },
+      { num: 6, label: "Automação", to: "/conteudo-ia?aula=m6", icon: CalendarClock },
     ],
   },
   academia: {
@@ -235,16 +236,19 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
 
   const isActive = (to: string) => {
     const [toPath, toQuery] = to.split("?");
+    const cur = new URLSearchParams(searchStr.replace(/^\?/, ""));
     if (toQuery) {
       if (pathname !== toPath) return false;
-      const cur = new URLSearchParams(searchStr.replace(/^\?/, ""));
       const tgt = new URLSearchParams(toQuery);
       if (cur.get("aba") !== tgt.get("aba")) return false;
+      if (cur.get("aula") !== tgt.get("aula")) return false;
       // se o alvo tem um sub-formato (fmt), exige correspondência exata
       if (tgt.get("fmt")) return cur.get("fmt") === tgt.get("fmt");
       return true;
     }
-    return pathname === toPath || pathname.startsWith(toPath + "/");
+    // sem query: ativo só se não houver aba/aula selecionada (ex.: página de introdução)
+    if (pathname === toPath) return !cur.get("aba") && !cur.get("aula");
+    return pathname.startsWith(toPath + "/");
   };
   const activeParent = def.items.find(
     (i) => i.children && (isActive(i.to) || i.children.some((c) => isActive(c.to))),
