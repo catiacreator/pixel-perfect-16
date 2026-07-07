@@ -11,6 +11,7 @@ import QuickIdeas from "@/components/QuickIdeas";
 import ModulePaywall from "@/components/ModulePaywall";
 import PreviewTurmaModal from "@/components/PreviewTurmaModal";
 import EmManutencao from "@/components/EmManutencao";
+import MarcarEtapa from "@/components/MarcarEtapa";
 import { useAccess } from "@/lib/use-access";
 import { useAdminView, setAdminView, abrirPreviewTurma, setPreviewTurma, useBloqueadoParaAlunos } from "@/lib/admin-view";
 import { useBloqueios } from "@/lib/bloqueios";
@@ -290,7 +291,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         ) : blocked && gateModule ? (
           <ModulePaywall module={gateModule} signedIn={hasAccessSignedIn} />
         ) : (
-          children
+          <>
+            {children}
+            <MarcarEtapa />
+          </>
         )}
       </main>
 
