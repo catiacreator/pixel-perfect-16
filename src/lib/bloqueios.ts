@@ -8,7 +8,7 @@
 // Combina-se sempre com useBloqueadoParaAlunos(): o admin (vista admin) vê tudo.
 
 import { useEffect, useState } from "react";
-import { getBloqueios, setBloqueios, getMinhaTurmaAcessos, getModoBloqueio } from "@/lib/admin.functions";
+import { getBloqueios, setBloqueios, getMinhaTurmaAcessos, getModoBloqueio, getGeralAtivo } from "@/lib/admin.functions";
 import { ESTRUTURA, BLOQUEIOS_PADRAO, type Nodo } from "@/lib/estrutura";
 import { getPreviewTurma } from "@/lib/admin-view";
 
@@ -16,6 +16,7 @@ const EVENT = "leveza:bloqueios";
 let cacheGlobal: Set<string> | null = null;
 let cacheTurma: { restrito: boolean; grants: Set<string>; categoria: string | null } | null = null;
 let cacheModo: Record<string, string> = {};
+let cacheGeralAtivo = true;
 let loading = false;
 
 // mapa id -> ids dos antecessores (para propagar o "Em breve" aos filhos)
@@ -58,14 +59,16 @@ async function ensureLoaded() {
   if ((cacheGlobal && cacheTurma) || loading || typeof window === "undefined") return;
   loading = true;
   try {
-    const [ids, turma, modos] = await Promise.all([
+    const [ids, turma, modos, geral] = await Promise.all([
       getBloqueios().catch(() => null),
       getMinhaTurmaAcessos().catch(() => ({ restrito: false, acessos: [] as string[], categoria: null as string | null })),
       getModoBloqueio().catch(() => ({} as Record<string, string>)),
+      getGeralAtivo().catch(() => true),
     ]);
     cacheGlobal = new Set(ids ?? BLOQUEIOS_PADRAO);
     cacheTurma = { restrito: !!turma?.restrito, grants: new Set(turma?.acessos ?? []), categoria: (turma as { categoria?: string | null })?.categoria ?? null };
     cacheModo = modos ?? {};
+    cacheGeralAtivo = geral !== false;
   } catch {
     cacheGlobal = new Set(BLOQUEIOS_PADRAO);
     cacheTurma = { restrito: false, grants: new Set(), categoria: null };
@@ -95,7 +98,8 @@ export function useBloqueios() {
 
   const antep = (id: string) => ANCESTRAIS[id] ?? [];
   const desc = (id: string) => DESCENDENTES[id] ?? [];
-  const emBreve = (id: string) => global.has(id) || antep(id).some((a) => global.has(a));
+  // Se o Geral estiver desligado, os bloqueios "Em breve" globais não se aplicam.
+  const emBreve = (id: string) => cacheGeralAtivo && (global.has(id) || antep(id).some((a) => global.has(a)));
   // Concedido se o próprio nó OU algum descendente estiver concedido (permite
   // escolher página a página; um módulo fica acessível se tiver alguma página ligada).
   const turmaConcede = (id: string) => turma.grants.has(id) || desc(id).some((d) => turma.grants.has(d));

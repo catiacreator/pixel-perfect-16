@@ -602,6 +602,39 @@ export const setBloqueios = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+// ── Geral ativo: interruptor mestre. Se desligado, os bloqueios "Em breve"
+// globais deixam de se aplicar (só as turmas mandam). Default ligado.
+const GERAL_KEY = "__geral-ativo__";
+
+export const getGeralAtivo = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async () => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const uid = await ownerUserId(supabaseAdmin);
+    if (!uid) return true;
+    const { data } = await supabaseAdmin.from("master_documents").select("data").eq("user_id", uid).maybeSingle();
+    const blob = (data?.data as Record<string, unknown>) ?? {};
+    return blob[GERAL_KEY] !== false; // default true
+  });
+
+export const setGeralAtivo = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { ativo: boolean }) => z.object({ ativo: z.boolean() }).parse(d))
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const uid = await ownerUserId(supabaseAdmin);
+    if (!uid) throw new Error("Conta principal não encontrada.");
+    const { data: existing } = await supabaseAdmin.from("master_documents").select("data").eq("user_id", uid).maybeSingle();
+    const blob = { ...((existing?.data as Record<string, unknown>) ?? {}), [GERAL_KEY]: data.ativo };
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: uid, data: blob, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
+    return { ok: true };
+  });
+
 // ── Modo de bloqueio por módulo: "em-breve" (nada a fazer) ou "bloqueado"
 // (mostra o contacto da Cátia). Guardado em "__modo-bloqueio__" na conta dona.
 const MODO_KEY = "__modo-bloqueio__";

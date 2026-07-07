@@ -5,7 +5,7 @@ import { Lock, Eye, ListTree } from "lucide-react";
 import { notify } from "@/lib/toast";
 import { ESTRUTURA, type Nodo, type NodoTipo } from "@/lib/estrutura";
 import { useBloqueios, guardarBloqueios } from "@/lib/bloqueios";
-import { getModoBloqueio, setModoBloqueio, getTurmas, setTurmas } from "@/lib/admin.functions";
+import { getModoBloqueio, setModoBloqueio, getTurmas, setTurmas, getGeralAtivo, setGeralAtivo } from "@/lib/admin.functions";
 import { type Turma } from "@/lib/turmas";
 import AcessoArvore from "@/components/admin/AcessoArvore";
 
@@ -58,6 +58,36 @@ function EstruturaPage() {
     );
   };
 
+  // Interruptor mestre do Geral. Se desligado, o "Em breve" global não se aplica.
+  const getGeralFn = useServerFn(getGeralAtivo);
+  const saveGeralFn = useServerFn(setGeralAtivo);
+  const [geralAtivo, setGeralAtivo_] = useState(true);
+  useEffect(() => {
+    getGeralFn().then((v) => setGeralAtivo_(v !== false)).catch(() => {});
+  }, [getGeralFn]);
+  const toggleGeral = () => {
+    const v = !geralAtivo;
+    setGeralAtivo_(v);
+    saveGeralFn({ data: { ativo: v } }).catch((e: unknown) =>
+      notify(e instanceof Error ? e.message : "Não foi possível guardar.", "error"),
+    );
+  };
+
+  // Estado do módulo: Livre (acessível) / Em breve / Bloqueado (unifica bloqueio + modo).
+  const estadoModulo = (id: string): "livre" | "em-breve" | "bloqueado" => {
+    if (!sel.has(id)) return "livre";
+    return modos[id] === "bloqueado" ? "bloqueado" : "em-breve";
+  };
+  const mudarEstadoModulo = async (id: string, v: string) => {
+    const jaBloq = sel.has(id);
+    if (v === "livre") {
+      if (jaBloq) await toggle(id);
+    } else {
+      if (!jaBloq) await toggle(id);
+      mudarModo(id, v);
+    }
+  };
+
   // Semeia o estado local assim que a config global carrega do servidor.
   useEffect(() => {
     if (carregado && !seeded) {
@@ -102,19 +132,19 @@ function EstruturaPage() {
               {n.label}
             </span>
 
-            {n.tipo === "modulo" && (
+            {n.tipo === "modulo" ? (
               <select
-                value={modos[n.id] === "bloqueado" ? "bloqueado" : "em-breve"}
-                onChange={(e) => mudarModo(n.id, e.target.value)}
-                className="shrink-0 h-8 rounded-lg border border-[var(--color-border)] bg-white px-2 text-[12px]"
-                title="Tag mostrada no card quando o módulo está bloqueado para o aluno"
+                value={estadoModulo(n.id)}
+                onChange={(e) => mudarEstadoModulo(n.id, e.target.value)}
+                disabled={savingId === n.id}
+                className="shrink-0 h-8 rounded-lg border border-[var(--color-border)] bg-white px-2 text-[12px] disabled:opacity-50"
+                title="Estado do módulo para os alunos"
               >
-                <option value="em-breve">Tag: Em breve</option>
-                <option value="bloqueado">Tag: Bloqueado (contacto)</option>
+                <option value="livre">Livre (acessível)</option>
+                <option value="em-breve">Em breve</option>
+                <option value="bloqueado">Bloqueado (contacto)</option>
               </select>
-            )}
-
-            {paiBloqueado ? (
+            ) : paiBloqueado ? (
               <span className="text-[11px] text-ink/40 italic shrink-0">herdado (pai bloqueado)</span>
             ) : (
               <button
@@ -164,10 +194,24 @@ function EstruturaPage() {
 
       {escopo === "geral" ? (
         <>
-          <div className="flex items-center gap-4 text-[13px] text-ink/60 mb-4">
-            <span className="inline-flex items-center gap-1.5"><Lock size={13} className="text-amber-600" /> {total} em breve</span>
-            {!carregado && <span className="text-ink/40">a carregar…</span>}
+          <div className="flex items-center justify-between gap-4 mb-4">
+            <button
+              onClick={toggleGeral}
+              className="inline-flex items-center gap-2.5 shrink-0"
+              title="Ativar/desativar os bloqueios globais (Em breve). Desligado = só as turmas mandam."
+            >
+              <span className={`w-10 h-6 rounded-full transition-colors relative ${geralAtivo ? "bg-terracotta" : "bg-ink/20"}`}>
+                <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all ${geralAtivo ? "left-[18px]" : "left-0.5"}`} />
+              </span>
+              <span className="text-sm font-medium text-ink">Geral {geralAtivo ? "ativo" : "desativado"}</span>
+            </button>
+            <span className="inline-flex items-center gap-1.5 text-[13px] text-ink/60"><Lock size={13} className="text-amber-600" /> {total} em breve</span>
           </div>
+          {!geralAtivo && (
+            <p className="text-[13px] text-amber-700 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 mb-4">
+              O Geral está <b>desativado</b> — os bloqueios "Em breve" globais não se aplicam. Só as permissões das turmas mandam.
+            </p>
+          )}
           <div className="space-y-4">
             {ESTRUTURA.map((mod) => (
               <div key={mod.id} className="bg-white border border-[var(--color-border)] rounded-2xl px-4 py-1 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
