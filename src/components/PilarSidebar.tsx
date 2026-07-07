@@ -92,6 +92,7 @@ const PILARES: Record<string | number, PilarDef> = {
       { num: 4, label: "ChatGPT", to: "/conteudo-ia?aula=m4", icon: Video },
       { num: 5, label: "Fluxo + projeto final", to: "/conteudo-ia?aula=m5", icon: Wrench },
       { num: 6, label: "Automação", to: "/conteudo-ia?aula=m6", icon: CalendarClock },
+      { num: 7, label: "Banco de prompts", to: "/conteudo-ia?aula=bonus", icon: Book },
     ],
   },
   academia: {
