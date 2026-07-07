@@ -27,6 +27,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { extractDocMestre } from "@/lib/doc-mestre.functions";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import DocMestrePreview from "@/components/DocMestrePreview";
+import ConfirmDialog from "@/components/ConfirmDialog";
 import { HYDRATED_EVENT } from "@/lib/master-doc-sync";
 
 // ------------------------------------------------------------------
@@ -381,10 +382,8 @@ export default function DocMestre() {
   const set = <K extends keyof DocState>(k: K, v: DocState[K]) =>
     setDoc((p) => ({ ...p, [k]: v }));
 
-  const resetAll = () => {
-    if (!confirm("Apagar todos os campos do Documento Mestre?")) return;
-    setDoc(EMPTY);
-  };
+  const [confirmarReset, setConfirmarReset] = useState(false);
+  const resetAll = () => setConfirmarReset(true);
 
   const [previewOpen, setPreviewOpen] = useState(false);
   const printPDF = () => setPreviewOpen(true);
@@ -927,6 +926,16 @@ export default function DocMestre() {
       {previewOpen && (
         <DocMestrePreview doc={doc} metodo={metodo} onClose={() => setPreviewOpen(false)} />
       )}
+
+      <ConfirmDialog
+        open={confirmarReset}
+        titulo="Apagar todos os campos?"
+        descricao={<>Vai limpar <b className="text-ink">todo o Documento Mestre</b>. Esta ação não pode ser anulada.</>}
+        confirmarLabel="Zerar tudo"
+        Icone={RotateCcw}
+        onConfirmar={() => { setDoc(EMPTY); setConfirmarReset(false); }}
+        onCancelar={() => setConfirmarReset(false)}
+      />
     </Layout>
   );
 }
