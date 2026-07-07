@@ -47,7 +47,8 @@ const PRODUTOS = [
     to: "/metodo/pilar-1/aprenda-ia",
     cta: "Entrar na Academia",
     img: "/academia-de-ia.png?v=1",
-    pos: "center 26%",
+    pos: "center 44%",
+    zoom: "118%",
     cor: "#2E7CB8",
     icon: GraduationCap,
     estruturaId: "academia",
@@ -96,6 +97,77 @@ export default function Home() {
       clearTimeout(idle);
     };
   }, []);
+
+  const renderCard = (p: (typeof PRODUTOS)[number], i: number) => {
+    const Icon = p.icon;
+    const eid = (p as { estruturaId?: string }).estruturaId;
+    const locked = !!eid && isBloqueado(eid) && bloqueado;
+    // Turma mini-curso: o card fica clicável e abre a pop-up de contacto.
+    const modoDesbloquear = locked && soMiniCurso;
+    const Wrapper: any = modoDesbloquear ? "button" : locked ? "div" : Link;
+    const wrapperProps = modoDesbloquear
+      ? { type: "button" as const, onClick: () => setDesbloquearOpen(true) }
+      : locked
+        ? { "aria-disabled": true }
+        : { to: p.to };
+    return (
+      <Wrapper
+        key={p.key}
+        {...wrapperProps}
+        className={`fade-up group relative overflow-hidden rounded-[24px] border border-white/60 flex flex-col justify-end aspect-[9/16] w-full sm:w-[330px] md:w-[360px] p-6 text-left transition-all duration-300 ${locked && !modoDesbloquear ? "cursor-not-allowed" : "hover:-translate-y-1.5 hover:shadow-[0_34px_70px_-30px_rgba(40,20,15,0.55)]"}`}
+        style={{ animationDelay: `${i * 100}ms` }}
+      >
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-cover transition-transform duration-700 group-hover:scale-105"
+          style={{ backgroundImage: `url(${p.img})`, backgroundColor: p.cor, backgroundPosition: p.pos, backgroundSize: (p as { zoom?: string }).zoom || undefined }}
+        />
+        <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+        <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
+        <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5" style={{ background: p.cor }} />
+        {locked && <div aria-hidden className="absolute inset-0 bg-black/35" />}
+
+        <span className="absolute top-6 left-6 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 bg-white/12 border border-white/25 rounded-full px-3 py-1.5 backdrop-blur-sm">
+          <Icon size={13} /> {p.tag}
+        </span>
+        {locked && (
+          <span className={`absolute top-6 right-6 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] rounded-full px-3 py-1.5 backdrop-blur-sm ${modoDesbloquear ? "text-ink bg-white/90 border border-white" : "text-white bg-white/15 border border-white/30"}`}>
+            <Lock size={12} /> {modoDesbloquear ? "Desbloquear" : "Em breve"}
+          </span>
+        )}
+
+        <div className="relative [text-shadow:0_2px_18px_rgba(0,0,0,0.6)]">
+          <p className="text-[11px] tracking-[0.22em] uppercase text-white/85 mb-1.5">{p.assinatura}</p>
+          <h2 className="font-display text-2xl md:text-3xl leading-[1.05] tracking-[-0.02em] text-white">
+            {p.titulo}
+          </h2>
+          <p className="text-[13px] md:text-sm text-white/90 mt-2.5 leading-relaxed">{p.desc}</p>
+
+          {locked ? (
+            modoDesbloquear ? (
+              <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white">
+                Desbloquear este curso
+                <span className="w-9 h-9 rounded-full border border-white/60 flex items-center justify-center transition-all duration-300 group-hover:bg-white group-hover:text-ink group-hover:translate-x-0.5">
+                  <ArrowUpRight size={15} strokeWidth={2.25} />
+                </span>
+              </span>
+            ) : (
+              <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white/85">
+                <Lock size={15} /> Disponível em breve
+              </span>
+            )
+          ) : (
+            <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white">
+              {p.cta}
+              <span className="w-9 h-9 rounded-full border border-white/60 flex items-center justify-center transition-all duration-300 group-hover:bg-white group-hover:text-ink group-hover:translate-x-0.5">
+                <ArrowUpRight size={15} strokeWidth={2.25} />
+              </span>
+            </span>
+          )}
+        </div>
+      </Wrapper>
+    );
+  };
 
   return (
     <Layout>
@@ -152,77 +224,19 @@ export default function Home() {
 
       {/* Dois caminhos */}
       <section className="max-w-[1200px] mx-auto px-5 md:px-10 pt-8 md:pt-12 pb-20 md:pb-28">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
-          {PRODUTOS.map((p, i) => {
-            const Icon = p.icon;
-            const eid = (p as { estruturaId?: string }).estruturaId;
-            const locked = !!eid && isBloqueado(eid) && bloqueado;
-            // Turma mini-curso: o card fica clicável e abre a pop-up de contacto.
-            const modoDesbloquear = locked && soMiniCurso;
-            const Wrapper: any = modoDesbloquear ? "button" : locked ? "div" : Link;
-            const wrapperProps = modoDesbloquear
-              ? { type: "button" as const, onClick: () => setDesbloquearOpen(true) }
-              : locked
-                ? { "aria-disabled": true }
-                : { to: p.to };
-            return (
-              <Wrapper
-                key={p.key}
-                {...wrapperProps}
-                className={`fade-up group relative overflow-hidden rounded-[24px] border border-white/60 flex flex-col justify-end aspect-[9/16] p-6 md:p-6 text-left transition-all duration-300 ${locked && !modoDesbloquear ? "cursor-not-allowed" : "hover:-translate-y-1.5 hover:shadow-[0_34px_70px_-30px_rgba(40,20,15,0.55)]"}`}
-                style={{ animationDelay: `${i * 100}ms` }}
-              >
-                <div
-                  aria-hidden
-                  className="absolute inset-0 bg-cover transition-transform duration-700 group-hover:scale-105"
-                  style={{ backgroundImage: `url(${p.img})`, backgroundColor: p.cor, backgroundPosition: p.pos }}
-                />
-                <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
-                <div aria-hidden className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
-                <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5" style={{ background: p.cor }} />
-                {locked && <div aria-hidden className="absolute inset-0 bg-black/35" />}
+        {/* Cursos principais */}
+        <div className="flex flex-col sm:flex-row justify-center gap-4 md:gap-5">
+          {PRODUTOS.filter((p) => p.key !== "conteudo-ia").map((p, i) => renderCard(p, i))}
+        </div>
 
-                <span className="absolute top-6 left-7 md:left-9 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 bg-white/12 border border-white/25 rounded-full px-3 py-1.5 backdrop-blur-sm">
-                  <Icon size={13} /> {p.tag}
-                </span>
-                {locked && (
-                  <span className={`absolute top-6 right-7 md:right-9 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] rounded-full px-3 py-1.5 backdrop-blur-sm ${modoDesbloquear ? "text-ink bg-white/90 border border-white" : "text-white bg-white/15 border border-white/30"}`}>
-                    <Lock size={12} /> {modoDesbloquear ? "Desbloquear" : "Em breve"}
-                  </span>
-                )}
+        {/* Mini-cursos */}
+        <div className="mt-14 mb-6">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-ink/50">Mini-cursos</p>
+          <div className="h-px bg-[var(--color-border)] mt-2.5" />
+        </div>
 
-                <div className="relative [text-shadow:0_2px_18px_rgba(0,0,0,0.6)]">
-                  <p className="text-[11px] tracking-[0.22em] uppercase text-white/85 mb-1.5">{p.assinatura}</p>
-                  <h2 className="font-display text-2xl md:text-3xl leading-[1.05] tracking-[-0.02em] text-white">
-                    {p.titulo}
-                  </h2>
-                  <p className="text-[13px] md:text-sm text-white/90 mt-2.5 leading-relaxed">{p.desc}</p>
-
-                  {locked ? (
-                    modoDesbloquear ? (
-                      <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white">
-                        Desbloquear este curso
-                        <span className="w-9 h-9 rounded-full border border-white/60 flex items-center justify-center transition-all duration-300 group-hover:bg-white group-hover:text-ink group-hover:translate-x-0.5">
-                          <ArrowUpRight size={15} strokeWidth={2.25} />
-                        </span>
-                      </span>
-                    ) : (
-                      <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white/85">
-                        <Lock size={15} /> Disponível em breve
-                      </span>
-                    )
-                  ) : (
-                    <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white">
-                      {p.cta}
-                      <span className="w-9 h-9 rounded-full border border-white/60 flex items-center justify-center transition-all duration-300 group-hover:bg-white group-hover:text-ink group-hover:translate-x-0.5">
-                        <ArrowUpRight size={15} strokeWidth={2.25} />
-                      </span>
-                    </span>
-                  )}
-                </div>
-              </Wrapper>
-            );
-          })}
+        <div className="flex flex-col sm:flex-row justify-center sm:justify-start gap-4 md:gap-5">
+          {PRODUTOS.filter((p) => p.key === "conteudo-ia").map((p, i) => renderCard(p, i))}
         </div>
       </section>
 
