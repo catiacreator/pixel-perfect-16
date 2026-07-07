@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { isAdminEmail } from "@/lib/access";
 import { achatarEstrutura } from "@/lib/estrutura";
+import { mesCorrente, chaveMes, contarPor, type PostPublicado } from "@/lib/gamificacao";
 import { z } from "zod";
 
 // A administradora principal (dona) — só ela pode adicionar/eliminar alunos e atribuir papéis.
@@ -882,6 +883,79 @@ export const setMensagens = createServerFn({ method: "POST" })
     );
     if (error) throw error;
     return { ok: true };
+  });
+
+// ───────── Competição mensal de posts (admin) ─────────
+const POSTS_KEY_G = "__posts__";
+const PREMIOS_KEY_G = "__premios-mes__";
+
+// Vencedor do mês + se deve alertar a admin (a partir do dia 30).
+export const getAlertaVencedor = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const agora = new Date();
+    const mes = mesCorrente(agora);
+    const dia = agora.getDate();
+    const { data: docs } = await supabaseAdmin.from("master_documents").select("user_id, data");
+    const { data: perfis } = await supabaseAdmin.from("profiles").select("id, nome");
+    const { data: roles } = await supabaseAdmin.from("user_roles").select("user_id, role").in("role", ["admin", "moderator"]);
+    const excluir = new Set((roles ?? []).map((r: { user_id: string }) => r.user_id));
+    const nomePorId = new Map((perfis ?? []).map((p: { id: string; nome: string | null }) => [p.id, p.nome || "Aluno"]));
+    const linhas = (docs ?? [])
+      .map((row: { user_id: string; data: Record<string, unknown> }) => {
+        const posts = (row.data?.[POSTS_KEY_G] as PostPublicado[]) ?? [];
+        const n = contarPor(posts, chaveMes)[mes] ?? 0;
+        const premios = row.data?.[PREMIOS_KEY_G];
+        const jaPremiado = Array.isArray(premios) && premios.includes(mes);
+        return { userId: row.user_id, nome: nomePorId.get(row.user_id) ?? "Aluno", posts: n, jaPremiado };
+      })
+      .filter((l) => l.posts > 0 && nomePorId.has(l.userId) && !excluir.has(l.userId))
+      .sort((a, b) => b.posts - a.posts);
+    const lider = linhas[0] ?? null;
+    return {
+      mes,
+      dia,
+      alertar: dia >= 30 && !!lider && !lider.jaPremiado,
+      lider,
+      ranking: linhas.slice(0, 10),
+    };
+  });
+
+// Premiar o vencedor do mês: marca o mês, soma +300 e regista no log.
+export const premiarVencedor = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { userId: string; mes: string }) =>
+    z.object({ userId: z.string().uuid(), mes: z.string().regex(/^\d{4}-\d{2}$/) }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: row } = await supabaseAdmin
+      .from("master_documents")
+      .select("data")
+      .eq("user_id", data.userId)
+      .maybeSingle();
+    const blob = (row?.data as Record<string, unknown>) ?? {};
+    const premios = Array.isArray(blob[PREMIOS_KEY_G]) ? (blob[PREMIOS_KEY_G] as string[]) : [];
+    if (premios.includes(data.mes)) return { ok: true, jaPremiado: true };
+    premios.push(data.mes);
+    await supabaseAdmin.from("master_documents").upsert(
+      { user_id: data.userId, data: { ...blob, [PREMIOS_KEY_G]: premios }, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    // Soma +300 já (a recompute do aluno mantém o total consistente: base + prémios×300).
+    const { data: prof } = await supabaseAdmin.from("profiles").select("pontos").eq("id", data.userId).maybeSingle();
+    const novo = (prof?.pontos ?? 0) + 300;
+    await supabaseAdmin.from("profiles").update({ pontos: novo, updated_at: new Date().toISOString() }).eq("id", data.userId);
+    await supabaseAdmin.from("pontos_log").insert({
+      user_id: data.userId,
+      delta: 300,
+      motivo: `Vencedor do mês ${data.mes} — sessão de 30 min`,
+      criado_por: context.userId,
+    });
+    return { ok: true, novoTotal: novo };
   });
 
 // Ranking visível a qualquer aluno autenticado (top 50 por pontos).

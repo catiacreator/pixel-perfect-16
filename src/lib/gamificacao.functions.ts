@@ -166,6 +166,11 @@ export const getRankingMes = createServerFn({ method: "POST" })
     const { data: perfis } = await supabaseAdmin
       .from("profiles")
       .select("id, nome, avatar_url");
+    const { data: roles } = await supabaseAdmin
+      .from("user_roles")
+      .select("user_id, role")
+      .in("role", ["admin", "moderator"]);
+    const excluir = new Set((roles ?? []).map((r: { user_id: string }) => r.user_id));
     const nomePorId = new Map(
       (perfis ?? []).map((p: any) => [p.id, { nome: p.nome || "Aluno", avatar: p.avatar_url || undefined }]),
     );
@@ -176,7 +181,7 @@ export const getRankingMes = createServerFn({ method: "POST" })
         const info = nomePorId.get(row.user_id);
         return { userId: row.user_id, nome: info?.nome ?? "Aluno", avatar: info?.avatar, posts: doMes };
       })
-      .filter((l) => l.posts > 0 && nomePorId.has(l.userId))
+      .filter((l) => l.posts > 0 && nomePorId.has(l.userId) && !excluir.has(l.userId))
       .sort((a, b) => b.posts - a.posts);
     return {
       mes,

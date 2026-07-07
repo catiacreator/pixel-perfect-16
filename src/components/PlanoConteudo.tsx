@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { useProgresso } from "@/lib/use-progresso";
 import { chaveMes, chaveSemana } from "@/lib/gamificacao";
+import { getRankingMes } from "@/lib/gamificacao.functions";
 
 // Plano de Conteúdo — a aluna cola até 4 resultados do ChatGPT; a plataforma
 // parte-os em posts, ela agenda dia/mês/hora, e tudo aparece no calendário
@@ -331,9 +332,45 @@ export default function PlanoConteudo() {
         </div>
       </div>
 
+      <RankingMes />
+
       <Link to="/metodo/pilar-2/redes-sociais?aba=criar" className="inline-flex items-center gap-2 text-sm font-semibold text-terracotta hover:text-terracotta-dark transition-colors">
         <Sparkles size={15} /> Criar mais conteúdo com os agentes <ArrowRight size={14} />
       </Link>
+    </div>
+  );
+}
+
+// Ranking do mês por nº de posts publicados. Quem lidera ganha uma sessão de 30 min.
+function RankingMes() {
+  const [dados, setDados] = useState<{ mes: string; ranking: { pos: number; nome: string; posts: number; isMe: boolean }[] } | null>(null);
+  useEffect(() => {
+    let vivo = true;
+    getRankingMes().then((r: any) => { if (vivo) setDados(r); }).catch(() => {});
+    return () => { vivo = false; };
+  }, []);
+
+  if (!dados || dados.ranking.length === 0) return null;
+
+  return (
+    <div className="rounded-2xl border border-terracotta/25 bg-terracotta/5 p-5">
+      <div className="flex items-center gap-2 mb-1">
+        <Trophy size={16} className="text-terracotta" />
+        <p className="text-sm font-semibold text-ink">Ranking do mês · quem publica mais ganha</p>
+      </div>
+      <p className="text-xs text-ink/55 mb-3">O 1.º lugar ganha uma <b className="text-terracotta">sessão de 30 min</b> com a Cátia.</p>
+      <div className="space-y-1">
+        {dados.ranking.slice(0, 5).map((r) => (
+          <div
+            key={r.pos}
+            className={`flex items-center gap-3 px-3 py-2 rounded-xl ${r.isMe ? "bg-terracotta/10" : "bg-white/60"}`}
+          >
+            <span className={`text-sm font-bold tabular-nums w-6 ${r.pos === 1 ? "text-terracotta" : "text-ink/40"}`}>{r.pos}º</span>
+            <span className="text-sm text-ink flex-1 truncate">{r.nome}{r.isMe ? " (você)" : ""}</span>
+            <span className="text-sm font-semibold text-ink tabular-nums">{r.posts} <span className="text-ink/50 font-normal text-xs">posts</span></span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
