@@ -654,7 +654,7 @@ export const getModoBloqueio = createServerFn({ method: "POST" })
 export const setModoBloqueio = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { modos: Record<string, string> }) =>
-    z.object({ modos: z.record(z.string(), z.enum(["em-breve", "bloqueado"])) }).parse(d),
+    z.object({ modos: z.record(z.string(), z.enum(["em-breve", "bloqueado", "oculto"])) }).parse(d),
   )
   .handler(async ({ context, data }) => {
     await assertAdmin(context);

@@ -101,8 +101,11 @@ export default function Home() {
     const Icon = p.icon;
     const eid = (p as { estruturaId?: string }).estruturaId;
     const locked = !!eid && isBloqueado(eid) && bloqueado;
-    // Módulo marcado como "bloqueado" no admin → clicável, abre o contacto da Cátia.
-    const modoDesbloquear = locked && !!eid && modoBloqueio(eid) === "bloqueado";
+    const modo = locked && eid ? modoBloqueio(eid) : "em-breve";
+    // "Oculto": o card não aparece de todo para esta turma.
+    if (modo === "oculto") return null;
+    // Módulo "bloqueado" → clicável, abre o contacto da Cátia.
+    const modoDesbloquear = locked && modo === "bloqueado";
     const Wrapper: any = modoDesbloquear ? "button" : locked ? "div" : Link;
     const wrapperProps = modoDesbloquear
       ? { type: "button" as const, onClick: () => setDesbloquearOpen(true) }

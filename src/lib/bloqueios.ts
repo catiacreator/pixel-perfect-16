@@ -110,12 +110,12 @@ export function useBloqueios() {
   // Modo do nó bloqueado: "bloqueado" (mostra contacto) ou "em-breve" (nada a
   // fazer). Prioridade: modo da turma para o nó → modo geral do nó/módulo → em-breve.
   const moduloDe = (id: string) => antep(id)[0] ?? id;
-  const modoBloqueio = (id: string): "em-breve" | "bloqueado" => {
+  const norm = (v?: string): "em-breve" | "bloqueado" | "oculto" =>
+    v === "bloqueado" ? "bloqueado" : v === "oculto" ? "oculto" : "em-breve";
+  const modoBloqueio = (id: string): "em-breve" | "bloqueado" | "oculto" => {
     const t = turma.modos?.[id];
-    if (t === "bloqueado") return "bloqueado";
-    if (t === "em-breve") return "em-breve";
-    const g = cacheModo[id] ?? cacheModo[moduloDe(id)];
-    return g === "bloqueado" ? "bloqueado" : "em-breve";
+    if (t === "bloqueado" || t === "em-breve" || t === "oculto") return t;
+    return norm(cacheModo[id] ?? cacheModo[moduloDe(id)]);
   };
 
   return { carregado: !!cacheGlobal, isBloqueado, isBloqueadoRaw: (id: string) => global.has(id), ids: [...global], categoriaTurma: turma.categoria ?? null, modoBloqueio };

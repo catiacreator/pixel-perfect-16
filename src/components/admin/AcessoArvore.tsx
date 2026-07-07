@@ -85,6 +85,7 @@ function ModoSelect({ id, modos, onModo }: { id: string; modos?: ModoMap; onModo
     >
       <option value="em-breve">Em breve</option>
       <option value="bloqueado">Bloqueado</option>
+      <option value="oculto">Oculto</option>
     </select>
   );
 }

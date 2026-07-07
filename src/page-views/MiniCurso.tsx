@@ -1,32 +1,30 @@
 import Layout from "../components/Layout";
 import { Link } from "@/lib/router-compat";
-import { Sparkles, ArrowRight, Lock, PlayCircle } from "lucide-react";
-import PromptCard from "../components/PromptCard";
+import { Sparkles, ArrowRight, PlayCircle, Check, ListChecks } from "lucide-react";
+import TarefaCompleta from "../components/TarefaCompleta";
+import { CURSO_INTRO, AULAS, CURSO_BONUS, type Secao } from "@/data/curso-conteudo-ia";
 
-// Mini-curso "Conteúdo com IA" — porta de entrada grátis. Aulas curtas e prompts
-// prontos (sem Documento Mestre), a mostrar o valor da plataforma para dar
-// vontade de entrar no método completo.
+// Curso "Conteúdo com IA" — 6 módulos (a Cátia coloca o vídeo de cada aula).
 
-const AULAS = [
-  {
-    n: 1,
-    titulo: "O que postar (mesmo sem ideias)",
-    desc: "Um prompt para receber 3 ideias de post prontas em segundos.",
-    prompt: `Você é o meu estrategista de conteúdo para Instagram. Antes de responder, pergunte-me em 1 linha qual é o meu nicho e o meu público. Depois, dê-me 3 ideias de post para esta semana (1 Reel, 1 carrossel, 1 Stories), cada uma com: tema, gancho (0–3s) e objetivo (atrair, dar autoridade ou vender). Fale de forma simples e direta, sem termos vagos.`,
-  },
-  {
-    n: 2,
-    titulo: "O teu primeiro Reel em 30 segundos",
-    desc: "Roteiro simples, fácil de gravar hoje.",
-    prompt: `Crie um roteiro de Reel de até 30 segundos para o meu Instagram. Primeiro pergunte-me o tema em 1 linha. Depois entregue: 3 opções de gancho (0–3s) que fazem parar o scroll, um desenvolvimento curto (3 falas diretas) e 1 chamada para ação clara. Acrescente 1 linha de texto para pôr no ecrã. Linguagem simples.`,
-  },
-  {
-    n: 3,
-    titulo: "Legenda que prende (método PAS)",
-    desc: "Problema → Agitação → Solução, numa legenda que gera salvamentos.",
-    prompt: `Escreva 3 versões de legenda para um post de Instagram, no método PAS (Problema → Agitação → Solução). Pergunte-me primeiro o tema e a dor do público. Cada versão: 1ª linha = gancho que corta o scroll; 2–4 linhas de valor; chamada para ação final (comentar, guardar ou chamar no Direct). Sem promessas exageradas.`,
-  },
-];
+function SecaoView({ s }: { s: Secao }) {
+  return (
+    <div className="mb-4">
+      {s.titulo && <p className="text-sm font-semibold text-ink mb-1.5">{s.titulo}</p>}
+      {s.paragrafos?.map((p, i) => (
+        <p key={i} className="text-[15px] text-ink/70 leading-relaxed mb-2">{p}</p>
+      ))}
+      {s.lista && (
+        <ul className="space-y-1.5 mt-1">
+          {s.lista.map((li, i) => (
+            <li key={i} className="flex items-start gap-2 text-[15px] text-ink/70 leading-relaxed">
+              <Check size={15} className="text-terracotta mt-1 shrink-0" /> <span>{li}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
 
 export default function MiniCurso() {
   return (
@@ -37,59 +35,96 @@ export default function MiniCurso() {
           <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.24em] uppercase text-terracotta font-semibold mb-3">
             <Sparkles size={13} /> Mini-curso
           </span>
-          <h1 className="font-serif text-3xl md:text-5xl text-ink leading-tight mb-3">
-            Conteúdo com IA
-          </h1>
-          <p className="text-ink/60 leading-relaxed max-w-2xl">
-            Uma amostra do método: aulas curtas e prompts prontos para criares conteúdo com
-            Inteligência Artificial e publicares com consistência — sem travar antes de começar.
-          </p>
-        </section>
+          <h1 className="font-serif text-3xl md:text-5xl text-ink leading-tight mb-3">{CURSO_INTRO.titulo}</h1>
+          <p className="text-ink/70 text-lg mb-1">{CURSO_INTRO.subtitulo}</p>
+          <p className="text-[13px] text-ink/50">{CURSO_INTRO.ferramentas} · {CURSO_INTRO.nivel}</p>
 
-        {/* Vídeo de boas-vindas */}
-        <section className="px-5 md:px-10 pt-8 max-w-4xl mx-auto">
-          <div className="rounded-2xl overflow-hidden border border-border bg-ink/90 aspect-video flex items-center justify-center text-cream">
-            <div className="text-center">
-              <PlayCircle size={40} className="mx-auto mb-2 opacity-80" />
-              <p className="text-sm opacity-80">Boas-vindas ao mini-curso (2 min)</p>
-            </div>
+          <div className="mt-6 space-y-3">
+            {CURSO_INTRO.paragrafos.map((p, i) => (
+              <p key={i} className="text-[15px] text-ink/70 leading-relaxed">{p}</p>
+            ))}
+          </div>
+
+          <div className="mt-6 rounded-2xl border border-border bg-white p-5">
+            <p className="text-sm font-semibold text-ink mb-1.5">Como funciona o método</p>
+            <p className="text-[15px] text-ink/70 leading-relaxed">{CURSO_INTRO.metodo}</p>
+          </div>
+
+          <div className="mt-4 rounded-2xl border border-border bg-white p-5">
+            <p className="text-sm font-semibold text-ink mb-2 inline-flex items-center gap-2"><ListChecks size={16} className="text-terracotta" /> O que precisas para começar</p>
+            <ul className="space-y-1.5">
+              {CURSO_INTRO.requisitos.map((r, i) => (
+                <li key={i} className="flex items-start gap-2 text-[15px] text-ink/70 leading-relaxed">
+                  <Check size={15} className="text-terracotta mt-1 shrink-0" /> <span>{r}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Índice dos módulos */}
+          <div className="mt-6 flex flex-wrap gap-2">
+            {AULAS.map((a) => (
+              <a key={a.id} href={`#${a.id}`} className="text-[13px] font-semibold px-3 py-1.5 rounded-full border border-border text-ink/70 hover:border-terracotta hover:text-terracotta transition-colors">
+                {a.numero}
+              </a>
+            ))}
           </div>
         </section>
 
-        {/* Aulas */}
-        <section className="px-5 md:px-10 pt-10 max-w-4xl mx-auto">
-          <h2 className="font-serif text-xl text-ink mb-1.5">As tuas 3 primeiras aulas</h2>
-          <p className="text-sm text-ink/55 mb-5">Copia o prompt, cola no ChatGPT e adapta ao teu perfil.</p>
+        {/* Módulos */}
+        <section className="px-5 md:px-10 pt-10 pb-6 max-w-4xl mx-auto space-y-8">
           {AULAS.map((a) => (
-            <PromptCard
-              key={a.n}
-              numero={a.n}
-              titulo={`Aula ${a.n} — ${a.titulo}`}
-              descricao={a.desc}
-              prompt={a.prompt}
-              rotuloBotao="Copiar prompt"
-              icon={<Sparkles size={18} />}
-              cor="#7C56C9"
-              botaoCor="#7C56C9"
-            />
+            <div key={a.id} id={a.id} className="scroll-mt-24 rounded-3xl border border-border bg-white p-6 md:p-8">
+              <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">{a.numero}</p>
+              <h2 className="font-serif text-2xl md:text-3xl text-ink mb-1.5">{a.titulo}</h2>
+              {a.subtitulo && <p className="text-sm text-ink/55 mb-4">{a.subtitulo}</p>}
+
+              {/* Vídeo da aula */}
+              <div className="rounded-2xl overflow-hidden border border-border bg-ink/90 aspect-video flex items-center justify-center text-cream mb-5">
+                {a.videoUrl ? (
+                  <iframe src={a.videoUrl} title={a.titulo} className="w-full h-full" allowFullScreen />
+                ) : (
+                  <div className="text-center">
+                    <PlayCircle size={40} className="mx-auto mb-2 opacity-80" />
+                    <p className="text-sm opacity-80">Vídeo do {a.numero} — em breve</p>
+                  </div>
+                )}
+              </div>
+
+              {a.secoes.map((s, i) => (
+                <SecaoView key={i} s={s} />
+              ))}
+
+              <div className="mt-4 pt-4 border-t border-border flex justify-end">
+                <TarefaCompleta id={`aula:conteudo-ia/${a.id}`} tipo="aula" />
+              </div>
+            </div>
           ))}
         </section>
 
-        {/* CTA — desejar entrar */}
-        <section className="px-5 md:px-10 py-12 max-w-4xl mx-auto">
-          <div className="rounded-3xl border border-terracotta/25 bg-gradient-to-br from-terracotta/8 to-cream p-7 md:p-9 text-center">
-            <Lock size={22} className="mx-auto text-terracotta mb-3" />
-            <h2 className="font-serif text-2xl md:text-3xl text-ink mb-2">Gostaste? Isto é só o início.</h2>
+        {/* Bónus */}
+        <section className="px-5 md:px-10 pb-6 max-w-4xl mx-auto">
+          <div className="rounded-3xl border border-terracotta/25 bg-terracotta/5 p-6 md:p-8">
+            <h2 className="font-serif text-2xl text-ink mb-1.5">{CURSO_BONUS.titulo}</h2>
+            <p className="text-[15px] text-ink/70 leading-relaxed mb-4">{CURSO_BONUS.intro}</p>
+            <div className="flex flex-wrap gap-2">
+              {CURSO_BONUS.blocos.map((b) => (
+                <span key={b} className="text-[13px] font-semibold px-3 py-1.5 rounded-full bg-white border border-border text-ink/70">{b}</span>
+              ))}
+            </div>
+            <p className="text-[15px] text-ink/70 leading-relaxed mt-5 italic">{CURSO_BONUS.fecho}</p>
+          </div>
+        </section>
+
+        {/* CTA — método completo */}
+        <section className="px-5 md:px-10 pb-14 max-w-4xl mx-auto">
+          <div className="rounded-3xl border border-border bg-gradient-to-br from-cream-warm to-cream p-7 md:p-8 text-center">
+            <h2 className="font-serif text-2xl text-ink mb-2">Queres ir mais longe?</h2>
             <p className="text-ink/60 max-w-xl mx-auto leading-relaxed mb-6">
-              No método completo tens <b>30 dias de conteúdo</b> gerados por ti, o teu
-              <b> Documento Mestre</b>, a <b>Cat.IA adaptada a ti</b>, o Plano de Posts e a
-              competição mensal. Tudo o que precisas para crescer com consistência.
+              No método completo tens o teu Documento Mestre, a Cat.IA adaptada a ti, o Plano de Posts e a competição mensal.
             </p>
-            <Link
-              to="/protocolo"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-terracotta text-cream text-sm font-semibold hover:bg-terracotta-dark transition-colors"
-            >
-              Quero o método completo <ArrowRight size={15} />
+            <Link to="/protocolo" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-terracotta text-cream text-sm font-semibold hover:bg-terracotta-dark transition-colors">
+              Ver o método completo <ArrowRight size={15} />
             </Link>
           </div>
         </section>

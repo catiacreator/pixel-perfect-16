@@ -81,9 +81,10 @@ function EstruturaPage() {
   };
 
   // Estado do módulo: Livre (acessível) / Em breve / Bloqueado (unifica bloqueio + modo).
-  const estadoModulo = (id: string): "livre" | "em-breve" | "bloqueado" => {
+  const estadoModulo = (id: string): "livre" | "em-breve" | "bloqueado" | "oculto" => {
     if (!sel.has(id)) return "livre";
-    return modos[id] === "bloqueado" ? "bloqueado" : "em-breve";
+    const m = modos[id];
+    return m === "bloqueado" ? "bloqueado" : m === "oculto" ? "oculto" : "em-breve";
   };
   const mudarEstadoModulo = async (id: string, v: string) => {
     const jaBloq = sel.has(id);
@@ -150,6 +151,7 @@ function EstruturaPage() {
                 <option value="livre">Livre (acessível)</option>
                 <option value="em-breve">Em breve</option>
                 <option value="bloqueado">Bloqueado (contacto)</option>
+                <option value="oculto">Oculto (não aparece)</option>
               </select>
             ) : paiBloqueado ? (
               <span className="text-[11px] text-ink/40 italic shrink-0">herdado (pai bloqueado)</span>
