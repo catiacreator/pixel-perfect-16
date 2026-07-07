@@ -12,14 +12,14 @@ import { useBloqueios } from "@/lib/bloqueios";
 const PRODUTOS = [
   {
     key: "conteudo-ia",
-    tag: "Mini-curso · grátis",
+    tag: "Mini-curso",
     titulo: "Conteúdo com IA",
     assinatura: "o teu primeiro mês de posts",
     desc: "Aulas grátis para criares conteúdo com IA e publicares com consistência. A porta de entrada para o método completo.",
     to: "/conteudo-ia",
     cta: "Começar o mini-curso",
-    img: "/academia-ia.png",
-    pos: "center bottom",
+    img: "/conteudo-com-ia.png?v=1",
+    pos: "center 28%",
     cor: "#7C56C9",
     icon: Sparkles,
     estruturaId: "conteudo-ia",

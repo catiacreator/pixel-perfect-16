@@ -35,7 +35,7 @@ export default function MiniCurso() {
         {/* Hero */}
         <section className="px-5 md:px-10 pt-10 md:pt-14 max-w-4xl mx-auto">
           <span className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.24em] uppercase text-terracotta font-semibold mb-3">
-            <Sparkles size={13} /> Mini-curso · grátis
+            <Sparkles size={13} /> Mini-curso
           </span>
           <h1 className="font-serif text-3xl md:text-5xl text-ink leading-tight mb-3">
             Conteúdo com IA
