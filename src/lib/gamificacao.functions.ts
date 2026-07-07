@@ -131,15 +131,16 @@ export const registarPost = createServerFn({ method: "POST" })
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const blob = await readBlob(supabaseAdmin, context.userId);
     const posts: PostPublicado[] = [...((blob[POSTS_KEY] as PostPublicado[]) ?? [])];
-    posts.push({
+    const novoPost: PostPublicado = {
       id: `p_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 7)}`,
       data: data.data,
       titulo: data.titulo,
       formato: data.formato,
-    });
+    };
+    posts.push(novoPost);
     const novo = await writeBlob(supabaseAdmin, context.userId, { [POSTS_KEY]: posts });
     const pontos = await recomputar(supabaseAdmin, context.userId, novo);
-    return { ok: true, pontos, posts };
+    return { ok: true, pontos, posts, novo: novoPost };
   });
 
 export const removerPost = createServerFn({ method: "POST" })

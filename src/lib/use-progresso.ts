@@ -66,13 +66,14 @@ export function useProgresso() {
     emitir();
   };
 
-  const registar = async (dataYMD: string, titulo?: string, formato?: string) => {
+  const registar = async (dataYMD: string, titulo?: string, formato?: string): Promise<string | undefined> => {
     try {
       const res = await registarPost({ data: { data: dataYMD, titulo, formato } });
       cache = { tarefas: cache?.tarefas ?? {}, posts: res.posts as PostPublicado[], pontos: res.pontos };
       emitir();
+      return (res as { novo?: { id: string } }).novo?.id;
     } catch {
-      /* ignora */
+      return undefined;
     }
   };
 
