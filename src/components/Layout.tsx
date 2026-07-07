@@ -15,6 +15,7 @@ import MarcarEtapa from "@/components/MarcarEtapa";
 import { useAccess } from "@/lib/use-access";
 import { useAdminView, setAdminView, abrirPreviewTurma, setPreviewTurma, useBloqueadoParaAlunos } from "@/lib/admin-view";
 import { useBloqueios } from "@/lib/bloqueios";
+import { categoriaDesativaLinks } from "@/lib/turmas";
 import { nodeIdParaRota } from "@/lib/estrutura";
 import { isAdminEmail, type ModuleKey } from "@/lib/access";
 
@@ -93,19 +94,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   // Guarda da PÁGINA: se a rota atual corresponde a um nó bloqueado ("Em breve" /
   // sem permissão da turma), esconde o conteúdo e mostra "Em manutenção".
-  const { isBloqueado } = useBloqueios();
+  const { isBloqueado, categoriaTurma } = useBloqueios();
   const bloqueadoParaAlunos = useBloqueadoParaAlunos();
   const nodeRota = nodeIdParaRota(path);
   const rotaBloqueada = !!nodeRota && bloqueadoParaAlunos && isBloqueado(nodeRota);
 
-  // Modo "só mini-curso": aluno restrito que só tem acesso ao Conteúdo com IA
-  // (sem jornada nem academia). Esconde Robot/Skills/Documento/Jornada/Vitórias
-  // para ele ver a plataforma e ficar a desejar entrar no método completo.
-  const soMiniCurso =
-    bloqueadoParaAlunos &&
-    !isBloqueado("conteudo-ia") &&
-    isBloqueado("jornada") &&
-    isBloqueado("academia");
+  // Turmas de categoria "Cursos" ou "Mini-cursos": links do topo desativados
+  // (só o Início ativo), para verem a plataforma e desejarem o método completo.
+  const soMiniCurso = bloqueadoParaAlunos && categoriaDesativaLinks(categoriaTurma);
 
   // Paywall por módulo: bloqueia o acesso direto às rotas dos produtos.
   const gateModule: ModuleKey | null = academia ? "academia" : redes ? "redes" : jornada ? "jornada" : null;
@@ -132,13 +128,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {/* Menu de produtos */}
             <div className="relative mr-1" ref={prodRef}>
               <button
-                onClick={() => setProdOpen((v) => !v)}
-                className="relative px-3.5 py-2 rounded-full text-[13px] font-medium text-ink/70 hover:text-ink hover:bg-ink/10 transition-all inline-flex items-center gap-1.5"
+                onClick={() => { if (!soMiniCurso) setProdOpen((v) => !v); }}
+                disabled={soMiniCurso}
+                title={soMiniCurso ? "Disponível no método completo" : undefined}
+                className={`relative px-3.5 py-2 rounded-full text-[13px] font-medium transition-all inline-flex items-center gap-1.5 ${soMiniCurso ? "text-ink/30 cursor-not-allowed" : "text-ink/70 hover:text-ink hover:bg-ink/10"}`}
               >
                 Cursos
                 <ChevronDown size={13} className={`transition-transform ${prodOpen ? "rotate-180" : ""}`} />
               </button>
-              {prodOpen && (
+              {prodOpen && !soMiniCurso && (
                 <div className="absolute left-0 mt-2 w-64 bg-white border border-[var(--color-border)] rounded-2xl shadow-[0_20px_50px_-20px_rgba(0,0,0,0.4)] p-2 z-50">
                   <Link
                     to="/protocolo"

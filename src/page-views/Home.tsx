@@ -7,6 +7,7 @@ import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, 
 const WHATSAPP_CATIA = "https://wa.link/jwr3yp";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
 import { useBloqueios } from "@/lib/bloqueios";
+import { categoriaDesativaLinks } from "@/lib/turmas";
 
 // Porta de entrada: dois produtos independentes.
 const PRODUTOS = [
@@ -57,11 +58,10 @@ const PRODUTOS = [
 
 export default function Home() {
   const bloqueado = useBloqueadoParaAlunos();
-  const { isBloqueado } = useBloqueios();
+  const { isBloqueado, categoriaTurma } = useBloqueios();
   const [desbloquearOpen, setDesbloquearOpen] = useState(false);
-  // Turma "Conteúdo com IA": só tem o mini-curso; os outros cursos mostram "Desbloquear".
-  const soMiniCurso =
-    bloqueado && !isBloqueado("conteudo-ia") && isBloqueado("jornada") && isBloqueado("academia");
+  // Turmas de categoria Cursos/Mini-cursos: os outros cursos mostram "Desbloquear".
+  const soMiniCurso = bloqueado && categoriaDesativaLinks(categoriaTurma);
   const orbRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let x = window.innerWidth / 2;

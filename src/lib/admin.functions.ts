@@ -765,6 +765,7 @@ export const setTurmas = createServerFn({ method: "POST" })
         id: z.string(),
         nome: z.string().max(120),
         cor: z.string().max(16).optional(),
+        categoria: z.string().max(30).optional(),
         membros: z.array(z.string()).max(5000),
         acessos: z.array(z.string()).max(2000),
       })).max(500),
@@ -794,22 +795,22 @@ export const getMinhaTurmaAcessos = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const roles = await rolesOf(supabaseAdmin, context.userId);
-    if (roles.includes("admin")) return { restrito: false, acessos: [] as string[] };
+    if (roles.includes("admin")) return { restrito: false, acessos: [] as string[], categoria: null as string | null };
 
     const { blob } = await readOwnerBlob(supabaseAdmin);
     const papeis = (blob[PAPEIS_KEY] as { aluno?: string[]; moderador?: string[] }) ?? {};
 
     if (roles.includes("moderator")) {
-      return { restrito: true, acessos: Array.isArray(papeis.moderador) ? papeis.moderador : [...PAPEIS_PADRAO] };
+      return { restrito: true, acessos: Array.isArray(papeis.moderador) ? papeis.moderador : [...PAPEIS_PADRAO], categoria: null as string | null };
     }
 
     // Aluno: turma explícita sobrepõe o papel.
     const turmas = (Array.isArray(blob[TURMAS_KEY]) ? blob[TURMAS_KEY] : []) as {
-      membros?: string[]; acessos?: string[];
+      membros?: string[]; acessos?: string[]; categoria?: string;
     }[];
     const turma = turmas.find((t) => Array.isArray(t.membros) && t.membros.includes(context.userId));
-    if (turma) return { restrito: true, acessos: Array.isArray(turma.acessos) ? turma.acessos : [] };
-    return { restrito: true, acessos: Array.isArray(papeis.aluno) ? papeis.aluno : [...PAPEIS_PADRAO] };
+    if (turma) return { restrito: true, acessos: Array.isArray(turma.acessos) ? turma.acessos : [], categoria: turma.categoria ?? null };
+    return { restrito: true, acessos: Array.isArray(papeis.aluno) ? papeis.aluno : [...PAPEIS_PADRAO], categoria: null as string | null };
   });
 
 // ───────── Mensagens da mentora — a admin escreve; os alunos leem ─────────

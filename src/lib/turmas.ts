@@ -1,8 +1,25 @@
+// Categoria da turma (tier do produto). Cursos e Mini-cursos veem a plataforma
+// com os links do topo desativados (só o Início ativo).
+export type TurmaCategoria = "mentoria" | "ferramentas" | "cursos" | "mini-cursos";
+
+export const CATEGORIAS_TURMA: { id: TurmaCategoria; label: string }[] = [
+  { id: "mentoria", label: "Mentoria" },
+  { id: "ferramentas", label: "Ferramentas" },
+  { id: "cursos", label: "Cursos" },
+  { id: "mini-cursos", label: "Mini-cursos" },
+];
+
+// Cursos e Mini-cursos → links do topo desativados.
+export function categoriaDesativaLinks(c?: string | null): boolean {
+  return c === "cursos" || c === "mini-cursos";
+}
+
 // Tipos partilhados das Turmas (grupos de alunos com permissões próprias).
 export type Turma = {
   id: string;
   nome: string;
   cor?: string;
+  categoria?: TurmaCategoria;
   membros: string[]; // userIds
   acessos: string[]; // ids da ESTRUTURA que a turma pode ver
 };

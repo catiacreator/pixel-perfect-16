@@ -14,7 +14,7 @@ import { getPreviewTurma } from "@/lib/admin-view";
 
 const EVENT = "leveza:bloqueios";
 let cacheGlobal: Set<string> | null = null;
-let cacheTurma: { restrito: boolean; grants: Set<string> } | null = null;
+let cacheTurma: { restrito: boolean; grants: Set<string>; categoria: string | null } | null = null;
 let loading = false;
 
 // mapa id -> ids dos antecessores (para propagar o "Em breve" aos filhos)
@@ -59,13 +59,13 @@ async function ensureLoaded() {
   try {
     const [ids, turma] = await Promise.all([
       getBloqueios().catch(() => null),
-      getMinhaTurmaAcessos().catch(() => ({ restrito: false, acessos: [] as string[] })),
+      getMinhaTurmaAcessos().catch(() => ({ restrito: false, acessos: [] as string[], categoria: null as string | null })),
     ]);
     cacheGlobal = new Set(ids ?? BLOQUEIOS_PADRAO);
-    cacheTurma = { restrito: !!turma?.restrito, grants: new Set(turma?.acessos ?? []) };
+    cacheTurma = { restrito: !!turma?.restrito, grants: new Set(turma?.acessos ?? []), categoria: (turma as { categoria?: string | null })?.categoria ?? null };
   } catch {
     cacheGlobal = new Set(BLOQUEIOS_PADRAO);
-    cacheTurma = { restrito: false, grants: new Set() };
+    cacheTurma = { restrito: false, grants: new Set(), categoria: null };
   } finally {
     loading = false;
     window.dispatchEvent(new Event(EVENT));
@@ -87,8 +87,8 @@ export function useBloqueios() {
   // Se a admin está a pré-visualizar uma turma específica, usa os acessos dela.
   const preview = getPreviewTurma();
   const turma = preview
-    ? { restrito: true, grants: new Set(preview.acessos) }
-    : (cacheTurma ?? { restrito: false, grants: new Set<string>() });
+    ? { restrito: true, grants: new Set(preview.acessos), categoria: (preview as { categoria?: string | null }).categoria ?? null }
+    : (cacheTurma ?? { restrito: false, grants: new Set<string>(), categoria: null });
 
   const antep = (id: string) => ANCESTRAIS[id] ?? [];
   const desc = (id: string) => DESCENDENTES[id] ?? [];
@@ -100,7 +100,7 @@ export function useBloqueios() {
   // Bloqueado para o aluno: "Em breve" global OU (restrito por turma e sem grant).
   const isBloqueado = (id: string) => emBreve(id) || (turma.restrito && !turmaConcede(id));
 
-  return { carregado: !!cacheGlobal, isBloqueado, isBloqueadoRaw: (id: string) => global.has(id), ids: [...global] };
+  return { carregado: !!cacheGlobal, isBloqueado, isBloqueadoRaw: (id: string) => global.has(id), ids: [...global], categoriaTurma: turma.categoria ?? null };
 }
 
 // Guarda a nova lista de bloqueios globais (admin) e atualiza a cache local.
