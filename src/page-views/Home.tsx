@@ -1,13 +1,29 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import HeroRobot from "../components/HeroRobot";
-import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock } from "lucide-react";
+import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, X } from "lucide-react";
+
+const WHATSAPP_CATIA = "https://wa.link/jwr3yp";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
 import { useBloqueios } from "@/lib/bloqueios";
 
 // Porta de entrada: dois produtos independentes.
 const PRODUTOS = [
+  {
+    key: "conteudo-ia",
+    tag: "Mini-curso",
+    titulo: "Conteúdo com IA",
+    assinatura: "o teu primeiro mês de posts",
+    desc: "Aprende a criar conteúdo com IA e a publicar com consistência. A porta de entrada para o método completo.",
+    to: "/conteudo-ia",
+    cta: "Começar o mini-curso",
+    img: "/conteudo-com-ia.png?v=1",
+    pos: "center 28%",
+    cor: "#7C56C9",
+    icon: Sparkles,
+    estruturaId: "conteudo-ia",
+  },
   {
     key: "protocolo",
     tag: "Mentoria · Instagram",
@@ -16,11 +32,12 @@ const PRODUTOS = [
     desc: "O método de IA para transformar o teu perfil numa máquina de crescimento.",
     to: "/protocolo",
     cta: "Entrar no Protocolo",
-    img: "/redes-sociais.png?v=3",
-    pos: "center calc(42% - 10px)",
+    img: "/protocolo-viral.png?v=1",
+    pos: "center 30%",
     cor: "#C8487E",
     icon: Instagram,
     estruturaId: "jornada",
+    sombraTitulo: true,
   },
   {
     key: "academia",
@@ -30,17 +47,20 @@ const PRODUTOS = [
     desc: "Aulas práticas, ferramenta a ferramenta, para aplicar Inteligência Artificial no teu negócio.",
     to: "/metodo/pilar-1/aprenda-ia",
     cta: "Entrar na Academia",
-    img: "/academia-ia.png",
-    pos: "center bottom",
+    img: "/academia-de-ia.png?v=1",
+    pos: "center 44%",
+    zoom: "118%",
     cor: "#2E7CB8",
     icon: GraduationCap,
     estruturaId: "academia",
+    sombraTitulo: true,
   },
 ];
 
 export default function Home() {
   const bloqueado = useBloqueadoParaAlunos();
-  const { isBloqueado } = useBloqueios();
+  const { isBloqueado, modoBloqueio } = useBloqueios();
+  const [desbloquearOpen, setDesbloquearOpen] = useState(false);
   const orbRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     let x = window.innerWidth / 2;
@@ -76,6 +96,77 @@ export default function Home() {
       clearTimeout(idle);
     };
   }, []);
+
+  const renderCard = (p: (typeof PRODUTOS)[number], i: number) => {
+    const Icon = p.icon;
+    const eid = (p as { estruturaId?: string }).estruturaId;
+    const locked = !!eid && isBloqueado(eid) && bloqueado;
+    const modo = locked && eid ? modoBloqueio(eid) : "em-breve";
+    // "Oculto": o card não aparece de todo para esta turma.
+    if (modo === "oculto") return null;
+    // Módulo "bloqueado" → clicável, abre o contacto da Cátia.
+    const modoDesbloquear = locked && modo === "bloqueado";
+    const Wrapper: any = modoDesbloquear ? "button" : locked ? "div" : Link;
+    const wrapperProps = modoDesbloquear
+      ? { type: "button" as const, onClick: () => setDesbloquearOpen(true) }
+      : locked
+        ? { "aria-disabled": true }
+        : { to: p.to };
+    return (
+      <Wrapper
+        key={p.key}
+        {...wrapperProps}
+        className={`fade-up group relative overflow-hidden rounded-[24px] border border-white/60 flex flex-col justify-end aspect-[9/16] w-full sm:w-[330px] md:w-[360px] p-6 text-left transition-all duration-300 ${locked && !modoDesbloquear ? "cursor-not-allowed" : "hover:-translate-y-1.5 hover:shadow-[0_34px_70px_-30px_rgba(40,20,15,0.55)]"}`}
+        style={{ animationDelay: `${i * 100}ms` }}
+      >
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-cover transition-transform duration-700 group-hover:scale-105"
+          style={{ backgroundImage: `url(${p.img})`, backgroundColor: p.cor, backgroundPosition: p.pos, backgroundSize: (p as { zoom?: string }).zoom || undefined }}
+        />
+        <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5" style={{ background: p.cor }} />
+
+        <span className="absolute top-6 left-6 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 bg-white/12 border border-white/25 rounded-full px-3 py-1.5 backdrop-blur-sm">
+          <Icon size={13} /> {p.tag}
+        </span>
+        {locked && (
+          <span className={`absolute top-6 right-6 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] rounded-full px-3 py-1.5 backdrop-blur-sm ${modoDesbloquear ? "text-ink bg-white/90 border border-white" : "text-white bg-white/15 border border-white/30"}`}>
+            <Lock size={12} /> {modoDesbloquear ? "Bloqueado" : "Em breve"}
+          </span>
+        )}
+
+        <div className="relative bg-black/80 rounded-2xl px-4 py-4">
+          <p className="text-[11px] tracking-[0.22em] uppercase text-white/85 mb-1.5">{p.assinatura}</p>
+          <h2 className="font-display text-2xl md:text-3xl leading-[1.05] tracking-[-0.02em] text-white">
+            {p.titulo}
+          </h2>
+          <p className="text-[13px] md:text-sm text-white/90 mt-2.5 leading-relaxed">{p.desc}</p>
+
+          {locked ? (
+            modoDesbloquear ? (
+              <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white">
+                Desbloquear este curso
+                <span className="w-9 h-9 rounded-full border border-white/60 flex items-center justify-center transition-all duration-300 group-hover:bg-white group-hover:text-ink group-hover:translate-x-0.5">
+                  <ArrowUpRight size={15} strokeWidth={2.25} />
+                </span>
+              </span>
+            ) : (
+              <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white/85">
+                <Lock size={15} /> Disponível em breve
+              </span>
+            )
+          ) : (
+            <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white">
+              {p.cta}
+              <span className="w-9 h-9 rounded-full border border-white/60 flex items-center justify-center transition-all duration-300 group-hover:bg-white group-hover:text-ink group-hover:translate-x-0.5">
+                <ArrowUpRight size={15} strokeWidth={2.25} />
+              </span>
+            </span>
+          )}
+        </div>
+      </Wrapper>
+    );
+  };
 
   return (
     <Layout>
@@ -132,64 +223,57 @@ export default function Home() {
 
       {/* Dois caminhos */}
       <section className="max-w-[1200px] mx-auto px-5 md:px-10 pt-8 md:pt-12 pb-20 md:pb-28">
-        <div className="grid md:grid-cols-2 gap-5 md:gap-6">
-          {PRODUTOS.map((p, i) => {
-            const Icon = p.icon;
-            const eid = (p as { estruturaId?: string }).estruturaId;
-            const locked = !!eid && isBloqueado(eid) && bloqueado;
-            const Wrapper: any = locked ? "div" : Link;
-            const wrapperProps = locked ? { "aria-disabled": true } : { to: p.to };
-            return (
-              <Wrapper
-                key={p.key}
-                {...wrapperProps}
-                className={`fade-up group relative overflow-hidden rounded-[28px] border border-white/60 flex flex-col justify-end min-h-[440px] md:min-h-[520px] p-7 md:p-9 transition-all duration-300 ${locked ? "cursor-not-allowed" : "hover:-translate-y-1.5 hover:shadow-[0_34px_70px_-30px_rgba(40,20,15,0.55)]"}`}
-                style={{ animationDelay: `${i * 100}ms` }}
-              >
-                <div
-                  aria-hidden
-                  className="absolute inset-0 bg-cover transition-transform duration-700 group-hover:scale-105"
-                  style={{ backgroundImage: `url(${p.img})`, backgroundColor: p.cor, backgroundPosition: p.pos }}
-                />
-                <div aria-hidden className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/45 to-black/25" />
-                <div aria-hidden className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/92 via-black/62 to-transparent" />
-                <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5" style={{ background: p.cor }} />
-                {locked && <div aria-hidden className="absolute inset-0 bg-black/35" />}
+        {/* Cursos principais */}
+        <div className="flex flex-col sm:flex-row gap-4 md:gap-5">
+          {PRODUTOS.filter((p) => p.key !== "conteudo-ia").map((p, i) => renderCard(p, i))}
+        </div>
 
-                <span className="absolute top-6 left-7 md:left-9 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 bg-white/12 border border-white/25 rounded-full px-3 py-1.5 backdrop-blur-sm">
-                  <Icon size={13} /> {p.tag}
-                </span>
-                {locked && (
-                  <span className="absolute top-6 right-7 md:right-9 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-white bg-white/15 border border-white/30 rounded-full px-3 py-1.5 backdrop-blur-sm">
-                    <Lock size={12} /> Em breve
-                  </span>
-                )}
+        {/* Mini-cursos */}
+        <div className="mt-14 mb-6">
+          <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-ink/50">Mini-cursos</p>
+          <div className="h-px bg-[var(--color-border)] mt-2.5" />
+        </div>
 
-                <div className="relative [text-shadow:0_2px_18px_rgba(0,0,0,0.6)]">
-                  <p className="text-[12px] tracking-[0.24em] uppercase text-white/85 mb-2">{p.assinatura}</p>
-                  <h2 className="font-display text-3xl md:text-[2.6rem] leading-[1.02] tracking-[-0.02em] text-white">
-                    {p.titulo}
-                  </h2>
-                  <p className="text-sm md:text-[15px] text-white/90 mt-3 leading-relaxed max-w-md">{p.desc}</p>
-
-                  {locked ? (
-                    <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white/85">
-                      <Lock size={15} /> Disponível em breve
-                    </span>
-                  ) : (
-                    <span className="mt-7 inline-flex items-center gap-2.5 text-sm font-semibold text-white">
-                      {p.cta}
-                      <span className="w-9 h-9 rounded-full border border-white/60 flex items-center justify-center transition-all duration-300 group-hover:bg-white group-hover:text-ink group-hover:translate-x-0.5">
-                        <ArrowUpRight size={15} strokeWidth={2.25} />
-                      </span>
-                    </span>
-                  )}
-                </div>
-              </Wrapper>
-            );
-          })}
+        <div className="flex flex-col sm:flex-row justify-center sm:justify-start gap-4 md:gap-5">
+          {PRODUTOS.filter((p) => p.key === "conteudo-ia").map((p, i) => renderCard(p, i))}
         </div>
       </section>
+
+      {desbloquearOpen && (
+        <div
+          className="fixed inset-0 z-[80] bg-black/50 flex items-center justify-center p-4"
+          onClick={() => setDesbloquearOpen(false)}
+        >
+          <div
+            className="bg-white w-full max-w-md rounded-3xl p-6 md:p-7 shadow-[0_30px_80px_-30px_rgba(0,0,0,0.6)] relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setDesbloquearOpen(false)}
+              className="absolute top-4 right-4 text-ink/35 hover:text-ink transition-colors"
+              aria-label="Fechar"
+            >
+              <X size={18} />
+            </button>
+            <div className="w-12 h-12 rounded-2xl bg-terracotta/10 text-terracotta flex items-center justify-center mb-4">
+              <Lock size={22} />
+            </div>
+            <h2 className="font-serif text-xl text-ink mb-2">Queres desbloquear este curso?</h2>
+            <p className="text-sm text-ink/60 leading-relaxed mb-6">
+              Este curso faz parte do método completo. Para teres acesso, entra em contacto com a
+              <b> Cátia Creator</b> — ela ajuda-te a escolher o melhor caminho para ti.
+            </p>
+            <a
+              href={WHATSAPP_CATIA}
+              target="_blank"
+              rel="noreferrer"
+              className="w-full inline-flex items-center justify-center gap-2 h-12 rounded-full bg-[#25D366] text-white text-sm font-semibold hover:bg-[#1FB855] transition-colors"
+            >
+              <MessageCircle size={18} /> Falar com a Cátia no WhatsApp
+            </a>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }

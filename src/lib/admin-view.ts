@@ -57,7 +57,7 @@ const PT_KEY = "leveza.preview-turma.v1";
 const PT_EVENT = "leveza:preview-turma";
 export const ABRIR_PREVIEW_EVENT = "leveza:abrir-preview-turma";
 
-export type PreviewTurma = { nome: string; acessos: string[] } | null;
+export type PreviewTurma = { nome: string; acessos: string[]; categoria?: string | null } | null;
 
 export function getPreviewTurma(): PreviewTurma {
   if (typeof window === "undefined") return null;

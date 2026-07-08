@@ -15,6 +15,7 @@ import MarcarEtapa from "@/components/MarcarEtapa";
 import { useAccess } from "@/lib/use-access";
 import { useAdminView, setAdminView, abrirPreviewTurma, setPreviewTurma, useBloqueadoParaAlunos } from "@/lib/admin-view";
 import { useBloqueios } from "@/lib/bloqueios";
+import { categoriaDesativaLinks } from "@/lib/turmas";
 import { nodeIdParaRota } from "@/lib/estrutura";
 import { isAdminEmail, type ModuleKey } from "@/lib/access";
 
@@ -93,10 +94,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   // Guarda da PÁGINA: se a rota atual corresponde a um nó bloqueado ("Em breve" /
   // sem permissão da turma), esconde o conteúdo e mostra "Em manutenção".
-  const { isBloqueado } = useBloqueios();
+  const { isBloqueado, categoriaTurma, modoBloqueio } = useBloqueios();
   const bloqueadoParaAlunos = useBloqueadoParaAlunos();
   const nodeRota = nodeIdParaRota(path);
   const rotaBloqueada = !!nodeRota && bloqueadoParaAlunos && isBloqueado(nodeRota);
+
+  // Turmas de categoria "Cursos" ou "Mini-cursos": links do topo desativados
+  // (só o Início ativo), para verem a plataforma e desejarem o método completo.
+  const soMiniCurso = bloqueadoParaAlunos && categoriaDesativaLinks(categoriaTurma);
 
   // Paywall por módulo: bloqueia o acesso direto às rotas dos produtos.
   const gateModule: ModuleKey | null = academia ? "academia" : redes ? "redes" : jornada ? "jornada" : null;
@@ -123,13 +128,15 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {/* Menu de produtos */}
             <div className="relative mr-1" ref={prodRef}>
               <button
-                onClick={() => setProdOpen((v) => !v)}
-                className="relative px-3.5 py-2 rounded-full text-[13px] font-medium text-ink/70 hover:text-ink hover:bg-ink/10 transition-all inline-flex items-center gap-1.5"
+                onClick={() => { if (!soMiniCurso) setProdOpen((v) => !v); }}
+                disabled={soMiniCurso}
+                title={soMiniCurso ? "Disponível no método completo" : undefined}
+                className={`relative px-3.5 py-2 rounded-full text-[13px] font-medium transition-all inline-flex items-center gap-1.5 ${soMiniCurso ? "text-ink/30 cursor-not-allowed" : "text-ink/70 hover:text-ink hover:bg-ink/10"}`}
               >
                 Cursos
                 <ChevronDown size={13} className={`transition-transform ${prodOpen ? "rotate-180" : ""}`} />
               </button>
-              {prodOpen && (
+              {prodOpen && !soMiniCurso && (
                 <div className="absolute left-0 mt-2 w-64 bg-white border border-[var(--color-border)] rounded-2xl shadow-[0_20px_50px_-20px_rgba(0,0,0,0.4)] p-2 z-50">
                   <Link
                     to="/protocolo"
@@ -163,12 +170,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
             {NAV.map((item) => {
               const active = isActive(item.to);
-              // Sem login: itens visíveis mas desativados.
-              if (!signedIn) {
+              // Visíveis mas desativados: sem login, ou turma só mini-curso (exceto Início).
+              const disabled = !signedIn || (soMiniCurso && item.to !== "/");
+              if (disabled) {
                 return (
                   <span
                     key={item.to}
-                    title="Entra para aceder"
+                    title={signedIn ? "Disponível no método completo" : "Entra para aceder"}
                     className="relative px-3.5 py-2 rounded-full text-[13px] text-ink/30 cursor-not-allowed"
                   >
                     {item.label}
@@ -194,13 +202,23 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {/* Direita */}
           <div className="flex items-center gap-2 justify-end">
             {signedIn && (
-              <Link
-                to="/doc-mestre"
-                className="hidden md:inline-flex items-center gap-1.5 text-[13px] pl-4 pr-3 py-2 bg-ink text-cream rounded-full font-medium transition-all hover:-translate-y-0.5 active:scale-[0.97]"
-              >
-                <FileText size={13} strokeWidth={2.25} /> Documento
-                <ArrowUpRight size={13} strokeWidth={2.25} />
-              </Link>
+              soMiniCurso ? (
+                <span
+                  title="Disponível no método completo"
+                  className="hidden md:inline-flex items-center gap-1.5 text-[13px] pl-4 pr-3 py-2 bg-ink/20 text-ink/40 rounded-full font-medium cursor-not-allowed"
+                >
+                  <FileText size={13} strokeWidth={2.25} /> Documento
+                  <ArrowUpRight size={13} strokeWidth={2.25} />
+                </span>
+              ) : (
+                <Link
+                  to="/doc-mestre"
+                  className="hidden md:inline-flex items-center gap-1.5 text-[13px] pl-4 pr-3 py-2 bg-ink text-cream rounded-full font-medium transition-all hover:-translate-y-0.5 active:scale-[0.97]"
+                >
+                  <FileText size={13} strokeWidth={2.25} /> Documento
+                  <ArrowUpRight size={13} strokeWidth={2.25} />
+                </Link>
+              )
             )}
             {isAdmin && (
               <div className="hidden md:inline-flex items-center gap-0.5 p-0.5 rounded-full border border-ink/15 bg-white" title="Pré-visualizar como aluno ou admin (só muda a vista)">
@@ -254,10 +272,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             {NAV.map((item) => {
               const Icon = item.icon;
               const active = isActive(item.to);
-              if (!signedIn) {
+              const disabled = !signedIn || (soMiniCurso && item.to !== "/");
+              if (disabled) {
                 return (
                   <span
                     key={item.to}
+                    title={signedIn ? "Disponível no método completo" : undefined}
                     className="flex items-center gap-3 px-3 py-3 rounded-lg text-sm text-ink/30 cursor-not-allowed"
                   >
                     <Icon size={18} strokeWidth={1.75} />
@@ -287,7 +307,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         {gateModule && accessLoading ? (
           <div className="px-5 py-20 text-center text-ink/45 text-sm">A verificar acesso…</div>
         ) : rotaBloqueada ? (
-          <EmManutencao />
+          <EmManutencao modo={nodeRota ? modoBloqueio(nodeRota) : "em-breve"} />
         ) : blocked && gateModule ? (
           <ModulePaywall module={gateModule} signedIn={hasAccessSignedIn} />
         ) : (

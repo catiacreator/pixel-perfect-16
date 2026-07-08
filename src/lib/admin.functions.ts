@@ -602,6 +602,75 @@ export const setBloqueios = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+// ── Geral ativo: interruptor mestre. Se desligado, os bloqueios "Em breve"
+// globais deixam de se aplicar (só as turmas mandam). Default ligado.
+const GERAL_KEY = "__geral-ativo__";
+
+export const getGeralAtivo = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async () => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const uid = await ownerUserId(supabaseAdmin);
+    if (!uid) return true;
+    const { data } = await supabaseAdmin.from("master_documents").select("data").eq("user_id", uid).maybeSingle();
+    const blob = (data?.data as Record<string, unknown>) ?? {};
+    return blob[GERAL_KEY] !== false; // default true
+  });
+
+export const setGeralAtivo = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { ativo: boolean }) => z.object({ ativo: z.boolean() }).parse(d))
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const uid = await ownerUserId(supabaseAdmin);
+    if (!uid) throw new Error("Conta principal não encontrada.");
+    const { data: existing } = await supabaseAdmin.from("master_documents").select("data").eq("user_id", uid).maybeSingle();
+    const blob = { ...((existing?.data as Record<string, unknown>) ?? {}), [GERAL_KEY]: data.ativo };
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: uid, data: blob, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
+    return { ok: true };
+  });
+
+// ── Modo de bloqueio por módulo: "em-breve" (nada a fazer) ou "bloqueado"
+// (mostra o contacto da Cátia). Guardado em "__modo-bloqueio__" na conta dona.
+const MODO_KEY = "__modo-bloqueio__";
+
+export const getModoBloqueio = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async () => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const uid = await ownerUserId(supabaseAdmin);
+    if (!uid) return {} as Record<string, string>;
+    const { data } = await supabaseAdmin.from("master_documents").select("data").eq("user_id", uid).maybeSingle();
+    const blob = (data?.data as Record<string, unknown>) ?? {};
+    const m = blob[MODO_KEY];
+    return (m && typeof m === "object" ? m : {}) as Record<string, string>;
+  });
+
+export const setModoBloqueio = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { modos: Record<string, string> }) =>
+    z.object({ modos: z.record(z.string(), z.enum(["em-breve", "bloqueado", "oculto"])) }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const uid = await ownerUserId(supabaseAdmin);
+    if (!uid) throw new Error("Conta principal não encontrada.");
+    const { data: existing } = await supabaseAdmin.from("master_documents").select("data").eq("user_id", uid).maybeSingle();
+    const blob = { ...((existing?.data as Record<string, unknown>) ?? {}), [MODO_KEY]: data.modos };
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: uid, data: blob, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
+    return { ok: true };
+  });
+
 // ───────── Códigos de acesso — a mentora cria; usados para criar conta ─────────
 const CODIGOS_KEY = "__codigos__";
 
@@ -765,8 +834,10 @@ export const setTurmas = createServerFn({ method: "POST" })
         id: z.string(),
         nome: z.string().max(120),
         cor: z.string().max(16).optional(),
+        categoria: z.string().max(30).optional(),
         membros: z.array(z.string()).max(5000),
         acessos: z.array(z.string()).max(2000),
+        modos: z.record(z.string(), z.string()).optional(),
       })).max(500),
     }).parse(d),
   )
@@ -794,22 +865,22 @@ export const getMinhaTurmaAcessos = createServerFn({ method: "POST" })
   .handler(async ({ context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const roles = await rolesOf(supabaseAdmin, context.userId);
-    if (roles.includes("admin")) return { restrito: false, acessos: [] as string[] };
+    if (roles.includes("admin")) return { restrito: false, acessos: [] as string[], categoria: null as string | null, modos: {} as Record<string, string> };
 
     const { blob } = await readOwnerBlob(supabaseAdmin);
     const papeis = (blob[PAPEIS_KEY] as { aluno?: string[]; moderador?: string[] }) ?? {};
 
     if (roles.includes("moderator")) {
-      return { restrito: true, acessos: Array.isArray(papeis.moderador) ? papeis.moderador : [...PAPEIS_PADRAO] };
+      return { restrito: true, acessos: Array.isArray(papeis.moderador) ? papeis.moderador : [...PAPEIS_PADRAO], categoria: null as string | null, modos: {} as Record<string, string> };
     }
 
     // Aluno: turma explícita sobrepõe o papel.
     const turmas = (Array.isArray(blob[TURMAS_KEY]) ? blob[TURMAS_KEY] : []) as {
-      membros?: string[]; acessos?: string[];
+      membros?: string[]; acessos?: string[]; categoria?: string; modos?: Record<string, string>;
     }[];
     const turma = turmas.find((t) => Array.isArray(t.membros) && t.membros.includes(context.userId));
-    if (turma) return { restrito: true, acessos: Array.isArray(turma.acessos) ? turma.acessos : [] };
-    return { restrito: true, acessos: Array.isArray(papeis.aluno) ? papeis.aluno : [...PAPEIS_PADRAO] };
+    if (turma) return { restrito: true, acessos: Array.isArray(turma.acessos) ? turma.acessos : [], categoria: turma.categoria ?? null, modos: turma.modos ?? {} };
+    return { restrito: true, acessos: Array.isArray(papeis.aluno) ? papeis.aluno : [...PAPEIS_PADRAO], categoria: null as string | null, modos: {} as Record<string, string> };
   });
 
 // ───────── Mensagens da mentora — a admin escreve; os alunos leem ─────────

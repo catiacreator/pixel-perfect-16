@@ -31,8 +31,8 @@ export default function PreviewTurmaModal() {
     return () => window.removeEventListener(ABRIR_PREVIEW_EVENT, onOpen);
   }, [fetchTurmas, fetchPapeis]);
 
-  function escolher(nome: string, acessos: string[]) {
-    setPreviewTurma({ nome, acessos });
+  function escolher(nome: string, acessos: string[], categoria?: string | null) {
+    setPreviewTurma({ nome, acessos, categoria: categoria ?? null });
     setAdminView("aluno");
     setOpen(false);
   }
@@ -70,7 +70,7 @@ export default function PreviewTurmaModal() {
                 <Opcao icon={<GraduationCap size={16} />} nome="Aluno (padrão)" desc="O que um aluno sem turma vê (papel Aluno)" onClick={() => escolher("Aluno (padrão)", papeis?.aluno ?? [])} />
                 <Opcao icon={<Shield size={16} />} nome="Moderador" desc="Permissões do papel Moderador" onClick={() => escolher("Moderador", papeis?.moderador ?? [])} />
                 {turmas.map((t) => (
-                  <Opcao key={t.id} dot={t.cor} nome={t.nome} desc={`${t.acessos.length} acesso(s) · ${t.membros.length} aluno(s)`} onClick={() => escolher(t.nome, t.acessos)} />
+                  <Opcao key={t.id} dot={t.cor} nome={t.nome} desc={`${t.categoria ? t.categoria + " · " : ""}${t.acessos.length} acesso(s) · ${t.membros.length} aluno(s)`} onClick={() => escolher(t.nome, t.acessos, t.categoria)} />
                 ))}
                 {turmas.length === 0 && <p className="text-[12px] text-ink/40 px-1 pt-1">Ainda não há turmas — crie em Admin → Turmas.</p>}
               </div>

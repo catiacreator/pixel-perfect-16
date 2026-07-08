@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Plus, Trash2, Users, X, Save } from "lucide-react";
 import { notify } from "@/lib/toast";
 import { getTurmas, setTurmas, listMentoradas } from "@/lib/admin.functions";
-import { CORES_TURMA, novoTurmaId, type Turma } from "@/lib/turmas";
+import { CORES_TURMA, CATEGORIAS_TURMA, novoTurmaId, type Turma } from "@/lib/turmas";
 import AcessoArvore from "@/components/admin/AcessoArvore";
 
 export const Route = createFileRoute("/_authenticated/admin/turmas")({
@@ -164,6 +164,24 @@ function TurmasPage() {
                 <button onClick={() => apagarTurma(sel.id)} className="text-ink/40 hover:text-rose-600 p-1.5" aria-label="Apagar turma">
                   <Trash2 size={16} />
                 </button>
+              </div>
+
+              {/* Categoria */}
+              <div className="mb-5">
+                <p className="text-[10px] tracking-[0.14em] uppercase text-ink/45 mb-1.5">Categoria</p>
+                <select
+                  value={sel.categoria ?? ""}
+                  onChange={(e) => editar(sel.id, { categoria: (e.target.value || undefined) as Turma["categoria"] })}
+                  className="w-full h-10 px-3 rounded-lg border border-[var(--color-border)] bg-white text-sm"
+                >
+                  <option value="">— sem categoria (acesso completo) —</option>
+                  {CATEGORIAS_TURMA.map((c) => (
+                    <option key={c.id} value={c.id}>{c.label}</option>
+                  ))}
+                </select>
+                <p className="text-[11px] text-ink/45 mt-1.5">
+                  <b>Cursos</b> e <b>Mini-cursos</b> veem a plataforma com os links do topo desativados (só o Início ativo).
+                </p>
               </div>
 
               {/* Membros */}

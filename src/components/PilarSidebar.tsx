@@ -56,9 +56,11 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   "↳ Carrossel": LayoutGrid,
   "↳ Stories": CircleDot,
   "↳ Reels": Video,
+  "Carrosséis no ChatGPT": LayoutGrid,
+  "Agentes Creator": Sparkles,
 };
 
-type SubItem = { label: string; to: string };
+type SubItem = { label: string; to: string; badge?: string };
 type Item = {
   num: number;
   label: string;
@@ -70,7 +72,7 @@ type Item = {
   id?: string; // id na ESTRUTURA — se bloqueado no painel, alunos veem "Em breve"
 };
 
-type SidebarKey = 1 | 2 | 3 | 4 | "academia" | "redes";
+type SidebarKey = 1 | 2 | 3 | 4 | "academia" | "redes" | "conteudo-ia";
 
 type PilarDef = {
   pilar: SidebarKey;
@@ -80,6 +82,27 @@ type PilarDef = {
 };
 
 const PILARES: Record<string | number, PilarDef> = {
+  "conteudo-ia": {
+    pilar: "conteudo-ia",
+    title: "Curso · Conteúdo com IA",
+    enabled: true,
+    items: [
+      { num: 0, label: "Introdução", to: "/conteudo-ia", icon: Compass },
+      { num: 1, label: "NotebookLM", to: "/conteudo-ia?aula=m1", icon: Search },
+      { num: 2, label: "Grok", to: "/conteudo-ia?aula=m2", icon: Zap },
+      { num: 3, label: "Claude", to: "/conteudo-ia?aula=m3", icon: Sparkles },
+      {
+        num: 4, label: "ChatGPT", to: "/conteudo-ia?aula=m4", icon: Video,
+        children: [
+          { label: "Carrosséis no ChatGPT", to: "/conteudo-ia?aula=m4b", badge: "Bónus" },
+          { label: "Agentes Creator", to: "/agentes-creator", badge: "Bónus" },
+        ],
+      },
+      { num: 5, label: "Fluxo + projeto final", to: "/conteudo-ia?aula=m5", icon: Wrench },
+      { num: 6, label: "Automação", to: "/conteudo-ia?aula=m6", icon: CalendarClock, badge: "Bónus" },
+      { num: 7, label: "Banco de prompts", to: "/conteudo-ia?aula=bonus", icon: Book },
+    ],
+  },
   academia: {
     pilar: "academia",
     title: "Domine as principais IAs",
@@ -221,17 +244,23 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
       : "";
 
   const isActive = (to: string) => {
+    // Agentes Creator: subpágina do curso — ativa em toda a secção (índice + detalhes)
+    if (to === "/agentes-creator") return pathname === "/agentes-creator";
     const [toPath, toQuery] = to.split("?");
+    const cur = new URLSearchParams(searchStr.replace(/^\?/, ""));
     if (toQuery) {
       if (pathname !== toPath) return false;
-      const cur = new URLSearchParams(searchStr.replace(/^\?/, ""));
       const tgt = new URLSearchParams(toQuery);
       if (cur.get("aba") !== tgt.get("aba")) return false;
+      if (cur.get("aula") !== tgt.get("aula")) return false;
+      if (cur.get("agente") !== tgt.get("agente")) return false;
       // se o alvo tem um sub-formato (fmt), exige correspondência exata
       if (tgt.get("fmt")) return cur.get("fmt") === tgt.get("fmt");
       return true;
     }
-    return pathname === toPath || pathname.startsWith(toPath + "/");
+    // sem query: ativo só se não houver aba/aula/agente selecionada (página de introdução)
+    if (pathname === toPath) return !cur.get("aba") && !cur.get("aula") && !cur.get("agente");
+    return pathname.startsWith(toPath + "/");
   };
   const activeParent = def.items.find(
     (i) => i.children && (isActive(i.to) || i.children.some((c) => isActive(c.to))),
@@ -239,7 +268,10 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
   const [openId, setOpenId] = useState<string | null>(activeParent?.to ?? null);
 
   const kicker =
-    def.pilar === "academia" ? "Academia de IA" : def.pilar === "redes" ? "Redes Sociais" : `Pilar ${def.pilar}`;
+    def.pilar === "academia" ? "Academia de IA"
+      : def.pilar === "redes" ? "Redes Sociais"
+      : def.pilar === "conteudo-ia" ? "Curso Conteúdo-IA"
+      : `Pilar ${def.pilar}`;
 
   return (
     <div className="h-full flex flex-col bg-gradient-to-b from-terracotta to-terracotta-dark text-white border-r border-black/10">
@@ -317,7 +349,13 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                       <span className={active ? "text-terracotta/55" : "text-white/55"}>{item.num}.</span> {item.label}
                     </span>
                     {item.badge && (
-                      <span className={`ml-1 text-[9px] tracking-[0.18em] uppercase px-2 py-0.5 rounded-full font-semibold ${active ? "bg-terracotta/10 text-terracotta" : "bg-white/20 text-white"}`}>
+                      <span className={`ml-1 text-[8.5px] tracking-[0.14em] uppercase px-2 py-0.5 rounded-full font-semibold shrink-0 ${
+                        active
+                          ? "bg-terracotta/10 text-terracotta"
+                          : item.badge === "Bónus"
+                            ? "bg-amber-400/25 text-amber-200"
+                            : "bg-white/20 text-white"
+                      }`}>
                         {item.badge}
                       </span>
                     )}
@@ -368,7 +406,12 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                               return <Shirt size={12} className={cls} />;
                             })()}
                             <span className="flex-1 truncate">{c.label}</span>
-                            {cActive && (
+                            {c.badge && (
+                              <span className={`ml-1 text-[8.5px] tracking-[0.14em] uppercase px-2 py-0.5 rounded-full font-semibold shrink-0 ${cActive ? "bg-terracotta/10 text-terracotta" : "bg-amber-400/25 text-amber-200"}`}>
+                                {c.badge}
+                              </span>
+                            )}
+                            {cActive && !c.badge && (
                               <span className="w-1.5 h-1.5 rounded-full bg-terracotta shrink-0" />
                             )}
                           </Link>
