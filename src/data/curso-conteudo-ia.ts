@@ -333,15 +333,11 @@ frases curtas, português do Brasil. NUNCA use "fórmula mágica",
             "**Promessa de recompensa** — “Como eu fiz X em Y tempo” ou “O erro que destrói a tua conta”.",
           ] },
           { t: "prompt", agente: "Claude", nome: "Fábrica de ganchos", texto: `Tema: [TEMA]. Usa as dores do meu perfil.
-Se eu tiver pesquisas das outras ferramentas, estão aqui:
-- Dores reais do público (Grok, M2): [COLA AQUI · opcional]
 Dá-me 15 ganchos para Reels, no estilo ESPECIALISTA
 (abrir uma lacuna ou tocar numa dor específica, nunca anunciar
 o tema). Mistura os 4 tipos: quebra de expectativa,
 dor silenciosa, curiosidade/polémica e promessa de recompensa.
 Frases curtas, impacto imediato.`, textoBr: `Tema: [TEMA]. Use as dores do meu perfil.
-Se eu tiver pesquisas das outras ferramentas, estão aqui:
-- Dores reais do público (Grok, M2): [COLE AQUI · opcional]
 Me dê 15 ganchos para Reels, no estilo ESPECIALISTA
 (abrir lacuna ou tocar uma dor específica, nunca anunciar
 o tema). Misture os 4 tipos: quebra de expectativa,
@@ -352,12 +348,9 @@ Frases curtas, impacto imediato.` },
       {
         blocos: [
           { t: "sub", titulo: "Passo 3 · Escreve o conteúdo (Reel ou carrossel)" },
-          { t: "p", texto: "**Dica de ouro:** os dois prompts abaixo têm um espaço para colares os padrões do NotebookLM (M1) e as dores do Grok (M2). O roteiro nasce de dados reais — não de achismo." },
+          { t: "p", texto: "**Dica de ouro:** antes de pedires o roteiro, cola na conversa os padrões do NotebookLM (M1) e as dores do Grok (M2). O roteiro nasce de dados reais." },
           { t: "prompt", agente: "Claude", nome: "Roteiro de Reels (atração)", texto: `Cria um guião de Reels de até 45 segundos sobre [TEMA].
 Usa este gancho: [COLA O GANCHO ESCOLHIDO].
-Contexto real (cola o que tiveres):
-- Padrões dos virais (NotebookLM, M1): [COLA AQUI · opcional]
-- Dores/tema quente (Grok, M2): [COLA AQUI · opcional]
 Estrutura: gancho -> problema -> viragem/solução -> prova -> CTA.
 Formato de entrega, bloco a bloco:
 - FALA: o que eu digo (frases curtas, à minha maneira)
@@ -365,9 +358,6 @@ Formato de entrega, bloco a bloco:
 - CENA: sugestão do que gravar
 No fim, 3 ganchos alternativos + 3 CTAs (seguir, guardar, Direct).`, textoBr: `Crie um roteiro de Reels de até 45 segundos sobre [TEMA].
 Use este gancho: [COLE O GANCHO ESCOLHIDO].
-Contexto real (cole o que você tiver):
-- Padrões dos virais (NotebookLM, M1): [COLE AQUI · opcional]
-- Dores/tema quente (Grok, M2): [COLE AQUI · opcional]
 Estrutura: gancho -> problema -> virada/solução -> prova -> CTA.
 Formato de entrega, bloco a bloco:
 - FALA: o que eu digo (frases curtas, do meu jeito)
@@ -376,25 +366,15 @@ Formato de entrega, bloco a bloco:
 No fim, 3 ganchos alternativos + 3 CTAs (seguir, salvar, Direct).` },
           { t: "prompt", agente: "Claude", nome: "Carrossel (autoridade · gera salvamentos)", texto: `Cria um carrossel de 7 slides sobre [TEMA] (formato
 checklist ou passo a passo, para gerar salvamentos).
-Contexto real (cola o que tiveres):
-- Padrões dos virais (NotebookLM, M1): [COLA AQUI · opcional]
-- Dores/tema quente (Grok, M2): [COLA AQUI · opcional]
 - Slide 1: capa = gancho forte (faz parar de rolar)
 - Slides 2 a 6: uma ideia por slide, texto curto e escaneável
 - Slide 7: CTA + convite para guardar/partilhar
-Para cada slide: TÍTULO, texto e sugestão de imagem/visual.
-No fim, entrega também a lista "texto por slide" limpa,
-pronta a colar no ChatGPT para gerar as imagens (M4).`, textoBr: `Crie um carrossel de 7 slides sobre [TEMA] (formato
+Para cada slide: TÍTULO, texto e sugestão de imagem/visual.`, textoBr: `Crie um carrossel de 7 slides sobre [TEMA] (formato
 checklist ou passo a passo, para gerar salvamentos).
-Contexto real (cole o que você tiver):
-- Padrões dos virais (NotebookLM, M1): [COLE AQUI · opcional]
-- Dores/tema quente (Grok, M2): [COLE AQUI · opcional]
 - Slide 1: capa = gancho forte (faz parar de rolar)
 - Slides 2 a 6: uma ideia por slide, texto curto e escaneável
 - Slide 7: CTA + convite para salvar/compartilhar
-Para cada slide: TÍTULO, texto e sugestão de imagem/visual.
-No fim, entregue também a lista "texto por slide" limpa,
-pronta para colar no ChatGPT e gerar as imagens (M4).` },
+Para cada slide: TÍTULO, texto e sugestão de imagem/visual.` },
         ],
       },
       {
