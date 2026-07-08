@@ -238,21 +238,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Dois caminhos */}
-      <section className="max-w-[1200px] mx-auto px-5 md:px-10 pt-8 md:pt-12 pb-20 md:pb-28">
-        {/* Cursos principais */}
-        <div className="flex flex-col sm:flex-row gap-4 md:gap-5">
-          {PRODUTOS.filter((p) => !MINI_CURSOS.includes(p.key)).map((p, i) => renderCard(p, i))}
-        </div>
+      {/* Dois caminhos — mesmo contentor do hero (max-w-[1400px] + px-4/px-10) p/ alinhar à esquerda */}
+      <section className="px-4 md:px-10 pt-8 md:pt-12 pb-20 md:pb-28">
+        <div className="max-w-[1400px] mx-auto">
+          {/* Cursos principais */}
+          <div className="flex flex-col sm:flex-row gap-4 md:gap-5">
+            {PRODUTOS.filter((p) => !MINI_CURSOS.includes(p.key)).map((p, i) => renderCard(p, i))}
+          </div>
 
-        {/* Mini-cursos */}
-        <div className="mt-14 mb-6">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-ink/50">Mini-cursos</p>
-          <div className="h-px bg-[var(--color-border)] mt-2.5" />
-        </div>
+          {/* Mini-cursos */}
+          <div className="mt-14 mb-6">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-ink/50">Mini-cursos</p>
+            <div className="h-px bg-[var(--color-border)] mt-2.5" />
+          </div>
 
-        <div className="flex flex-col sm:flex-row justify-center sm:justify-start gap-4 md:gap-5">
-          {PRODUTOS.filter((p) => MINI_CURSOS.includes(p.key)).map((p, i) => renderCard(p, i))}
+          <div className="flex flex-col sm:flex-row justify-center sm:justify-start gap-4 md:gap-5">
+            {PRODUTOS.filter((p) => MINI_CURSOS.includes(p.key)).map((p, i) => renderCard(p, i))}
+          </div>
         </div>
       </section>
 
