@@ -56,7 +56,9 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   "↳ Carrossel": LayoutGrid,
   "↳ Stories": CircleDot,
   "↳ Reels": Video,
-  "Carrosséis no ChatGPT": LayoutGrid,
+  "1 · Carrosséis no ChatGPT": LayoutGrid,
+  "2 · Infográficos, livros e imagens": Palette,
+  "3 · Carrosséis c/ info externa": FileText,
   "Agentes Creator": Sparkles,
 };
 
@@ -94,7 +96,9 @@ const PILARES: Record<string | number, PilarDef> = {
       {
         num: 4, label: "ChatGPT", to: "/conteudo-ia?aula=m4", icon: Video,
         children: [
-          { label: "Carrosséis no ChatGPT", to: "/conteudo-ia?aula=m4b", badge: "Bónus" },
+          { label: "1 · Carrosséis no ChatGPT", to: "/conteudo-ia?aula=m4b" },
+          { label: "2 · Infográficos, livros e imagens", to: "/conteudo-ia?aula=m4c" },
+          { label: "3 · Carrosséis c/ info externa", to: "/conteudo-ia?aula=m4d" },
           { label: "Agentes Creator", to: "/agentes-creator", badge: "Bónus" },
         ],
       },
