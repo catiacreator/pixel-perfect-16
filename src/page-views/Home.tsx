@@ -25,6 +25,20 @@ const PRODUTOS = [
     estruturaId: "conteudo-ia",
   },
   {
+    key: "carrosseis-virais",
+    tag: "Mini-curso",
+    titulo: "Carrosséis Virais",
+    assinatura: "imagens lindas no ChatGPT",
+    desc: "Cria carrosséis de imagem no ChatGPT — estilos, cores e como ajustar cada slide até ficar perfeito.",
+    to: "/carrosseis-virais",
+    cta: "Começar o mini-curso",
+    img: "/carrosseis-virais.svg",
+    pos: "center 30%",
+    cor: "#E5218C",
+    icon: Sparkles,
+    estruturaId: "carrosseis-virais",
+  },
+  {
     key: "protocolo",
     tag: "Mentoria · Instagram",
     titulo: "Protocolo Viral",
@@ -56,6 +70,9 @@ const PRODUTOS = [
     sombraTitulo: true,
   },
 ];
+
+// Chaves que aparecem na secção "Mini-cursos" (as outras vão para os cursos principais).
+const MINI_CURSOS = ["conteudo-ia", "carrosseis-virais"];
 
 export default function Home() {
   const bloqueado = useBloqueadoParaAlunos();
@@ -225,7 +242,7 @@ export default function Home() {
       <section className="max-w-[1200px] mx-auto px-5 md:px-10 pt-8 md:pt-12 pb-20 md:pb-28">
         {/* Cursos principais */}
         <div className="flex flex-col sm:flex-row gap-4 md:gap-5">
-          {PRODUTOS.filter((p) => p.key !== "conteudo-ia").map((p, i) => renderCard(p, i))}
+          {PRODUTOS.filter((p) => !MINI_CURSOS.includes(p.key)).map((p, i) => renderCard(p, i))}
         </div>
 
         {/* Mini-cursos */}
@@ -235,7 +252,7 @@ export default function Home() {
         </div>
 
         <div className="flex flex-col sm:flex-row justify-center sm:justify-start gap-4 md:gap-5">
-          {PRODUTOS.filter((p) => p.key === "conteudo-ia").map((p, i) => renderCard(p, i))}
+          {PRODUTOS.filter((p) => MINI_CURSOS.includes(p.key)).map((p, i) => renderCard(p, i))}
         </div>
       </section>
 
