@@ -2,9 +2,9 @@ import Layout from "../components/Layout";
 import PilarSidebar from "../components/PilarSidebar";
 import PromptBox from "../components/curso/PromptBox";
 import { Link, useSearchParams } from "@/lib/router-compat";
-import { Sparkles, ArrowRight, ArrowLeft, PlayCircle, Check } from "lucide-react";
+import { Sparkles, ArrowRight, ArrowLeft, PlayCircle, Check, ExternalLink } from "lucide-react";
 import TarefaCompleta from "../components/TarefaCompleta";
-import { CURSO_INTRO, AULAS, CURSO_BONUS, type Aula, type Bloco, type Secao } from "@/data/curso-conteudo-ia";
+import { CURSO_INTRO, AULAS, SUBAULAS, CURSO_BONUS, type Aula, type Bloco, type Secao } from "@/data/curso-conteudo-ia";
 
 // Curso "Conteúdo com IA" — cada módulo na sua página (via ?aula=mX).
 
@@ -72,6 +72,24 @@ function BlocoView({ b }: { b: Bloco }) {
           </table>
         </div>
       );
+    case "funil": {
+      const larguras = ["100%", "82%", "64%", "46%"];
+      const cores = ["bg-terracotta-dark", "bg-terracotta", "bg-terracotta/80", "bg-amber-400"];
+      return (
+        <div className="flex flex-col items-center gap-1.5 my-4">
+          {b.niveis.map((n, i) => (
+            <div
+              key={i}
+              className={`rounded-xl px-4 py-3 flex flex-col items-center text-center ${cores[i] ?? "bg-terracotta"} ${i === 3 ? "text-ink" : "text-cream"}`}
+              style={{ width: larguras[i] ?? "100%" }}
+            >
+              <span className="font-bold text-[15px]">{n.titulo}</span>
+              <span className="text-[12.5px] opacity-90">{n.desc}</span>
+            </div>
+          ))}
+        </div>
+      );
+    }
   }
 }
 
@@ -110,14 +128,14 @@ function Intro() {
         <p className="text-ink/70 text-lg mb-2">{CURSO_INTRO.subtitulo}</p>
         <p className="text-[13px] text-ink/50">{CURSO_INTRO.ferramentas} · {CURSO_INTRO.nivel}</p>
 
-        {/* Como funciona o método */}
-        <div className="mt-6 rounded-2xl border border-border bg-white p-6">
-          <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">Como funciona o método</p>
-          <h2 className="font-serif text-2xl text-ink mb-2">{CURSO_INTRO.metodoTitulo}</h2>
-          <p className="text-[15px] text-ink/70 leading-relaxed">{CURSO_INTRO.metodoTexto}</p>
-          <BlocoView b={{ t: "tabela", cab: CURSO_INTRO.metodoTabela.cab, linhas: CURSO_INTRO.metodoTabela.linhas }} />
-          <BlocoView b={{ t: "nota", v: "info", texto: CURSO_INTRO.metodoNota }} />
-        </div>
+        {/* Secções do método */}
+        {CURSO_INTRO.secoes.map((s, i) => (
+          <div key={i} className="mt-6 rounded-2xl border border-border bg-white p-6">
+            {s.label && <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">{s.label}</p>}
+            {s.titulo && <h2 className="font-serif text-2xl text-ink mb-2">{s.titulo}</h2>}
+            {s.blocos.map((b, j) => <BlocoView key={j} b={b} />)}
+          </div>
+        ))}
 
         {/* Módulos do curso */}
         <p className="text-sm font-semibold text-ink mt-8 mb-3">Módulos do curso</p>
@@ -155,6 +173,22 @@ function Modulo({ aula, prev, next }: { aula: Aula; prev: Aula | null; next: Aul
       {aula.objetivo && (
         <div className="rounded-r-xl border-l-4 border-terracotta bg-terracotta/8 px-4 py-3 mb-4 text-[15px] text-ink/75">
           <b className="text-ink">Objetivo:</b> {aula.objetivo}
+        </div>
+      )}
+
+      {aula.links && aula.links.length > 0 && (
+        <div className="flex flex-wrap gap-2.5 mb-5">
+          {aula.links.map((l) => (
+            <a
+              key={l.url}
+              href={l.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta text-cream text-sm font-semibold hover:bg-terracotta-dark transition-colors"
+            >
+              <ExternalLink size={15} /> {l.nome}
+            </a>
+          ))}
         </div>
       )}
 
@@ -207,12 +241,24 @@ export default function MiniCurso() {
   const aula = params.get("aula");
   const idx = AULAS.findIndex((a) => a.id === aula);
   const aulaSel = idx >= 0 ? AULAS[idx] : null;
+  const subSel = SUBAULAS.find((a) => a.id === aula) ?? null;
 
   let conteudo: React.ReactNode;
   if (aula === "bonus") conteudo = <Bonus />;
   else if (aulaSel) {
     conteudo = (
       <Modulo aula={aulaSel} prev={idx > 0 ? AULAS[idx - 1] : null} next={idx < AULAS.length - 1 ? AULAS[idx + 1] : null} />
+    );
+  } else if (subSel) {
+    // sub-aula (ex.: m4b) — prev = módulo pai (m4), next = módulo seguinte (m5)
+    const paiBase = subSel.id.replace(/[a-z]$/, "");
+    const pIdx = AULAS.findIndex((a) => a.id === paiBase);
+    conteudo = (
+      <Modulo
+        aula={subSel}
+        prev={pIdx >= 0 ? AULAS[pIdx] : null}
+        next={pIdx >= 0 && pIdx < AULAS.length - 1 ? AULAS[pIdx + 1] : null}
+      />
     );
   } else conteudo = <Intro />;
 
