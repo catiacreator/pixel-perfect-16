@@ -162,6 +162,15 @@ export const ESTRUTURA: Nodo[] = [
       { id: "conteudo-ia.aulas", label: "Mini-curso — aulas grátis", tipo: "pagina", to: "/conteudo-ia" },
     ],
   },
+  {
+    id: "carrosseis-virais",
+    label: "Carrosséis Virais (Mini-curso)",
+    tipo: "modulo",
+    to: "/carrosseis-virais",
+    filhos: [
+      { id: "carrosseis-virais.guia", label: "Guia de carrosséis no ChatGPT", tipo: "pagina", to: "/carrosseis-virais" },
+    ],
+  },
 ];
 
 // Bloqueios "Em breve" por defeito (enquanto a mentora não mexer no painel).
