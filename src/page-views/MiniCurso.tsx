@@ -2,7 +2,7 @@ import Layout from "../components/Layout";
 import PilarSidebar from "../components/PilarSidebar";
 import PromptBox from "../components/curso/PromptBox";
 import { Link, useSearchParams } from "@/lib/router-compat";
-import { Sparkles, ArrowRight, ArrowLeft, PlayCircle, Check, ExternalLink } from "lucide-react";
+import { Sparkles, ArrowRight, ArrowLeft, PlayCircle, Check, ExternalLink, Download } from "lucide-react";
 import TarefaCompleta from "../components/TarefaCompleta";
 import { CURSO_INTRO, AULAS, SUBAULAS, CURSO_BONUS, type Aula, type Bloco, type Secao } from "@/data/curso-conteudo-ia";
 
@@ -48,7 +48,7 @@ function BlocoView({ b }: { b: Bloco }) {
         </ol>
       );
     case "prompt":
-      return <PromptBox agente={b.agente} nome={b.nome} texto={b.texto} />;
+      return <PromptBox agente={b.agente} nome={b.nome} texto={b.texto} textoBr={b.textoBr} />;
     case "nota":
       return (
         <div className={`rounded-xl px-4 py-3 my-3 text-[14px] leading-relaxed ${b.v === "warn" ? "bg-amber-50 border-l-4 border-amber-400 text-amber-900" : "bg-ink/5 border-l-4 border-terracotta text-ink/75"}`}>
@@ -70,6 +70,45 @@ function BlocoView({ b }: { b: Bloco }) {
               ))}
             </tbody>
           </table>
+        </div>
+      );
+    case "aulas":
+      return (
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 my-4">
+          {b.itens.map((a) => (
+            <Link
+              key={a.aula}
+              to={`/conteudo-ia?aula=${a.aula}`}
+              className="rounded-2xl border border-border bg-white p-4 hover:border-terracotta transition-colors group flex flex-col"
+            >
+              <p className="text-sm font-semibold text-ink group-hover:text-terracotta transition-colors mb-1">{a.titulo}</p>
+              <p className="text-[12.5px] text-ink/60 leading-snug flex-1">{a.desc}</p>
+              <span className="inline-flex items-center gap-1.5 text-[12px] text-terracotta font-semibold mt-2.5">
+                Abrir aula <ArrowRight size={13} />
+              </span>
+            </Link>
+          ))}
+        </div>
+      );
+    case "downloads":
+      return (
+        <div className="flex flex-col sm:flex-row gap-3 my-4">
+          {b.itens.map((d) => (
+            <a
+              key={d.url}
+              href={d.url}
+              download
+              className="flex-1 flex items-center gap-3 rounded-2xl border border-terracotta/30 bg-terracotta/5 px-4 py-3.5 hover:border-terracotta hover:bg-terracotta/10 transition-colors group"
+            >
+              <span className="w-10 h-10 rounded-xl bg-terracotta text-cream flex items-center justify-center shrink-0">
+                <Download size={17} />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold text-ink group-hover:text-terracotta transition-colors">{d.nome}</span>
+                {d.desc && <span className="block text-[12px] text-ink/55 leading-snug">{d.desc}</span>}
+              </span>
+            </a>
+          ))}
         </div>
       );
     case "funil": {
@@ -227,7 +266,7 @@ function Bonus() {
       <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">Bónus</p>
       <h1 className="font-serif text-3xl md:text-4xl text-ink mb-2">Banco de prompts rápidos</h1>
       <p className="text-[15px] text-ink/70 leading-relaxed mb-4">{CURSO_BONUS.intro}</p>
-      {CURSO_BONUS.prompts.map((p, i) => <PromptBox key={i} agente={p.agente} nome={p.nome} texto={p.texto} />)}
+      {CURSO_BONUS.prompts.map((p, i) => <PromptBox key={i} agente={p.agente} nome={p.nome} texto={p.texto} textoBr={(p as { textoBr?: string }).textoBr} />)}
       <div className="mt-8 rounded-3xl bg-gradient-to-br from-terracotta-dark to-terracotta text-cream p-8 text-center">
         <h2 className="font-serif text-2xl mb-2">Agora é contigo.</h2>
         <p className="text-cream/85 max-w-xl mx-auto leading-relaxed">{CURSO_BONUS.fecho}</p>
@@ -250,14 +289,17 @@ export default function MiniCurso() {
       <Modulo aula={aulaSel} prev={idx > 0 ? AULAS[idx - 1] : null} next={idx < AULAS.length - 1 ? AULAS[idx + 1] : null} />
     );
   } else if (subSel) {
-    // sub-aula (ex.: m4b) — prev = módulo pai (m4), next = módulo seguinte (m5)
+    // sub-aula (ex.: m4b) — navega em cadeia entre irmãs do mesmo módulo:
+    // pai (m4) → aula 1 (m4b) → aula 2 (m4c) → … → módulo seguinte (m5)
     const paiBase = subSel.id.replace(/[a-z]$/, "");
     const pIdx = AULAS.findIndex((a) => a.id === paiBase);
+    const irmas = SUBAULAS.filter((s) => s.id.replace(/[a-z]$/, "") === paiBase);
+    const sIdx = irmas.findIndex((s) => s.id === subSel.id);
     conteudo = (
       <Modulo
         aula={subSel}
-        prev={pIdx >= 0 ? AULAS[pIdx] : null}
-        next={pIdx >= 0 && pIdx < AULAS.length - 1 ? AULAS[pIdx + 1] : null}
+        prev={sIdx > 0 ? irmas[sIdx - 1] : pIdx >= 0 ? AULAS[pIdx] : null}
+        next={sIdx < irmas.length - 1 ? irmas[sIdx + 1] : pIdx >= 0 && pIdx < AULAS.length - 1 ? AULAS[pIdx + 1] : null}
       />
     );
   } else conteudo = <Intro />;
