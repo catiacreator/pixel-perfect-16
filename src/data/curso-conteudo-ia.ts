@@ -280,19 +280,7 @@ Diga o elemento interativo de cada tela (enquete, caixinha, link).` },
         ],
       },
       {
-        titulo: "4.2 Caminho 1 (mais simples): GPTs prontos",
-        blocos: [
-          { t: "ol", itens: [
-            "No ChatGPT, clica em “Explorar GPTs”.",
-            "Procura “carousel”, “Instagram carousel” ou “carrossel”.",
-            "Escolhe um bem avaliado (ex.: “CarouselGen”, “InstaCarousel”).",
-            "Cola o texto slide a slide que o Claude escreveu no M3.",
-            "Pede as imagens em 1080 x 1350 e ajusta cores a conversar.",
-          ] },
-        ],
-      },
-      {
-        titulo: "4.3 Caminho 2: gerar tu mesma (mais controlo)",
+        titulo: "4.2 Gerar as imagens do carrossel",
         blocos: [
           { t: "prompt", agente: "ChatGPT", nome: "Definir o estilo visual (faz uma vez)", texto: `Vou criar um carrossel de Instagram. Guarde este estilo
 para todas as imagens desta conversa:
