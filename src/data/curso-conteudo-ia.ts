@@ -576,16 +576,7 @@ export const SUBAULAS: Aula[] = [
     secoes: [
       {
         blocos: [
-          { t: "p", texto: "Transforma o teu conteúdo numa **apresentação** completa — capa, slides de conteúdo e conclusão, todos com a mesma identidade visual. Formato 16:9 (1920x1080)." },
-          { t: "prompt", agente: "ChatGPT", nome: "Slides de apresentação", texto: `Cria uma apresentação sobre [TEMA] para [PÚBLICO],
-em [Nº] slides no formato 16:9 (1920x1080).
-Para cada slide: título curto + 3 a 4 tópicos, mesmo
-estilo visual, cores [PALETA], muito espaço em branco.
-Slide 1 = capa; último slide = conclusão + CTA.`, textoBr: `Crie uma apresentação sobre [TEMA] para [PÚBLICO],
-em [Nº] slides no formato 16:9 (1920x1080).
-Para cada slide: título curto + 3 a 4 tópicos, mesmo
-estilo visual, cores [PALETA], muito espaço em branco.
-Slide 1 = capa; último slide = conclusão + CTA.` },
+          { t: "p", texto: "Transforma o teu conteúdo numa **apresentação** completa — capa, slides de conteúdo e conclusão, todos com a mesma identidade visual. Segue o vídeo acima, passo a passo." },
           { t: "nota", v: "warn", texto: "**Confere o texto:** os slides têm muito texto e os geradores erram acentos. Revê tudo; se falhar, pede de novo ou corrige no Canva, PowerPoint ou Google Slides." },
         ],
       },
