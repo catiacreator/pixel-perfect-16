@@ -750,6 +750,7 @@ Sem texto na imagem — o texto eu coloco depois.` },
         titulo: "3.2 Infográficos e apresentações",
         blocos: [
           { t: "p", texto: "Infográfico = o teu método ou um processo **visualizado**. É dos formatos que mais gera guardados, porque a pessoa quer voltar a consultar. E os mesmos prompts servem para montar **slides de apresentação**." },
+          { t: "video", url: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/infograficos.mp4", titulo: "Infográficos e apresentações" },
           { t: "prompt", agente: "ChatGPT", nome: "Infográfico", texto: `Cria um infográfico vertical 1080x1350 sobre [TEMA].
 Conteúdo (por esta ordem):
 [LISTA OS 3 A 5 PASSOS OU DADOS]
