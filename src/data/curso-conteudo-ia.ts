@@ -28,7 +28,7 @@ export type Aula = {
 
 export const CURSO_INTRO = {
   // URL do vídeo de boas-vindas: aceita embed (YouTube/Vimeo/Tella) ou ficheiro .mp4 direto
-  videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/intro.mp4?v=2",
+  videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/intro.mp4?v=3",
   titulo: "Criação de Conteúdo com Inteligência Artificial",
   subtitulo: "A tua equipa de 4 IAs para viralizar e vender no Instagram. Cada ferramenta faz uma parte do trabalho pesado — tu ficas com a direção criativa e a tua voz.",
   ferramentas: "NotebookLM · pesquisa · Grok · tendências · Claude · roteiros · ChatGPT · arte",
@@ -83,7 +83,7 @@ export const AULAS: Aula[] = [
     numero: "Módulo 1",
     titulo: "NotebookLM: inteligência do teu nicho",
     objetivo: "Transformar vídeos virais, PDFs e referências do teu nicho num “cérebro” que revela o que faz o público parar de rolar o feed.",
-    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/notebooklm.mp4",
+    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/notebooklm.mp4?v=3",
     links: [{ nome: "Abrir NotebookLM", url: "https://notebooklm.google.com" }],
     secoes: [
       {
@@ -195,7 +195,7 @@ quente para a mais fria e cite as fontes.` },
     numero: "Módulo 2",
     titulo: "Grok: surfando as tendências em tempo real",
     objetivo: "Descobrir o que o público fala e sente AGORA para criar conteúdo em cima de assuntos quentes antes de toda a gente.",
-    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/grok.mp4",
+    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/grok.mp4?v=3",
     links: [{ nome: "Abrir Grok", url: "https://grok.com" }],
     secoes: [
       {
@@ -395,7 +395,7 @@ Com base nisso:
     numero: "Bónus",
     titulo: "Automações que geram ideias",
     objetivo: "Configurar o Claude e o ChatGPT para, todos os dias e sozinhos, te enviarem um resumo das notícias e ideias do teu nicho — sem tu pedires.",
-    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/automacoes.mp4",
+    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/automacoes.mp4?v=3",
     links: [
       { nome: "Abrir ChatGPT", url: "https://chatgpt.com" },
       { nome: "Abrir Claude", url: "https://claude.ai" },
@@ -571,7 +571,7 @@ export const SUBAULAS: Aula[] = [
     numero: "NotebookLM · Apresentações",
     titulo: "Apresentações",
     objetivo: "Criar slides de apresentação prontos a usar — capa, tópicos e conclusão — todos com o mesmo estilo visual.",
-    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/apresentacoes.mp4",
+    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/apresentacoes.mp4?v=3",
     links: [{ nome: "Abrir ChatGPT", url: "https://chatgpt.com" }],
     secoes: [
       {
@@ -587,7 +587,7 @@ export const SUBAULAS: Aula[] = [
     numero: "ChatGPT · Aula 1",
     titulo: "Carrosséis no ChatGPT",
     objetivo: "Criar um carrossel completo dentro do ChatGPT — da estrutura ao texto final, design, legenda e montagem — a partir de um tema teu.",
-    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/carrosseis-chatgpt.mp4",
+    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/carrosseis-chatgpt.mp4?v=3",
     links: [{ nome: "Abrir ChatGPT", url: "https://chatgpt.com" }],
     secoes: [
       {
@@ -748,7 +748,7 @@ No último, peça espaço para adicionar o seu @ e a logo.)` },
         titulo: "3.1 Imagens fotográficas",
         blocos: [
           { t: "p", texto: "Imagens realistas, com ar de fotografia — para posts, fundos de stories, capas de Reels ou mockups de produto. Descreves a cena em português e o ChatGPT cria." },
-          { t: "video", url: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/imagens-fotograficas.mp4", titulo: "Gerar imagens fotográficas" },
+          { t: "video", url: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/imagens-fotograficas.mp4?v=3", titulo: "Gerar imagens fotográficas" },
           { t: "prompt", agente: "ChatGPT", nome: "Imagem fotográfica", texto: `Cria uma imagem fotográfica realista de: [DESCREVE A CENA].
 - Formato: [1080x1350 retrato / 1080x1080 quadrado / 1080x1920 story]
 - Luz: [ex.: natural suave, luz de manhã junto à janela]
@@ -767,7 +767,7 @@ Sem texto na imagem — o texto eu coloco depois.` },
         titulo: "3.2 Infográficos e thumbnails",
         blocos: [
           { t: "p", texto: "Infográfico = o teu método ou um processo **visualizado**. É dos formatos que mais gera guardados, porque a pessoa quer voltar a consultar." },
-          { t: "video", url: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/infograficos.mp4", titulo: "Infográficos e thumbnails" },
+          { t: "video", url: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/infograficos.mp4?v=3", titulo: "Infográficos e thumbnails" },
           { t: "prompt", agente: "ChatGPT", nome: "Infográfico", texto: `Cria um infográfico vertical 1080x1350 sobre [TEMA].
 Conteúdo (por esta ordem):
 [LISTA OS 3 A 5 PASSOS OU DADOS]
