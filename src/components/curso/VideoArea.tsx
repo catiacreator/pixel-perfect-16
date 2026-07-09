@@ -73,7 +73,7 @@ function VideoFicheiro({ videoUrl, titulo }: { videoUrl: string; titulo: string 
             <X size={18} />
           </button>
           <div
-            className="w-[90vw] md:w-[60vw] max-w-[1280px] max-h-[85vh] aspect-video"
+            className="w-[92vw] md:w-[80vw] max-w-[1600px] max-h-[88vh] aspect-video"
             onClick={(e) => e.stopPropagation()}
           >
             <video
