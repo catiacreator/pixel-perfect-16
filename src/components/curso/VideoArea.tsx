@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Maximize2, X } from "lucide-react";
+import { Expand, X } from "lucide-react";
 
 // Player de vídeo do curso. Para ficheiros (.mp4) usa o player nativo mas
 // SEM o botão de ecrã inteiro (que estica o 1280x720 e perde nitidez):
@@ -56,7 +56,7 @@ function VideoFicheiro({ videoUrl, titulo }: { videoUrl: string; titulo: string 
           aria-label="Expandir vídeo"
           className="absolute top-2.5 right-2.5 w-8 h-8 rounded-lg bg-black/55 text-white flex items-center justify-center hover:bg-black/75 transition-colors backdrop-blur-sm"
         >
-          <Maximize2 size={15} />
+          <Expand size={15} />
         </button>
       </div>
 
