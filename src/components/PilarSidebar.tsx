@@ -121,6 +121,7 @@ const PILARES: Record<string | number, PilarDef> = {
       { num: 5, id: "conteudo-ia.m5", label: "Fluxo + projeto final", to: "/conteudo-ia?aula=m5", icon: Wrench },
       { num: 6, id: "conteudo-ia.m6", label: "Automações que geram ideias", to: "/conteudo-ia?aula=m6", icon: CalendarClock, badge: "Bónus" },
       { num: 7, id: "conteudo-ia.bonus", label: "Banco de prompts", to: "/conteudo-ia?aula=bonus", icon: Book },
+      { num: 8, id: "conteudo-ia.final", label: "O teu próximo passo", to: "/conteudo-ia?aula=final", icon: Sparkles },
     ],
   },
   academia: {

@@ -395,6 +395,7 @@ Com base nisso:
     numero: "Bónus",
     titulo: "Automações que geram ideias",
     objetivo: "Configurar o Claude e o ChatGPT para, todos os dias e sozinhos, te enviarem um resumo das notícias e ideias do teu nicho — sem tu pedires.",
+    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/automacoes.mp4",
     links: [
       { nome: "Abrir ChatGPT", url: "https://chatgpt.com" },
       { nome: "Abrir Claude", url: "https://claude.ai" },

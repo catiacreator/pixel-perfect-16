@@ -2,7 +2,8 @@ import Layout from "../components/Layout";
 import PilarSidebar from "../components/PilarSidebar";
 import PromptBox from "../components/curso/PromptBox";
 import { Link, useSearchParams } from "@/lib/router-compat";
-import { Sparkles, ArrowRight, ArrowLeft, Check, ExternalLink, Download } from "lucide-react";
+import { Sparkles, ArrowRight, ArrowLeft, Check, ExternalLink, Download, Instagram, GraduationCap, MessageCircle } from "lucide-react";
+import { WHATSAPP_CATIA } from "@/lib/turmas";
 import TarefaCompleta from "../components/TarefaCompleta";
 import EmManutencao from "../components/EmManutencao";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
@@ -281,6 +282,79 @@ function Bonus() {
         <h2 className="font-serif text-2xl mb-2">Agora é contigo.</h2>
         <p className="text-cream/85 max-w-xl mx-auto leading-relaxed">{CURSO_BONUS.fecho}</p>
       </div>
+      <div className="mt-6 flex justify-end">
+        <Link to="/conteudo-ia?aula=final" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-semibold hover:bg-terracotta transition-colors">
+          O teu próximo passo <ArrowRight size={15} />
+        </Link>
+      </div>
+    </section>
+  );
+}
+
+// Capítulo final: convite para o método completo (Leveza no Digital).
+function FinalCTA() {
+  const cursos = [
+    {
+      titulo: "Protocolo Viral",
+      tag: "Mentoria · Instagram",
+      desc: "O método de IA para crescer e vender no Instagram — transforma o teu perfil numa máquina de crescimento.",
+      to: "/protocolo",
+      icon: Instagram,
+      cor: "#C8487E",
+    },
+    {
+      titulo: "Academia de IA",
+      tag: "Ferramentas",
+      desc: "Aulas práticas, ferramenta a ferramenta, para te tornares especialista em Inteligência Artificial.",
+      to: "/metodo/pilar-1/aprenda-ia",
+      icon: GraduationCap,
+      cor: "#2E7CB8",
+    },
+  ];
+  return (
+    <section className="px-5 md:px-10 pt-8 md:pt-10 pb-14 max-w-3xl mx-auto">
+      <Link to="/conteudo-ia" className="inline-flex items-center gap-1.5 text-sm text-ink/55 hover:text-terracotta transition-colors mb-5">
+        <ArrowLeft size={15} /> Início do curso
+      </Link>
+      <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">O teu próximo passo</p>
+      <h1 className="font-serif text-3xl md:text-4xl text-ink mb-3">Continua na Leveza no Digital</h1>
+      <p className="text-[15px] text-ink/70 leading-relaxed mb-8 max-w-2xl">
+        Já tens a equipa de IAs a trabalhar por ti. O próximo passo é o <b className="text-ink">método completo</b> — dentro da Leveza no Digital tens dois caminhos para ires mais longe:
+      </p>
+
+      <div className="grid sm:grid-cols-2 gap-4">
+        {cursos.map((c) => {
+          const Icon = c.icon;
+          return (
+            <Link key={c.to} to={c.to} className="group rounded-2xl border border-border bg-white p-5 hover:border-terracotta hover:-translate-y-0.5 transition-all flex flex-col">
+              <span className="w-11 h-11 rounded-xl flex items-center justify-center mb-3" style={{ backgroundColor: `${c.cor}18`, color: c.cor }}>
+                <Icon size={20} />
+              </span>
+              <p className="text-[10px] tracking-[0.18em] uppercase font-semibold mb-1" style={{ color: c.cor }}>{c.tag}</p>
+              <h3 className="font-serif text-xl text-ink group-hover:text-terracotta transition-colors mb-1.5">{c.titulo}</h3>
+              <p className="text-[13.5px] text-ink/60 leading-relaxed flex-1">{c.desc}</p>
+              <span className="inline-flex items-center gap-1.5 text-[13px] font-semibold mt-3" style={{ color: c.cor }}>
+                Conhecer <ArrowRight size={14} />
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+
+      <div className="mt-8 rounded-3xl bg-gradient-to-br from-terracotta-dark to-terracotta text-cream p-8 text-center">
+        <h2 className="font-serif text-2xl mb-2">Pronta para o próximo nível?</h2>
+        <p className="text-cream/85 max-w-xl mx-auto leading-relaxed mb-5">
+          Fala comigo e escolhe o caminho certo para ti — crescer no Instagram, dominar a IA, ou os dois.
+        </p>
+        <a
+          href={WHATSAPP_CATIA}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#25D366] text-white text-sm font-semibold hover:bg-[#1FB855] transition-colors"
+        >
+          <MessageCircle size={17} /> Falar com a Cátia no WhatsApp
+        </a>
+      </div>
     </section>
   );
 }
@@ -308,7 +382,8 @@ export default function MiniCurso() {
         <EmManutencao modo={modoBloqueio(cid) === "bloqueado" ? "bloqueado" : "em-breve"} />
       </section>
     );
-  } else if (aula === "bonus") conteudo = <Bonus />;
+  } else if (aula === "final") conteudo = <FinalCTA />;
+  else if (aula === "bonus") conteudo = <Bonus />;
   else if (aulaSel) {
     conteudo = (
       <Modulo aula={aulaSel} prev={idx > 0 ? AULAS[idx - 1] : null} next={idx < AULAS.length - 1 ? AULAS[idx + 1] : null} />
