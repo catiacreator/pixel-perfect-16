@@ -52,6 +52,8 @@ function BlocoView({ b }: { b: Bloco }) {
       );
     case "prompt":
       return <PromptBox agente={b.agente} nome={b.nome} texto={b.texto} textoBr={b.textoBr} />;
+    case "video":
+      return <div className="my-4"><VideoArea videoUrl={b.url} titulo={b.titulo ?? "Vídeo"} /></div>;
     case "nota":
       return (
         <div className={`rounded-xl px-4 py-3 my-3 text-[14px] leading-relaxed ${b.v === "warn" ? "bg-amber-50 border-l-4 border-amber-400 text-amber-900" : "bg-ink/5 border-l-4 border-terracotta text-ink/75"}`}>
