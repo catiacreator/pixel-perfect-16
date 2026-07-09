@@ -142,10 +142,17 @@ function SecaoView({ s }: { s: Secao }) {
 }
 
 function VideoArea({ numero, videoUrl, titulo }: { numero: string; videoUrl?: string; titulo: string }) {
+  // Ficheiro de vídeo direto (ex.: .mp4 no Supabase Storage) → player nativo;
+  // caso contrário assume link de embed (YouTube/Vimeo/Tella) → iframe.
+  const isFicheiro = !!videoUrl && /\.(mp4|webm|m4v|mov)(\?|#|$)/i.test(videoUrl);
   return (
     <div className="rounded-2xl overflow-hidden border border-border bg-ink/90 aspect-video flex items-center justify-center text-cream mb-6">
       {videoUrl ? (
-        <iframe src={videoUrl} title={titulo} className="w-full h-full" allowFullScreen />
+        isFicheiro ? (
+          <video src={videoUrl} title={titulo} className="w-full h-full" controls playsInline preload="metadata" />
+        ) : (
+          <iframe src={videoUrl} title={titulo} className="w-full h-full" allowFullScreen />
+        )
       ) : (
         <div className="text-center">
           <PlayCircle size={40} className="mx-auto mb-2 opacity-80" />
@@ -165,7 +172,10 @@ function Intro() {
         </span>
         <h1 className="font-serif text-3xl md:text-5xl text-ink leading-tight mb-3">{CURSO_INTRO.titulo}</h1>
         <p className="text-ink/70 text-lg mb-2">{CURSO_INTRO.subtitulo}</p>
-        <p className="text-[13px] text-ink/50">{CURSO_INTRO.ferramentas} · {CURSO_INTRO.nivel}</p>
+        <p className="text-[13px] text-ink/50 mb-6">{CURSO_INTRO.ferramentas} · {CURSO_INTRO.nivel}</p>
+
+        {/* Vídeo de boas-vindas */}
+        <VideoArea numero="curso" videoUrl={CURSO_INTRO.videoUrl} titulo="Boas-vindas ao curso" />
 
         {/* Secções do método */}
         {CURSO_INTRO.secoes.map((s, i) => (

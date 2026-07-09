@@ -60,6 +60,9 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   "2 · Infográficos, livros e imagens": Palette,
   "3 · Carrosséis c/ info externa": FileText,
   "Agentes Creator": Sparkles,
+  "1 · Criar conteúdo no Claude": AlignLeft,
+  "2 · Carrosséis visuais": LayoutGrid,
+  "3 · Criar artefactos": Monitor,
 };
 
 type SubItem = { label: string; to: string; badge?: string };
@@ -92,7 +95,14 @@ const PILARES: Record<string | number, PilarDef> = {
       { num: 0, label: "Introdução", to: "/conteudo-ia", icon: Compass },
       { num: 1, label: "NotebookLM", to: "/conteudo-ia?aula=m1", icon: Search },
       { num: 2, label: "Grok", to: "/conteudo-ia?aula=m2", icon: Zap },
-      { num: 3, label: "Claude", to: "/conteudo-ia?aula=m3", icon: Sparkles },
+      {
+        num: 3, label: "Claude", to: "/conteudo-ia?aula=m3", icon: Sparkles,
+        children: [
+          { label: "1 · Criar conteúdo no Claude", to: "/conteudo-ia?aula=m3b" },
+          { label: "2 · Carrosséis visuais", to: "/conteudo-ia?aula=m3c" },
+          { label: "3 · Criar artefactos", to: "/conteudo-ia?aula=m3d" },
+        ],
+      },
       {
         num: 4, label: "ChatGPT", to: "/conteudo-ia?aula=m4", icon: Video,
         children: [
