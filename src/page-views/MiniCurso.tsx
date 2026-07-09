@@ -1,6 +1,7 @@
 import Layout from "../components/Layout";
 import PilarSidebar from "../components/PilarSidebar";
 import PromptBox from "../components/curso/PromptBox";
+import VideoArea from "../components/curso/VideoArea";
 import { Link, useSearchParams } from "@/lib/router-compat";
 import { Sparkles, ArrowRight, ArrowLeft, Check, ExternalLink, Download, Instagram, GraduationCap, MessageCircle } from "lucide-react";
 import { WHATSAPP_CATIA } from "@/lib/turmas";
@@ -143,23 +144,6 @@ function SecaoView({ s }: { s: Secao }) {
     <div className="mb-4">
       {s.titulo && <h3 className="text-lg font-semibold text-ink mt-6 mb-2">{s.titulo}</h3>}
       {s.blocos.map((b, i) => <BlocoView key={i} b={b} />)}
-    </div>
-  );
-}
-
-function VideoArea({ videoUrl, titulo }: { videoUrl?: string; titulo: string }) {
-  // Sem vídeo → não mostra nada (sem placeholder "em breve").
-  if (!videoUrl) return null;
-  // Ficheiro de vídeo direto (ex.: .mp4 no Supabase Storage) → player nativo;
-  // caso contrário assume link de embed (YouTube/Vimeo/Tella) → iframe.
-  const isFicheiro = /\.(mp4|webm|m4v|mov)(\?|#|$)/i.test(videoUrl);
-  return (
-    <div className="rounded-2xl overflow-hidden border border-border bg-ink/90 aspect-video flex items-center justify-center text-cream mb-6">
-      {isFicheiro ? (
-        <video src={videoUrl} title={titulo} className="w-full h-full" controls playsInline preload="metadata" />
-      ) : (
-        <iframe src={videoUrl} title={titulo} className="w-full h-full" allowFullScreen />
-      )}
     </div>
   );
 }
