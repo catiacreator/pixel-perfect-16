@@ -1,6 +1,6 @@
 import { Link } from "@/lib/router-compat";
 import { useLocation, useRouter } from "@tanstack/react-router";
-import { FileText, Mail, Map, Bot, Database, Award, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, ChevronDown, Instagram, GraduationCap, Eye } from "lucide-react";
+import { FileText, Mail, Map, Database, Award, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, ChevronDown, Instagram, GraduationCap, Eye } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { initMasterDocSync } from "@/lib/master-doc-sync";
@@ -21,7 +21,6 @@ import { isAdminEmail, type ModuleKey } from "@/lib/access";
 
 const NAV = [
   { to: "/", label: "Início", icon: Map },
-  { to: "/assistente", label: "Robot do Curso", icon: Bot, gated: true },
   { to: "/metodo/pilar-1/aprenda-ia/claude/instalar-skills", label: "Skills", icon: Award },
   { to: "/minha-base", label: "A minha jornada", icon: Database, gated: true },
   { to: "/conquistas", label: "Vitórias", icon: Trophy, gated: true },
