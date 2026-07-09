@@ -2,6 +2,7 @@ import { useState } from "react";
 import Layout from "../components/Layout";
 import PilarSidebar from "../components/PilarSidebar";
 import ContentRenderer from "../components/agentes/ContentRenderer";
+import VideoArea from "../components/curso/VideoArea";
 import { Link, useSearchParams } from "@/lib/router-compat";
 import { Sparkles, ArrowRight, ArrowLeft, ExternalLink } from "lucide-react";
 import { agents, type Agent } from "@/data/agentes-creator";
@@ -27,16 +28,7 @@ function Intro() {
       <p className="text-[13px] text-ink/50 mb-6">{agents.length} agentes · ChatGPT · Nível iniciante</p>
 
       {/* Vídeo da aula */}
-      <div className="rounded-2xl overflow-hidden border border-border bg-ink/90 aspect-video mb-8">
-        <video
-          src="https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/agentes-creator.mp4"
-          title="Agentes Creator"
-          className="w-full h-full"
-          controls
-          playsInline
-          preload="metadata"
-        />
-      </div>
+      <VideoArea videoUrl="https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/agentes-creator.mp4" titulo="Agentes Creator" />
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {agents.map((a) => (
