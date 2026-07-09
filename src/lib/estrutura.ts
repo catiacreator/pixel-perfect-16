@@ -160,7 +160,12 @@ export const ESTRUTURA: Nodo[] = [
     to: "/conteudo-ia",
     filhos: [
       { id: "conteudo-ia.intro", label: "Introdução", tipo: "pagina", to: "/conteudo-ia" },
-      { id: "conteudo-ia.m1", label: "Módulo 1 · NotebookLM", tipo: "pagina", to: "/conteudo-ia?aula=m1" },
+      {
+        id: "conteudo-ia.m1", label: "Módulo 1 · NotebookLM", tipo: "pagina", to: "/conteudo-ia?aula=m1",
+        filhos: [
+          { id: "conteudo-ia.m1b", label: "Apresentações", tipo: "subpagina", to: "/conteudo-ia?aula=m1b" },
+        ],
+      },
       { id: "conteudo-ia.m2", label: "Módulo 2 · Grok", tipo: "pagina", to: "/conteudo-ia?aula=m2" },
       {
         id: "conteudo-ia.m3", label: "Módulo 3 · Claude", tipo: "pagina", to: "/conteudo-ia?aula=m3",

@@ -56,6 +56,7 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   "↳ Carrossel": LayoutGrid,
   "↳ Stories": CircleDot,
   "↳ Reels": Video,
+  "Apresentações": Monitor,
   "1 · Agentes Creator": Sparkles,
   "2 · Carrosséis no ChatGPT": LayoutGrid,
   "3 · Imagens e infográficos": Palette,
@@ -93,7 +94,12 @@ const PILARES: Record<string | number, PilarDef> = {
     enabled: true,
     items: [
       { num: 0, id: "conteudo-ia.intro", label: "Introdução", to: "/conteudo-ia", icon: Compass },
-      { num: 1, id: "conteudo-ia.m1", label: "NotebookLM", to: "/conteudo-ia?aula=m1", icon: Search },
+      {
+        num: 1, id: "conteudo-ia.m1", label: "NotebookLM", to: "/conteudo-ia?aula=m1", icon: Search,
+        children: [
+          { label: "Apresentações", to: "/conteudo-ia?aula=m1b" },
+        ],
+      },
       { num: 2, id: "conteudo-ia.m2", label: "Grok", to: "/conteudo-ia?aula=m2", icon: Zap },
       {
         num: 3, id: "conteudo-ia.m3", label: "Claude", to: "/conteudo-ia?aula=m3", icon: Sparkles,

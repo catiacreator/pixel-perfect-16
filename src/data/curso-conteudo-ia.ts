@@ -566,6 +566,31 @@ Regras:
 // na grelha de módulos nem no prev/next principal.
 export const SUBAULAS: Aula[] = [
   {
+    id: "m1b",
+    numero: "NotebookLM · Apresentações",
+    titulo: "Apresentações",
+    objetivo: "Criar slides de apresentação prontos a usar — capa, tópicos e conclusão — todos com o mesmo estilo visual.",
+    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/apresentacoes.mp4",
+    links: [{ nome: "Abrir ChatGPT", url: "https://chatgpt.com" }],
+    secoes: [
+      {
+        blocos: [
+          { t: "p", texto: "Transforma o teu conteúdo numa **apresentação** completa — capa, slides de conteúdo e conclusão, todos com a mesma identidade visual. Formato 16:9 (1920x1080)." },
+          { t: "prompt", agente: "ChatGPT", nome: "Slides de apresentação", texto: `Cria uma apresentação sobre [TEMA] para [PÚBLICO],
+em [Nº] slides no formato 16:9 (1920x1080).
+Para cada slide: título curto + 3 a 4 tópicos, mesmo
+estilo visual, cores [PALETA], muito espaço em branco.
+Slide 1 = capa; último slide = conclusão + CTA.`, textoBr: `Crie uma apresentação sobre [TEMA] para [PÚBLICO],
+em [Nº] slides no formato 16:9 (1920x1080).
+Para cada slide: título curto + 3 a 4 tópicos, mesmo
+estilo visual, cores [PALETA], muito espaço em branco.
+Slide 1 = capa; último slide = conclusão + CTA.` },
+          { t: "nota", v: "warn", texto: "**Confere o texto:** os slides têm muito texto e os geradores erram acentos. Revê tudo; se falhar, pede de novo ou corrige no Canva, PowerPoint ou Google Slides." },
+        ],
+      },
+    ],
+  },
+  {
     id: "m4b",
     numero: "ChatGPT · Aula 1",
     titulo: "Carrosséis no ChatGPT",
@@ -747,10 +772,10 @@ Sem texto na imagem — o texto eu coloco depois.` },
         ],
       },
       {
-        titulo: "3.2 Infográficos e apresentações",
+        titulo: "3.2 Infográficos e thumbnails",
         blocos: [
-          { t: "p", texto: "Infográfico = o teu método ou um processo **visualizado**. É dos formatos que mais gera guardados, porque a pessoa quer voltar a consultar. E os mesmos prompts servem para montar **slides de apresentação**." },
-          { t: "video", url: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/infograficos.mp4", titulo: "Infográficos e apresentações" },
+          { t: "p", texto: "Infográfico = o teu método ou um processo **visualizado**. É dos formatos que mais gera guardados, porque a pessoa quer voltar a consultar." },
+          { t: "video", url: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/infograficos.mp4", titulo: "Infográficos e thumbnails" },
           { t: "prompt", agente: "ChatGPT", nome: "Infográfico", texto: `Cria um infográfico vertical 1080x1350 sobre [TEMA].
 Conteúdo (por esta ordem):
 [LISTA OS 3 A 5 PASSOS OU DADOS]
@@ -762,16 +787,7 @@ Conteúdo (nesta ordem):
 Estilo: limpo, fundo claro, cores [PALETA], títulos grandes,
 ícones simples, numeração visível. Texto em português correto
 e legível no celular. Deixe espaço no rodapé para o meu @.` },
-          { t: "prompt", agente: "ChatGPT", nome: "Slides de apresentação", texto: `Cria uma apresentação sobre [TEMA] para [PÚBLICO],
-em [Nº] slides no formato 16:9 (1920x1080).
-Para cada slide: título curto + 3 a 4 tópicos, mesmo
-estilo visual, cores [PALETA], muito espaço em branco.
-Slide 1 = capa; último slide = conclusão + CTA.`, textoBr: `Crie uma apresentação sobre [TEMA] para [PÚBLICO],
-em [Nº] slides no formato 16:9 (1920x1080).
-Para cada slide: título curto + 3 a 4 tópicos, mesmo
-estilo visual, cores [PALETA], muito espaço em branco.
-Slide 1 = capa; último slide = conclusão + CTA.` },
-          { t: "nota", v: "warn", texto: "**Confere números e letras:** infográficos e slides têm muito texto e os geradores erram acentos. Revê tudo; se falhar, pede de novo ou corrige por cima no Canva." },
+          { t: "nota", v: "warn", texto: "**Confere números e letras:** infográficos têm muito texto e os geradores erram acentos. Revê tudo; se falhar, pede de novo ou corrige por cima no Canva." },
           { t: "nota", v: "warn", texto: "**Exercício:** cria 1 imagem fotográfica para um post e 1 infográfico com os passos do teu método. Um de cada tipo." },
         ],
       },
