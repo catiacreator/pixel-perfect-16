@@ -12,7 +12,8 @@ export type Bloco =
   | { t: "funil"; niveis: { titulo: string; desc: string }[] }
   | { t: "downloads"; itens: { nome: string; desc?: string; url: string }[] } // botões de descarregar ficheiros
   | { t: "aulas"; itens: { titulo: string; desc: string; aula: string }[] } // cartões-link para sub-aulas (?aula=id)
-  | { t: "video"; url: string; titulo?: string }; // vídeo inline (.mp4 direto ou embed)
+  | { t: "video"; url: string; titulo?: string } // vídeo inline (.mp4 direto ou embed)
+  | { t: "slides"; base: string; count: number; alt?: string }; // galeria de slides (base/slide-01.webp…)
 
 export type Secao = { label?: string; titulo?: string; blocos: Bloco[] };
 export type Aula = {
@@ -593,6 +594,16 @@ export const SUBAULAS: Aula[] = [
       {
         blocos: [
           { t: "nota", v: "info", texto: "**Aula 1 do capítulo ChatGPT.** Aqui partes de um **tema** e fazes tudo numa só conversa. Se já tens matéria-prima de outras ferramentas (texto, documento, Grok, NotebookLM ou Claude), usa a **Aula 3 · Carrosséis com informação externa**." },
+        ],
+      },
+      {
+        titulo: "Apresentação · Carousel Magic",
+        blocos: [
+          { t: "p", texto: "Passa os slides ao teu ritmo (setas ou pontos). Clica em expandir para veres em grande." },
+          { t: "slides", base: "/carrossel-magic/", count: 15, alt: "Carousel Magic" },
+          { t: "downloads", itens: [
+            { nome: "Descarregar a apresentação", desc: "Carousel Magic · PowerPoint (.pptx)", url: "/carrossel-magic/Carousel_Magic.pptx" },
+          ] },
         ],
       },
       {

@@ -3,7 +3,8 @@ import PilarSidebar from "../components/PilarSidebar";
 import PromptBox from "../components/curso/PromptBox";
 import VideoArea from "../components/curso/VideoArea";
 import { Link, useSearchParams } from "@/lib/router-compat";
-import { Sparkles, ArrowRight, ArrowLeft, Check, ExternalLink, Download, Instagram, GraduationCap, MessageCircle } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Sparkles, ArrowRight, ArrowLeft, Check, ExternalLink, Download, Instagram, GraduationCap, MessageCircle, ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
 import { WHATSAPP_CATIA } from "@/lib/turmas";
 import TarefaCompleta from "../components/TarefaCompleta";
 import EmManutencao from "../components/EmManutencao";
@@ -22,6 +23,64 @@ function Bold({ texto }: { texto: string }) {
         /^\*\*[^*]+\*\*$/.test(p) ? <b key={i} className="text-ink">{p.slice(2, -2)}</b> : <span key={i}>{p}</span>,
       )}
     </>
+  );
+}
+
+// Galeria de slides (uma apresentação): imagens base/slide-01.webp … com
+// anterior/próximo, pontos, e um botão para expandir num overlay maior.
+function Slideshow({ base, count, alt }: { base: string; count: number; alt?: string }) {
+  const [i, setI] = useState(0);
+  const [zoom, setZoom] = useState(false);
+  const prev = () => setI((v) => (v - 1 + count) % count);
+  const next = () => setI((v) => (v + 1) % count);
+  const src = (k: number) => `${base}slide-${String(k + 1).padStart(2, "0")}.webp`;
+
+  useEffect(() => {
+    if (!zoom) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setZoom(false);
+      else if (e.key === "ArrowLeft") prev();
+      else if (e.key === "ArrowRight") next();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [zoom]);
+
+  const viewer = (big: boolean) => (
+    <div className={`relative aspect-video bg-ink overflow-hidden ${big ? "w-[92vw] md:w-[85vw] max-w-[1500px] rounded-2xl" : "w-full rounded-2xl border border-border"}`}>
+      <img src={src(i)} alt={`${alt ?? "Slide"} ${i + 1}`} className="w-full h-full object-contain" />
+      <button onClick={prev} aria-label="Slide anterior" className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-colors">
+        <ChevronLeft size={18} />
+      </button>
+      <button onClick={next} aria-label="Slide seguinte" className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-black/50 text-white flex items-center justify-center hover:bg-black/70 transition-colors">
+        <ChevronRight size={18} />
+      </button>
+      {!big && (
+        <button onClick={() => setZoom(true)} aria-label="Expandir apresentação" className="absolute top-2.5 right-2.5 w-8 h-8 rounded-lg bg-black/55 text-white flex items-center justify-center hover:bg-black/75 transition-colors">
+          <Expand size={15} />
+        </button>
+      )}
+      <div className="absolute bottom-0 left-0 right-0 flex flex-wrap items-center justify-center gap-1.5 py-2.5 px-3 bg-gradient-to-t from-black/55 to-transparent">
+        {Array.from({ length: count }).map((_, k) => (
+          <button key={k} onClick={() => setI(k)} aria-label={`Ir para o slide ${k + 1}`} className={`h-1.5 rounded-full transition-all ${k === i ? "w-4 bg-white" : "w-1.5 bg-white/50 hover:bg-white/80"}`} />
+        ))}
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="my-5">
+      {viewer(false)}
+      <p className="text-center text-[12px] text-ink/45 mt-2">Slide {i + 1} de {count}</p>
+      {zoom && (
+        <div className="fixed inset-0 z-[90] bg-black/85 flex items-center justify-center p-4" onClick={() => setZoom(false)}>
+          <button onClick={() => setZoom(false)} aria-label="Fechar" className="absolute top-4 right-4 w-10 h-10 rounded-full border border-white/30 text-white flex items-center justify-center hover:bg-white/10 transition-colors">
+            <X size={18} />
+          </button>
+          <div onClick={(e) => e.stopPropagation()}>{viewer(true)}</div>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -56,6 +115,8 @@ function BlocoView({ b }: { b: Bloco }) {
       return <PromptBox agente={b.agente} nome={b.nome} texto={b.texto} textoBr={b.textoBr} />;
     case "video":
       return <div className="my-4"><VideoArea videoUrl={b.url} titulo={b.titulo ?? "Vídeo"} /></div>;
+    case "slides":
+      return <Slideshow base={b.base} count={b.count} alt={b.alt} />;
     case "nota":
       return (
         <div className={`rounded-xl px-4 py-3 my-3 text-[14px] leading-relaxed ${b.v === "warn" ? "bg-amber-50 border-l-4 border-amber-400 text-amber-900" : "bg-ink/5 border-l-4 border-terracotta text-ink/75"}`}>
