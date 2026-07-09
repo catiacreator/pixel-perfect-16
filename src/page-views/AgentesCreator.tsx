@@ -28,7 +28,7 @@ function Intro() {
       <p className="text-[13px] text-ink/50 mb-6">{agents.length} agentes · ChatGPT · Nível iniciante</p>
 
       {/* Vídeo da aula */}
-      <VideoArea videoUrl="https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/agentes-creator.mp4" titulo="Agentes Creator" />
+      <VideoArea videoUrl="https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/agentes-creator.mp4?v=3" titulo="Agentes Creator" />
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {agents.map((a) => (
