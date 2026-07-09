@@ -2,7 +2,7 @@ import Layout from "../components/Layout";
 import PilarSidebar from "../components/PilarSidebar";
 import PromptBox from "../components/curso/PromptBox";
 import { Link, useSearchParams } from "@/lib/router-compat";
-import { Sparkles, ArrowRight, ArrowLeft, PlayCircle, Check, ExternalLink, Download } from "lucide-react";
+import { Sparkles, ArrowRight, ArrowLeft, Check, ExternalLink, Download } from "lucide-react";
 import TarefaCompleta from "../components/TarefaCompleta";
 import EmManutencao from "../components/EmManutencao";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
@@ -144,23 +144,18 @@ function SecaoView({ s }: { s: Secao }) {
   );
 }
 
-function VideoArea({ numero, videoUrl, titulo }: { numero: string; videoUrl?: string; titulo: string }) {
+function VideoArea({ videoUrl, titulo }: { videoUrl?: string; titulo: string }) {
+  // Sem vídeo → não mostra nada (sem placeholder "em breve").
+  if (!videoUrl) return null;
   // Ficheiro de vídeo direto (ex.: .mp4 no Supabase Storage) → player nativo;
   // caso contrário assume link de embed (YouTube/Vimeo/Tella) → iframe.
-  const isFicheiro = !!videoUrl && /\.(mp4|webm|m4v|mov)(\?|#|$)/i.test(videoUrl);
+  const isFicheiro = /\.(mp4|webm|m4v|mov)(\?|#|$)/i.test(videoUrl);
   return (
     <div className="rounded-2xl overflow-hidden border border-border bg-ink/90 aspect-video flex items-center justify-center text-cream mb-6">
-      {videoUrl ? (
-        isFicheiro ? (
-          <video src={videoUrl} title={titulo} className="w-full h-full" controls playsInline preload="metadata" />
-        ) : (
-          <iframe src={videoUrl} title={titulo} className="w-full h-full" allowFullScreen />
-        )
+      {isFicheiro ? (
+        <video src={videoUrl} title={titulo} className="w-full h-full" controls playsInline preload="metadata" />
       ) : (
-        <div className="text-center">
-          <PlayCircle size={40} className="mx-auto mb-2 opacity-80" />
-          <p className="text-sm opacity-80">Vídeo do {numero} — em breve</p>
-        </div>
+        <iframe src={videoUrl} title={titulo} className="w-full h-full" allowFullScreen />
       )}
     </div>
   );
@@ -178,7 +173,7 @@ function Intro() {
         <p className="text-[13px] text-ink/50 mb-6">{CURSO_INTRO.ferramentas} · {CURSO_INTRO.nivel}</p>
 
         {/* Vídeo de boas-vindas */}
-        <VideoArea numero="curso" videoUrl={CURSO_INTRO.videoUrl} titulo="Boas-vindas ao curso" />
+        <VideoArea videoUrl={CURSO_INTRO.videoUrl} titulo="Boas-vindas ao curso" />
 
         {/* Secções do método */}
         {CURSO_INTRO.secoes.map((s, i) => (
@@ -220,7 +215,7 @@ function Modulo({ aula, prev, next }: { aula: Aula; prev: Aula | null; next: Aul
       <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">{aula.numero}</p>
       <h1 className="font-serif text-3xl md:text-4xl text-ink mb-3">{aula.titulo}</h1>
 
-      <VideoArea numero={aula.numero} videoUrl={aula.videoUrl} titulo={aula.titulo} />
+      <VideoArea videoUrl={aula.videoUrl} titulo={aula.titulo} />
 
       {aula.objetivo && (
         <div className="rounded-r-xl border-l-4 border-terracotta bg-terracotta/8 px-4 py-3 mb-4 text-[15px] text-ink/75">
