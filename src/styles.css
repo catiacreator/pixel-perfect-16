@@ -289,6 +289,10 @@ select:focus {
   --color-gold: #A78BE8;
 }
 
+/* Vídeos do curso: esconde o botão de ecrã inteiro nativo (Safari + Chrome).
+   Usamos o botão "expandir" próprio, que abre a 80% sem perder nitidez. */
+.curso-video::-webkit-media-controls-fullscreen-button { display: none !important; }
+
 /* Glassmorphism — vidro fosco reutilizável */
 .glass {
   background: rgba(255, 255, 255, 0.5);

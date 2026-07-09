@@ -43,7 +43,7 @@ function VideoFicheiro({ videoUrl, titulo }: { videoUrl: string; titulo: string 
           ref={inline}
           src={videoUrl}
           title={titulo}
-          className="w-full h-full"
+          className="w-full h-full curso-video"
           controls
           controlsList="nofullscreen noremoteplayback"
           disablePictureInPicture
@@ -80,7 +80,7 @@ function VideoFicheiro({ videoUrl, titulo }: { videoUrl: string; titulo: string 
               ref={modal}
               src={videoUrl}
               title={titulo}
-              className="w-full h-full rounded-xl bg-black"
+              className="w-full h-full rounded-xl bg-black curso-video"
               controls
               controlsList="nofullscreen noremoteplayback"
               disablePictureInPicture
