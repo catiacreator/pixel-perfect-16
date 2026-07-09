@@ -569,6 +569,7 @@ export const SUBAULAS: Aula[] = [
     numero: "ChatGPT · Aula 1",
     titulo: "Carrosséis no ChatGPT",
     objetivo: "Criar um carrossel completo dentro do ChatGPT — da estrutura ao texto final, design, legenda e montagem — a partir de um tema teu.",
+    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/carrosseis-chatgpt.mp4",
     links: [{ nome: "Abrir ChatGPT", url: "https://chatgpt.com" }],
     secoes: [
       {

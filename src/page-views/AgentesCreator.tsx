@@ -24,7 +24,19 @@ function Intro() {
       <p className="text-ink/70 text-lg mb-2 max-w-2xl">
         Explora os agentes que criei, aprende como funcionam e começa a usá-los. Clica num agente para ver a aula e aceder ao link.
       </p>
-      <p className="text-[13px] text-ink/50 mb-8">{agents.length} agentes · ChatGPT · Nível iniciante</p>
+      <p className="text-[13px] text-ink/50 mb-6">{agents.length} agentes · ChatGPT · Nível iniciante</p>
+
+      {/* Vídeo da aula */}
+      <div className="rounded-2xl overflow-hidden border border-border bg-ink/90 aspect-video mb-8">
+        <video
+          src="https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/agentes-creator.mp4"
+          title="Agentes Creator"
+          className="w-full h-full"
+          controls
+          playsInline
+          preload="metadata"
+        />
+      </div>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {agents.map((a) => (
