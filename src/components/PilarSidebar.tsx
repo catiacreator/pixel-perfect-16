@@ -92,11 +92,11 @@ const PILARES: Record<string | number, PilarDef> = {
     title: "Curso · Conteúdo com IA",
     enabled: true,
     items: [
-      { num: 0, label: "Introdução", to: "/conteudo-ia", icon: Compass },
-      { num: 1, label: "NotebookLM", to: "/conteudo-ia?aula=m1", icon: Search },
-      { num: 2, label: "Grok", to: "/conteudo-ia?aula=m2", icon: Zap },
+      { num: 0, id: "conteudo-ia.intro", label: "Introdução", to: "/conteudo-ia", icon: Compass },
+      { num: 1, id: "conteudo-ia.m1", label: "NotebookLM", to: "/conteudo-ia?aula=m1", icon: Search },
+      { num: 2, id: "conteudo-ia.m2", label: "Grok", to: "/conteudo-ia?aula=m2", icon: Zap },
       {
-        num: 3, label: "Claude", to: "/conteudo-ia?aula=m3", icon: Sparkles,
+        num: 3, id: "conteudo-ia.m3", label: "Claude", to: "/conteudo-ia?aula=m3", icon: Sparkles,
         children: [
           { label: "1 · Criar conteúdo no Claude", to: "/conteudo-ia?aula=m3b" },
           { label: "2 · Carrosséis visuais", to: "/conteudo-ia?aula=m3c" },
@@ -104,7 +104,7 @@ const PILARES: Record<string | number, PilarDef> = {
         ],
       },
       {
-        num: 4, label: "ChatGPT", to: "/conteudo-ia?aula=m4", icon: Video,
+        num: 4, id: "conteudo-ia.m4", label: "ChatGPT", to: "/conteudo-ia?aula=m4", icon: Video,
         children: [
           { label: "1 · Carrosséis no ChatGPT", to: "/conteudo-ia?aula=m4b" },
           { label: "2 · Infográficos, livros e imagens", to: "/conteudo-ia?aula=m4c" },
@@ -112,9 +112,9 @@ const PILARES: Record<string | number, PilarDef> = {
           { label: "Agentes Creator", to: "/agentes-creator", badge: "Bónus" },
         ],
       },
-      { num: 5, label: "Fluxo + projeto final", to: "/conteudo-ia?aula=m5", icon: Wrench },
-      { num: 6, label: "Automação", to: "/conteudo-ia?aula=m6", icon: CalendarClock, badge: "Bónus" },
-      { num: 7, label: "Banco de prompts", to: "/conteudo-ia?aula=bonus", icon: Book },
+      { num: 5, id: "conteudo-ia.m5", label: "Fluxo + projeto final", to: "/conteudo-ia?aula=m5", icon: Wrench },
+      { num: 6, id: "conteudo-ia.m6", label: "Automação", to: "/conteudo-ia?aula=m6", icon: CalendarClock, badge: "Bónus" },
+      { num: 7, id: "conteudo-ia.bonus", label: "Banco de prompts", to: "/conteudo-ia?aula=bonus", icon: Book },
     ],
   },
   academia: {
@@ -247,7 +247,10 @@ const PILAR_SHORT: Record<number, string> = {
 function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: () => void }) {
   const def = PILARES[pilar];
   const bloqueadoParaAlunos = useBloqueadoParaAlunos();
-  const { isBloqueado } = useBloqueios();
+  const { isBloqueado, isBloqueadoRaw, modoBloqueio } = useBloqueios();
+  // No mini-curso os capítulos seguem diretamente a lista do painel (isBloqueadoRaw),
+  // igual à página — funciona com o "Geral" desligado e sem depender de turmas.
+  const capituloBloqueado = (id?: string) => !!id && (def.pilar === "conteudo-ia" ? isBloqueadoRaw(id) : isBloqueado(id));
   const location = useLocation();
   const pathname = location.pathname;
   // location.search can be an object in TanStack Router
@@ -309,7 +312,11 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
         <ul className="space-y-1">
           {def.items.map((item) => {
             const Icon = item.icon;
-            const locked = !!item.id && isBloqueado(item.id) && bloqueadoParaAlunos;
+            // "Oculto" no mini-curso → item nem aparece na sidebar (para os alunos).
+            if (bloqueadoParaAlunos && def.pilar === "conteudo-ia" && item.id && isBloqueadoRaw(item.id) && modoBloqueio(item.id) === "oculto") {
+              return null;
+            }
+            const locked = capituloBloqueado(item.id) && bloqueadoParaAlunos;
 
             // Item bloqueado para alunos — mostra "Em breve", sem link nem submenu.
             if (locked) {
@@ -331,7 +338,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
             }
 
             // Em vista admin, sinaliza (sem bloquear) o que está "Em breve" p/ alunos.
-            const emBreveAlunos = !bloqueadoParaAlunos && !!item.id && isBloqueado(item.id);
+            const emBreveAlunos = !bloqueadoParaAlunos && capituloBloqueado(item.id);
             const active = isActive(item.to);
             const hasChildren = !!item.children?.length;
             // Abre se for o pai ativo OU se uma filha for a página atual (reativo à rota).

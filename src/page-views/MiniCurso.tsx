@@ -4,6 +4,9 @@ import PromptBox from "../components/curso/PromptBox";
 import { Link, useSearchParams } from "@/lib/router-compat";
 import { Sparkles, ArrowRight, ArrowLeft, PlayCircle, Check, ExternalLink, Download } from "lucide-react";
 import TarefaCompleta from "../components/TarefaCompleta";
+import EmManutencao from "../components/EmManutencao";
+import { useBloqueadoParaAlunos } from "@/lib/admin-view";
+import { useBloqueios } from "@/lib/bloqueios";
 import { CURSO_INTRO, AULAS, SUBAULAS, CURSO_BONUS, type Aula, type Bloco, type Secao } from "@/data/curso-conteudo-ia";
 
 // Curso "Conteúdo com IA" — cada módulo na sua página (via ?aula=mX).
@@ -292,8 +295,23 @@ export default function MiniCurso() {
   const aulaSel = idx >= 0 ? AULAS[idx] : null;
   const subSel = SUBAULAS.find((a) => a.id === aula) ?? null;
 
+  // Cada capítulo pode ser marcado "Em breve/Bloqueado" no painel (Estrutura).
+  // Segue diretamente a lista do painel (isBloqueadoRaw) para funcionar mesmo com
+  // o "Geral" desligado e sem depender das turmas. Admin (vista admin) vê tudo.
+  const bloqueadoParaAlunos = useBloqueadoParaAlunos();
+  const { isBloqueadoRaw, modoBloqueio } = useBloqueios();
+  const cid = "conteudo-ia." + (aula || "intro");
+  const paiCid = aula && /[a-z]$/.test(aula) ? "conteudo-ia." + aula.replace(/[a-z]$/, "") : null; // m4b → conteudo-ia.m4
+  const capBloqueado = bloqueadoParaAlunos && (isBloqueadoRaw(cid) || (!!paiCid && isBloqueadoRaw(paiCid)));
+
   let conteudo: React.ReactNode;
-  if (aula === "bonus") conteudo = <Bonus />;
+  if (capBloqueado) {
+    conteudo = (
+      <section className="px-5 md:px-10 pt-8 pb-14 max-w-3xl mx-auto">
+        <EmManutencao modo={modoBloqueio(cid) === "bloqueado" ? "bloqueado" : "em-breve"} />
+      </section>
+    );
+  } else if (aula === "bonus") conteudo = <Bonus />;
   else if (aulaSel) {
     conteudo = (
       <Modulo aula={aulaSel} prev={idx > 0 ? AULAS[idx - 1] : null} next={idx < AULAS.length - 1 ? AULAS[idx + 1] : null} />

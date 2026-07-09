@@ -159,7 +159,28 @@ export const ESTRUTURA: Nodo[] = [
     tipo: "modulo",
     to: "/conteudo-ia",
     filhos: [
-      { id: "conteudo-ia.aulas", label: "Mini-curso — aulas grátis", tipo: "pagina", to: "/conteudo-ia" },
+      { id: "conteudo-ia.intro", label: "Introdução", tipo: "pagina", to: "/conteudo-ia" },
+      { id: "conteudo-ia.m1", label: "Módulo 1 · NotebookLM", tipo: "pagina", to: "/conteudo-ia?aula=m1" },
+      { id: "conteudo-ia.m2", label: "Módulo 2 · Grok", tipo: "pagina", to: "/conteudo-ia?aula=m2" },
+      {
+        id: "conteudo-ia.m3", label: "Módulo 3 · Claude", tipo: "pagina", to: "/conteudo-ia?aula=m3",
+        filhos: [
+          { id: "conteudo-ia.m3b", label: "Criar conteúdo no Claude", tipo: "subpagina", to: "/conteudo-ia?aula=m3b" },
+          { id: "conteudo-ia.m3c", label: "Carrosséis visuais", tipo: "subpagina", to: "/conteudo-ia?aula=m3c" },
+          { id: "conteudo-ia.m3d", label: "Criar artefactos", tipo: "subpagina", to: "/conteudo-ia?aula=m3d" },
+        ],
+      },
+      {
+        id: "conteudo-ia.m4", label: "Módulo 4 · ChatGPT", tipo: "pagina", to: "/conteudo-ia?aula=m4",
+        filhos: [
+          { id: "conteudo-ia.m4b", label: "Carrosséis no ChatGPT", tipo: "subpagina", to: "/conteudo-ia?aula=m4b" },
+          { id: "conteudo-ia.m4c", label: "Infográficos, livros e imagens", tipo: "subpagina", to: "/conteudo-ia?aula=m4c" },
+          { id: "conteudo-ia.m4d", label: "Carrosséis c/ info externa", tipo: "subpagina", to: "/conteudo-ia?aula=m4d" },
+        ],
+      },
+      { id: "conteudo-ia.m5", label: "Módulo 5 · Fluxo + projeto final", tipo: "pagina", to: "/conteudo-ia?aula=m5" },
+      { id: "conteudo-ia.m6", label: "Automação (Bónus)", tipo: "pagina", to: "/conteudo-ia?aula=m6" },
+      { id: "conteudo-ia.bonus", label: "Banco de prompts", tipo: "pagina", to: "/conteudo-ia?aula=bonus" },
     ],
   },
   {
