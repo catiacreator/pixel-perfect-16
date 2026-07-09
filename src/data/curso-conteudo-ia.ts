@@ -11,7 +11,8 @@ export type Bloco =
   | { t: "tabela"; cab: string[]; linhas: string[][] }
   | { t: "funil"; niveis: { titulo: string; desc: string }[] }
   | { t: "downloads"; itens: { nome: string; desc?: string; url: string }[] } // botões de descarregar ficheiros
-  | { t: "aulas"; itens: { titulo: string; desc: string; aula: string }[] }; // cartões-link para sub-aulas (?aula=id)
+  | { t: "aulas"; itens: { titulo: string; desc: string; aula: string }[] } // cartões-link para sub-aulas (?aula=id)
+  | { t: "video"; url: string; titulo?: string }; // vídeo inline (.mp4 direto ou embed)
 
 export type Secao = { label?: string; titulo?: string; blocos: Bloco[] };
 export type Aula = {
@@ -26,6 +27,8 @@ export type Aula = {
 };
 
 export const CURSO_INTRO = {
+  // URL do vídeo de boas-vindas: aceita embed (YouTube/Vimeo/Tella) ou ficheiro .mp4 direto
+  videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/intro.mp4?v=2",
   titulo: "Criação de Conteúdo com Inteligência Artificial",
   subtitulo: "A tua equipa de 4 IAs para viralizar e vender no Instagram. Cada ferramenta faz uma parte do trabalho pesado — tu ficas com a direção criativa e a tua voz.",
   ferramentas: "NotebookLM · pesquisa · Grok · tendências · Claude · roteiros · ChatGPT · arte",
@@ -80,6 +83,7 @@ export const AULAS: Aula[] = [
     numero: "Módulo 1",
     titulo: "NotebookLM: inteligência do teu nicho",
     objetivo: "Transformar vídeos virais, PDFs e referências do teu nicho num “cérebro” que revela o que faz o público parar de rolar o feed.",
+    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/notebooklm.mp4",
     links: [{ nome: "Abrir NotebookLM", url: "https://notebooklm.google.com" }],
     secoes: [
       {
@@ -191,6 +195,7 @@ quente para a mais fria e cite as fontes.` },
     numero: "Módulo 2",
     titulo: "Grok: surfando as tendências em tempo real",
     objetivo: "Descobrir o que o público fala e sente AGORA para criar conteúdo em cima de assuntos quentes antes de toda a gente.",
+    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/grok.mp4",
     links: [{ nome: "Abrir Grok", url: "https://grok.com" }],
     secoes: [
       {
@@ -283,166 +288,25 @@ Com base nisso:
   {
     id: "m3",
     numero: "Módulo 3",
-    titulo: "Claude: o roteirista da tua marca",
-    objetivo: "Transformar temas em ganchos, roteiros de Reels, carrosséis e legendas que soam como TU — não como um robô.",
+    titulo: "Criar conteúdo com o Claude",
+    objetivo: "Dominar o Claude como o teu estúdio criativo: escrita na tua voz, carrosséis visuais prontos a exportar e peças interativas partilháveis por link.",
     links: [{ nome: "Abrir Claude", url: "https://claude.ai" }],
     secoes: [
       {
+        titulo: "3.1 Porque o Claude",
         blocos: [
-          { t: "nota", v: "info", texto: "**Como usar este módulo (importante):** os prompts NÃO são para escolher um. São uma **sequência**, na mesma conversa do Claude: **Passo 1** prepara a voz (uma vez só) → **Passo 2** gera os ganchos (escolhes o melhor) → **Passo 3** escreve o roteiro/carrossel → **Passo 4** fecha com a legenda. É como uma receita: um passo puxa o outro." },
+          { t: "p", texto: "Escreve textos naturais, com nuance, e segue instruções longas muito bem. Usa os **Projetos** para guardar as instruções fixas da tua marca — toda a conversa já sai com a tua cara. E com os **artefactos**, não fica pelo texto: desenha carrosséis visuais e cria peças interativas." },
         ],
       },
       {
-        titulo: "3.1 Porque o Claude para escrever",
+        titulo: "3.2 As três aulas deste capítulo",
         blocos: [
-          { t: "p", texto: "Escreve textos naturais, com nuance, e segue instruções longas muito bem. Usa os **Projetos** para guardar as instruções fixas da tua marca — aí toda a conversa já sai com a tua cara, sem reexplicar nada." },
-        ],
-      },
-      {
-        blocos: [
-          { t: "sub", titulo: "Passo 1 · Ensina a tua voz (faz uma vez, no Projeto)" },
-          { t: "prompt", agente: "Claude", nome: "Configurar a voz da marca", texto: `Vais ser o meu roteirista e copywriter de Instagram.
-Contexto da minha marca:
-- Nicho: [O TEU NICHO]
-- O meu público e as 5 dores dele: [LISTA as dores]
-- O meu tom de voz: [ex.: leve, direto, acolhedor]
-- Palavras que uso / que NUNCA uso: [lista]
-- A minha oferta e objetivo: [ex.: vender mentoria]
-Regras: escreve como ESPECIALISTA (nunca "hoje vou dar dicas"),
-frases curtas, português de Portugal. NUNCA uses "fórmula mágica",
-"segredo revelado" ou "guia definitivo". Confirma que entendeste.`, textoBr: `Você é o meu roteirista e copywriter de Instagram.
-Contexto da minha marca:
-- Nicho: [SEU NICHO]
-- Meu público e as 5 dores dele: [LISTE as dores]
-- Meu tom de voz: [ex.: leve, direto, acolhedor]
-- Palavras que eu uso / que eu NUNCA uso: [liste]
-- Minha oferta e objetivo: [ex.: vender mentoria]
-Regras: escreva como ESPECIALISTA (nunca "hoje vou dar dicas"),
-frases curtas, português do Brasil. NUNCA use "fórmula mágica",
-"segredo revelado" ou "guia definitivo". Confirme que entendeu.` },
-        ],
-      },
-      {
-        blocos: [
-          { t: "sub", titulo: "Passo 2 · Ganchos: os 3 segundos que decidem tudo" },
-          { t: "p", texto: "A atenção é ganha ou perdida nos 3 primeiros segundos. Existem 4 tipos de gancho que funcionam — pede os quatro e escolhe o melhor:" },
-          { t: "ul", itens: [
-            "**Quebra de expectativa** — contradiz o senso comum (“O problema pode ser tu — mas não como pensas”).",
-            "**Dor silenciosa** — o que ele sente mas nunca disse (“Parece que falas com a parede no Instagram?”).",
-            "**Curiosidade/polémica** — pega boleia num assunto do momento com a tua ótica.",
-            "**Promessa de recompensa** — “Como eu fiz X em Y tempo” ou “O erro que destrói a tua conta”.",
+          { t: "aulas", itens: [
+            { titulo: "1 · Criar conteúdo no Claude", desc: "A voz da marca, ganchos, roteiros de Reels, carrosséis e legendas — o fluxo completo de escrita.", aula: "m3b" },
+            { titulo: "2 · Carrosséis visuais no Claude", desc: "O Claude desenha os slides prontos a exportar (1080x1350), com a tua marca — sem gerador de imagens.", aula: "m3c" },
+            { titulo: "3 · Criar artefactos no Claude", desc: "Quizzes, checklists e mini-páginas interativas — criadas na conversa e partilhadas por link.", aula: "m3d" },
           ] },
-          { t: "prompt", agente: "Claude", nome: "Fábrica de ganchos", texto: `Tema: [TEMA]. Usa as dores do meu perfil.
-Dá-me 15 ganchos para Reels, no estilo ESPECIALISTA
-(abrir uma lacuna ou tocar numa dor específica, nunca anunciar
-o tema). Mistura os 4 tipos: quebra de expectativa,
-dor silenciosa, curiosidade/polémica e promessa de recompensa.
-Frases curtas, impacto imediato.`, textoBr: `Tema: [TEMA]. Use as dores do meu perfil.
-Me dê 15 ganchos para Reels, no estilo ESPECIALISTA
-(abrir lacuna ou tocar uma dor específica, nunca anunciar
-o tema). Misture os 4 tipos: quebra de expectativa,
-dor silenciosa, curiosidade/polêmica e promessa de recompensa.
-Frases curtas, impacto imediato.` },
-        ],
-      },
-      {
-        blocos: [
-          { t: "sub", titulo: "Passo 3 · Escreve o conteúdo (Reel ou carrossel)" },
-          { t: "p", texto: "**Dica de ouro:** antes de pedires o roteiro, cola na conversa os padrões do NotebookLM (M1) e as dores do Grok (M2). O roteiro nasce de dados reais." },
-          { t: "prompt", agente: "Claude", nome: "Roteiro de Reels (atração)", texto: `Cria um guião de Reels de até 45 segundos sobre [TEMA].
-Usa este gancho: [COLA O GANCHO ESCOLHIDO].
-Estrutura: gancho -> problema -> viragem/solução -> prova -> CTA.
-Formato de entrega, bloco a bloco:
-- FALA: o que eu digo (frases curtas, à minha maneira)
-- ECRÃ: o texto que aparece escrito no ecrã
-- CENA: sugestão do que gravar
-No fim, 3 ganchos alternativos + 3 CTAs (seguir, guardar, Direct).`, textoBr: `Crie um roteiro de Reels de até 45 segundos sobre [TEMA].
-Use este gancho: [COLE O GANCHO ESCOLHIDO].
-Estrutura: gancho -> problema -> virada/solução -> prova -> CTA.
-Formato de entrega, bloco a bloco:
-- FALA: o que eu digo (frases curtas, do meu jeito)
-- TELA: o texto que aparece escrito na tela
-- CENA: sugestão do que gravar
-No fim, 3 ganchos alternativos + 3 CTAs (seguir, salvar, Direct).` },
-          { t: "prompt", agente: "Claude", nome: "Carrossel (autoridade · gera salvamentos)", texto: `Cria um carrossel de 7 slides sobre [TEMA] (formato
-checklist ou passo a passo, para gerar salvamentos).
-- Slide 1: capa = gancho forte (faz parar de rolar)
-- Slides 2 a 6: uma ideia por slide, texto curto e escaneável
-- Slide 7: CTA + convite para guardar/partilhar
-Para cada slide: TÍTULO, texto e sugestão de imagem/visual.`, textoBr: `Crie um carrossel de 7 slides sobre [TEMA] (formato
-checklist ou passo a passo, para gerar salvamentos).
-- Slide 1: capa = gancho forte (faz parar de rolar)
-- Slides 2 a 6: uma ideia por slide, texto curto e escaneável
-- Slide 7: CTA + convite para salvar/compartilhar
-Para cada slide: TÍTULO, texto e sugestão de imagem/visual.` },
-        ],
-      },
-      {
-        blocos: [
-          { t: "sub", titulo: "Passo 4 · Legenda que converte (método PAS)" },
-          { t: "p", texto: "PAS = **Problema** (espelha a dor: “sei o que passas”) → **Agitação** (o custo de não resolver, com lógica) → **Solução** (a lógica do teu método, não “compra de mim”)." },
-          { t: "prompt", agente: "Claude", nome: "Legenda PAS", texto: `Escreve a legenda deste conteúdo:
-
-[COLA AQUI O GUIÃO/CARROSSEL QUE ESCREVESTE ACIMA]
-
-usando o método PAS:
-- 1ª linha (headline): vende o CLIQUE para a 2ª linha, toca
-  numa dor — não anuncia o produto
-- Problema -> Agitação (com lógica, não medo) -> Solução
-  (a lógica do meu método)
-- CTA: interação, guardar ou "manda-me X no Direct"
-Dá 2 opções de headline, 2 de CTA e 8 a 10 hashtags do nicho.`, textoBr: `Escreva a legenda deste conteúdo:
-
-[COLE AQUI O ROTEIRO/CARROSSEL QUE VOCÊ ESCREVEU ACIMA]
-
-usando o método PAS:
-- 1ª linha (headline): vende o CLIQUE para a 2ª linha, toca
-  uma dor — não anuncia o produto
-- Problema -> Agitação (com lógica, não medo) -> Solução
-  (a lógica do meu método)
-- CTA: engajamento, salvar ou "me manda X no Direct"
-Dê 2 opções de headline, 2 de CTA e 8 a 10 hashtags do nicho.` },
-        ],
-      },
-      {
-        blocos: [
-          { t: "sub", titulo: "Bónus · Stories de venda (5 telas · conversão)" },
-          { t: "prompt", agente: "Claude", nome: "Sequência de 5 stories", texto: `Cria uma sequência de 5 stories de venda sobre [TEMA/OFERTA]:
-1. Identificação (sondagem/pergunta que toca na dor)
-2. Agitação (porque é que ele está preso no problema)
-3. Prova (caso/testemunho — marca como MODELO p/ eu trocar)
-4. Convite/CTA ("manda-me a palavra X no Direct")
-5. Reforço (última chamada)
-Diz o elemento interativo de cada ecrã (sondagem, caixinha, link).`, textoBr: `Crie uma sequência de 5 stories de venda sobre [TEMA/OFERTA]:
-1. Identificação (enquete/pergunta que toca a dor)
-2. Agitação (por que ele está preso no problema)
-3. Prova (caso/depoimento — marque como MODELO p/ eu trocar)
-4. Convite/CTA ("me manda a palavra X no Direct")
-5. Reforço (última chamada)
-Diga o elemento interativo de cada tela (enquete, caixinha, link).` },
-        ],
-      },
-      {
-        blocos: [
-          { t: "nota", v: "info", texto: "**Pede edições:** a 1ª versão nunca é a final. “Deixa mais curto”, “tira o clichê”, “essa parte ficou robótica, reescreve”. É assim que o texto vira teu." },
-          { t: "nota", v: "warn", texto: "**Revisão antes de postar:** corta o excesso, lê em voz alta (se tropeças, o leitor também) e confirma que o texto cumpre a promessa do gancho." },
-          { t: "nota", v: "warn", texto: "**Exercício:** configura a voz (Passo 1), pega 1 dor do perfil e gera 15 ganchos → 1 roteiro de Reel → 1 legenda PAS. Um post completo, de ponta a ponta." },
-        ],
-      },
-      {
-        titulo: "Atalho · Skills prontas a instalar",
-        blocos: [
-          { t: "p", texto: "Uma **skill** é uma capacidade que instalas no Claude uma vez — depois basta pedires “faz-me um carrossel sobre X” ou “roteiro de Reel sobre Y” e ela já sabe a estrutura toda (gancho, um ponto por slide, CTA, legenda, hashtags), sem colares prompt nenhum. Preparei duas:" },
-          { t: "downloads", itens: [
-            { nome: "Gerador de Carrosséis", desc: "Carrossel slide a slide + legenda + hashtags", url: "/skills/gerador-carrosseis.skill" },
-            { nome: "Gerador de Roteiros", desc: "Roteiro de Reel com fala + imagem + CTA", url: "/skills/gerador-roteiros.skill" },
-          ] },
-          { t: "ol", itens: [
-            "Descarrega os dois ficheiros .skill acima.",
-            "No Claude, abre Definições → Capacidades/Skills → “Adicionar skill” e carrega o ficheiro.",
-            "Numa conversa nova, pede: “faz-me um carrossel sobre [TEMA]” ou “roteiro de Reel sobre [TEMA]”.",
-          ] },
-          { t: "nota", v: "info", texto: "**Skills + voz da marca:** se configuraste o Passo 1 num Projeto, usa as skills dentro desse Projeto — o carrossel já sai com o teu tom. Os prompts deste módulo continuam úteis para quando quiseres controlar cada passo à mão." },
+          { t: "nota", v: "info", texto: "**Qual escolher?** Queres escrever posts → Aula 1. Queres o carrossel já desenhado, slide a slide → Aula 2. Queres uma peça interativa (quiz, checklist, página) → Aula 3." },
         ],
       },
     ],
@@ -465,7 +329,7 @@ Diga o elemento interativo de cada tela (enquete, caixinha, link).` },
         blocos: [
           { t: "aulas", itens: [
             { titulo: "1 · Carrosséis no ChatGPT", desc: "Cria um carrossel completo do zero: estrutura, texto final, design, legenda e montagem.", aula: "m4b" },
-            { titulo: "2 · Infográficos, livros e imagens", desc: "Gera infográficos, capas e imagens de posts — e estrutura um e-book do zero.", aula: "m4c" },
+            { titulo: "2 · Imagens e infográficos", desc: "Imagens fotográficas realistas, infográficos e slides de apresentação — cada um com o seu prompt.", aula: "m4c" },
             { titulo: "3 · Carrosséis com informação externa", desc: "Transforma um texto, documento, ideia ou os resultados do Grok/NotebookLM num carrossel.", aula: "m4d" },
           ] },
           { t: "nota", v: "info", texto: "**Qual escolher?** Tens só um tema na cabeça → Aula 1. Queres outro formato (infográfico, e-book, imagem) → Aula 2. Já tens matéria-prima (texto, documento, pesquisa do M1/M2 ou estrutura do M3) → Aula 3." },
@@ -529,8 +393,9 @@ Diga o elemento interativo de cada tela (enquete, caixinha, link).` },
   {
     id: "m6",
     numero: "Bónus",
-    titulo: "Automação: notícias e conteúdo no piloto automático",
+    titulo: "Automações que geram ideias",
     objetivo: "Configurar o Claude e o ChatGPT para, todos os dias e sozinhos, te enviarem um resumo das notícias e ideias do teu nicho — sem tu pedires.",
+    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/automacoes.mp4",
     links: [
       { nome: "Abrir ChatGPT", url: "https://chatgpt.com" },
       { nome: "Abrir Claude", url: "https://claude.ai" },
@@ -702,10 +567,27 @@ Regras:
 // na grelha de módulos nem no prev/next principal.
 export const SUBAULAS: Aula[] = [
   {
+    id: "m1b",
+    numero: "NotebookLM · Apresentações",
+    titulo: "Apresentações",
+    objetivo: "Criar slides de apresentação prontos a usar — capa, tópicos e conclusão — todos com o mesmo estilo visual.",
+    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/apresentacoes.mp4",
+    links: [{ nome: "Abrir ChatGPT", url: "https://chatgpt.com" }],
+    secoes: [
+      {
+        blocos: [
+          { t: "p", texto: "Transforma o teu conteúdo numa **apresentação** completa — capa, slides de conteúdo e conclusão, todos com a mesma identidade visual. Segue o vídeo acima, passo a passo." },
+          { t: "nota", v: "warn", texto: "**Confere o texto:** os slides têm muito texto e os geradores erram acentos. Revê tudo; se falhar, pede de novo ou corrige no Canva, PowerPoint ou Google Slides." },
+        ],
+      },
+    ],
+  },
+  {
     id: "m4b",
     numero: "ChatGPT · Aula 1",
     titulo: "Carrosséis no ChatGPT",
     objetivo: "Criar um carrossel completo dentro do ChatGPT — da estrutura ao texto final, design, legenda e montagem — a partir de um tema teu.",
+    videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/carrosseis-chatgpt.mp4",
     links: [{ nome: "Abrir ChatGPT", url: "https://chatgpt.com" }],
     secoes: [
       {
@@ -853,27 +735,40 @@ No último, peça espaço para adicionar o seu @ e a logo.)` },
   {
     id: "m4c",
     numero: "ChatGPT · Aula 2",
-    titulo: "Infográficos, livros e imagens",
-    objetivo: "Usar a geração de imagem do ChatGPT para criar infográficos, imagens de posts e a capa do teu e-book — e estruturar o e-book do zero.",
+    titulo: "Imagens e infográficos",
+    objetivo: "Usar a geração de imagem do ChatGPT para imagens fotográficas realistas e para infográficos e slides de apresentação — cada um com o seu prompt.",
     links: [{ nome: "Abrir ChatGPT", url: "https://chatgpt.com" }],
     secoes: [
       {
-        titulo: "1. O que o ChatGPT desenha bem",
         blocos: [
-          { t: "tabela", cab: ["Formato", "Para quê", "Tamanho"], linhas: [
-            ["Infográfico", "Educar e gerar salvamentos — processo ou dados visualizados.", "1080 x 1350"],
-            ["Imagem de post", "Ilustrar um post estático ou a capa de um Reel.", "1080 x 1350 ou 1080 x 1080"],
-            ["Capa de e-book", "O teu lead magnet com cara profissional.", "Vertical (A4)"],
-            ["Story", "Fundos e visuais para stories.", "1080 x 1920 (9:16)"],
-          ] },
-          { t: "nota", v: "info", texto: "**Regra que vale para tudo:** pede **um formato de cada vez**, indica sempre o tamanho e a paleta, e corrige com uma alteração por mensagem." },
+          { t: "nota", v: "info", texto: "**Regra que vale para tudo:** pede **um formato de cada vez**, indica sempre o **tamanho** e a **paleta**, e corrige com **uma alteração por mensagem**. Para texto por cima, pede a imagem **sem texto** e escreve tu no Canva (evita erros de letras)." },
         ],
       },
       {
-        titulo: "2. Infográficos",
+        titulo: "3.1 Imagens fotográficas",
         blocos: [
-          { t: "p", texto: "Um infográfico é o teu método ou um processo **visualizado** — é dos formatos que mais gera guardados, porque a pessoa quer voltar a consultar." },
-          { t: "prompt", agente: "ChatGPT", nome: "Criar um infográfico", texto: `Cria um infográfico vertical 1080x1350 sobre [TEMA].
+          { t: "p", texto: "Imagens realistas, com ar de fotografia — para posts, fundos de stories, capas de Reels ou mockups de produto. Descreves a cena em português e o ChatGPT cria." },
+          { t: "video", url: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/imagens-fotograficas.mp4", titulo: "Gerar imagens fotográficas" },
+          { t: "prompt", agente: "ChatGPT", nome: "Imagem fotográfica", texto: `Cria uma imagem fotográfica realista de: [DESCREVE A CENA].
+- Formato: [1080x1350 retrato / 1080x1080 quadrado / 1080x1920 story]
+- Luz: [ex.: natural suave, luz de manhã junto à janela]
+- Ambiente/cores: [PALETA ou descrição]
+- Enquadramento: [ex.: primeiro plano, cima para baixo (flat lay)]
+Sem texto na imagem — o texto ponho eu depois.`, textoBr: `Crie uma imagem fotográfica realista de: [DESCREVA A CENA].
+- Formato: [1080x1350 retrato / 1080x1080 quadrado / 1080x1920 story]
+- Luz: [ex.: natural suave, luz da manhã perto da janela]
+- Ambiente/cores: [PALETA ou descrição]
+- Enquadramento: [ex.: primeiro plano, de cima para baixo (flat lay)]
+Sem texto na imagem — o texto eu coloco depois.` },
+          { t: "nota", v: "info", texto: "**Mais realismo:** diz o tipo de luz, a hora do dia e detalhes concretos (“chávena de café a fumegar, mesa de madeira”). Pede **3 variações** e corrige **uma coisa de cada vez** (“muda só o fundo para…”)." },
+        ],
+      },
+      {
+        titulo: "3.2 Infográficos e thumbnails",
+        blocos: [
+          { t: "p", texto: "Infográfico = o teu método ou um processo **visualizado**. É dos formatos que mais gera guardados, porque a pessoa quer voltar a consultar." },
+          { t: "video", url: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/infograficos.mp4", titulo: "Infográficos e thumbnails" },
+          { t: "prompt", agente: "ChatGPT", nome: "Infográfico", texto: `Cria um infográfico vertical 1080x1350 sobre [TEMA].
 Conteúdo (por esta ordem):
 [LISTA OS 3 A 5 PASSOS OU DADOS]
 Estilo: limpo, fundo claro, cores [PALETA], títulos grandes,
@@ -884,55 +779,8 @@ Conteúdo (nesta ordem):
 Estilo: limpo, fundo claro, cores [PALETA], títulos grandes,
 ícones simples, numeração visível. Texto em português correto
 e legível no celular. Deixe espaço no rodapé para o meu @.` },
-          { t: "nota", v: "warn", texto: "**Confere números e letras:** infográficos têm muito texto e os geradores erram acentos. Revê tudo; se falhar, corrige por cima no Canva." },
-        ],
-      },
-      {
-        titulo: "3. E-books e livros digitais",
-        blocos: [
-          { t: "p", texto: "Um e-book é o **lead magnet** perfeito: entregas nos stories (“manda a palavra X no Direct”) e transformas seguidores em contactos. Três prompts, na mesma conversa:" },
-          { t: "prompt", agente: "ChatGPT", nome: "Passo 1 · Estrutura do e-book", texto: `Quero criar um e-book sobre [TEMA] para [PÚBLICO].
-Objetivo: [ex.: captar contactos / entregar no Direct].
-Cria: título apelativo, subtítulo, e a estrutura de
-5 a 7 capítulos com 2 linhas do que cada um cobre.
-Tom: [DESCREVE O TEU TOM].`, textoBr: `Quero criar um e-book sobre [TEMA] para [PÚBLICO].
-Objetivo: [ex.: captar contatos / entregar no Direct].
-Crie: título chamativo, subtítulo, e a estrutura de
-5 a 7 capítulos com 2 linhas do que cada um cobre.
-Tom: [DESCREVA O SEU TOM].` },
-          { t: "prompt", agente: "ChatGPT", nome: "Passo 2 · Escrever capítulo a capítulo", texto: `Escreve o capítulo 1: [TÍTULO DO CAPÍTULO].
-300 a 500 palavras, no meu tom, com exemplos práticos
-e uma dica acionável no fim.
-
-(Repete para cada um: 'Agora o capítulo 2: …')`, textoBr: `Escreva o capítulo 1: [TÍTULO DO CAPÍTULO].
-300 a 500 palavras, no meu tom, com exemplos práticos
-e uma dica acionável no final.
-
-(Repita para cada um: 'Agora o capítulo 2: …')` },
-          { t: "prompt", agente: "ChatGPT", nome: "Passo 3 · Capa do e-book", texto: `Cria a capa do e-book, formato vertical (proporção A4):
-Título: "[TÍTULO]" · Subtítulo: "[SUBTÍTULO]"
-Estilo: [minimalista / editorial], cores [PALETA],
-título grande e legível em miniatura. Deixa espaço
-para o meu nome em baixo.`, textoBr: `Crie a capa do e-book, formato vertical (proporção A4):
-Título: "[TÍTULO]" · Subtítulo: "[SUBTÍTULO]"
-Estilo: [minimalista / editorial], cores [PALETA],
-título grande e legível em miniatura. Deixe espaço
-para o meu nome embaixo.` },
-          { t: "nota", v: "info", texto: "**Montagem final:** junta texto + capa num PDF no Canva ou no Google Docs. O ChatGPT também consegue gerar o PDF diretamente — pede “monta tudo num PDF para download”." },
-        ],
-      },
-      {
-        titulo: "4. Imagens para posts",
-        blocos: [
-          { t: "prompt", agente: "ChatGPT", nome: "Imagem de post", texto: `Cria uma imagem [1080x1350 retrato / 1080x1080 quadrado /
-1080x1920 story] sobre: [DESCREVE A CENA].
-Estilo: [fotografia realista / ilustração / 3D suave],
-cores [PALETA]. Sem texto na imagem — o texto ponho eu.`, textoBr: `Crie uma imagem [1080x1350 retrato / 1080x1080 quadrado /
-1080x1920 story] sobre: [DESCREVA A CENA].
-Estilo: [fotografia realista / ilustração / 3D suave],
-cores [PALETA]. Sem texto na imagem — o texto eu coloco.` },
-          { t: "nota", v: "info", texto: "**A afinar:** pede variações (“dá-me 3 versões”) e corrige **uma coisa de cada vez** (“muda só o fundo para…”). Pedir 5 correções juntas confunde o gerador." },
-          { t: "nota", v: "warn", texto: "**Exercício:** cria 1 infográfico com os passos do teu método e a capa de um mini e-book sobre a maior dor do teu público." },
+          { t: "nota", v: "warn", texto: "**Confere números e letras:** infográficos têm muito texto e os geradores erram acentos. Revê tudo; se falhar, pede de novo ou corrige por cima no Canva." },
+          { t: "nota", v: "warn", texto: "**Exercício:** cria 1 imagem fotográfica para um post e 1 infográfico com os passos do teu método. Um de cada tipo." },
         ],
       },
     ],
@@ -1054,6 +902,333 @@ fáceis de ler no celular. Mantenha a coerência de tom.
 Depois continue com o design e a legenda (Aula 1, Passos 3 e 4).` },
           { t: "nota", v: "warn", texto: "**Material dos outros = inspiração, nunca cópia.** Quando a fonte não é tua (artigo, transcrição de concorrente), extrai a estrutura e recria com a tua voz e os teus exemplos — o prompt já obriga, garante tu que o resultado final é teu." },
           { t: "nota", v: "warn", texto: "**Exercício:** pega num artigo que gostes OU na tua análise do Módulo 1 e gera um carrossel completo. Publica e marca a tarefa como completa." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "m3b",
+    numero: "Claude · Aula 1",
+    titulo: "Criar conteúdo no Claude",
+    objetivo: "Transformar temas em ganchos, roteiros de Reels, carrosséis e legendas que soam como TU — não como um robô.",
+    links: [{ nome: "Abrir Claude", url: "https://claude.ai" }],
+    secoes: [
+      {
+        blocos: [
+          { t: "nota", v: "info", texto: "**Como usar este módulo (importante):** os prompts NÃO são para escolher um. São uma **sequência**, na mesma conversa do Claude: **Passo 1** prepara a voz (uma vez só) → **Passo 2** gera os ganchos (escolhes o melhor) → **Passo 3** escreve o roteiro/carrossel → **Passo 4** fecha com a legenda. É como uma receita: um passo puxa o outro." },
+        ],
+      },
+      {
+        blocos: [
+          { t: "sub", titulo: "Passo 1 · Ensina a tua voz (faz uma vez, no Projeto)" },
+          { t: "prompt", agente: "Claude", nome: "Configurar a voz da marca", texto: `Vais ser o meu roteirista e copywriter de Instagram.
+Contexto da minha marca:
+- Nicho: [O TEU NICHO]
+- O meu público e as 5 dores dele: [LISTA as dores]
+- O meu tom de voz: [ex.: leve, direto, acolhedor]
+- Palavras que uso / que NUNCA uso: [lista]
+- A minha oferta e objetivo: [ex.: vender mentoria]
+Regras: escreve como ESPECIALISTA (nunca "hoje vou dar dicas"),
+frases curtas, português de Portugal. NUNCA uses "fórmula mágica",
+"segredo revelado" ou "guia definitivo". Confirma que entendeste.`, textoBr: `Você é o meu roteirista e copywriter de Instagram.
+Contexto da minha marca:
+- Nicho: [SEU NICHO]
+- Meu público e as 5 dores dele: [LISTE as dores]
+- Meu tom de voz: [ex.: leve, direto, acolhedor]
+- Palavras que eu uso / que eu NUNCA uso: [liste]
+- Minha oferta e objetivo: [ex.: vender mentoria]
+Regras: escreva como ESPECIALISTA (nunca "hoje vou dar dicas"),
+frases curtas, português do Brasil. NUNCA use "fórmula mágica",
+"segredo revelado" ou "guia definitivo". Confirme que entendeu.` },
+        ],
+      },
+      {
+        blocos: [
+          { t: "sub", titulo: "Passo 2 · Ganchos: os 3 segundos que decidem tudo" },
+          { t: "p", texto: "A atenção é ganha ou perdida nos 3 primeiros segundos. Existem 4 tipos de gancho que funcionam — pede os quatro e escolhe o melhor:" },
+          { t: "ul", itens: [
+            "**Quebra de expectativa** — contradiz o senso comum (“O problema pode ser tu — mas não como pensas”).",
+            "**Dor silenciosa** — o que ele sente mas nunca disse (“Parece que falas com a parede no Instagram?”).",
+            "**Curiosidade/polémica** — pega boleia num assunto do momento com a tua ótica.",
+            "**Promessa de recompensa** — “Como eu fiz X em Y tempo” ou “O erro que destrói a tua conta”.",
+          ] },
+          { t: "prompt", agente: "Claude", nome: "Fábrica de ganchos", texto: `Tema: [TEMA]. Usa as dores do meu perfil.
+Dá-me 15 ganchos para Reels, no estilo ESPECIALISTA
+(abrir uma lacuna ou tocar numa dor específica, nunca anunciar
+o tema). Mistura os 4 tipos: quebra de expectativa,
+dor silenciosa, curiosidade/polémica e promessa de recompensa.
+Frases curtas, impacto imediato.`, textoBr: `Tema: [TEMA]. Use as dores do meu perfil.
+Me dê 15 ganchos para Reels, no estilo ESPECIALISTA
+(abrir lacuna ou tocar uma dor específica, nunca anunciar
+o tema). Misture os 4 tipos: quebra de expectativa,
+dor silenciosa, curiosidade/polêmica e promessa de recompensa.
+Frases curtas, impacto imediato.` },
+        ],
+      },
+      {
+        blocos: [
+          { t: "sub", titulo: "Passo 3 · Escreve o conteúdo (Reel ou carrossel)" },
+          { t: "p", texto: "**Dica de ouro:** antes de pedires o roteiro, cola na conversa os padrões do NotebookLM (M1) e as dores do Grok (M2). O roteiro nasce de dados reais." },
+          { t: "prompt", agente: "Claude", nome: "Roteiro de Reels (atração)", texto: `Cria um guião de Reels de até 45 segundos sobre [TEMA].
+Usa este gancho: [COLA O GANCHO ESCOLHIDO].
+Estrutura: gancho -> problema -> viragem/solução -> prova -> CTA.
+Formato de entrega, bloco a bloco:
+- FALA: o que eu digo (frases curtas, à minha maneira)
+- ECRÃ: o texto que aparece escrito no ecrã
+- CENA: sugestão do que gravar
+No fim, 3 ganchos alternativos + 3 CTAs (seguir, guardar, Direct).`, textoBr: `Crie um roteiro de Reels de até 45 segundos sobre [TEMA].
+Use este gancho: [COLE O GANCHO ESCOLHIDO].
+Estrutura: gancho -> problema -> virada/solução -> prova -> CTA.
+Formato de entrega, bloco a bloco:
+- FALA: o que eu digo (frases curtas, do meu jeito)
+- TELA: o texto que aparece escrito na tela
+- CENA: sugestão do que gravar
+No fim, 3 ganchos alternativos + 3 CTAs (seguir, salvar, Direct).` },
+          { t: "prompt", agente: "Claude", nome: "Carrossel (autoridade · gera salvamentos)", texto: `Cria um carrossel de 7 slides sobre [TEMA] (formato
+checklist ou passo a passo, para gerar salvamentos).
+- Slide 1: capa = gancho forte (faz parar de rolar)
+- Slides 2 a 6: uma ideia por slide, texto curto e escaneável
+- Slide 7: CTA + convite para guardar/partilhar
+Para cada slide: TÍTULO, texto e sugestão de imagem/visual.`, textoBr: `Crie um carrossel de 7 slides sobre [TEMA] (formato
+checklist ou passo a passo, para gerar salvamentos).
+- Slide 1: capa = gancho forte (faz parar de rolar)
+- Slides 2 a 6: uma ideia por slide, texto curto e escaneável
+- Slide 7: CTA + convite para salvar/compartilhar
+Para cada slide: TÍTULO, texto e sugestão de imagem/visual.` },
+        ],
+      },
+      {
+        blocos: [
+          { t: "sub", titulo: "Passo 4 · Legenda que converte (método PAS)" },
+          { t: "p", texto: "PAS = **Problema** (espelha a dor: “sei o que passas”) → **Agitação** (o custo de não resolver, com lógica) → **Solução** (a lógica do teu método, não “compra de mim”)." },
+          { t: "prompt", agente: "Claude", nome: "Legenda PAS", texto: `Escreve a legenda deste conteúdo:
+
+[COLA AQUI O GUIÃO/CARROSSEL QUE ESCREVESTE ACIMA]
+
+usando o método PAS:
+- 1ª linha (headline): vende o CLIQUE para a 2ª linha, toca
+  numa dor — não anuncia o produto
+- Problema -> Agitação (com lógica, não medo) -> Solução
+  (a lógica do meu método)
+- CTA: interação, guardar ou "manda-me X no Direct"
+Dá 2 opções de headline, 2 de CTA e 8 a 10 hashtags do nicho.`, textoBr: `Escreva a legenda deste conteúdo:
+
+[COLE AQUI O ROTEIRO/CARROSSEL QUE VOCÊ ESCREVEU ACIMA]
+
+usando o método PAS:
+- 1ª linha (headline): vende o CLIQUE para a 2ª linha, toca
+  uma dor — não anuncia o produto
+- Problema -> Agitação (com lógica, não medo) -> Solução
+  (a lógica do meu método)
+- CTA: engajamento, salvar ou "me manda X no Direct"
+Dê 2 opções de headline, 2 de CTA e 8 a 10 hashtags do nicho.` },
+        ],
+      },
+      {
+        blocos: [
+          { t: "sub", titulo: "Bónus · Stories de venda (5 telas · conversão)" },
+          { t: "prompt", agente: "Claude", nome: "Sequência de 5 stories", texto: `Cria uma sequência de 5 stories de venda sobre [TEMA/OFERTA]:
+1. Identificação (sondagem/pergunta que toca na dor)
+2. Agitação (porque é que ele está preso no problema)
+3. Prova (caso/testemunho — marca como MODELO p/ eu trocar)
+4. Convite/CTA ("manda-me a palavra X no Direct")
+5. Reforço (última chamada)
+Diz o elemento interativo de cada ecrã (sondagem, caixinha, link).`, textoBr: `Crie uma sequência de 5 stories de venda sobre [TEMA/OFERTA]:
+1. Identificação (enquete/pergunta que toca a dor)
+2. Agitação (por que ele está preso no problema)
+3. Prova (caso/depoimento — marque como MODELO p/ eu trocar)
+4. Convite/CTA ("me manda a palavra X no Direct")
+5. Reforço (última chamada)
+Diga o elemento interativo de cada tela (enquete, caixinha, link).` },
+        ],
+      },
+      {
+        blocos: [
+          { t: "nota", v: "info", texto: "**Pede edições:** a 1ª versão nunca é a final. “Deixa mais curto”, “tira o clichê”, “essa parte ficou robótica, reescreve”. É assim que o texto vira teu." },
+          { t: "nota", v: "warn", texto: "**Revisão antes de postar:** corta o excesso, lê em voz alta (se tropeças, o leitor também) e confirma que o texto cumpre a promessa do gancho." },
+          { t: "nota", v: "warn", texto: "**Exercício:** configura a voz (Passo 1), pega 1 dor do perfil e gera 15 ganchos → 1 roteiro de Reel → 1 legenda PAS. Um post completo, de ponta a ponta." },
+        ],
+      },
+      {
+        titulo: "Atalho · Skills prontas a instalar",
+        blocos: [
+          { t: "p", texto: "Uma **skill** é uma capacidade que instalas no Claude uma vez — depois basta pedires “faz-me um carrossel sobre X” ou “roteiro de Reel sobre Y” e ela já sabe a estrutura toda (gancho, um ponto por slide, CTA, legenda, hashtags), sem colares prompt nenhum. Preparei duas:" },
+          { t: "downloads", itens: [
+            { nome: "Gerador de Carrosséis", desc: "Carrossel slide a slide + legenda + hashtags", url: "/skills/gerador-carrosseis.skill" },
+            { nome: "Gerador de Roteiros", desc: "Roteiro de Reel com fala + imagem + CTA", url: "/skills/gerador-roteiros.skill" },
+          ] },
+          { t: "ol", itens: [
+            "Descarrega os dois ficheiros .skill acima.",
+            "No Claude, abre Definições → Capacidades/Skills → “Adicionar skill” e carrega o ficheiro.",
+            "Numa conversa nova, pede: “faz-me um carrossel sobre [TEMA]” ou “roteiro de Reel sobre [TEMA]”.",
+          ] },
+          { t: "nota", v: "info", texto: "**Skills + voz da marca:** se configuraste o Passo 1 num Projeto, usa as skills dentro desse Projeto — o carrossel já sai com o teu tom. Os prompts deste módulo continuam úteis para quando quiseres controlar cada passo à mão." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "m3c",
+    numero: "Claude · Aula 2",
+    titulo: "Carrosséis visuais no Claude",
+    objetivo: "Pôr o Claude a desenhar o teu carrossel — slides 1080 x 1350 com a tua marca, texto sempre correto e ajustes slide a slide — sem gerador de imagens.",
+    links: [{ nome: "Abrir Claude", url: "https://claude.ai" }],
+    secoes: [
+      {
+        titulo: "1. Desenhar em vez de gerar",
+        blocos: [
+          { t: "p", texto: "O ChatGPT **gera** imagens (e às vezes erra letras). O Claude **desenha** os slides como um designer: constrói cada um num artefacto visual, com as tuas cores e fontes exatas." },
+          { t: "ul", itens: [
+            "**Texto sempre correto** — é texto real, não letras “desenhadas” por IA.",
+            "**A tua marca exata** — cor HEX, fonte e logótipo iguais em todos os slides.",
+            "**Ajustes cirúrgicos** — “muda só o título do slide 3” e ele muda só isso.",
+            "**Pronto para o Instagram** — slides 4:5, exportáveis em 1080 x 1350.",
+          ] },
+        ],
+      },
+      {
+        titulo: "2. Caminho 1 · Com a skill (recomendado)",
+        blocos: [
+          { t: "p", texto: "A skill **Criador de Carrosséis** já sabe o processo todo: pergunta os dados da marca, escreve o copy, desenha os slides com barra de progresso e seta de swipe, mostra a pré-visualização e exporta os PNG." },
+          { t: "downloads", itens: [
+            { nome: "Criador de Carrosséis (skill)", desc: "Carrosséis visuais completos, prontos a exportar", url: "/skills/criador-de-carrosseis.skill" },
+          ] },
+          { t: "ol", itens: [
+            "Descarrega e instala a skill (Definições → Capacidades/Skills → Adicionar).",
+            "Pede: “cria um carrossel sobre [TEMA]”.",
+            "Responde às perguntas da marca (nome, @, cor, fonte, tom).",
+            "Vê a pré-visualização e diz que slides queres ajustar.",
+            "Aprova (“pode exportar”) e recebe os PNG 1080 x 1350.",
+          ] },
+          { t: "nota", v: "info", texto: "**Onde funciona melhor:** no Claude Desktop (Cowork), a skill exporta os PNG sozinha. Na web vês a pré-visualização na mesma e podes pedir os ficheiros dos slides." },
+        ],
+      },
+      {
+        titulo: "3. Caminho 2 · Sem skill, com um prompt",
+        blocos: [
+          { t: "prompt", agente: "Claude", nome: "Carrossel visual como artefacto", texto: `Cria um carrossel visual de Instagram como artefacto
+(pré-visualização deslizável), com 7 slides 4:5 prontos
+a exportar em 1080 x 1350.
+Tema: [TEMA]
+Marca: [NOME] · @[UTILIZADOR] · cor principal [HEX]
+Tom: [ex.: próximo e direto]
+Regras:
+- Slide 1: capa com gancho forte (nunca o nome da marca)
+- Fundos claros e escuros alternados, mesma identidade
+- Barra de progresso em todos; último slide = CTA, sem seta
+No fim, pergunta-me que slides quero ajustar.`, textoBr: `Crie um carrossel visual de Instagram como artefato
+(pré-visualização deslizável), com 7 slides 4:5 prontos
+para exportar em 1080 x 1350.
+Tema: [TEMA]
+Marca: [NOME] · @[USUÁRIO] · cor principal [HEX]
+Tom: [ex.: próximo e direto]
+Regras:
+- Slide 1: capa com gancho forte (nunca o nome da marca)
+- Fundos claros e escuros alternados, mesma identidade
+- Barra de progresso em todos; último slide = CTA, sem seta
+No final, me pergunte quais slides quero ajustar.` },
+        ],
+      },
+      {
+        titulo: "4. Os dados que ele vai pedir",
+        blocos: [
+          { t: "tabela", cab: ["Dado", "Exemplo"], linhas: [
+            ["Nome da marca e @", "Cátia Creator · @catiacreator"],
+            ["Cor principal (HEX)", "#7C56C9"],
+            ["Estilo/fonte", "moderno e limpo · editorial · arredondado"],
+            ["Tom", "próximo e direto"],
+            ["Formato", "padrão (7 slides) · lista · tutorial · comparação"],
+          ] },
+        ],
+      },
+      {
+        titulo: "5. Formatos de sequência",
+        blocos: [
+          { t: "tabela", cab: ["Formato", "Quando usar", "Sequência"], linhas: [
+            ["Padrão (7 slides)", "Tema completo", "gancho → problema → solução → o que ganhas → detalhes → passos → CTA"],
+            ["Lista (5–10)", "“X erros”, “X ferramentas”", "gancho → um item por slide → CTA"],
+            ["Tutorial (7)", "Ensinar um processo", "gancho → porquê → passos 1-3 → resultado → CTA"],
+            ["Comparação (5)", "A vs. B", "gancho → opção A → opção B → veredicto → CTA"],
+          ] },
+          { t: "nota", v: "info", texto: "**Regras dos slides:** capa que para o scroll (nunca o nome da marca como título), fundos claros/escuros alternados, e o último slide sem seta, com barra completa e CTA." },
+          { t: "nota", v: "warn", texto: "**Exercício:** cria um carrossel visual sobre a maior dor do teu público (usa o texto do carrossel da Aula 1, se já o tens), pede um ajuste num slide e exporta." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "m3d",
+    numero: "Claude · Aula 3",
+    titulo: "Criar artefactos no Claude",
+    objetivo: "Criar peças interativas na conversa — quizzes, checklists, mini-páginas e ferramentas — e partilhá-las com o teu público por link.",
+    links: [{ nome: "Abrir Claude", url: "https://claude.ai" }],
+    secoes: [
+      {
+        titulo: "1. O que é um artefacto",
+        blocos: [
+          { t: "p", texto: "Quando pedes algo “construível”, o Claude abre uma janela ao lado da conversa e cria a peça **a funcionar**: uma página, um quiz, uma checklist, uma calculadora. Vês o resultado na hora, pedes ajustes, e no fim **publicas com um link** que qualquer pessoa abre no navegador — sem instalar nada." },
+        ],
+      },
+      {
+        titulo: "2. Para que servem a uma criadora",
+        blocos: [
+          { t: "tabela", cab: ["Peça", "Para quê"], linhas: [
+            ["Quiz", "Interação + qualificar o público (“que tipo de criadora és?”)."],
+            ["Checklist interativa", "Lead magnet: entregas no Direct em troca do contacto."],
+            ["Calculadora", "Autoridade: “calcula quanto tempo poupas por semana com IA”."],
+            ["Mini-página", "Link na bio com os teus destaques e ofertas."],
+            ["Carrossel visual", "Slides desenhados — é a Aula 2 deste capítulo."],
+          ] },
+        ],
+      },
+      {
+        titulo: "3. Prompts prontos",
+        blocos: [
+          { t: "prompt", agente: "Claude", nome: "Quiz para o teu público", texto: `Cria um quiz interativo como artefacto: "[TÍTULO DO QUIZ]",
+para o meu público [PÚBLICO].
+- 5 perguntas de escolha múltipla sobre [TEMA]
+- No fim, um resultado personalizado por perfil de resposta
+  (2 a 3 perfis), com uma dica prática para cada
+- Visual limpo, cores [PALETA], bom no telemóvel`, textoBr: `Crie um quiz interativo como artefato: "[TÍTULO DO QUIZ]",
+para o meu público [PÚBLICO].
+- 5 perguntas de múltipla escolha sobre [TEMA]
+- No final, um resultado personalizado por perfil de resposta
+  (2 a 3 perfis), com uma dica prática para cada
+- Visual limpo, cores [PALETA], bom no celular` },
+          { t: "prompt", agente: "Claude", nome: "Checklist interativa (lead magnet)", texto: `Cria uma checklist interativa como artefacto:
+"[TÍTULO — ex.: Checklist do post perfeito]".
+- 8 a 12 itens sobre [TEMA], que eu possa marcar
+- Barra de progresso no topo
+- No fim, mensagem de parabéns com o meu @ e um CTA
+  para me seguir
+- Visual limpo, cores [PALETA], bom no telemóvel`, textoBr: `Crie uma checklist interativa como artefato:
+"[TÍTULO — ex.: Checklist do post perfeito]".
+- 8 a 12 itens sobre [TEMA], que eu possa marcar
+- Barra de progresso no topo
+- No final, mensagem de parabéns com o meu @ e um CTA
+  para me seguir
+- Visual limpo, cores [PALETA], bom no celular` },
+          { t: "prompt", agente: "Claude", nome: "Mini-página “link na bio”", texto: `Cria uma mini-página "link na bio" como artefacto para
+a minha marca [NOME · @UTILIZADOR].
+- Topo: nome + 1 frase de posicionamento
+- 3 a 5 botões: [LISTA — ex.: mini-curso, mentoria, Direct]
+- Cores [PALETA], simples e rápida no telemóvel`, textoBr: `Crie uma mini-página "link na bio" como artefato para
+a minha marca [NOME · @USUÁRIO].
+- Topo: nome + 1 frase de posicionamento
+- 3 a 5 botões: [LISTA — ex.: mini-curso, mentoria, Direct]
+- Cores [PALETA], simples e rápida no celular` },
+        ],
+      },
+      {
+        titulo: "4. Publicar e partilhar",
+        blocos: [
+          { t: "ol", itens: [
+            "Com o artefacto aberto, clica em “Publicar/Partilhar”.",
+            "Copia o link público.",
+            "Usa-o no link da bio, nos stories ou envia no Direct.",
+          ] },
+          { t: "nota", v: "info", texto: "**Ajustes:** pede uma alteração de cada vez (“muda a cor para…”, “acrescenta uma pergunta”). O artefacto atualiza-se à tua frente." },
+          { t: "nota", v: "warn", texto: "**Exercício:** cria uma checklist interativa sobre a maior dor do teu público, publica e testa o link no telemóvel. Depois marca a tarefa como completa." },
         ],
       },
     ],
