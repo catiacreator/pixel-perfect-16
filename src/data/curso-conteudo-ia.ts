@@ -393,7 +393,7 @@ Com base nisso:
   {
     id: "m6",
     numero: "Bónus",
-    titulo: "Automação: notícias e conteúdo no piloto automático",
+    titulo: "Automações que geram ideias",
     objetivo: "Configurar o Claude e o ChatGPT para, todos os dias e sozinhos, te enviarem um resumo das notícias e ideias do teu nicho — sem tu pedires.",
     links: [
       { nome: "Abrir ChatGPT", url: "https://chatgpt.com" },
