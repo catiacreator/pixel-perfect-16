@@ -328,7 +328,7 @@ Com base nisso:
         blocos: [
           { t: "aulas", itens: [
             { titulo: "1 · Carrosséis no ChatGPT", desc: "Cria um carrossel completo do zero: estrutura, texto final, design, legenda e montagem.", aula: "m4b" },
-            { titulo: "2 · Infográficos, livros e imagens", desc: "Gera infográficos, capas e imagens de posts — e estrutura um e-book do zero.", aula: "m4c" },
+            { titulo: "2 · Imagens, infográficos e thumbnails", desc: "Imagens fotográficas, infográficos e slides, e thumbnails de YouTube — cada um com o seu prompt.", aula: "m4c" },
             { titulo: "3 · Carrosséis com informação externa", desc: "Transforma um texto, documento, ideia ou os resultados do Grok/NotebookLM num carrossel.", aula: "m4d" },
           ] },
           { t: "nota", v: "info", texto: "**Qual escolher?** Tens só um tema na cabeça → Aula 1. Queres outro formato (infográfico, e-book, imagem) → Aula 2. Já tens matéria-prima (texto, documento, pesquisa do M1/M2 ou estrutura do M3) → Aula 3." },
@@ -717,27 +717,38 @@ No último, peça espaço para adicionar o seu @ e a logo.)` },
   {
     id: "m4c",
     numero: "ChatGPT · Aula 2",
-    titulo: "Infográficos, livros e imagens",
-    objetivo: "Usar a geração de imagem do ChatGPT para criar infográficos, imagens de posts e a capa do teu e-book — e estruturar o e-book do zero.",
+    titulo: "Imagens, infográficos e thumbnails",
+    objetivo: "Usar a geração de imagem do ChatGPT para três coisas distintas: imagens fotográficas realistas, infográficos e slides de apresentação, e thumbnails de YouTube — cada uma com o seu prompt.",
     links: [{ nome: "Abrir ChatGPT", url: "https://chatgpt.com" }],
     secoes: [
       {
-        titulo: "1. O que o ChatGPT desenha bem",
         blocos: [
-          { t: "tabela", cab: ["Formato", "Para quê", "Tamanho"], linhas: [
-            ["Infográfico", "Educar e gerar salvamentos — processo ou dados visualizados.", "1080 x 1350"],
-            ["Imagem de post", "Ilustrar um post estático ou a capa de um Reel.", "1080 x 1350 ou 1080 x 1080"],
-            ["Capa de e-book", "O teu lead magnet com cara profissional.", "Vertical (A4)"],
-            ["Story", "Fundos e visuais para stories.", "1080 x 1920 (9:16)"],
-          ] },
-          { t: "nota", v: "info", texto: "**Regra que vale para tudo:** pede **um formato de cada vez**, indica sempre o tamanho e a paleta, e corrige com uma alteração por mensagem." },
+          { t: "nota", v: "info", texto: "**Regra que vale para tudo:** pede **um formato de cada vez**, indica sempre o **tamanho** e a **paleta**, e corrige com **uma alteração por mensagem**. Para texto por cima, pede a imagem **sem texto** e escreve tu no Canva (evita erros de letras)." },
         ],
       },
       {
-        titulo: "2. Infográficos",
+        titulo: "3.1 Imagens fotográficas",
         blocos: [
-          { t: "p", texto: "Um infográfico é o teu método ou um processo **visualizado** — é dos formatos que mais gera guardados, porque a pessoa quer voltar a consultar." },
-          { t: "prompt", agente: "ChatGPT", nome: "Criar um infográfico", texto: `Cria um infográfico vertical 1080x1350 sobre [TEMA].
+          { t: "p", texto: "Imagens realistas, com ar de fotografia — para posts, fundos de stories, capas de Reels ou mockups de produto. Descreves a cena em português e o ChatGPT cria." },
+          { t: "prompt", agente: "ChatGPT", nome: "Imagem fotográfica", texto: `Cria uma imagem fotográfica realista de: [DESCREVE A CENA].
+- Formato: [1080x1350 retrato / 1080x1080 quadrado / 1080x1920 story]
+- Luz: [ex.: natural suave, luz de manhã junto à janela]
+- Ambiente/cores: [PALETA ou descrição]
+- Enquadramento: [ex.: primeiro plano, cima para baixo (flat lay)]
+Sem texto na imagem — o texto ponho eu depois.`, textoBr: `Crie uma imagem fotográfica realista de: [DESCREVA A CENA].
+- Formato: [1080x1350 retrato / 1080x1080 quadrado / 1080x1920 story]
+- Luz: [ex.: natural suave, luz da manhã perto da janela]
+- Ambiente/cores: [PALETA ou descrição]
+- Enquadramento: [ex.: primeiro plano, de cima para baixo (flat lay)]
+Sem texto na imagem — o texto eu coloco depois.` },
+          { t: "nota", v: "info", texto: "**Mais realismo:** diz o tipo de luz, a hora do dia e detalhes concretos (“chávena de café a fumegar, mesa de madeira”). Pede **3 variações** e corrige **uma coisa de cada vez** (“muda só o fundo para…”)." },
+        ],
+      },
+      {
+        titulo: "3.2 Infográficos e apresentações",
+        blocos: [
+          { t: "p", texto: "Infográfico = o teu método ou um processo **visualizado**. É dos formatos que mais gera guardados, porque a pessoa quer voltar a consultar. E os mesmos prompts servem para montar **slides de apresentação**." },
+          { t: "prompt", agente: "ChatGPT", nome: "Infográfico", texto: `Cria um infográfico vertical 1080x1350 sobre [TEMA].
 Conteúdo (por esta ordem):
 [LISTA OS 3 A 5 PASSOS OU DADOS]
 Estilo: limpo, fundo claro, cores [PALETA], títulos grandes,
@@ -748,55 +759,35 @@ Conteúdo (nesta ordem):
 Estilo: limpo, fundo claro, cores [PALETA], títulos grandes,
 ícones simples, numeração visível. Texto em português correto
 e legível no celular. Deixe espaço no rodapé para o meu @.` },
-          { t: "nota", v: "warn", texto: "**Confere números e letras:** infográficos têm muito texto e os geradores erram acentos. Revê tudo; se falhar, corrige por cima no Canva." },
+          { t: "prompt", agente: "ChatGPT", nome: "Slides de apresentação", texto: `Cria uma apresentação sobre [TEMA] para [PÚBLICO],
+em [Nº] slides no formato 16:9 (1920x1080).
+Para cada slide: título curto + 3 a 4 tópicos, mesmo
+estilo visual, cores [PALETA], muito espaço em branco.
+Slide 1 = capa; último slide = conclusão + CTA.`, textoBr: `Crie uma apresentação sobre [TEMA] para [PÚBLICO],
+em [Nº] slides no formato 16:9 (1920x1080).
+Para cada slide: título curto + 3 a 4 tópicos, mesmo
+estilo visual, cores [PALETA], muito espaço em branco.
+Slide 1 = capa; último slide = conclusão + CTA.` },
+          { t: "nota", v: "warn", texto: "**Confere números e letras:** infográficos e slides têm muito texto e os geradores erram acentos. Revê tudo; se falhar, pede de novo ou corrige por cima no Canva." },
         ],
       },
       {
-        titulo: "3. E-books e livros digitais",
+        titulo: "3.3 Thumbnails para o YouTube",
         blocos: [
-          { t: "p", texto: "Um e-book é o **lead magnet** perfeito: entregas nos stories (“manda a palavra X no Direct”) e transformas seguidores em contactos. Três prompts, na mesma conversa:" },
-          { t: "prompt", agente: "ChatGPT", nome: "Passo 1 · Estrutura do e-book", texto: `Quero criar um e-book sobre [TEMA] para [PÚBLICO].
-Objetivo: [ex.: captar contactos / entregar no Direct].
-Cria: título apelativo, subtítulo, e a estrutura de
-5 a 7 capítulos com 2 linhas do que cada um cobre.
-Tom: [DESCREVE O TEU TOM].`, textoBr: `Quero criar um e-book sobre [TEMA] para [PÚBLICO].
-Objetivo: [ex.: captar contatos / entregar no Direct].
-Crie: título chamativo, subtítulo, e a estrutura de
-5 a 7 capítulos com 2 linhas do que cada um cobre.
-Tom: [DESCREVA O SEU TOM].` },
-          { t: "prompt", agente: "ChatGPT", nome: "Passo 2 · Escrever capítulo a capítulo", texto: `Escreve o capítulo 1: [TÍTULO DO CAPÍTULO].
-300 a 500 palavras, no meu tom, com exemplos práticos
-e uma dica acionável no fim.
-
-(Repete para cada um: 'Agora o capítulo 2: …')`, textoBr: `Escreva o capítulo 1: [TÍTULO DO CAPÍTULO].
-300 a 500 palavras, no meu tom, com exemplos práticos
-e uma dica acionável no final.
-
-(Repita para cada um: 'Agora o capítulo 2: …')` },
-          { t: "prompt", agente: "ChatGPT", nome: "Passo 3 · Capa do e-book", texto: `Cria a capa do e-book, formato vertical (proporção A4):
-Título: "[TÍTULO]" · Subtítulo: "[SUBTÍTULO]"
-Estilo: [minimalista / editorial], cores [PALETA],
-título grande e legível em miniatura. Deixa espaço
-para o meu nome em baixo.`, textoBr: `Crie a capa do e-book, formato vertical (proporção A4):
-Título: "[TÍTULO]" · Subtítulo: "[SUBTÍTULO]"
-Estilo: [minimalista / editorial], cores [PALETA],
-título grande e legível em miniatura. Deixe espaço
-para o meu nome embaixo.` },
-          { t: "nota", v: "info", texto: "**Montagem final:** junta texto + capa num PDF no Canva ou no Google Docs. O ChatGPT também consegue gerar o PDF diretamente — pede “monta tudo num PDF para download”." },
-        ],
-      },
-      {
-        titulo: "4. Imagens para posts",
-        blocos: [
-          { t: "prompt", agente: "ChatGPT", nome: "Imagem de post", texto: `Cria uma imagem [1080x1350 retrato / 1080x1080 quadrado /
-1080x1920 story] sobre: [DESCREVE A CENA].
-Estilo: [fotografia realista / ilustração / 3D suave],
-cores [PALETA]. Sem texto na imagem — o texto ponho eu.`, textoBr: `Crie uma imagem [1080x1350 retrato / 1080x1080 quadrado /
-1080x1920 story] sobre: [DESCREVA A CENA].
-Estilo: [fotografia realista / ilustração / 3D suave],
-cores [PALETA]. Sem texto na imagem — o texto eu coloco.` },
-          { t: "nota", v: "info", texto: "**A afinar:** pede variações (“dá-me 3 versões”) e corrige **uma coisa de cada vez** (“muda só o fundo para…”). Pedir 5 correções juntas confunde o gerador." },
-          { t: "nota", v: "warn", texto: "**Exercício:** cria 1 infográfico com os passos do teu método e a capa de um mini e-book sobre a maior dor do teu público." },
+          { t: "p", texto: "A thumbnail decide o clique — mais do que o título. Formato **16:9 (1280 x 720)**, poucas palavras enormes, uma emoção clara e altíssimo contraste para se ler no telemóvel." },
+          { t: "prompt", agente: "ChatGPT", nome: "Thumbnail de YouTube", texto: `Cria uma thumbnail de YouTube 1280x720 (16:9) sobre [TEMA].
+- Texto curto e ENORME (máx. 3 a 4 palavras): "[TEXTO]"
+- Emoção/gancho: [ex.: surpresa, "isto mudou tudo"]
+- Elemento de destaque: [ex.: um rosto com expressão / um objeto]
+- Cores fortes, altíssimo contraste, fundo simples
+- Legível numa miniatura pequena no telemóvel`, textoBr: `Crie uma thumbnail de YouTube 1280x720 (16:9) sobre [TEMA].
+- Texto curto e ENORME (máx. 3 a 4 palavras): "[TEXTO]"
+- Emoção/gancho: [ex.: surpresa, "isso mudou tudo"]
+- Elemento de destaque: [ex.: um rosto com expressão / um objeto]
+- Cores fortes, altíssimo contraste, fundo simples
+- Legível numa miniatura pequena no celular` },
+          { t: "nota", v: "info", texto: "**Dica:** se queres o teu rosto na thumbnail, gera o fundo e o texto aqui e junta a tua foto no Canva — fica mais fiel do que pedir o rosto à IA. Testa 2 versões e fica com a de maior contraste." },
+          { t: "nota", v: "warn", texto: "**Exercício:** cria 1 imagem fotográfica para um post, 1 infográfico com os passos do teu método e 1 thumbnail para um vídeo teu. Um de cada tipo." },
         ],
       },
     ],

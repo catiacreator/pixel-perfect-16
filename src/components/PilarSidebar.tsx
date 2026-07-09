@@ -58,7 +58,7 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   "↳ Reels": Video,
   "1 · Agentes Creator": Sparkles,
   "2 · Carrosséis no ChatGPT": LayoutGrid,
-  "3 · Infográficos, livros e imagens": Palette,
+  "3 · Imagens, infográficos, thumbnails": Palette,
   "4 · Carrosséis c/ info externa": FileText,
   "1 · Criar conteúdo no Claude": AlignLeft,
   "2 · Carrosséis visuais": LayoutGrid,
@@ -108,7 +108,7 @@ const PILARES: Record<string | number, PilarDef> = {
         children: [
           { label: "1 · Agentes Creator", to: "/agentes-creator", badge: "Bónus" },
           { label: "2 · Carrosséis no ChatGPT", to: "/conteudo-ia?aula=m4b" },
-          { label: "3 · Infográficos, livros e imagens", to: "/conteudo-ia?aula=m4c" },
+          { label: "3 · Imagens, infográficos, thumbnails", to: "/conteudo-ia?aula=m4c" },
           { label: "4 · Carrosséis c/ info externa", to: "/conteudo-ia?aula=m4d" },
         ],
       },
