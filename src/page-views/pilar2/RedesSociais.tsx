@@ -46,6 +46,7 @@ const TITULOS: Record<string, string> = {
   linha: "Linha Editorial",
   bio: "Posicionamento e Bio",
   agendar: "Publicar",
+  automacao: "Automação para mensagens automáticas",
 };
 
 const OBJETIVOS_CONTEUDO: { id: Objetivo; label: string }[] = [
@@ -749,6 +750,78 @@ export default function RedesSociais() {
             <Link to="/metodo/pilar-2/redes-sociais/instagram" className="text-sm font-semibold text-terracotta">
               Ir para Instagram →
             </Link>
+          </div>
+        )}
+
+        {aba === "automacao" && (
+          <div className="space-y-6">
+            {/* Intro */}
+            <div className="rounded-2xl border border-border bg-white p-6">
+              <span className="w-11 h-11 rounded-xl bg-terracotta/12 text-terracotta flex items-center justify-center mb-4">
+                <Bot size={20} />
+              </span>
+              <h2 className="font-serif text-xl text-ink mb-2">Responde a toda a gente — mesmo enquanto dormes</h2>
+              <p className="text-[15px] text-ink/70 leading-relaxed mb-3">
+                A ferramenta que uso para isto chama-se <strong className="text-ink">Youze</strong>. Ligas o teu Instagram
+                e ela responde por ti: quando alguém comenta uma palavra-chave, envias-lhe o link ou o material na DM;
+                reage a stories, envia lembretes de compra e até cria os fluxos com IA. Configuras em ~5 minutos, sem saber programar.
+              </p>
+              <p className="text-[13px] text-ink/55 leading-relaxed">
+                Usa a API oficial da Meta, por isso a tua conta fica segura. Tem um plano gratuito para começares.
+              </p>
+            </div>
+
+            {/* Como funciona — 3 passos */}
+            <div>
+              <h3 className="font-serif text-lg text-ink mb-3">Como funciona, em 3 passos</h3>
+              <div className="grid sm:grid-cols-3 gap-3">
+                {[
+                  { n: "1", t: "Liga o Instagram", d: "Crias conta na Youze e ligas o teu perfil profissional em segundos." },
+                  { n: "2", t: "Escolhes o gatilho", d: "Ex.: “quando alguém comentar QUERO neste post…”." },
+                  { n: "3", t: "Defines a resposta", d: "A Youze envia o link, o PDF ou a mensagem na DM — automaticamente, 24h por dia." },
+                ].map((s) => (
+                  <div key={s.n} className="rounded-2xl border border-border bg-white p-4">
+                    <span className="w-7 h-7 rounded-full bg-terracotta text-cream text-sm font-semibold flex items-center justify-center mb-2">{s.n}</span>
+                    <h4 className="font-serif text-[15px] text-ink mb-1">{s.t}</h4>
+                    <p className="text-[13px] text-ink/60 leading-relaxed">{s.d}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Casos de uso */}
+            <div>
+              <h3 className="font-serif text-lg text-ink mb-3">O que podes automatizar</h3>
+              <div className="grid sm:grid-cols-3 gap-3">
+                {[
+                  { icon: MessageSquare, t: "Comentário → DM", d: "Alguém comenta “QUERO” e recebe o link automaticamente na mensagem privada." },
+                  { icon: MessageCircle, t: "Boas-vindas automáticas", d: "Cada novo seguidor recebe uma mensagem tua a apresentar o que fazes." },
+                  { icon: Zap, t: "Recuperar vendas", d: "Lembretes automáticos para quem mostrou interesse mas não comprou." },
+                ].map((c) => (
+                  <div key={c.t} className="rounded-2xl border border-border bg-white p-4">
+                    <c.icon size={18} className="text-terracotta mb-2" />
+                    <h4 className="font-serif text-[15px] text-ink mb-1">{c.t}</h4>
+                    <p className="text-[13px] text-ink/60 leading-relaxed">{c.d}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* CTA — link da Cátia */}
+            <div className="rounded-3xl bg-gradient-to-br from-terracotta-dark to-terracotta text-cream p-8 text-center">
+              <h3 className="font-serif text-2xl mb-2">Experimenta a Youze</h3>
+              <p className="text-cream/85 max-w-lg mx-auto leading-relaxed mb-5">
+                Começa com o plano gratuito e monta a tua primeira automação hoje.
+              </p>
+              <a
+                href="https://youze.com.br?tag=YOUZUKF7U4"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-cream text-terracotta-dark text-sm font-semibold hover:bg-white transition-colors"
+              >
+                <Bot size={17} /> Criar conta na Youze <ArrowUpRight size={16} />
+              </a>
+            </div>
           </div>
         )}
         </>

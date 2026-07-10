@@ -76,6 +76,7 @@ type Item = {
   badge?: string;
   children?: SubItem[];
   id?: string; // id na ESTRUTURA — se bloqueado no painel, alunos veem "Em breve"
+  secao?: string; // título de secção — desenha uma linha + rótulo pequeno antes do item
 };
 
 type SidebarKey = 1 | 2 | 3 | 4 | "academia" | "redes" | "conteudo-ia";
@@ -179,6 +180,7 @@ const PILARES: Record<string | number, PilarDef> = {
       { num: 5, id: "redes.plano", label: "Plano de Posts", to: "/metodo/pilar-2/redes-sociais?aba=plano", icon: CalendarDays },
       { num: 6, id: "redes.desafio", label: "30 posts em 30 dias", to: "/metodo/pilar-2/redes-sociais?aba=desafio", icon: Zap },
       { num: 7, id: "redes.agendar", label: "Publicar", to: "/metodo/pilar-2/redes-sociais?aba=agendar", icon: CalendarClock },
+      { num: 1, id: "redes.automacao", label: "Automação para mensagens automáticas", to: "/metodo/pilar-2/redes-sociais?aba=automacao", icon: MessageSquare, secao: "Ferramentas Essenciais" },
     ],
   },
   1: {
@@ -318,6 +320,14 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
         <ul className="space-y-1">
           {def.items.map((item) => {
             const Icon = item.icon;
+            // Separador de secção (linha + rótulo pequeno) antes deste item.
+            const secao = item.secao ? (
+              <li key={`sec-${item.to}`} className="pt-3 mt-2 border-t border-white/15" aria-hidden>
+                <p className="px-2 pt-1 pb-1.5 text-[9.5px] tracking-[0.18em] uppercase font-semibold text-white/50">
+                  {item.secao}
+                </p>
+              </li>
+            ) : null;
             // "Oculto" no mini-curso → item nem aparece na sidebar (para os alunos).
             if (bloqueadoParaAlunos && def.pilar === "conteudo-ia" && item.id && isBloqueadoRaw(item.id) && modoBloqueio(item.id) === "oculto") {
               return null;
@@ -326,7 +336,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
 
             // Item bloqueado para alunos — mostra "Em breve", sem link nem submenu.
             if (locked) {
-              return (
+              return [secao,
                 <li key={item.to}>
                   <div className="flex items-center gap-3 pl-2 pr-2 py-2 text-[13px] rounded-2xl opacity-70 cursor-not-allowed select-none">
                     <span className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 bg-white/10 text-white/60">
@@ -339,8 +349,8 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                       Em breve
                     </span>
                   </div>
-                </li>
-              );
+                </li>,
+              ];
             }
 
             // Em vista admin, sinaliza (sem bloquear) o que está "Em breve" p/ alunos.
@@ -351,7 +361,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
             const childActive = hasChildren && item.children!.some((c) => isActive(c.to));
             const open = openId === item.to || active || childActive;
 
-            return (
+            return [secao,
               <li key={item.to}>
                 <div
                   className={`group flex items-stretch rounded-2xl transition-all duration-200 ${
@@ -447,8 +457,8 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                     })}
                   </ul>
                 )}
-              </li>
-            );
+              </li>,
+            ];
           })}
         </ul>
       </nav>
