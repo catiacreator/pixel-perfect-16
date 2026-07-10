@@ -1107,3 +1107,100 @@ export const criarUploadEncontro = createServerFn({ method: "POST" })
     const { data: pub } = supabaseAdmin.storage.from("encontros").getPublicUrl(path);
     return { path: signed.path, token: signed.token, publicUrl: pub.publicUrl };
   });
+
+// ── Códigos de ferramentas (ex.: cupão de desconto) — editáveis pelo admin ──
+// Guardado no blob da conta principal, em "__ferramentas_codigos__": { chave: codigo }.
+const FERRAMENTA_CODIGOS_KEY = "__ferramentas_codigos__";
+
+export const getFerramentaCodigo = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { chave: string }) => z.object({ chave: z.string().max(80) }).parse(d))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { blob } = await readOwnerBlob(supabaseAdmin);
+    const mapa = (blob[FERRAMENTA_CODIGOS_KEY] as Record<string, string>) ?? {};
+    return { codigo: typeof mapa[data.chave] === "string" ? mapa[data.chave] : "" };
+  });
+
+export const setFerramentaCodigo = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { chave: string; codigo: string }) =>
+    z.object({ chave: z.string().max(80), codigo: z.string().max(200) }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { uid, blob } = await readOwnerBlob(supabaseAdmin);
+    const mapa = { ...((blob[FERRAMENTA_CODIGOS_KEY] as Record<string, string>) ?? {}), [data.chave]: data.codigo };
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: uid, data: { ...blob, [FERRAMENTA_CODIGOS_KEY]: mapa }, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
+    return { ok: true };
+  });
+
+// ── Comentários dos Encontros — mural partilhado (todos os alunos comentam) ──
+// Guardado no blob da conta principal, sob "__encontros_coment__": Comentario[].
+const COMENT_KEY = "__encontros_coment__";
+type ComentarioBlob = { id: string; encontroId: string; userId: string; nome: string; avatar?: string; texto: string; ts: string };
+
+export const getComentarios = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { encontroId: string }) => z.object({ encontroId: z.string().max(120) }).parse(d))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { blob } = await readOwnerBlob(supabaseAdmin);
+    const all = Array.isArray(blob[COMENT_KEY]) ? (blob[COMENT_KEY] as ComentarioBlob[]) : [];
+    return all
+      .filter((c) => c.encontroId === data.encontroId)
+      .sort((a, b) => (a.ts < b.ts ? -1 : a.ts > b.ts ? 1 : 0));
+  });
+
+export const addComentario = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { encontroId: string; texto: string }) =>
+    z.object({ encontroId: z.string().max(120), texto: z.string().trim().min(1).max(2000) }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const uid = context.userId as string;
+    const { data: prof } = await supabaseAdmin.from("profiles").select("nome, avatar_url").eq("id", uid).maybeSingle();
+    const { uid: ownerUid, blob } = await readOwnerBlob(supabaseAdmin);
+    const all = Array.isArray(blob[COMENT_KEY]) ? [...(blob[COMENT_KEY] as ComentarioBlob[])] : [];
+    const novo: ComentarioBlob = {
+      id: `c-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      encontroId: data.encontroId,
+      userId: uid,
+      nome: prof?.nome || "Aluno",
+      avatar: prof?.avatar_url || undefined,
+      texto: data.texto,
+      ts: new Date().toISOString(),
+    };
+    all.push(novo);
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: ownerUid, data: { ...blob, [COMENT_KEY]: all }, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
+    return novo;
+  });
+
+export const removerComentario = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { id: string }) => z.object({ id: z.string().max(120) }).parse(d))
+  .handler(async ({ context, data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { uid: ownerUid, blob } = await readOwnerBlob(supabaseAdmin);
+    const all = Array.isArray(blob[COMENT_KEY]) ? (blob[COMENT_KEY] as ComentarioBlob[]) : [];
+    const alvo = all.find((c) => c.id === data.id);
+    if (!alvo) return { ok: true };
+    // Só o autor do comentário ou um admin/moderador pode apagar.
+    if (alvo.userId !== context.userId) await assertAdmin(context);
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: ownerUid, data: { ...blob, [COMENT_KEY]: all.filter((c) => c.id !== data.id) }, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
+    return { ok: true };
+  });

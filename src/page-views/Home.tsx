@@ -63,11 +63,12 @@ const PRODUTOS = [
     desc: "Sessões em direto para tirares dúvidas, receberes feedback e avançares com acompanhamento.",
     to: "/encontros",
     cta: "Ver os encontros",
-    img: "/encontros.svg",
-    pos: "center 30%",
-    cor: "#D9553F",
+    img: "/encontros.svg?v=2",
+    pos: "center",
+    cor: "#A2004E",
     icon: Users,
     estruturaId: "encontros",
+    soCapa: true,
   },
 ];
 
@@ -153,6 +154,7 @@ export default function Home() {
           </span>
         )}
 
+        {!(p as { soCapa?: boolean }).soCapa && (
         <div className="relative bg-black/80 rounded-2xl px-4 py-4">
           <p className="text-[11px] tracking-[0.22em] uppercase text-white/85 mb-1.5">{p.assinatura}</p>
           <h2 className="font-display text-2xl md:text-3xl leading-[1.05] tracking-[-0.02em] text-white">
@@ -182,6 +184,7 @@ export default function Home() {
             </span>
           )}
         </div>
+        )}
       </Wrapper>
     );
   };

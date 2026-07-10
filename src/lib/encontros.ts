@@ -15,6 +15,16 @@ export type Encontro = {
   ficheiros?: EncontroFicheiro[];
 };
 
+export type EncontroComentario = {
+  id: string;
+  encontroId: string;
+  userId: string;
+  nome: string;
+  avatar?: string;
+  texto: string;
+  ts: string; // ISO
+};
+
 /** Extensão em maiúsculas para a etiqueta do ficheiro (PDF, DOCX, …). */
 export function extLabel(nome: string): string {
   const m = /\.([a-z0-9]+)$/i.exec(nome.trim());
