@@ -18,6 +18,8 @@ import Desafio30Dias from "../../components/Desafio30Dias";
 import { CRIAR_CONTEUDO, type Objetivo } from "@/data/criar-conteudo";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
 import { useBloqueios } from "@/lib/bloqueios";
+import { useServerFn } from "@tanstack/react-start";
+import { getFerramentaCodigo, setFerramentaCodigo } from "@/lib/admin.functions";
 import EmManutencao from "@/components/EmManutencao";
 
 const AGENTE_POR_FORMATO: Record<string, string> = {
@@ -47,6 +49,7 @@ const TITULOS: Record<string, string> = {
   bio: "Posicionamento e Bio",
   agendar: "Publicar",
   automacao: "Automação para mensagens automáticas",
+  "carousel-snap": "Carousel Snap",
 };
 
 const OBJETIVOS_CONTEUDO: { id: Objetivo; label: string }[] = [
@@ -824,9 +827,133 @@ export default function RedesSociais() {
             </div>
           </div>
         )}
+
+        {aba === "carousel-snap" && <CarouselSnap podeEditar={!bloqueadoParaAlunos} />}
         </>
         )}
       </div>
     </Layout>
+  );
+}
+
+// ─────────────── Ferramenta: Carousel Snap (link + código editável) ───────────────
+function CarouselSnap({ podeEditar }: { podeEditar: boolean }) {
+  const LINK = "https://carouselsnap.app/";
+  const CHAVE = "carousel-snap";
+  const CODIGO_PADRAO = "COMUNIDADE-JUL26-BDA5";
+
+  const getCod = useServerFn(getFerramentaCodigo);
+  const setCod = useServerFn(setFerramentaCodigo);
+  const [codigo, setCodigo] = useState(CODIGO_PADRAO);
+  const [editando, setEditando] = useState(false);
+  const [rascunho, setRascunho] = useState("");
+  const [aGuardar, setAGuardar] = useState(false);
+  const [copiado, setCopiado] = useState(false);
+
+  useEffect(() => {
+    let vivo = true;
+    getCod({ data: { chave: CHAVE } })
+      .then((r) => { if (vivo && r?.codigo) setCodigo(r.codigo); })
+      .catch(() => {});
+    return () => { vivo = false; };
+  }, [getCod]);
+
+  async function guardar() {
+    const novo = rascunho.trim();
+    if (!novo) return;
+    setAGuardar(true);
+    try {
+      await setCod({ data: { chave: CHAVE, codigo: novo } });
+      setCodigo(novo);
+      setEditando(false);
+    } finally {
+      setAGuardar(false);
+    }
+  }
+
+  function copiar() {
+    navigator.clipboard?.writeText(codigo).then(() => {
+      setCopiado(true);
+      setTimeout(() => setCopiado(false), 1600);
+    });
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Intro */}
+      <div className="rounded-2xl border border-border bg-white p-6">
+        <span className="w-11 h-11 rounded-xl bg-terracotta/12 text-terracotta flex items-center justify-center mb-4">
+          <LayoutGrid size={20} />
+        </span>
+        <h2 className="font-serif text-xl text-ink mb-2">Cria carrosséis lindos em minutos</h2>
+        <p className="text-[15px] text-ink/70 leading-relaxed">
+          O <strong className="text-ink">Carousel Snap</strong> é a ferramenta que uso para montar carrosséis de
+          Instagram com um visual profissional — guardas os teus estilos e reaproveitas o mesmo look em todos os posts,
+          sem começares do zero de cada vez.
+        </p>
+      </div>
+
+      {/* Código de desconto */}
+      <div className="rounded-2xl border border-terracotta/30 bg-terracotta/[0.04] p-6">
+        <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-2">
+          Código de desconto da comunidade
+        </p>
+        {editando ? (
+          <div className="flex flex-wrap items-center gap-2">
+            <input
+              value={rascunho}
+              onChange={(e) => setRascunho(e.target.value.toUpperCase())}
+              className="font-mono text-lg font-bold tracking-wider text-ink bg-white border border-border rounded-lg px-3 py-2 outline-none focus:border-terracotta"
+              placeholder="CODIGO"
+            />
+            <button
+              onClick={guardar}
+              disabled={aGuardar}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-terracotta text-cream text-sm font-semibold hover:bg-terracotta-dark transition-colors disabled:opacity-60"
+            >
+              {aGuardar ? "A guardar…" : "Guardar"}
+            </button>
+            <button onClick={() => setEditando(false)} className="text-ink/50 hover:text-ink text-sm px-2">
+              Cancelar
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="font-mono text-xl md:text-2xl font-bold tracking-wider text-ink select-all">{codigo}</span>
+            <button
+              onClick={copiar}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-terracotta/40 text-terracotta text-sm font-semibold hover:bg-terracotta/10 transition-colors"
+            >
+              {copiado ? <Check size={14} /> : <Copy size={14} />} {copiado ? "Copiado!" : "Copiar"}
+            </button>
+            {podeEditar && (
+              <button
+                onClick={() => { setRascunho(codigo); setEditando(true); }}
+                className="text-ink/45 hover:text-terracotta text-sm underline decoration-dotted"
+              >
+                editar código
+              </button>
+            )}
+          </div>
+        )}
+        <p className="text-[13px] text-ink/55 mt-3">Usa este código no checkout para teres desconto.</p>
+      </div>
+
+      {/* Botão do link */}
+      <div className="rounded-3xl bg-gradient-to-br from-terracotta-dark to-terracotta text-cream p-8 text-center">
+        <h3 className="font-serif text-2xl mb-2">Abrir o Carousel Snap</h3>
+        <p className="text-cream/85 max-w-lg mx-auto leading-relaxed mb-5">
+          Cria a tua conta e começa a montar carrosséis com o código acima.
+        </p>
+        <a
+          href={LINK}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-cream text-terracotta-dark text-sm font-semibold hover:bg-white transition-colors"
+        >
+          <LayoutGrid size={17} /> Ir para o Carousel Snap <ArrowUpRight size={16} />
+        </a>
+      </div>
+    </div>
   );
 }

@@ -55,6 +55,7 @@ import { Route as MeusProjetosRouteImport } from './routes/meus-projetos'
 import { Route as MetodoRouteImport } from './routes/metodo'
 import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as GlossarioRouteImport } from './routes/glossario'
+import { Route as Encontros2RouteImport } from './routes/encontros 2'
 import { Route as EncontrosRouteImport } from './routes/encontros'
 import { Route as DocMestreRouteImport } from './routes/doc-mestre'
 import { Route as ConteudoIaRouteImport } from './routes/conteudo-ia'
@@ -429,6 +430,11 @@ const MensagensRoute = MensagensRouteImport.update({
 const GlossarioRoute = GlossarioRouteImport.update({
   id: '/glossario',
   path: '/glossario',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Encontros2Route = Encontros2RouteImport.update({
+  id: '/encontros 2',
+  path: '/encontros 2',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EncontrosRoute = EncontrosRouteImport.update({
@@ -1268,6 +1274,7 @@ export interface FileRoutesByFullPath {
   '/conteudo-ia': typeof ConteudoIaRoute
   '/doc-mestre': typeof DocMestreRoute
   '/encontros': typeof EncontrosRoute
+  '/encontros 2': typeof Encontros2Route
   '/glossario': typeof GlossarioRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
@@ -1460,6 +1467,7 @@ export interface FileRoutesByTo {
   '/conteudo-ia': typeof ConteudoIaRoute
   '/doc-mestre': typeof DocMestreRoute
   '/encontros': typeof EncontrosRoute
+  '/encontros 2': typeof Encontros2Route
   '/glossario': typeof GlossarioRoute
   '/mensagens': typeof MensagensRoute
   '/meus-projetos': typeof MeusProjetosRoute
@@ -1643,6 +1651,7 @@ export interface FileRoutesById {
   '/conteudo-ia': typeof ConteudoIaRoute
   '/doc-mestre': typeof DocMestreRoute
   '/encontros': typeof EncontrosRoute
+  '/encontros 2': typeof Encontros2Route
   '/glossario': typeof GlossarioRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
@@ -1837,6 +1846,7 @@ export interface FileRouteTypes {
     | '/conteudo-ia'
     | '/doc-mestre'
     | '/encontros'
+    | '/encontros 2'
     | '/glossario'
     | '/mensagens'
     | '/metodo'
@@ -2029,6 +2039,7 @@ export interface FileRouteTypes {
     | '/conteudo-ia'
     | '/doc-mestre'
     | '/encontros'
+    | '/encontros 2'
     | '/glossario'
     | '/mensagens'
     | '/meus-projetos'
@@ -2211,6 +2222,7 @@ export interface FileRouteTypes {
     | '/conteudo-ia'
     | '/doc-mestre'
     | '/encontros'
+    | '/encontros 2'
     | '/glossario'
     | '/mensagens'
     | '/metodo'
@@ -2405,6 +2417,7 @@ export interface RootRouteChildren {
   ConteudoIaRoute: typeof ConteudoIaRoute
   DocMestreRoute: typeof DocMestreRoute
   EncontrosRoute: typeof EncontrosRoute
+  Encontros2Route: typeof Encontros2Route
   GlossarioRoute: typeof GlossarioRoute
   MensagensRoute: typeof MensagensRoute
   MetodoRoute: typeof MetodoRouteWithChildren
@@ -2777,6 +2790,13 @@ declare module '@tanstack/react-router' {
       path: '/glossario'
       fullPath: '/glossario'
       preLoaderRoute: typeof GlossarioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/encontros 2': {
+      id: '/encontros 2'
+      path: '/encontros 2'
+      fullPath: '/encontros 2'
+      preLoaderRoute: typeof Encontros2RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/encontros': {
@@ -4220,6 +4240,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConteudoIaRoute: ConteudoIaRoute,
   DocMestreRoute: DocMestreRoute,
   EncontrosRoute: EncontrosRoute,
+  Encontros2Route: Encontros2Route,
   GlossarioRoute: GlossarioRoute,
   MensagensRoute: MensagensRoute,
   MetodoRoute: MetodoRouteWithChildren,

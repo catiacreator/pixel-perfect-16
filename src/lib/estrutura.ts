@@ -46,6 +46,7 @@ export const ESTRUTURA: Nodo[] = [
       { id: "redes.assistente", label: "Assistente Cat.IA", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=assistente" },
       { id: "redes.agendar", label: "Publicar", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=agendar" },
       { id: "redes.automacao", label: "Automação para mensagens automáticas", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=automacao" },
+      { id: "redes.carousel-snap", label: "Carousel Snap", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=carousel-snap" },
     ],
   },
   {
