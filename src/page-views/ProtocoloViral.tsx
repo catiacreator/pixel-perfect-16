@@ -1,6 +1,6 @@
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
-import { ArrowUpRight, ArrowLeft, Compass, Instagram, FileText, Lock, Users } from "lucide-react";
+import { ArrowUpRight, ArrowLeft, Compass, Instagram, FileText, Lock } from "lucide-react";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
 import { useBloqueios } from "@/lib/bloqueios";
 
@@ -30,19 +30,6 @@ const CARDS = [
     cor: "#C8487E",
     icon: Instagram,
     estruturaId: "redes",
-  },
-  {
-    key: "encontros",
-    tag: "Mentoria · ao vivo",
-    titulo: "Encontros",
-    desc: "Sessões em direto comigo — dúvidas, feedback e acompanhamento em grupo.",
-    to: "/encontros",
-    cta: "Ver os encontros",
-    img: "/encontros.svg",
-    pos: "center 38%",
-    cor: "#D9553F",
-    icon: Users,
-    estruturaId: "encontros",
   },
 ];
 
