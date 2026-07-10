@@ -145,9 +145,11 @@ export default function Home() {
         />
         <span aria-hidden className="absolute top-0 left-0 right-0 h-1.5" style={{ background: p.cor }} />
 
-        <span className="absolute top-6 left-6 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 bg-white/12 border border-white/25 rounded-full px-3 py-1.5 backdrop-blur-sm">
-          <Icon size={13} /> {p.tag}
-        </span>
+        {!(p as { soCapa?: boolean }).soCapa && (
+          <span className="absolute top-6 left-6 inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90 bg-white/12 border border-white/25 rounded-full px-3 py-1.5 backdrop-blur-sm">
+            <Icon size={13} /> {p.tag}
+          </span>
+        )}
         {locked && (
           <span className={`absolute top-6 right-6 inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] rounded-full px-3 py-1.5 backdrop-blur-sm ${modoDesbloquear ? "text-ink bg-white/90 border border-white" : "text-white bg-white/15 border border-white/30"}`}>
             <Lock size={12} /> {modoDesbloquear ? "Bloqueado" : "Em breve"}
