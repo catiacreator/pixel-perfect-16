@@ -1048,3 +1048,62 @@ export const getRanking = createServerFn({ method: "GET" })
       isMe: r.id === context.userId,
     }));
   });
+
+// ───────── Encontros (mentoria ao vivo) — galeria de vídeos + materiais ─────────
+// Guardado em "__encontros__": Encontro[]. Ler: qualquer autenticado. Escrever: admin.
+const ENCONTROS_KEY = "__encontros__";
+
+export const getEncontros = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async () => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { blob } = await readOwnerBlob(supabaseAdmin);
+    const e = blob[ENCONTROS_KEY];
+    return Array.isArray(e) ? e : [];
+  });
+
+export const setEncontros = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { encontros: unknown[] }) =>
+    z.object({
+      encontros: z.array(z.object({
+        id: z.string(),
+        titulo: z.string().max(200),
+        data: z.string().max(120).optional(),
+        videoUrl: z.string().max(2000).optional(),
+        descricao: z.string().max(20000).optional(),
+        links: z.array(z.object({ nome: z.string().max(200), url: z.string().max(2000) })).max(50).optional(),
+        ficheiros: z.array(z.object({ nome: z.string().max(300), url: z.string().max(2000), tipo: z.string().max(120).optional() })).max(50).optional(),
+      })).max(300),
+    }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { uid, blob } = await readOwnerBlob(supabaseAdmin);
+    const next = { ...blob, [ENCONTROS_KEY]: data.encontros };
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: uid, data: next, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
+    return { ok: true };
+  });
+
+// Cria um URL assinado para o browser fazer upload direto ao Storage (evita o limite
+// de ~4.5MB dos server functions da Vercel). Devolve { path, token, publicUrl }.
+export const criarUploadEncontro = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { nome: string }) =>
+    z.object({ nome: z.string().min(1).max(300) }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const safe = data.nome.replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "").slice(-120) || "ficheiro";
+    const path = `materiais/${Date.now()}-${safe}`;
+    const { data: signed, error } = await supabaseAdmin.storage.from("encontros").createSignedUploadUrl(path);
+    if (error || !signed) throw error ?? new Error("Falha ao criar URL de upload.");
+    const { data: pub } = supabaseAdmin.storage.from("encontros").getPublicUrl(path);
+    return { path: signed.path, token: signed.token, publicUrl: pub.publicUrl };
+  });

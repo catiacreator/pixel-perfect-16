@@ -45,6 +45,7 @@ export const ESTRUTURA: Nodo[] = [
       { id: "redes.desafio", label: "30 posts em 30 dias", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=desafio" },
       { id: "redes.assistente", label: "Assistente Cat.IA", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=assistente" },
       { id: "redes.agendar", label: "Publicar", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=agendar" },
+      { id: "redes.automacao", label: "Automação para mensagens automáticas", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=automacao" },
     ],
   },
   {
@@ -190,12 +191,12 @@ export const ESTRUTURA: Nodo[] = [
     ],
   },
   {
-    id: "carrosseis-virais",
-    label: "Carrosséis Virais (Mini-curso)",
+    id: "encontros",
+    label: "Encontros (Mentoria)",
     tipo: "modulo",
-    to: "/carrosseis-virais",
+    to: "/encontros",
     filhos: [
-      { id: "carrosseis-virais.guia", label: "Guia de carrosséis no ChatGPT", tipo: "pagina", to: "/carrosseis-virais" },
+      { id: "encontros.sessoes", label: "Sessões ao vivo", tipo: "pagina", to: "/encontros" },
     ],
   },
 ];

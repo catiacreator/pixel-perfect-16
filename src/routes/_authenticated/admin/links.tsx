@@ -64,7 +64,6 @@ const SECCOES: Seccao[] = [
       { nome: "Criar Conteúdo", path: "/metodo/pilar-2/redes-sociais?aba=criar" },
       { nome: "Plano de Posts", path: "/metodo/pilar-2/redes-sociais?aba=plano" },
       { nome: "30 posts em 30 dias", path: "/metodo/pilar-2/redes-sociais?aba=desafio" },
-      { nome: "Assistente Cat.IA", path: "/metodo/pilar-2/redes-sociais?aba=assistente" },
       { nome: "Publicar", path: "/metodo/pilar-2/redes-sociais?aba=agendar" },
     ],
   },

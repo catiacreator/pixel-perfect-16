@@ -55,10 +55,10 @@ import { Route as MeusProjetosRouteImport } from './routes/meus-projetos'
 import { Route as MetodoRouteImport } from './routes/metodo'
 import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as GlossarioRouteImport } from './routes/glossario'
+import { Route as EncontrosRouteImport } from './routes/encontros'
 import { Route as DocMestreRouteImport } from './routes/doc-mestre'
 import { Route as ConteudoIaRouteImport } from './routes/conteudo-ia'
 import { Route as ConquistasRouteImport } from './routes/conquistas'
-import { Route as CarrosseisViraisRouteImport } from './routes/carrosseis-virais'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AssistenteRouteImport } from './routes/assistente'
 import { Route as AgentesCreatorRouteImport } from './routes/agentes-creator'
@@ -431,6 +431,11 @@ const GlossarioRoute = GlossarioRouteImport.update({
   path: '/glossario',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EncontrosRoute = EncontrosRouteImport.update({
+  id: '/encontros',
+  path: '/encontros',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DocMestreRoute = DocMestreRouteImport.update({
   id: '/doc-mestre',
   path: '/doc-mestre',
@@ -444,11 +449,6 @@ const ConteudoIaRoute = ConteudoIaRouteImport.update({
 const ConquistasRoute = ConquistasRouteImport.update({
   id: '/conquistas',
   path: '/conquistas',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CarrosseisViraisRoute = CarrosseisViraisRouteImport.update({
-  id: '/carrosseis-virais',
-  path: '/carrosseis-virais',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -1264,10 +1264,10 @@ export interface FileRoutesByFullPath {
   '/agentes-creator': typeof AgentesCreatorRoute
   '/assistente': typeof AssistenteRoute
   '/auth': typeof AuthRoute
-  '/carrosseis-virais': typeof CarrosseisViraisRoute
   '/conquistas': typeof ConquistasRoute
   '/conteudo-ia': typeof ConteudoIaRoute
   '/doc-mestre': typeof DocMestreRoute
+  '/encontros': typeof EncontrosRoute
   '/glossario': typeof GlossarioRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
@@ -1456,10 +1456,10 @@ export interface FileRoutesByTo {
   '/agentes-creator': typeof AgentesCreatorRoute
   '/assistente': typeof AssistenteRoute
   '/auth': typeof AuthRoute
-  '/carrosseis-virais': typeof CarrosseisViraisRoute
   '/conquistas': typeof ConquistasRoute
   '/conteudo-ia': typeof ConteudoIaRoute
   '/doc-mestre': typeof DocMestreRoute
+  '/encontros': typeof EncontrosRoute
   '/glossario': typeof GlossarioRoute
   '/mensagens': typeof MensagensRoute
   '/meus-projetos': typeof MeusProjetosRoute
@@ -1639,10 +1639,10 @@ export interface FileRoutesById {
   '/agentes-creator': typeof AgentesCreatorRoute
   '/assistente': typeof AssistenteRoute
   '/auth': typeof AuthRoute
-  '/carrosseis-virais': typeof CarrosseisViraisRoute
   '/conquistas': typeof ConquistasRoute
   '/conteudo-ia': typeof ConteudoIaRoute
   '/doc-mestre': typeof DocMestreRoute
+  '/encontros': typeof EncontrosRoute
   '/glossario': typeof GlossarioRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
@@ -1833,10 +1833,10 @@ export interface FileRouteTypes {
     | '/agentes-creator'
     | '/assistente'
     | '/auth'
-    | '/carrosseis-virais'
     | '/conquistas'
     | '/conteudo-ia'
     | '/doc-mestre'
+    | '/encontros'
     | '/glossario'
     | '/mensagens'
     | '/metodo'
@@ -2025,10 +2025,10 @@ export interface FileRouteTypes {
     | '/agentes-creator'
     | '/assistente'
     | '/auth'
-    | '/carrosseis-virais'
     | '/conquistas'
     | '/conteudo-ia'
     | '/doc-mestre'
+    | '/encontros'
     | '/glossario'
     | '/mensagens'
     | '/meus-projetos'
@@ -2207,10 +2207,10 @@ export interface FileRouteTypes {
     | '/agentes-creator'
     | '/assistente'
     | '/auth'
-    | '/carrosseis-virais'
     | '/conquistas'
     | '/conteudo-ia'
     | '/doc-mestre'
+    | '/encontros'
     | '/glossario'
     | '/mensagens'
     | '/metodo'
@@ -2401,10 +2401,10 @@ export interface RootRouteChildren {
   AgentesCreatorRoute: typeof AgentesCreatorRoute
   AssistenteRoute: typeof AssistenteRoute
   AuthRoute: typeof AuthRoute
-  CarrosseisViraisRoute: typeof CarrosseisViraisRoute
   ConquistasRoute: typeof ConquistasRoute
   ConteudoIaRoute: typeof ConteudoIaRoute
   DocMestreRoute: typeof DocMestreRoute
+  EncontrosRoute: typeof EncontrosRoute
   GlossarioRoute: typeof GlossarioRoute
   MensagensRoute: typeof MensagensRoute
   MetodoRoute: typeof MetodoRouteWithChildren
@@ -2779,6 +2779,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GlossarioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/encontros': {
+      id: '/encontros'
+      path: '/encontros'
+      fullPath: '/encontros'
+      preLoaderRoute: typeof EncontrosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/doc-mestre': {
       id: '/doc-mestre'
       path: '/doc-mestre'
@@ -2798,13 +2805,6 @@ declare module '@tanstack/react-router' {
       path: '/conquistas'
       fullPath: '/conquistas'
       preLoaderRoute: typeof ConquistasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/carrosseis-virais': {
-      id: '/carrosseis-virais'
-      path: '/carrosseis-virais'
-      fullPath: '/carrosseis-virais'
-      preLoaderRoute: typeof CarrosseisViraisRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -4216,10 +4216,10 @@ const rootRouteChildren: RootRouteChildren = {
   AgentesCreatorRoute: AgentesCreatorRoute,
   AssistenteRoute: AssistenteRoute,
   AuthRoute: AuthRoute,
-  CarrosseisViraisRoute: CarrosseisViraisRoute,
   ConquistasRoute: ConquistasRoute,
   ConteudoIaRoute: ConteudoIaRoute,
   DocMestreRoute: DocMestreRoute,
+  EncontrosRoute: EncontrosRoute,
   GlossarioRoute: GlossarioRoute,
   MensagensRoute: MensagensRoute,
   MetodoRoute: MetodoRouteWithChildren,

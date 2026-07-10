@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import HeroRobot from "../components/HeroRobot";
-import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, X } from "lucide-react";
+import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, X, Users } from "lucide-react";
 
 const WHATSAPP_CATIA = "https://wa.link/jwr3yp";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
@@ -23,20 +23,6 @@ const PRODUTOS = [
     cor: "#7C56C9",
     icon: Sparkles,
     estruturaId: "conteudo-ia",
-  },
-  {
-    key: "carrosseis-virais",
-    tag: "Mini-curso",
-    titulo: "Carrosséis Virais",
-    assinatura: "imagens lindas no ChatGPT",
-    desc: "Cria carrosséis de imagem no ChatGPT — estilos, cores e como ajustar cada slide até ficar perfeito.",
-    to: "/carrosseis-virais",
-    cta: "Começar o mini-curso",
-    img: "/carrosseis-virais.svg",
-    pos: "center 30%",
-    cor: "#E5218C",
-    icon: Sparkles,
-    estruturaId: "carrosseis-virais",
   },
   {
     key: "protocolo",
@@ -69,10 +55,25 @@ const PRODUTOS = [
     estruturaId: "academia",
     sombraTitulo: true,
   },
+  {
+    key: "encontros",
+    tag: "Mentoria",
+    titulo: "Encontros",
+    assinatura: "ao vivo, comigo",
+    desc: "Sessões em direto para tirares dúvidas, receberes feedback e avançares com acompanhamento.",
+    to: "/encontros",
+    cta: "Ver os encontros",
+    img: "/encontros.svg",
+    pos: "center 30%",
+    cor: "#D9553F",
+    icon: Users,
+    estruturaId: "encontros",
+  },
 ];
 
-// Chaves que aparecem na secção "Mini-cursos" (as outras vão para os cursos principais).
-const MINI_CURSOS = ["conteudo-ia", "carrosseis-virais"];
+// Cada secção agrupa os cards pela sua chave; o resto vai para os cursos principais.
+const MINI_CURSOS = ["conteudo-ia"];
+const MENTORIA = ["encontros"];
 
 export default function Home() {
   const bloqueado = useBloqueadoParaAlunos();
@@ -243,7 +244,7 @@ export default function Home() {
         <div className="max-w-[1400px] mx-auto">
           {/* Cursos principais */}
           <div className="flex flex-col sm:flex-row gap-4 md:gap-5">
-            {PRODUTOS.filter((p) => !MINI_CURSOS.includes(p.key)).map((p, i) => renderCard(p, i))}
+            {PRODUTOS.filter((p) => !MINI_CURSOS.includes(p.key) && !MENTORIA.includes(p.key)).map((p, i) => renderCard(p, i))}
           </div>
 
           {/* Mini-cursos */}
@@ -254,6 +255,16 @@ export default function Home() {
 
           <div className="flex flex-col sm:flex-row justify-center sm:justify-start gap-4 md:gap-5">
             {PRODUTOS.filter((p) => MINI_CURSOS.includes(p.key)).map((p, i) => renderCard(p, i))}
+          </div>
+
+          {/* Mentoria */}
+          <div className="mt-14 mb-6">
+            <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-ink/50">Mentoria</p>
+            <div className="h-px bg-[var(--color-border)] mt-2.5" />
+          </div>
+
+          <div className="flex flex-col sm:flex-row justify-center sm:justify-start gap-4 md:gap-5">
+            {PRODUTOS.filter((p) => MENTORIA.includes(p.key)).map((p, i) => renderCard(p, i))}
           </div>
         </div>
       </section>
