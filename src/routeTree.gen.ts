@@ -58,7 +58,6 @@ import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as DocMestreRouteImport } from './routes/doc-mestre'
 import { Route as ConteudoIaRouteImport } from './routes/conteudo-ia'
 import { Route as ConquistasRouteImport } from './routes/conquistas'
-import { Route as CarrosseisViraisRouteImport } from './routes/carrosseis-virais'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AssistenteRouteImport } from './routes/assistente'
 import { Route as AgentesCreatorRouteImport } from './routes/agentes-creator'
@@ -444,11 +443,6 @@ const ConteudoIaRoute = ConteudoIaRouteImport.update({
 const ConquistasRoute = ConquistasRouteImport.update({
   id: '/conquistas',
   path: '/conquistas',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CarrosseisViraisRoute = CarrosseisViraisRouteImport.update({
-  id: '/carrosseis-virais',
-  path: '/carrosseis-virais',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -1264,7 +1258,6 @@ export interface FileRoutesByFullPath {
   '/agentes-creator': typeof AgentesCreatorRoute
   '/assistente': typeof AssistenteRoute
   '/auth': typeof AuthRoute
-  '/carrosseis-virais': typeof CarrosseisViraisRoute
   '/conquistas': typeof ConquistasRoute
   '/conteudo-ia': typeof ConteudoIaRoute
   '/doc-mestre': typeof DocMestreRoute
@@ -1456,7 +1449,6 @@ export interface FileRoutesByTo {
   '/agentes-creator': typeof AgentesCreatorRoute
   '/assistente': typeof AssistenteRoute
   '/auth': typeof AuthRoute
-  '/carrosseis-virais': typeof CarrosseisViraisRoute
   '/conquistas': typeof ConquistasRoute
   '/conteudo-ia': typeof ConteudoIaRoute
   '/doc-mestre': typeof DocMestreRoute
@@ -1639,7 +1631,6 @@ export interface FileRoutesById {
   '/agentes-creator': typeof AgentesCreatorRoute
   '/assistente': typeof AssistenteRoute
   '/auth': typeof AuthRoute
-  '/carrosseis-virais': typeof CarrosseisViraisRoute
   '/conquistas': typeof ConquistasRoute
   '/conteudo-ia': typeof ConteudoIaRoute
   '/doc-mestre': typeof DocMestreRoute
@@ -1833,7 +1824,6 @@ export interface FileRouteTypes {
     | '/agentes-creator'
     | '/assistente'
     | '/auth'
-    | '/carrosseis-virais'
     | '/conquistas'
     | '/conteudo-ia'
     | '/doc-mestre'
@@ -2025,7 +2015,6 @@ export interface FileRouteTypes {
     | '/agentes-creator'
     | '/assistente'
     | '/auth'
-    | '/carrosseis-virais'
     | '/conquistas'
     | '/conteudo-ia'
     | '/doc-mestre'
@@ -2207,7 +2196,6 @@ export interface FileRouteTypes {
     | '/agentes-creator'
     | '/assistente'
     | '/auth'
-    | '/carrosseis-virais'
     | '/conquistas'
     | '/conteudo-ia'
     | '/doc-mestre'
@@ -2401,7 +2389,6 @@ export interface RootRouteChildren {
   AgentesCreatorRoute: typeof AgentesCreatorRoute
   AssistenteRoute: typeof AssistenteRoute
   AuthRoute: typeof AuthRoute
-  CarrosseisViraisRoute: typeof CarrosseisViraisRoute
   ConquistasRoute: typeof ConquistasRoute
   ConteudoIaRoute: typeof ConteudoIaRoute
   DocMestreRoute: typeof DocMestreRoute
@@ -2798,13 +2785,6 @@ declare module '@tanstack/react-router' {
       path: '/conquistas'
       fullPath: '/conquistas'
       preLoaderRoute: typeof ConquistasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/carrosseis-virais': {
-      id: '/carrosseis-virais'
-      path: '/carrosseis-virais'
-      fullPath: '/carrosseis-virais'
-      preLoaderRoute: typeof CarrosseisViraisRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -4216,7 +4196,6 @@ const rootRouteChildren: RootRouteChildren = {
   AgentesCreatorRoute: AgentesCreatorRoute,
   AssistenteRoute: AssistenteRoute,
   AuthRoute: AuthRoute,
-  CarrosseisViraisRoute: CarrosseisViraisRoute,
   ConquistasRoute: ConquistasRoute,
   ConteudoIaRoute: ConteudoIaRoute,
   DocMestreRoute: DocMestreRoute,

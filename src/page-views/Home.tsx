@@ -25,20 +25,6 @@ const PRODUTOS = [
     estruturaId: "conteudo-ia",
   },
   {
-    key: "carrosseis-virais",
-    tag: "Mini-curso",
-    titulo: "Carrosséis Virais",
-    assinatura: "imagens lindas no ChatGPT",
-    desc: "Cria carrosséis de imagem no ChatGPT — estilos, cores e como ajustar cada slide até ficar perfeito.",
-    to: "/carrosseis-virais",
-    cta: "Começar o mini-curso",
-    img: "/carrosseis-virais.svg",
-    pos: "center 30%",
-    cor: "#E5218C",
-    icon: Sparkles,
-    estruturaId: "carrosseis-virais",
-  },
-  {
     key: "protocolo",
     tag: "Mentoria · Instagram",
     titulo: "Protocolo Viral",
@@ -72,7 +58,7 @@ const PRODUTOS = [
 ];
 
 // Chaves que aparecem na secção "Mini-cursos" (as outras vão para os cursos principais).
-const MINI_CURSOS = ["conteudo-ia", "carrosseis-virais"];
+const MINI_CURSOS = ["conteudo-ia"];
 
 export default function Home() {
   const bloqueado = useBloqueadoParaAlunos();
