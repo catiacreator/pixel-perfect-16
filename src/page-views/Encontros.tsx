@@ -223,15 +223,7 @@ export default function Encontros() {
                     )}
                   </div>
 
-                  {/* Marcar como visto + Comentários (todos os alunos) */}
-                  {!editando && (
-                    <div className="mt-8 pt-8 border-t border-border space-y-10">
-                      <MarcarVisto encontroId={sel.id} />
-                      <Comentarios encontroId={sel.id} />
-                    </div>
-                  )}
-
-                  {/* Barra de edição */}
+                  {/* Barra de edição (admin) — logo a seguir aos materiais */}
                   {podeEditar && (
                     <div className="mt-6 flex flex-wrap items-center gap-3">
                       {editando ? (
@@ -246,9 +238,9 @@ export default function Encontros() {
                       ) : (
                         <button
                           onClick={() => setEditando(true)}
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-white text-ink text-sm font-semibold hover:border-berry transition-colors"
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-berry text-cream text-sm font-semibold hover:bg-berry-dark transition-colors"
                         >
-                          Editar este encontro
+                          <Save size={15} /> Editar este encontro
                         </button>
                       )}
                       <button
@@ -258,6 +250,14 @@ export default function Encontros() {
                         <Trash2 size={15} /> Eliminar
                       </button>
                       {aGuardar && <span className="text-xs text-ink/40">a guardar…</span>}
+                    </div>
+                  )}
+
+                  {/* Marcar como visto + Comentários (todos os alunos) */}
+                  {!editando && (
+                    <div className="mt-8 pt-8 border-t border-border space-y-10">
+                      <MarcarVisto encontroId={sel.id} />
+                      <Comentarios encontroId={sel.id} />
                     </div>
                   )}
                 </>

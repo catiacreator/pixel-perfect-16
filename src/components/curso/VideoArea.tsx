@@ -93,15 +93,31 @@ function VideoFicheiro({ videoUrl, titulo }: { videoUrl: string; titulo: string 
   );
 }
 
+// Converte links normais do YouTube/Vimeo para o formato "/embed" que pode ser
+// mostrado em iframe. Links watch?v= / youtu.be / shorts / live dão o erro
+// "refused to connect" quando embebidos diretamente.
+function toEmbedUrl(url: string): string {
+  const yt = url.match(
+    /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/|v\/)|youtu\.be\/)([\w-]{11})/,
+  );
+  if (yt) {
+    const inicio = url.match(/[?&#](?:t|start)=(\d+)/);
+    return `https://www.youtube.com/embed/${yt[1]}${inicio ? `?start=${inicio[1]}` : ""}`;
+  }
+  const vm = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+  if (vm) return `https://player.vimeo.com/video/${vm[1]}`;
+  return url;
+}
+
 export default function VideoArea({ videoUrl, titulo }: { videoUrl?: string; titulo: string }) {
   // Sem vídeo → não mostra nada (sem placeholder "em breve").
   if (!videoUrl) return null;
   const isFicheiro = /\.(mp4|webm|m4v|mov)(\?|#|$)/i.test(videoUrl);
   if (isFicheiro) return <VideoFicheiro videoUrl={videoUrl} titulo={titulo} />;
-  // Embed (YouTube/Vimeo/Tella) — mantém o iframe com ecrã inteiro nativo.
+  // Embed (YouTube/Vimeo/Tella) — normaliza para o formato /embed.
   return (
     <div className="rounded-2xl overflow-hidden border border-border bg-ink/90 aspect-video mb-6">
-      <iframe src={videoUrl} title={titulo} className="w-full h-full" allowFullScreen />
+      <iframe src={toEmbedUrl(videoUrl)} title={titulo} className="w-full h-full" allowFullScreen />
     </div>
   );
 }
