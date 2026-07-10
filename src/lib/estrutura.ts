@@ -189,6 +189,15 @@ export const ESTRUTURA: Nodo[] = [
       { id: "conteudo-ia.final", label: "O teu próximo passo", tipo: "pagina", to: "/conteudo-ia?aula=final" },
     ],
   },
+  {
+    id: "encontros",
+    label: "Encontros (Mentoria)",
+    tipo: "modulo",
+    to: "/encontros",
+    filhos: [
+      { id: "encontros.sessoes", label: "Sessões ao vivo", tipo: "pagina", to: "/encontros" },
+    ],
+  },
 ];
 
 // Bloqueios "Em breve" por defeito (enquanto a mentora não mexer no painel).
