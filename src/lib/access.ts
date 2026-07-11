@@ -26,9 +26,9 @@ export const FULL_ACCESS_PRODUCT_ID = ""; // TODO: id do produto único na Hotma
 export type ModuleKey = "jornada" | "academia" | "redes";
 
 export const MODULE_LABELS: Record<ModuleKey, string> = {
-  jornada: "A sua jornada",
+  jornada: "O Teu Método",
   academia: "Academia de IA",
-  redes: "Criando para as Redes Sociais",
+  redes: "Conteúdo Todo Dia",
 };
 
 /** Produto único: só o produto de acesso total concede acesso (a todos os módulos). */

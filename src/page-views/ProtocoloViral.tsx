@@ -8,7 +8,7 @@ const CARDS = [
   {
     key: "jornada",
     tag: "O método · 4 pilares",
-    titulo: "A tua Jornada",
+    titulo: "O Teu Método",
     desc: "Do tempo recuperado à venda — encontra o que ensinar e como te posicionar, passo a passo.",
     to: "/metodo",
     cta: "Ver a jornada",
@@ -21,7 +21,7 @@ const CARDS = [
   {
     key: "instagram",
     tag: "Conteúdo · Instagram",
-    titulo: "Criar para o Instagram",
+    titulo: "Conteúdo Todo Dia",
     desc: "Transforma o teu método em posts, linha editorial e calendário — para crescer com consistência.",
     to: "/metodo/pilar-2/redes-sociais",
     cta: "Criar conteúdo",

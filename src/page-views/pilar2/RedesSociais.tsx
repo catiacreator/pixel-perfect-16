@@ -644,19 +644,19 @@ export default function RedesSociais() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar="redes" pilarLabel="Criar para o Instagram" backTo="/protocolo" backLabel="Voltar ao Protocolo Viral" />
+      <PilarBreadcrumb pilar="redes" pilarLabel="Conteúdo Todo Dia" backTo="/protocolo" backLabel="Voltar ao Protocolo Viral" />
       {aba === "boas-vindas" ? (
         <PillarHeader
           numeral="✦"
           icon={<MessageSquare size={18} />}
           pilarLabel="Protocolo Viral · Instagram"
-          titulo="Criar para o Instagram"
+          titulo="Conteúdo Todo Dia"
           subtitulo="Comece pelas Boas-vindas: reveja o seu Documento Mestre e defina os temas com a Estrategista."
         />
       ) : (
         <div className="px-5 md:px-10 pt-6 max-w-4xl mx-auto">
-          <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">Criar para o Instagram</p>
-          <h1 className="font-serif text-2xl md:text-3xl text-ink tracking-tight">{TITULOS[aba] || "Criar para o Instagram"}</h1>
+          <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">Conteúdo Todo Dia</p>
+          <h1 className="font-serif text-2xl md:text-3xl text-ink tracking-tight">{TITULOS[aba] || "Conteúdo Todo Dia"}</h1>
         </div>
       )}
       <div className={`px-5 md:px-10 max-w-4xl mx-auto ${aba === "boas-vindas" ? "py-10" : "pt-6 pb-12"}`}>

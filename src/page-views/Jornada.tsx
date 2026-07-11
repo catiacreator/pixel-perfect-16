@@ -76,14 +76,14 @@ export default function Jornada() {
         </Link>
         {bloqueado && isBloqueado("redes") ? (
           <span className="inline-flex items-center gap-2 rounded-full bg-ink/5 text-ink/40 border border-border px-4 py-2 text-sm font-semibold cursor-not-allowed">
-            <Lock size={14} /> Criar para o Instagram · em breve
+            <Lock size={14} /> Conteúdo Todo Dia · em breve
           </span>
         ) : (
           <Link
             to="/metodo/pilar-2/redes-sociais"
             className="group inline-flex items-center gap-2 rounded-full bg-terracotta text-cream pl-4 pr-1.5 py-1.5 text-sm font-semibold hover:bg-terracotta-dark transition-colors"
           >
-            <Instagram size={15} /> Criar para o Instagram
+            <Instagram size={15} /> Conteúdo Todo Dia
             <span className="w-7 h-7 rounded-full bg-cream/20 flex items-center justify-center transition-transform group-hover:translate-x-0.5">
               <ArrowUpRight size={14} strokeWidth={2.5} />
             </span>
@@ -94,8 +94,8 @@ export default function Jornada() {
       <PillarHeader
         numeral="✦"
         icon={<Compass size={18} />}
-        pilarLabel="A sua jornada"
-        titulo="A sua jornada"
+        pilarLabel="O Teu Método"
+        titulo="O Teu Método"
         tituloHighlight="passo a passo"
         subtitulo="Os 4 pilares do método — do tempo recuperado à venda."
       />

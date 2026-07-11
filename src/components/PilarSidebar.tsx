@@ -91,7 +91,7 @@ type PilarDef = {
 const PILARES: Record<string | number, PilarDef> = {
   "conteudo-ia": {
     pilar: "conteudo-ia",
-    title: "Curso · Conteúdo com IA",
+    title: "Curso · Primeiro Mês de Posts",
     enabled: true,
     items: [
       { num: 0, id: "conteudo-ia.intro", label: "Introdução", to: "/conteudo-ia", icon: Compass },
@@ -162,7 +162,7 @@ const PILARES: Record<string | number, PilarDef> = {
   },
   redes: {
     pilar: "redes",
-    title: "Criar para o Instagram",
+    title: "Conteúdo Todo Dia",
     enabled: true,
     items: [
       { num: 1, id: "redes.boas-vindas", label: "Boas-vindas", to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas", icon: Compass },

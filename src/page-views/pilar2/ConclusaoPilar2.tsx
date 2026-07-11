@@ -92,7 +92,7 @@ export default function ConclusaoPilar2() {
               <span className="flex items-center gap-2 text-[10px] tracking-[0.18em] uppercase text-cream/70">
                 <Instagram size={14} /> Aplicar agora
               </span>
-              <span className="font-serif text-lg leading-tight">Criar para o Instagram</span>
+              <span className="font-serif text-lg leading-tight">Conteúdo Todo Dia</span>
               <span className="text-sm text-cream/80 leading-relaxed">
                 Gere Reels, Stories e carrosséis a partir do seu Documento Mestre.
               </span>
