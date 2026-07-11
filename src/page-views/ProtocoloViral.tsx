@@ -8,7 +8,7 @@ const CARDS = [
   {
     key: "jornada",
     tag: "O método · 4 pilares",
-    titulo: "O Teu Método",
+    titulo: "A tua jornada",
     desc: "Do tempo recuperado à venda — encontra o que ensinar e como te posicionar, passo a passo.",
     to: "/metodo",
     cta: "Ver a jornada",
