@@ -94,8 +94,8 @@ export default function Jornada() {
       <PillarHeader
         numeral="✦"
         icon={<Compass size={18} />}
-        pilarLabel="O Teu Método"
-        titulo="O Teu Método"
+        pilarLabel="A tua jornada"
+        titulo="A tua jornada"
         tituloHighlight="passo a passo"
         subtitulo="Os 4 pilares do método — do tempo recuperado à venda."
       />

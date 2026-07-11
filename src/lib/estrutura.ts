@@ -52,7 +52,7 @@ export const ESTRUTURA: Nodo[] = [
   },
   {
     id: "jornada",
-    label: "O Teu Método",
+    label: "A tua jornada",
     tipo: "modulo",
     to: "/metodo",
     filhos: [
