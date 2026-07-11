@@ -224,14 +224,22 @@ export const Route = createFileRoute("/api/reels-serie")({
           return Response.json({ error: "Ação desconhecida." }, { status: 400 });
         }
 
-        let model;
+        // Provedores a tentar por ordem: Anthropic (paga, se houver chave) → grátis.
+        const provedores: { nome: string; model: unknown }[] = [];
         try {
-          // Reels em Série usa a API paga da Anthropic (Claude) quando há chave —
-          // fiável, sem "Too Many Requests". Sem chave, cai no gateway gratuito.
-          model = resolveAnthropicModel() ?? resolveChatModel();
-        } catch (e) {
+          const a = resolveAnthropicModel();
+          if (a) provedores.push({ nome: "anthropic", model: a });
+        } catch {
+          /* sem Anthropic */
+        }
+        try {
+          provedores.push({ nome: "gratis", model: resolveChatModel() });
+        } catch {
+          /* sem gateway grátis */
+        }
+        if (!provedores.length) {
           return Response.json(
-            { error: e instanceof Error ? e.message : "Falta a chave de IA." },
+            { error: "Falta configurar a chave de IA no servidor." },
             { status: 500 },
           );
         }
@@ -241,20 +249,23 @@ export const Route = createFileRoute("/api/reels-serie")({
             ? promptNomes(body as Parameters<typeof promptNomes>[0])
             : promptRoteiros(body as Parameters<typeof promptRoteiros>[0]);
 
-        try {
-          const { text } = await generateText({ model, prompt });
-          const data = extrairJson(text);
-          return Response.json(data);
-        } catch (e) {
-          return Response.json(
-            {
-              error:
-                "Não consegui gerar agora. Tenta outra vez daqui a um instante — às vezes a IA gratuita fica ocupada.",
-              detail: e instanceof Error ? e.message : String(e),
-            },
-            { status: 502 },
-          );
+        const erros: string[] = [];
+        for (const p of provedores) {
+          try {
+            const { text } = await generateText({ model: p.model as Parameters<typeof generateText>[0]["model"], prompt });
+            const data = extrairJson(text);
+            return Response.json(data, { headers: { "x-ia-provider": p.nome } });
+          } catch (e) {
+            erros.push(`${p.nome}: ${e instanceof Error ? e.message : String(e)}`);
+          }
         }
+        return Response.json(
+          {
+            error: "Não consegui gerar agora. Tenta outra vez daqui a um instante.",
+            detail: erros.join(" | "),
+          },
+          { status: 502 },
+        );
       },
     },
   },

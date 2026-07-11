@@ -148,7 +148,10 @@ export default function ReelsEmSerie() {
         body: JSON.stringify({ ...payload, userContext }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data?.error || "Algo correu mal.");
+      if (!res.ok) {
+        const base = data?.error || "Algo correu mal.";
+        throw new Error(data?.detail ? `${base} (motivo: ${data.detail})` : base);
+      }
       return data;
     } catch (e) {
       setErro(e instanceof Error ? e.message : "Algo correu mal.");
