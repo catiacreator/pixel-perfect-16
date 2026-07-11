@@ -13,6 +13,8 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { Link } from "@/lib/router-compat";
+import { useServerFn } from "@tanstack/react-start";
+import { getUsoReelsSerie, consumirReelsSerie } from "@/lib/reels-serie.functions";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import PillarHeader from "../../components/PillarHeader";
@@ -98,6 +100,17 @@ export default function ReelsEmSerie() {
   const [etapa, setEtapa] = useState<Etapa>("ideia");
   const [ideia, setIdeia] = useState("");
   const [modo, setModo] = useState<"exata" | "explorar">("exata");
+
+  // Limite de 5 séries por mês (servidor, por aluno; admin ilimitado).
+  const usoFn = useServerFn(getUsoReelsSerie);
+  const consumirFn = useServerFn(consumirReelsSerie);
+  const [uso, setUso] = useState<{ usados: number; limite: number; restantes: number; ilimitado: boolean } | null>(null);
+  useEffect(() => {
+    usoFn()
+      .then((r) => setUso(r as { usados: number; limite: number; restantes: number; ilimitado: boolean }))
+      .catch(() => {});
+  }, [usoFn]);
+  const semSaldo = !!uso && !uso.ilimitado && uso.restantes <= 0;
   const [publico, setPublico] = useState("");
   const [oferta, setOferta] = useState("");
   const [prefilled, setPrefilled] = useState(false);
@@ -165,6 +178,11 @@ export default function ReelsEmSerie() {
   async function gerarRoteiros(opts?: { mais?: number }) {
     if (!nomeSel) return;
     const cont = !!opts?.mais && roteiros.length > 0;
+    // Limite mensal — só conta séries NOVAS (continuações não gastam saldo).
+    if (!cont && uso && !uso.ilimitado && uso.restantes <= 0) {
+      setErro(`Atingiste o limite de ${uso.limite} séries este mês. Volta no próximo mês para gerares mais.`);
+      return;
+    }
     const qtd = cont ? opts!.mais! : quantidade;
     const data = await chamar({
       action: "roteiros",
@@ -190,6 +208,15 @@ export default function ReelsEmSerie() {
       setEntregas(data.entregas || []);
       setRoteiros(data.roteiros || []);
       setEtapa("roteiros");
+      // Série nova gerada com sucesso → gasta 1 crédito do mês.
+      if (!uso?.ilimitado) {
+        try {
+          const r = await consumirFn();
+          setUso((u) => (u ? { ...u, usados: r.usados, restantes: r.restantes } : u));
+        } catch {
+          /* ignora — não bloqueia a geração já feita */
+        }
+      }
     }
   }
 
@@ -315,7 +342,7 @@ export default function ReelsEmSerie() {
               <div key={e} className="flex items-center gap-2">
                 <span
                   className={`rounded-full px-3 py-1 ${
-                    ativo ? "bg-terracotta text-cream" : "bg-[#F5EFE6] text-ink/45"
+                    ativo ? "bg-terracotta text-cream" : "bg-ink/8 text-ink/55"
                   }`}
                 >
                   {rotulo}
@@ -515,16 +542,25 @@ export default function ReelsEmSerie() {
               <p className="mb-4 text-xs text-ink/45">Até 10 de cada vez — depois podes pedir a continuação.</p>
               <button
                 onClick={() => gerarRoteiros()}
-                disabled={loading || !nomeSel}
+                disabled={loading || !nomeSel || semSaldo}
                 className="inline-flex items-center gap-2 rounded-full bg-terracotta px-6 py-3 text-sm font-medium text-cream transition-colors hover:bg-terracotta-dark disabled:opacity-40"
               >
                 {loading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
                 {loading
                   ? "A escrever os roteiros…"
-                  : nomeSel
-                    ? `Gerar ${quantidade} roteiros`
-                    : "Escolhe um nome acima"}
+                  : semSaldo
+                    ? "Limite mensal atingido"
+                    : nomeSel
+                      ? `Gerar ${quantidade} roteiros`
+                      : "Escolhe um nome acima"}
               </button>
+              {uso && !uso.ilimitado && (
+                <p className={`mt-3 text-xs ${semSaldo ? "text-red-500" : "text-ink/55"}`}>
+                  {semSaldo
+                    ? `Atingiste o limite de ${uso.limite} séries este mês.`
+                    : `Séries este mês: ${uso.usados}/${uso.limite} · restam ${uso.restantes}`}
+                </p>
+              )}
             </div>
           </div>
         )}
