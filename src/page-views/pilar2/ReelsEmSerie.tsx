@@ -40,7 +40,6 @@ type Roteiro = {
 
 type Etapa = "ideia" | "nomes" | "roteiros";
 
-const QTD_OPCOES = [3, 5, 7, 10];
 
 // Junta um roteiro num bloco de texto pronto a copiar/gravar.
 function roteiroTexto(r: Roteiro): string {
@@ -501,32 +500,19 @@ export default function ReelsEmSerie() {
             {/* Selecionar quantidade + gerar */}
             <div className="mt-6 rounded-2xl border border-terracotta/30 bg-white p-5">
               <p className="mb-2 text-sm font-semibold text-ink">Quantos episódios queres?</p>
-              <div className="mb-4 flex flex-wrap items-center gap-2">
-                {QTD_OPCOES.map((q) => (
-                  <button
-                    key={q}
-                    onClick={() => setQuantidade(q)}
-                    className={`h-10 w-12 rounded-xl border text-sm font-medium transition-colors ${
-                      quantidade === q
-                        ? "border-terracotta bg-terracotta text-cream"
-                        : "border-[var(--color-border)] bg-white text-ink hover:border-terracotta/50"
-                    }`}
-                  >
-                    {q}
-                  </button>
-                ))}
-                <span className="text-sm text-ink/45">ou</span>
+              <div className="mb-2 flex flex-wrap items-center gap-2">
                 <input
                   type="number"
                   min={1}
-                  max={12}
+                  max={10}
                   value={quantidade}
-                  onChange={(e) => setQuantidade(Math.min(Math.max(parseInt(e.target.value, 10) || 1, 1), 12))}
+                  onChange={(e) => setQuantidade(Math.min(Math.max(parseInt(e.target.value, 10) || 1, 1), 10))}
                   aria-label="Número de episódios"
                   className="h-10 w-20 rounded-xl border border-[var(--color-border)] bg-white px-3 text-center text-sm text-ink outline-none focus:border-terracotta"
                 />
+                <span className="text-sm text-ink/55">episódios</span>
               </div>
-              <p className="mb-4 -mt-2 text-xs text-ink/45">Até 12 de cada vez — depois podes pedir a continuação.</p>
+              <p className="mb-4 text-xs text-ink/45">Até 10 de cada vez — depois podes pedir a continuação.</p>
               <button
                 onClick={() => gerarRoteiros()}
                 disabled={loading || !nomeSel}
@@ -644,9 +630,9 @@ export default function ReelsEmSerie() {
                 <input
                   type="number"
                   min={1}
-                  max={12}
+                  max={10}
                   value={maisN}
-                  onChange={(e) => setMaisN(Math.min(Math.max(parseInt(e.target.value, 10) || 1, 1), 12))}
+                  onChange={(e) => setMaisN(Math.min(Math.max(parseInt(e.target.value, 10) || 1, 1), 10))}
                   aria-label="Quantos episódios a mais"
                   className="h-10 w-20 rounded-xl border border-[var(--color-border)] bg-white px-3 text-center text-sm text-ink outline-none focus:border-terracotta"
                 />

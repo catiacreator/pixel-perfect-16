@@ -130,7 +130,7 @@ function promptRoteiros(p: {
   desde?: number;
   jaEntregues?: string[];
 }): string {
-  const n = Math.min(Math.max(p.quantidade || 7, 1), 12);
+  const n = Math.min(Math.max(p.quantidade || 7, 1), 10);
   const desde = Math.max(p.desde || 0, 0);
   const inicio = desde + 1;
   const fim = desde + n;
