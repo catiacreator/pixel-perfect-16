@@ -72,6 +72,7 @@ import { Route as MetodoPilar3RouteImport } from './routes/metodo.pilar-3'
 import { Route as MetodoPilar2RouteImport } from './routes/metodo.pilar-2'
 import { Route as MetodoPilar1RouteImport } from './routes/metodo.pilar-1'
 import { Route as MetodoConsultoriaIaRouteImport } from './routes/metodo.consultoria-ia'
+import { Route as ApiReelsSerieRouteImport } from './routes/api/reels-serie'
 import { Route as ApiHotmartWebhookRouteImport } from './routes/api/hotmart-webhook'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
@@ -95,6 +96,7 @@ import { Route as MetodoPilar3ValidarProdutoRouteImport } from './routes/metodo.
 import { Route as MetodoPilar3DescobrirRouteImport } from './routes/metodo.pilar-3.descobrir'
 import { Route as MetodoPilar3ConclusaoRouteImport } from './routes/metodo.pilar-3.conclusao'
 import { Route as MetodoPilar2TomDeVozRouteImport } from './routes/metodo.pilar-2.tom-de-voz'
+import { Route as MetodoPilar2ReelsEmSerieRouteImport } from './routes/metodo.pilar-2.reels-em-serie'
 import { Route as MetodoPilar2RedesSociaisRouteImport } from './routes/metodo.pilar-2.redes-sociais'
 import { Route as MetodoPilar2PesquisaMercadoRouteImport } from './routes/metodo.pilar-2.pesquisa-mercado'
 import { Route as MetodoPilar2PaginaProfissionalRouteImport } from './routes/metodo.pilar-2.pagina-profissional'
@@ -515,6 +517,11 @@ const MetodoConsultoriaIaRoute = MetodoConsultoriaIaRouteImport.update({
   path: '/consultoria-ia',
   getParentRoute: () => MetodoRoute,
 } as any)
+const ApiReelsSerieRoute = ApiReelsSerieRouteImport.update({
+  id: '/api/reels-serie',
+  path: '/api/reels-serie',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiHotmartWebhookRoute = ApiHotmartWebhookRouteImport.update({
   id: '/api/hotmart-webhook',
   path: '/api/hotmart-webhook',
@@ -633,6 +640,12 @@ const MetodoPilar2TomDeVozRoute = MetodoPilar2TomDeVozRouteImport.update({
   path: '/tom-de-voz',
   getParentRoute: () => MetodoPilar2Route,
 } as any)
+const MetodoPilar2ReelsEmSerieRoute =
+  MetodoPilar2ReelsEmSerieRouteImport.update({
+    id: '/reels-em-serie',
+    path: '/reels-em-serie',
+    getParentRoute: () => MetodoPilar2Route,
+  } as any)
 const MetodoPilar2RedesSociaisRoute =
   MetodoPilar2RedesSociaisRouteImport.update({
     id: '/redes-sociais',
@@ -1317,6 +1330,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/api/hotmart-webhook': typeof ApiHotmartWebhookRoute
+  '/api/reels-serie': typeof ApiReelsSerieRoute
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
   '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
@@ -1409,6 +1423,7 @@ export interface FileRoutesByFullPath {
   '/metodo/pilar-2/pagina-profissional': typeof MetodoPilar2PaginaProfissionalRoute
   '/metodo/pilar-2/pesquisa-mercado': typeof MetodoPilar2PesquisaMercadoRoute
   '/metodo/pilar-2/redes-sociais': typeof MetodoPilar2RedesSociaisRouteWithChildren
+  '/metodo/pilar-2/reels-em-serie': typeof MetodoPilar2ReelsEmSerieRoute
   '/metodo/pilar-2/tom-de-voz': typeof MetodoPilar2TomDeVozRoute
   '/metodo/pilar-3/conclusao': typeof MetodoPilar3ConclusaoRoute
   '/metodo/pilar-3/descobrir': typeof MetodoPilar3DescobrirRoute
@@ -1507,6 +1522,7 @@ export interface FileRoutesByTo {
   '/vitrine 9': typeof Vitrine9Route
   '/api/chat': typeof ApiChatRoute
   '/api/hotmart-webhook': typeof ApiHotmartWebhookRoute
+  '/api/reels-serie': typeof ApiReelsSerieRoute
   '/metodo/saude': typeof MetodoSaudeRoute
   '/metodo': typeof MetodoIndexRoute
   '/admin/acessos': typeof AuthenticatedAdminAcessosRoute
@@ -1592,6 +1608,7 @@ export interface FileRoutesByTo {
   '/metodo/pilar-2/metodo': typeof MetodoPilar2MetodoRoute
   '/metodo/pilar-2/pagina-profissional': typeof MetodoPilar2PaginaProfissionalRoute
   '/metodo/pilar-2/pesquisa-mercado': typeof MetodoPilar2PesquisaMercadoRoute
+  '/metodo/pilar-2/reels-em-serie': typeof MetodoPilar2ReelsEmSerieRoute
   '/metodo/pilar-2/tom-de-voz': typeof MetodoPilar2TomDeVozRoute
   '/metodo/pilar-3/conclusao': typeof MetodoPilar3ConclusaoRoute
   '/metodo/pilar-3/descobrir': typeof MetodoPilar3DescobrirRoute
@@ -1692,6 +1709,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/api/chat': typeof ApiChatRoute
   '/api/hotmart-webhook': typeof ApiHotmartWebhookRoute
+  '/api/reels-serie': typeof ApiReelsSerieRoute
   '/metodo/consultoria-ia': typeof MetodoConsultoriaIaRouteWithChildren
   '/metodo/pilar-1': typeof MetodoPilar1RouteWithChildren
   '/metodo/pilar-2': typeof MetodoPilar2RouteWithChildren
@@ -1784,6 +1802,7 @@ export interface FileRoutesById {
   '/metodo/pilar-2/pagina-profissional': typeof MetodoPilar2PaginaProfissionalRoute
   '/metodo/pilar-2/pesquisa-mercado': typeof MetodoPilar2PesquisaMercadoRoute
   '/metodo/pilar-2/redes-sociais': typeof MetodoPilar2RedesSociaisRouteWithChildren
+  '/metodo/pilar-2/reels-em-serie': typeof MetodoPilar2ReelsEmSerieRoute
   '/metodo/pilar-2/tom-de-voz': typeof MetodoPilar2TomDeVozRoute
   '/metodo/pilar-3/conclusao': typeof MetodoPilar3ConclusaoRoute
   '/metodo/pilar-3/descobrir': typeof MetodoPilar3DescobrirRoute
@@ -1886,6 +1905,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/api/chat'
     | '/api/hotmart-webhook'
+    | '/api/reels-serie'
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
@@ -1978,6 +1998,7 @@ export interface FileRouteTypes {
     | '/metodo/pilar-2/pagina-profissional'
     | '/metodo/pilar-2/pesquisa-mercado'
     | '/metodo/pilar-2/redes-sociais'
+    | '/metodo/pilar-2/reels-em-serie'
     | '/metodo/pilar-2/tom-de-voz'
     | '/metodo/pilar-3/conclusao'
     | '/metodo/pilar-3/descobrir'
@@ -2076,6 +2097,7 @@ export interface FileRouteTypes {
     | '/vitrine 9'
     | '/api/chat'
     | '/api/hotmart-webhook'
+    | '/api/reels-serie'
     | '/metodo/saude'
     | '/metodo'
     | '/admin/acessos'
@@ -2161,6 +2183,7 @@ export interface FileRouteTypes {
     | '/metodo/pilar-2/metodo'
     | '/metodo/pilar-2/pagina-profissional'
     | '/metodo/pilar-2/pesquisa-mercado'
+    | '/metodo/pilar-2/reels-em-serie'
     | '/metodo/pilar-2/tom-de-voz'
     | '/metodo/pilar-3/conclusao'
     | '/metodo/pilar-3/descobrir'
@@ -2260,6 +2283,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/api/chat'
     | '/api/hotmart-webhook'
+    | '/api/reels-serie'
     | '/metodo/consultoria-ia'
     | '/metodo/pilar-1'
     | '/metodo/pilar-2'
@@ -2352,6 +2376,7 @@ export interface FileRouteTypes {
     | '/metodo/pilar-2/pagina-profissional'
     | '/metodo/pilar-2/pesquisa-mercado'
     | '/metodo/pilar-2/redes-sociais'
+    | '/metodo/pilar-2/reels-em-serie'
     | '/metodo/pilar-2/tom-de-voz'
     | '/metodo/pilar-3/conclusao'
     | '/metodo/pilar-3/descobrir'
@@ -2453,6 +2478,7 @@ export interface RootRouteChildren {
   Vitrine9Route: typeof Vitrine9Route
   ApiChatRoute: typeof ApiChatRoute
   ApiHotmartWebhookRoute: typeof ApiHotmartWebhookRoute
+  ApiReelsSerieRoute: typeof ApiReelsSerieRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -2898,6 +2924,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MetodoConsultoriaIaRouteImport
       parentRoute: typeof MetodoRoute
     }
+    '/api/reels-serie': {
+      id: '/api/reels-serie'
+      path: '/api/reels-serie'
+      fullPath: '/api/reels-serie'
+      preLoaderRoute: typeof ApiReelsSerieRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/hotmart-webhook': {
       id: '/api/hotmart-webhook'
       path: '/api/hotmart-webhook'
@@ -3057,6 +3090,13 @@ declare module '@tanstack/react-router' {
       path: '/tom-de-voz'
       fullPath: '/metodo/pilar-2/tom-de-voz'
       preLoaderRoute: typeof MetodoPilar2TomDeVozRouteImport
+      parentRoute: typeof MetodoPilar2Route
+    }
+    '/metodo/pilar-2/reels-em-serie': {
+      id: '/metodo/pilar-2/reels-em-serie'
+      path: '/reels-em-serie'
+      fullPath: '/metodo/pilar-2/reels-em-serie'
+      preLoaderRoute: typeof MetodoPilar2ReelsEmSerieRouteImport
       parentRoute: typeof MetodoPilar2Route
     }
     '/metodo/pilar-2/redes-sociais': {
@@ -4101,6 +4141,7 @@ interface MetodoPilar2RouteChildren {
   MetodoPilar2PaginaProfissionalRoute: typeof MetodoPilar2PaginaProfissionalRoute
   MetodoPilar2PesquisaMercadoRoute: typeof MetodoPilar2PesquisaMercadoRoute
   MetodoPilar2RedesSociaisRoute: typeof MetodoPilar2RedesSociaisRouteWithChildren
+  MetodoPilar2ReelsEmSerieRoute: typeof MetodoPilar2ReelsEmSerieRoute
   MetodoPilar2TomDeVozRoute: typeof MetodoPilar2TomDeVozRoute
   MetodoPilar2IndexRoute: typeof MetodoPilar2IndexRoute
 }
@@ -4114,6 +4155,7 @@ const MetodoPilar2RouteChildren: MetodoPilar2RouteChildren = {
   MetodoPilar2PaginaProfissionalRoute: MetodoPilar2PaginaProfissionalRoute,
   MetodoPilar2PesquisaMercadoRoute: MetodoPilar2PesquisaMercadoRoute,
   MetodoPilar2RedesSociaisRoute: MetodoPilar2RedesSociaisRouteWithChildren,
+  MetodoPilar2ReelsEmSerieRoute: MetodoPilar2ReelsEmSerieRoute,
   MetodoPilar2TomDeVozRoute: MetodoPilar2TomDeVozRoute,
   MetodoPilar2IndexRoute: MetodoPilar2IndexRoute,
 }
@@ -4268,6 +4310,7 @@ const rootRouteChildren: RootRouteChildren = {
   Vitrine9Route: Vitrine9Route,
   ApiChatRoute: ApiChatRoute,
   ApiHotmartWebhookRoute: ApiHotmartWebhookRoute,
+  ApiReelsSerieRoute: ApiReelsSerieRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

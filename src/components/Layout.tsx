@@ -86,7 +86,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   // A barra começa na cor do módulo atual e faz degradê para as outras (variantes claras/escuras em styles.css)
   const path = location.pathname;
   const academia = path.startsWith("/metodo/pilar-1/aprenda-ia");
-  const redes = path.startsWith("/metodo/pilar-2/redes-sociais");
+  const redes = path.startsWith("/metodo/pilar-2/redes-sociais") || path.startsWith("/metodo/pilar-2/reels-em-serie");
   const jornada = !academia && !redes && (path.startsWith("/metodo") || path.startsWith("/doc-mestre"));
   const roxo = path.startsWith("/minha-base") || path.startsWith("/agenda") || path.startsWith("/conquistas");
   const headerMod = academia ? "academia" : redes ? "redes" : jornada ? "jornada" : roxo ? "roxo" : "default";

@@ -66,7 +66,7 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   "3 · Criar artefactos": Monitor,
 };
 
-type SubItem = { label: string; to: string; badge?: string };
+type SubItem = { label: string; to: string; badge?: string; id?: string };
 type Item = {
   num: number;
   label: string;
@@ -168,12 +168,13 @@ const PILARES: Record<string | number, PilarDef> = {
       { num: 1, id: "redes.boas-vindas", label: "Boas-vindas", to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas", icon: Compass },
       { num: 2, id: "redes.bio", label: "Posicionamento e Bio", to: "/metodo/pilar-2/redes-sociais?aba=bio", icon: UserCircle2 },
       {
-        num: 3, id: "redes.formatos", label: "Formatos de Conteúdo", to: "/metodo/pilar-2/redes-sociais?aba=formatos", icon: Book,
+        num: 3, id: "redes.formatos", label: "Formatos de Conteúdo", to: "/metodo/pilar-2/reels-em-serie", icon: Book,
         children: [
-          { label: "↳ Roteiros simples", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=roteiros" },
-          { label: "↳ Reels virais", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=reels" },
-          { label: "↳ Carrosséis que vendem", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=carrossel" },
-          { label: "↳ Stories que vendem", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=stories" },
+          { label: "↳ Cria a tua série", to: "/metodo/pilar-2/reels-em-serie", id: "redes.formatos.reels-serie" },
+          { label: "↳ Roteiros simples", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=roteiros", id: "redes.formatos.roteiros" },
+          { label: "↳ Reels virais", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=reels", id: "redes.formatos.reels" },
+          { label: "↳ Carrosséis que vendem", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=carrossel", id: "redes.formatos.carrossel" },
+          { label: "↳ Stories que vendem", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=stories", id: "redes.formatos.stories" },
         ],
       },
       { num: 4, id: "redes.criar", label: "Criar Conteúdo", to: "/metodo/pilar-2/redes-sociais?aba=criar", icon: Sparkle },
@@ -424,6 +425,24 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                   <ul className="mt-1 mb-1.5 ml-[1.4rem] pl-3 border-l border-white/25 space-y-0.5">
                     {item.children!.map((c) => {
                       const cActive = isActive(c.to);
+                      const cLocked = capituloBloqueado(c.id) && bloqueadoParaAlunos;
+                      const cEmBreveAlunos = !bloqueadoParaAlunos && capituloBloqueado(c.id);
+
+                      // Sub-item "Em breve" para alunos — texto simples, sem link.
+                      if (cLocked) {
+                        return (
+                          <li key={c.label}>
+                            <span className="flex items-center gap-2 pl-2.5 pr-3 py-1.5 rounded-lg text-[12.5px] text-white/40 cursor-default">
+                              <Lock size={12} className="shrink-0 text-white/40" />
+                              <span className="flex-1 truncate">{c.label}</span>
+                              <span className="text-[8px] tracking-[0.12em] uppercase px-1.5 py-0.5 rounded-full font-semibold bg-white/10 text-white/50 shrink-0">
+                                Em breve
+                              </span>
+                            </span>
+                          </li>
+                        );
+                      }
+
                       return (
                         <li key={c.label}>
                           <Link
@@ -444,12 +463,20 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                               return <Shirt size={12} className={cls} />;
                             })()}
                             <span className="flex-1 truncate">{c.label}</span>
+                            {cEmBreveAlunos && (
+                              <span
+                                title="Em breve para os alunos (você, admin, continua a ver)"
+                                className="ml-1 inline-flex items-center gap-1 text-[8px] tracking-[0.1em] uppercase px-1.5 py-0.5 rounded-full font-semibold bg-amber-400/25 text-amber-200 shrink-0"
+                              >
+                                <Lock size={8} strokeWidth={2.5} /> Alunos
+                              </span>
+                            )}
                             {c.badge && (
                               <span className={`ml-1 text-[8.5px] tracking-[0.14em] uppercase px-2 py-0.5 rounded-full font-semibold shrink-0 ${cActive ? "bg-terracotta/10 text-terracotta" : "bg-amber-400/25 text-amber-200"}`}>
                                 {c.badge}
                               </span>
                             )}
-                            {cActive && !c.badge && (
+                            {cActive && !c.badge && !cEmBreveAlunos && (
                               <span className="w-1.5 h-1.5 rounded-full bg-terracotta shrink-0" />
                             )}
                           </Link>
