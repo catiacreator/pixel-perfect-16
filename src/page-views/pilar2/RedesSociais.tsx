@@ -512,9 +512,14 @@ export default function RedesSociais() {
   const aba = params.get("aba") || "boas-vindas";
   const bloqueadoParaAlunos = useBloqueadoParaAlunos();
   const { isBloqueado, modoBloqueio } = useBloqueios();
-  const conteudoBloqueado = bloqueadoParaAlunos && isBloqueado(`redes.${aba}`);
+  // Em "Formatos de Conteúdo" o bloqueio é por sub-formato (fmt): cada explicador
+  // (roteiros/reels/carrossel/stories) tem o seu id; "Cria a tua série" é uma
+  // página à parte (rota própria) e não passa por aqui.
+  const fmt = params.get("fmt") || "roteiros";
+  const guardId = aba === "formatos" ? `redes.formatos.${fmt}` : `redes.${aba}`;
+  const conteudoBloqueado = bloqueadoParaAlunos && isBloqueado(guardId);
   // Vista admin: a aba está "Em breve" p/ alunos, mas a admin vê o conteúdo.
-  const avisoAdminEmBreve = !bloqueadoParaAlunos && isBloqueado(`redes.${aba}`);
+  const avisoAdminEmBreve = !bloqueadoParaAlunos && isBloqueado(guardId);
   const [formato, setFormato] = useState<"reels" | "estatico" | null>(null);
   const [objetivo, setObjetivo] = useState<Objetivo>("autoridade");
 
@@ -665,7 +670,7 @@ export default function RedesSociais() {
           </div>
         )}
         {conteudoBloqueado ? (
-          <EmManutencao modo={modoBloqueio(`redes.${aba}`)} />
+          <EmManutencao modo={modoBloqueio(guardId)} />
         ) : (
         <>
         {aba === "boas-vindas" && <BoasVindasInstagram />}

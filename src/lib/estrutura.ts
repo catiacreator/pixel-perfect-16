@@ -34,6 +34,7 @@ export const ESTRUTURA: Nodo[] = [
         tipo: "pagina",
         to: "/metodo/pilar-2/redes-sociais?aba=formatos",
         filhos: [
+          { id: "redes.formatos.reels-serie", label: "Cria a tua série", tipo: "subpagina", to: "/metodo/pilar-2/reels-em-serie" },
           { id: "redes.formatos.roteiros", label: "Roteiros simples", tipo: "subpagina", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=roteiros" },
           { id: "redes.formatos.reels", label: "Reels virais", tipo: "subpagina", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=reels" },
           { id: "redes.formatos.carrossel", label: "Carrosséis que vendem", tipo: "subpagina", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=carrossel" },
@@ -205,7 +206,12 @@ export const ESTRUTURA: Nodo[] = [
 // Bloqueios "Em breve" por defeito (enquanto a mentora não mexer no painel).
 // Reflete o estado atual da app: estes nós aparecem como "Em breve" aos alunos.
 export const BLOQUEIOS_PADRAO: string[] = [
-  "redes.formatos",
+  // Dentro de "Formatos de Conteúdo" só "Cria a tua série" está livre;
+  // os restantes formatos ficam "Em breve" (bloqueio por sub-item, não no pai).
+  "redes.formatos.roteiros",
+  "redes.formatos.reels",
+  "redes.formatos.carrossel",
+  "redes.formatos.stories",
   "redes.criar",
   "redes.plano",
   "redes.desafio",
