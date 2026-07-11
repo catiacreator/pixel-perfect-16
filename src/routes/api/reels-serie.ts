@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { generateText } from "ai";
-import { resolveChatModel } from "@/lib/ai-gateway.server";
+import { resolveChatModel, resolveAnthropicModel } from "@/lib/ai-gateway.server";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // REELS EM SÉRIE — o "cérebro" da ferramenta guiada.
@@ -226,7 +226,9 @@ export const Route = createFileRoute("/api/reels-serie")({
 
         let model;
         try {
-          model = resolveChatModel();
+          // Reels em Série usa a API paga da Anthropic (Claude) quando há chave —
+          // fiável, sem "Too Many Requests". Sem chave, cai no gateway gratuito.
+          model = resolveAnthropicModel() ?? resolveChatModel();
         } catch (e) {
           return Response.json(
             { error: e instanceof Error ? e.message : "Falta a chave de IA." },

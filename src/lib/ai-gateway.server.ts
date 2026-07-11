@@ -1,6 +1,21 @@
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
+import { createAnthropic } from "@ai-sdk/anthropic";
 
 const LOVABLE_AIG_RUN_ID_HEADER = "X-Lovable-AIG-Run-ID";
+
+/**
+ * Modelo Claude (Anthropic) — só disponível se ANTHROPIC_API_KEY estiver definida.
+ * Usado onde queremos fiabilidade/qualidade paga (ex.: Reels em Série), em vez do
+ * gateway gratuito (que dá "Too Many Requests" sob carga). Devolve null se não houver chave.
+ * O modelo pode ser trocado via ANTHROPIC_MODEL (por defeito: Haiku 4.5, barato e rápido).
+ */
+export function resolveAnthropicModel() {
+  const key = process.env.ANTHROPIC_API_KEY;
+  if (!key) return null;
+  const anthropic = createAnthropic({ apiKey: key });
+  const modelo = process.env.ANTHROPIC_MODEL || "claude-haiku-4-5-20251001";
+  return anthropic(modelo);
+}
 
 export function createLovableAiGatewayProvider(lovableApiKey: string, initialRunId?: string) {
   let runId = initialRunId?.trim() || undefined;
