@@ -445,6 +445,17 @@ export default function ReelsEmSerie() {
               {loading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
               {loading ? "A pensar em nomes…" : "Sugerir nomes de série"}
             </button>
+
+            {uso && !uso.ilimitado && (
+              <p className={`mt-3 text-xs ${semSaldo ? "text-red-500" : "text-ink/55"}`}>
+                ℹ️ Podes gerar até <strong className="font-semibold">{uso.limite} séries por mês</strong>
+                {semSaldo
+                  ? ` — já atingiste o limite este mês.`
+                  : uso.usados > 0
+                    ? ` — já usaste ${uso.usados}, restam ${uso.restantes}.`
+                    : ` — este mês ainda tens ${uso.restantes}.`}
+              </p>
+            )}
           </div>
         )}
 
