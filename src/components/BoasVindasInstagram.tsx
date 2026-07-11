@@ -99,7 +99,7 @@ export default function BoasVindasInstagram() {
       {/* Boas-vindas */}
       <div className="rounded-2xl border border-terracotta/25 bg-terracotta/5 p-6">
         <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">Bem-vinda ao módulo</p>
-        <h2 className="font-serif text-2xl md:text-3xl text-ink mb-2">Criar para o Instagram</h2>
+        <h2 className="font-serif text-2xl md:text-3xl text-ink mb-2">Conteúdo Todo Dia</h2>
         <p className="text-sm text-ink/65 leading-relaxed max-w-2xl">Aqui transforma o seu método em conteúdo. O caminho é simples:</p>
         <div className="flex flex-wrap items-center gap-2 mt-4 text-[13px]">
           <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-border text-ink font-medium">

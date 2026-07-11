@@ -209,7 +209,7 @@ export default function ReelsEmSerie() {
     <Layout>
       <PilarBreadcrumb
         pilar="redes"
-        pilarLabel="Criar para o Instagram"
+        pilarLabel="Conteúdo Todo Dia"
         backTo="/metodo/pilar-2/redes-sociais?aba=formatos&fmt=reels"
         backLabel="Voltar aos formatos"
       />

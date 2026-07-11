@@ -22,7 +22,7 @@ export type Nodo = {
 export const ESTRUTURA: Nodo[] = [
   {
     id: "redes",
-    label: "Criar para o Instagram",
+    label: "Conteúdo Todo Dia",
     tipo: "modulo",
     to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas",
     filhos: [
@@ -52,7 +52,7 @@ export const ESTRUTURA: Nodo[] = [
   },
   {
     id: "jornada",
-    label: "Jornada",
+    label: "O Teu Método",
     tipo: "modulo",
     to: "/metodo",
     filhos: [
@@ -158,7 +158,7 @@ export const ESTRUTURA: Nodo[] = [
   },
   {
     id: "conteudo-ia",
-    label: "Conteúdo com IA (Mini-curso)",
+    label: "Primeiro Mês de Posts (Mini-curso)",
     tipo: "modulo",
     to: "/conteudo-ia",
     filhos: [

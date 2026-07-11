@@ -26,7 +26,7 @@ const CURSOS: Curso[] = [
     ],
   },
   {
-    id: "instagram", nome: "Criar para o Instagram", cor: "#F0A766",
+    id: "instagram", nome: "Conteúdo Todo Dia", cor: "#F0A766",
     modulos: [
       { id: "redes.boas-vindas", nome: "Boas-vindas" },
       { id: "redes.bio", nome: "Posicionamento e Bio" },

@@ -13,11 +13,11 @@ const FORMATOS = [
 export default function Instagram() {
   return (
     <Layout>
-      <PilarBreadcrumb pilar="redes" pilarLabel="Criando para as Redes Sociais" backTo="/metodo/pilar-2/redes-sociais" backLabel="Voltar para Redes Sociais" />
+      <PilarBreadcrumb pilar="redes" pilarLabel="Conteúdo Todo Dia" backTo="/metodo/pilar-2/redes-sociais" backLabel="Voltar para Redes Sociais" />
       <PillarHeader
         numeral="✦"
         icon={null}
-        pilarLabel="Criando para as Redes Sociais"
+        pilarLabel="Conteúdo Todo Dia"
         titulo="Instagram"
         subtitulo="Trabalhe os formatos do Instagram."
       />

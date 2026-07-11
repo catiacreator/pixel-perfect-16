@@ -65,11 +65,11 @@ export default function InstagramFormato() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar="redes" pilarLabel="Criando para as Redes Sociais" backTo="/metodo/pilar-2/redes-sociais/instagram" backLabel="Voltar para Instagram" />
+      <PilarBreadcrumb pilar="redes" pilarLabel="Conteúdo Todo Dia" backTo="/metodo/pilar-2/redes-sociais/instagram" backLabel="Voltar para Instagram" />
       <PillarHeader
         numeral="✦"
         icon={null}
-        pilarLabel="Criando para as Redes Sociais"
+        pilarLabel="Conteúdo Todo Dia"
         titulo={formato.titulo}
         subtitulo={formato.subtitulo}
       />

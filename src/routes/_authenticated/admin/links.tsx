@@ -56,7 +56,7 @@ const SECCOES: Seccao[] = [
     ],
   },
   {
-    titulo: "Criar para o Instagram",
+    titulo: "Conteúdo Todo Dia",
     paginas: [
       { nome: "Boas-vindas", path: "/metodo/pilar-2/redes-sociais?aba=boas-vindas" },
       { nome: "Posicionamento e Bio", path: "/metodo/pilar-2/redes-sociais?aba=bio" },
