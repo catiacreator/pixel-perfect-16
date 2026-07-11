@@ -446,16 +446,19 @@ export default function ReelsEmSerie() {
               {loading ? "A pensar em nomes…" : "Sugerir nomes de série"}
             </button>
 
-            {uso && !uso.ilimitado && (
-              <p className={`mt-3 text-xs ${semSaldo ? "text-red-500" : "text-ink/55"}`}>
-                ℹ️ Podes gerar até <strong className="font-semibold">{uso.limite} séries por mês</strong>
-                {semSaldo
-                  ? ` — já atingiste o limite este mês.`
-                  : uso.usados > 0
-                    ? ` — já usaste ${uso.usados}, restam ${uso.restantes}.`
-                    : ` — este mês ainda tens ${uso.restantes}.`}
-              </p>
-            )}
+            <div className={`mt-4 flex items-start gap-2 rounded-xl border px-3.5 py-2.5 text-xs ${semSaldo ? "border-red-300 bg-red-50 text-red-600" : "border-terracotta/25 bg-terracotta/[0.06] text-ink/70"}`}>
+              <span aria-hidden>ℹ️</span>
+              <span>
+                Cada pessoa pode gerar até <strong className="font-semibold">{uso?.limite ?? 5} séries por mês</strong>.
+                {uso?.ilimitado
+                  ? " Tu (admin) não tens limite."
+                  : semSaldo
+                    ? " Já atingiste o limite este mês — volta no próximo mês."
+                    : uso
+                      ? ` Este mês já usaste ${uso.usados}; restam ${uso.restantes}.`
+                      : ""}
+              </span>
+            </div>
           </div>
         )}
 
