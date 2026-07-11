@@ -121,6 +121,7 @@ export default function ReelsEmSerie() {
   const [direcao, setDirecao] = useState("");
 
   const [quantidade, setQuantidade] = useState(7);
+  const [maisN, setMaisN] = useState(3);
   const [entregas, setEntregas] = useState<string[]>([]);
   const [roteiros, setRoteiros] = useState<Roteiro[]>([]);
 
@@ -160,13 +161,35 @@ export default function ReelsEmSerie() {
     setEtapa("nomes");
   }
 
-  async function gerarRoteiros() {
+  async function gerarRoteiros(opts?: { mais?: number }) {
     if (!nomeSel) return;
-    const data = await chamar({ action: "roteiros", nome: nomeSel, ideia, publico, oferta, quantidade });
+    const cont = !!opts?.mais && roteiros.length > 0;
+    const qtd = cont ? opts!.mais! : quantidade;
+    const data = await chamar({
+      action: "roteiros",
+      nome: nomeSel,
+      ideia,
+      publico,
+      oferta,
+      quantidade: qtd,
+      desde: cont ? roteiros.length : 0,
+      jaEntregues: cont ? entregas : undefined,
+    });
     if (!data) return;
-    setEntregas(data.entregas || []);
-    setRoteiros(data.roteiros || []);
-    setEtapa("roteiros");
+    if (cont) {
+      // Continuação: numera a partir do último episódio e anexa (não substitui).
+      const base = roteiros.length;
+      const novos: Roteiro[] = (data.roteiros || []).map((r: Roteiro, i: number) => {
+        const num = base + i + 1;
+        return { ...r, n: num, gancho: String(r.gancho || "").replace(/parte\s*\d+/i, `parte ${num}`) };
+      });
+      setEntregas([...entregas, ...(data.entregas || [])]);
+      setRoteiros([...roteiros, ...novos]);
+    } else {
+      setEntregas(data.entregas || []);
+      setRoteiros(data.roteiros || []);
+      setEtapa("roteiros");
+    }
   }
 
   function recomecar() {
@@ -441,7 +464,7 @@ export default function ReelsEmSerie() {
             {/* Selecionar quantidade + gerar */}
             <div className="mt-6 rounded-2xl border border-terracotta/30 bg-white p-5">
               <p className="mb-2 text-sm font-semibold text-ink">Quantos episódios queres?</p>
-              <div className="mb-4 flex gap-2">
+              <div className="mb-4 flex flex-wrap items-center gap-2">
                 {QTD_OPCOES.map((q) => (
                   <button
                     key={q}
@@ -455,9 +478,20 @@ export default function ReelsEmSerie() {
                     {q}
                   </button>
                 ))}
+                <span className="text-sm text-ink/45">ou</span>
+                <input
+                  type="number"
+                  min={1}
+                  max={12}
+                  value={quantidade}
+                  onChange={(e) => setQuantidade(Math.min(Math.max(parseInt(e.target.value, 10) || 1, 1), 12))}
+                  aria-label="Número de episódios"
+                  className="h-10 w-20 rounded-xl border border-[var(--color-border)] bg-white px-3 text-center text-sm text-ink outline-none focus:border-terracotta"
+                />
               </div>
+              <p className="mb-4 -mt-2 text-xs text-ink/45">Até 12 de cada vez — depois podes pedir a continuação.</p>
               <button
-                onClick={gerarRoteiros}
+                onClick={() => gerarRoteiros()}
                 disabled={loading || !nomeSel}
                 className="inline-flex items-center gap-2 rounded-full bg-terracotta px-6 py-3 text-sm font-medium text-cream transition-colors hover:bg-terracotta-dark disabled:opacity-40"
               >
@@ -561,6 +595,33 @@ export default function ReelsEmSerie() {
             <div className="mt-6 rounded-xl border border-dashed border-[var(--color-border)] bg-white px-4 py-3 text-sm text-ink/60">
               💡 Lê cada roteiro em voz alta e troca qualquer palavra que tu não dirias — o método vive
               da tua voz. A estrutura e a primeira versão são minhas; a voz é tua.
+            </div>
+
+            {/* Continuar a série — gera mais episódios sem perder os atuais */}
+            <div className="mt-6 rounded-2xl border border-terracotta/30 bg-white p-5">
+              <p className="mb-1 text-sm font-semibold text-ink">Continuar a série</p>
+              <p className="mb-3 text-sm text-ink/55">
+                Gera mais episódios a partir do {roteiros.length + 1}º — os {roteiros.length} atuais mantêm-se.
+              </p>
+              <div className="flex flex-wrap items-center gap-2">
+                <input
+                  type="number"
+                  min={1}
+                  max={12}
+                  value={maisN}
+                  onChange={(e) => setMaisN(Math.min(Math.max(parseInt(e.target.value, 10) || 1, 1), 12))}
+                  aria-label="Quantos episódios a mais"
+                  className="h-10 w-20 rounded-xl border border-[var(--color-border)] bg-white px-3 text-center text-sm text-ink outline-none focus:border-terracotta"
+                />
+                <button
+                  onClick={() => gerarRoteiros({ mais: maisN })}
+                  disabled={loading}
+                  className="inline-flex items-center gap-2 rounded-full bg-terracotta px-5 py-2.5 text-sm font-medium text-cream transition-colors hover:bg-terracotta-dark disabled:opacity-40"
+                >
+                  {loading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+                  {loading ? "A escrever…" : `Gerar mais ${maisN} episódios`}
+                </button>
+              </div>
             </div>
 
             <div className="mt-6 flex flex-wrap gap-2">

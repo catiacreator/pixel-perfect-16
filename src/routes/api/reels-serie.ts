@@ -122,8 +122,18 @@ function promptRoteiros(p: {
   publico?: string;
   oferta?: string;
   userContext?: string;
+  desde?: number;
+  jaEntregues?: string[];
 }): string {
   const n = Math.min(Math.max(p.quantidade || 7, 1), 12);
+  const desde = Math.max(p.desde || 0, 0);
+  const inicio = desde + 1;
+  const fim = desde + n;
+  const continuacao = desde > 0;
+  const jaBloco =
+    continuacao && p.jaEntregues?.length
+      ? `\nJá existem ${desde} episódios nesta série — NÃO os repitas, continua o arco a partir do episódio ${inicio}. Episódios já feitos:\n${p.jaEntregues.map((e, i) => `${i + 1}. ${e}`).join("\n")}\n`
+      : "";
   return `${VOZ}
 
 ${METODO_ROTEIROS}
@@ -134,18 +144,22 @@ Série escolhida: "${p.nome}"
 Ideia/tema base: "${p.ideia}"
 Para quem é: ${p.publico?.trim() || "—"}
 O que ela vende: ${p.oferta?.trim() || "—"}
+${jaBloco}
+${
+  continuacao
+    ? `Gera a CONTINUAÇÃO desta série: ${n} episódios NOVOS, numerados do ${inicio} ao ${fim}, que avançam o arco sem repetir nenhum dos já feitos acima.`
+    : `Gera ${n} episódios desta série.`
+} Primeiro a lista de entregas (uma frase específica por episódio — cada uma com uma dor real + uma culpa para reverter; NADA de "fale sobre X"). Depois o roteiro completo de cada episódio no template.
 
-Gera ${n} episódios desta série. Primeiro a lista de entregas (uma frase específica por episódio — cada uma com uma dor real + uma culpa para reverter; NADA de "fale sobre X"). Depois o roteiro completo de cada episódio no template.
-
-Cada episódio precisa de uma dor concreta e uma culpa clara para reverter — se não tiver, troca a ideia do episódio. O gancho de cada roteiro começa SEMPRE com "${p.nome} — parte N".
+Cada episódio precisa de uma dor concreta e uma culpa clara para reverter — se não tiver, troca a ideia do episódio. O gancho de cada roteiro começa SEMPRE com "${p.nome} — parte N" (usa o número REAL do episódio, a começar em ${inicio}).
 
 Responde APENAS com JSON válido (sem markdown, sem texto à volta), exatamente nesta forma:
 {
-  "entregas": ["episódio 1 numa frase específica", "..."],
+  "entregas": ["episódio ${inicio} numa frase específica", "..."],
   "roteiros": [
     {
-      "n": 1,
-      "gancho": "${p.nome} — parte 1. …",
+      "n": ${inicio},
+      "gancho": "${p.nome} — parte ${inicio}. …",
       "dorCulpa": "Se tu …, o problema não é …. É que tu tá …",
       "corpo": "crença errada → a verdade → metáfora do dia a dia",
       "transicao": "frase curta que abre os passos",
@@ -155,7 +169,7 @@ Responde APENAS com JSON válido (sem markdown, sem texto à volta), exatamente 
     }
   ]
 }
-A lista "entregas" e a lista "roteiros" têm de ter ${n} itens.`;
+A lista "entregas" e a lista "roteiros" têm de ter ${n} itens (episódios ${inicio} a ${fim}).`;
 }
 
 // Extrai o primeiro objeto JSON do texto do modelo, tolerante a cercas ```json.
@@ -183,6 +197,8 @@ export const Route = createFileRoute("/api/reels-serie")({
           evitar?: string[];
           nome?: string;
           quantidade?: number;
+          desde?: number;
+          jaEntregues?: string[];
         };
         try {
           body = await request.json();
