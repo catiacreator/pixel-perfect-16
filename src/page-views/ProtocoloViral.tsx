@@ -46,7 +46,7 @@ export default function ProtocoloViral() {
         <div className="max-w-2xl mb-8 md:mb-10 fade-up">
           <p className="text-[11px] tracking-[0.3em] uppercase text-terracotta mb-2">Mentoria · Instagram · não é sorte, é método</p>
           <h1 className="font-display text-6xl md:text-8xl tracking-[-0.03em] text-ink leading-[0.95]">
-            Protocolo <span className="italic font-normal text-terracotta">Viral</span>
+            Leveza <span className="italic font-normal text-terracotta">no Digital</span>
           </h1>
           <p className="text-ink/55 mt-5 leading-relaxed">
             O método que descobres na tua jornada vira conteúdo no Instagram. Começa pela base e escolhe por onde continuar.

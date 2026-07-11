@@ -146,7 +146,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       <Instagram size={16} />
                     </span>
                     <span className="min-w-0">
-                      <span className="block text-sm font-semibold text-ink">Protocolo Viral</span>
+                      <span className="block text-sm font-semibold text-ink">Leveza no Digital</span>
                       <span className="block text-[11px] text-ink/50">Mentoria · Instagram</span>
                     </span>
                   </Link>

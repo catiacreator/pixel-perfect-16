@@ -340,7 +340,7 @@ function Bonus() {
 function FinalCTA() {
   const cursos = [
     {
-      titulo: "Protocolo Viral",
+      titulo: "Leveza no Digital",
       tag: "Mentoria · Instagram",
       desc: "O método de IA para crescer e vender no Instagram — transforma o teu perfil numa máquina de crescimento.",
       to: "/protocolo",

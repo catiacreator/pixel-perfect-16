@@ -32,7 +32,7 @@ type Card = {
 const CARDS: Card[] = [
   { n: 1, title: "Workshop Conteúdo com IA", sub: "Em destaque", pill: "Mais recente", accent: "#ec4899", icon: Sparkles, to: "#" },
   { n: 2, title: "Destrava o teu perfil", sub: "30 dias", pill: "Diagnóstico completo", accent: "#f97316", icon: TrendingUp, to: "#" },
-  { n: 3, title: "Mentoria Protocolo Viral", sub: "Quero ser avisado/a quando começar", pill: "Brevemente · Lista de espera", accent: "#eab308", icon: Zap, to: "/protocolo" },
+  { n: 3, title: "Mentoria Leveza no Digital", sub: "Quero ser avisado/a quando começar", pill: "Brevemente · Lista de espera", accent: "#eab308", icon: Zap, to: "/protocolo" },
   { n: 4, title: "Fala comigo!", sub: "Serviços", pill: null, accent: "#a855f7", icon: MessageCircle, to: "#" },
 ];
 

@@ -27,11 +27,11 @@ const PRODUTOS = [
   {
     key: "protocolo",
     tag: "Mentoria · Instagram",
-    titulo: "Protocolo Viral",
+    titulo: "Leveza no Digital",
     assinatura: "não é sorte, é método",
     desc: "O método de IA para transformar o teu perfil numa máquina de crescimento.",
     to: "/protocolo",
-    cta: "Entrar no Protocolo",
+    cta: "Entrar na Leveza no Digital",
     img: "/protocolo-viral.png?v=1",
     pos: "center 30%",
     cor: "#C8487E",

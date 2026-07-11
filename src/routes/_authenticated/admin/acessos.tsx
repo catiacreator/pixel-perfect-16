@@ -16,7 +16,7 @@ type Curso = { id: string; nome: string; cor: string; modulos: Modulo[] };
 
 const CURSOS: Curso[] = [
   {
-    id: "protocolo", nome: "Protocolo Viral", cor: "#C8487E",
+    id: "protocolo", nome: "Leveza no Digital", cor: "#C8487E",
     modulos: [
       { id: "doc-mestre", nome: "Documento Mestre" },
       { id: "pilar-1", nome: "Pilar 1 · Crie com leveza" },
