@@ -98,6 +98,7 @@ export default function ReelsEmSerie() {
 
   const [etapa, setEtapa] = useState<Etapa>("ideia");
   const [ideia, setIdeia] = useState("");
+  const [modo, setModo] = useState<"exata" | "explorar">("exata");
   const [publico, setPublico] = useState("");
   const [oferta, setOferta] = useState("");
   const [prefilled, setPrefilled] = useState(false);
@@ -152,6 +153,7 @@ export default function ReelsEmSerie() {
       publico,
       oferta,
       direcao: direcao || undefined,
+      modo,
       evitar: opts?.mais ? nomes.map((n) => n.nome) : undefined,
     });
     if (!data) return;
@@ -345,6 +347,41 @@ export default function ReelsEmSerie() {
               placeholder="Ex.: organização de casa para mães cansadas"
               className="w-full resize-none rounded-xl border border-[var(--color-border)] bg-[#FCFAF6] px-4 py-3 text-sm text-ink outline-none focus:border-terracotta"
             />
+
+            {/* Modo: focar na ideia vs. explorar variações à volta */}
+            <div className="mt-4">
+              <p className="mb-2 text-sm font-semibold text-ink">O que queres que eu sugira?</p>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={() => setModo("exata")}
+                  className={`rounded-xl border px-4 py-3 text-left transition-colors ${
+                    modo === "exata"
+                      ? "border-terracotta bg-terracotta/8"
+                      : "border-[var(--color-border)] bg-white hover:border-terracotta/50"
+                  }`}
+                >
+                  <span className={`block text-sm font-semibold ${modo === "exata" ? "text-terracotta-dark" : "text-ink"}`}>
+                    A minha ideia
+                  </span>
+                  <span className="mt-0.5 block text-xs text-ink/55">Séries centradas exatamente no que escreveste.</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setModo("explorar")}
+                  className={`rounded-xl border px-4 py-3 text-left transition-colors ${
+                    modo === "explorar"
+                      ? "border-terracotta bg-terracotta/8"
+                      : "border-[var(--color-border)] bg-white hover:border-terracotta/50"
+                  }`}
+                >
+                  <span className={`block text-sm font-semibold ${modo === "explorar" ? "text-terracotta-dark" : "text-ink"}`}>
+                    Explorar à volta
+                  </span>
+                  <span className="mt-0.5 block text-xs text-ink/55">A minha ideia + ângulos melhorados do mesmo tema.</span>
+                </button>
+              </div>
+            </div>
 
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div>

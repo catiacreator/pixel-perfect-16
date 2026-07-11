@@ -88,8 +88,13 @@ function promptNomes(p: {
   direcao?: string;
   evitar?: string[];
   userContext?: string;
+  modo?: "exata" | "explorar";
 }): string {
   const evitar = (p.evitar || []).filter(Boolean);
+  const explorar = p.modo === "explorar";
+  const instrucao = explorar
+    ? `Gera 6 nomes de série que EXPLORAM À VOLTA da ideia da criadora — sem te prenderes à formulação exata. Fica sempre claramente dentro do tema "${p.ideia}", mas atravessa 3–4 ÂNGULOS diferentes e MELHORADOS do mesmo tema (sub-temas, dores adjacentes, promessas mais fortes, o inimigo comum) — para ela ver caminhos que talvez não tivesse pensado. No campo "temaNota", resume em 1 frase os ângulos que exploraste.`
+    : `Gera 6 nomes de série centrados EXATAMENTE na ideia da criadora "${p.ideia}" (não fujas do tema). Se o tema estiver estreito demais (ex: "postar 1 reel por semana"), alarga-o o mínimo para aguentar 30+ partes (ex: "hábitos para postar sempre") e explica isso em 1 frase no campo "temaNota".`;
   return `${VOZ}
 
 ${METODO_NOMES}
@@ -102,9 +107,9 @@ O que ela vende (para os CTA de fundo de funil): ${p.oferta?.trim() || "—"}
 ${p.direcao?.trim() ? `Direção pedida para os nomes: ${p.direcao.trim()}` : ""}
 ${evitar.length ? `NÃO repitas nem sejas parecido com estes nomes já sugeridos: ${evitar.join(" | ")}` : ""}
 
-Se o tema estiver estreito demais (ex: "postar 1 reel por semana"), alarga-o antes de nomear (ex: "hábitos para postar sempre") e explica isso em 1 frase no campo "temaNota". Um tema bom cabe numa expressão curta e ainda dá para 30+ partes.
+${instrucao}
 
-Gera 6 nomes de série. CADA um tem de ser uma FRASE-MOLDE repetível que abre todos os episódios (nome + "— parte N") — não uma manchete de um vídeo só. Usa 6 moldes DIFERENTES da lista acima, adaptados ao nicho da criadora, e cada um tem de dar para dizer em voz alta a olhar para a câmara. Antes de escreveres cada nome, confirma: "isto aguenta 30 partes trocando só o exemplo?". Se não aguentar, troca.
+CADA nome tem de ser uma FRASE-MOLDE repetível que abre todos os episódios (nome + "— parte N") — não uma manchete de um vídeo só. Usa 6 moldes DIFERENTES da lista acima, adaptados ao nicho da criadora, e cada um tem de dar para dizer em voz alta a olhar para a câmara. Antes de escreveres cada nome, confirma: "isto aguenta 30 partes trocando só o exemplo?". Se não aguentar, troca.
 
 Responde APENAS com JSON válido (sem markdown, sem texto à volta), exatamente nesta forma:
 {
@@ -199,6 +204,7 @@ export const Route = createFileRoute("/api/reels-serie")({
           quantidade?: number;
           desde?: number;
           jaEntregues?: string[];
+          modo?: "exata" | "explorar";
         };
         try {
           body = await request.json();
