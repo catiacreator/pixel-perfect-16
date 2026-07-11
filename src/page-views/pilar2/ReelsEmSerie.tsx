@@ -8,12 +8,17 @@ import {
   Loader2,
   RefreshCw,
   Sparkles,
+  FileDown,
+  CalendarPlus,
+  ArrowUpRight,
 } from "lucide-react";
+import { Link } from "@/lib/router-compat";
 import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import PillarHeader from "../../components/PillarHeader";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import { perfilContexto, readDocMestre, type DocMestre } from "@/lib/pilar4-prompts";
+import { adicionarPostsPlano } from "@/lib/plano-conteudo";
 
 type NomeSugestao = {
   nome: string;
@@ -199,6 +204,60 @@ export default function ReelsEmSerie() {
     a.download = `${nomeFicheiro}.txt`;
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  function exportarPdf() {
+    const esc = (s: string) =>
+      (s || "").replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c] as string));
+    const arco = entregas.length
+      ? `<div class="arco"><h3>O arco da série</h3><ol>${entregas.map((e) => `<li>${esc(e)}</li>`).join("")}</ol></div>`
+      : "";
+    const eps = roteiros
+      .map(
+        (r) => `<section><h2>Episódio ${r.n}</h2>
+        <p class="g">${esc(r.gancho)}</p><p>${esc(r.dorCulpa)}</p><p>${esc(r.corpo)}</p>
+        <p class="t">${esc(r.transicao)}</p>
+        <ul><li>${esc(r.passo1)}</li><li>${esc(r.passo2)}</li><li>${esc(r.passo3)}</li></ul></section>`,
+      )
+      .join("");
+    const html = `<!doctype html><html lang="pt"><head><meta charset="utf-8"><title>${esc(nomeSel || "Série de Reels")}</title>
+    <style>
+      body{font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;color:#1a1a1a;max-width:720px;margin:32px auto;padding:0 24px;line-height:1.55}
+      h1{font-size:26px;margin:0 0 2px}.sub{color:#8a8a8a;margin:0 0 24px;font-size:13px}
+      .arco{background:#faf6ef;border:1px solid #eadfce;border-radius:12px;padding:14px 20px;margin-bottom:20px}
+      .arco h3{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:#b23c6e}
+      .arco ol{margin:0;padding-left:18px}
+      section{border:1px solid #eadfce;border-radius:12px;padding:16px 20px;margin-bottom:14px;page-break-inside:avoid}
+      h2{color:#b23c6e;font-size:13px;text-transform:uppercase;letter-spacing:.06em;margin:0 0 10px}
+      .g{font-weight:600;font-size:17px}.t{color:#666}
+      ul{border-left:3px solid #e7b9cd;padding-left:14px;margin:10px 0;list-style:none}
+      ul li{margin:2px 0}
+      @media print{body{margin:0}}
+    </style></head><body>
+    <h1>${esc(nomeSel || "Série de Reels")}</h1>
+    <p class="sub">${roteiros.length} episódios · Leveza no Digital</p>
+    ${arco}${eps}</body></html>`;
+    const w = window.open("", "_blank");
+    if (!w) {
+      alert("Permite pop-ups neste site para exportar o PDF.");
+      return;
+    }
+    w.document.write(html);
+    w.document.close();
+    w.focus();
+    setTimeout(() => w.print(), 350);
+  }
+
+  const [guardados, setGuardados] = useState(0);
+  function guardarNoCalendario() {
+    const itens = roteiros.map((r) => ({
+      tipo: "Reel",
+      titulo: `${nomeSel || "Série"} — Ep. ${r.n}: ${r.gancho}`.slice(0, 90),
+      conteudo: roteiroTexto(r),
+    }));
+    const n = adicionarPostsPlano(itens);
+    setGuardados(n);
+    setTimeout(() => setGuardados(0), 6000);
   }
 
   const copiarTudoTexto = roteiros
@@ -425,12 +484,37 @@ export default function ReelsEmSerie() {
                 <CopyButton text={copiarTudoTexto} />
                 <button
                   onClick={descarregarTudo}
+                  className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-white px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-terracotta"
+                >
+                  <Download size={15} /> .txt
+                </button>
+                <button
+                  onClick={exportarPdf}
+                  className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-white px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-terracotta"
+                >
+                  <FileDown size={15} /> Exportar PDF
+                </button>
+                <button
+                  onClick={guardarNoCalendario}
                   className="inline-flex items-center gap-2 rounded-full bg-terracotta px-4 py-2 text-sm font-medium text-cream transition-colors hover:bg-terracotta-dark"
                 >
-                  <Download size={15} /> Descarregar
+                  <CalendarPlus size={15} /> Guardar no calendário
                 </button>
               </div>
             </div>
+
+            {guardados > 0 && (
+              <div className="mb-5 flex flex-wrap items-center gap-2 rounded-xl border border-terracotta/30 bg-terracotta/[0.06] px-4 py-3 text-sm text-ink">
+                <Check size={16} className="text-terracotta" />
+                {guardados} {guardados === 1 ? "episódio guardado" : "episódios guardados"} no calendário de conteúdo — agora escolhe a data de cada um.
+                <Link
+                  to="/metodo/pilar-2/redes-sociais?aba=plano"
+                  className="inline-flex items-center gap-1 font-semibold text-terracotta hover:text-terracotta-dark"
+                >
+                  Ir agendar <ArrowUpRight size={14} />
+                </Link>
+              </div>
+            )}
 
             {/* Lista de entregas */}
             {entregas.length > 0 && (
