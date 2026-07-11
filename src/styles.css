@@ -335,6 +335,24 @@ select:focus {
   --color-border-soft: #241F19;
   --color-beige: #2A241E;
 }
+/* Redes em modo escuro: o rosa vivo (#C8487E) fica demasiado "aceso" no escuro.
+   Escurece a cor de acento do módulo (sidebar, hero, botões), mantendo o texto
+   branco/claro legível por cima e o acento ainda visível sobre fundos escuros. */
+.dark .theme-redes {
+  --color-terracotta: #C24E80;      /* acento — legível como texto e como fundo de botão */
+  --color-terracotta-dark: #6B2242; /* fim escuro do gradiente da sidebar/hero */
+  --color-gold: #D06E9A;
+}
+/* "text-cream" é a cor CLARA da marca — deve manter-se clara no escuro (senão o
+   token cream, que clareia os fundos, torna o texto escuro e ilegível sobre cor).
+   Exceção: botões bg-ink, cujo fundo CLAREIA no escuro e precisam de texto escuro. */
+.dark .text-cream { color: #FBFAF7 !important; }
+.dark .bg-ink.text-cream,
+.dark .bg-ink .text-cream { color: #14110E !important; }
+/* "terracotta-dark" é bom como fim de gradiente, mas ilegível como TEXTO no escuro —
+   como texto passa a um rosa claro (ex.: rótulo da opção selecionada, estados ativos). */
+.dark .theme-redes .text-terracotta-dark { color: #F0A9C6 !important; }
+
 /* superfícies com cor literal (branco) — invertem no escuro */
 .dark .bg-white { background-color: #1C1813 !important; }
 .dark .bg-white\/55 { background-color: rgba(28, 24, 19, 0.55) !important; }
