@@ -32,7 +32,7 @@ const SECCOES: Seccao[] = [
       { nome: "Mensagens", path: "/mensagens" },
       { nome: "Glossário", path: "/glossario" },
       { nome: "Jornada (mapa dos pilares)", path: "/metodo" },
-      { nome: "Protocolo Viral", path: "/protocolo" },
+      { nome: "Leveza no Digital", path: "/protocolo" },
     ],
   },
   {

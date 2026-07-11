@@ -644,12 +644,12 @@ export default function RedesSociais() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar="redes" pilarLabel="Conteúdo Todo Dia" backTo="/protocolo" backLabel="Voltar ao Protocolo Viral" />
+      <PilarBreadcrumb pilar="redes" pilarLabel="Conteúdo Todo Dia" backTo="/protocolo" backLabel="Voltar à Leveza no Digital" />
       {aba === "boas-vindas" ? (
         <PillarHeader
           numeral="✦"
           icon={<MessageSquare size={18} />}
-          pilarLabel="Protocolo Viral · Instagram"
+          pilarLabel="Leveza no Digital · Instagram"
           titulo="Conteúdo Todo Dia"
           subtitulo="Comece pelas Boas-vindas: reveja o seu Documento Mestre e defina os temas com a Estrategista."
         />

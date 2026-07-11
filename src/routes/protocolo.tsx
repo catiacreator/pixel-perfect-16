@@ -4,7 +4,7 @@ import ProtocoloViral from "@/page-views/ProtocoloViral";
 export const Route = createFileRoute("/protocolo")({
   head: () => ({
     meta: [
-      { title: "Protocolo Viral — não é sorte, é método" },
+      { title: "Leveza no Digital — não é sorte, é método" },
       { name: "description", content: "A mentoria de criação e viralização no Instagram: a tua jornada + criar para o Instagram." },
     ],
   }),
