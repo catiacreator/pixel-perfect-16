@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useMemo, useRef, useEffect } from "react";
-import { Search, Trash2, Coins, Check, Clock, UserPlus, ShieldCheck, Shield, FileDown } from "lucide-react";
+import { Search, Trash2, Coins, Check, Clock, UserPlus, ShieldCheck, Shield, FileDown, X } from "lucide-react";
 import { notify } from "@/lib/toast";
 import {
   listMentoradas,
@@ -68,19 +68,24 @@ function MentoradasPage() {
     onSuccess: () => { notify("Turma atualizada", "success"); qc.invalidateQueries({ queryKey: ["admin-turmas"] }); },
     onError: (e) => notify(e.message, "error"),
   });
-  // Uma turma por aluno. turmaId "" = tirar de todas (volta a Iniciante/papel Aluno).
-  const moverMembros = (uids: string[], turmaId: string) => {
+  // Um aluno pode estar em VÁRIAS turmas. Atribuir ADICIONA (mantém as outras);
+  // turmaId "" = tirar de TODAS (volta a Iniciante/papel Aluno).
+  const adicionarMembros = (uids: string[], turmaId: string) => {
     const set = new Set(uids);
     const next = turmas.map((t) => {
+      if (!turmaId) return { ...t, membros: t.membros.filter((m) => !set.has(m)) };
       if (t.id === turmaId) return { ...t, membros: Array.from(new Set([...t.membros, ...uids])) };
-      return { ...t, membros: t.membros.filter((m) => !set.has(m)) };
+      return t;
     });
     turmaMut.mutate(next);
   };
-  const atribuirTurma = (uid: string, turmaId: string) => moverMembros([uid], turmaId);
+  const removerDeTurma = (uid: string, turmaId: string) => {
+    turmaMut.mutate(turmas.map((t) => (t.id === turmaId ? { ...t, membros: t.membros.filter((m) => m !== uid) } : t)));
+  };
+  const turmasDoAlunoIds = (uid: string) => turmas.filter((t) => t.membros.includes(uid)).map((t) => t.id);
   const atribuirVarios = (turmaId: string) => {
     if (!turmaId || selectedIds.size === 0) return;
-    moverMembros([...selectedIds], turmaId === "__sem__" ? "" : turmaId);
+    adicionarMembros([...selectedIds], turmaId === "__sem__" ? "" : turmaId);
     setSelectedIds(new Set());
     setBulkTurma("");
   };
@@ -116,15 +121,13 @@ function MentoradasPage() {
   const [adjusting, setAdjusting] = useState<{ id: string; nome: string } | null>(null);
   const [adding, setAdding] = useState(false);
 
-  // "" = sem turma explícita = Iniciante (padrão), segue o papel Aluno.
-  const turmaDoAluno = (uid: string) => turmas.find((t) => t.membros.includes(uid))?.id ?? "";
-
   const filtered = useMemo(() => {
     const term = q.toLowerCase();
     return data.filter((m: any) => {
       if (term && !(m.nome?.toLowerCase().includes(term) || m.email?.toLowerCase().includes(term))) return false;
-      if (turmaFiltro === "__sem__" && turmaDoAluno(m.id) !== "") return false;
-      if (turmaFiltro && turmaFiltro !== "__sem__" && turmaDoAluno(m.id) !== turmaFiltro) return false;
+      const minhas = turmasDoAlunoIds(m.id);
+      if (turmaFiltro === "__sem__" && minhas.length !== 0) return false;
+      if (turmaFiltro && turmaFiltro !== "__sem__" && !minhas.includes(turmaFiltro)) return false;
       if (estadoFiltro === "aprovado" && !m.approved) return false;
       if (estadoFiltro === "pendente" && m.approved) return false;
       return true;
@@ -332,17 +335,45 @@ function MentoradasPage() {
                   )}
                 </td>
                 <td className="px-5 py-3">
-                  <select
-                    value={turmaDoAluno(m.id)}
-                    onChange={(e) => atribuirTurma(m.id, e.target.value)}
-                    disabled={turmaMut.isPending}
-                    className="h-8 rounded-lg border border-[var(--color-border)] bg-white px-2 text-xs disabled:opacity-50 max-w-[150px]"
-                  >
-                    <option value="">{SEM_TURMA_LABEL}</option>
-                    {turmas.map((t) => (
-                      <option key={t.id} value={t.id}>{t.nome}</option>
-                    ))}
-                  </select>
+                  {(() => {
+                    const minhas = turmasDoAlunoIds(m.id);
+                    const disponiveis = turmas.filter((t) => !minhas.includes(t.id));
+                    return (
+                      <div className="flex flex-wrap items-center gap-1 max-w-[240px]">
+                        {minhas.length === 0 && <span className="text-xs text-ink/40">{SEM_TURMA_LABEL}</span>}
+                        {minhas.map((id) => {
+                          const t = turmas.find((x) => x.id === id);
+                          if (!t) return null;
+                          return (
+                            <span key={id} className="inline-flex items-center gap-1 rounded-full bg-ink/8 px-2 py-0.5 text-[11px] text-ink">
+                              {t.nome}
+                              <button
+                                onClick={() => removerDeTurma(m.id, id)}
+                                disabled={turmaMut.isPending}
+                                className="text-ink/40 hover:text-rose-600 disabled:opacity-50"
+                                aria-label={`Tirar de ${t.nome}`}
+                              >
+                                <X size={11} />
+                              </button>
+                            </span>
+                          );
+                        })}
+                        {disponiveis.length > 0 && (
+                          <select
+                            value=""
+                            onChange={(e) => { if (e.target.value) adicionarMembros([m.id], e.target.value); }}
+                            disabled={turmaMut.isPending}
+                            className="h-7 rounded-lg border border-[var(--color-border)] bg-white px-1.5 text-[11px] disabled:opacity-50"
+                          >
+                            <option value="">+ turma</option>
+                            {disponiveis.map((t) => (
+                              <option key={t.id} value={t.id}>{t.nome}</option>
+                            ))}
+                          </select>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </td>
                 <td className="px-5 py-3">
                   {m.approved ? (

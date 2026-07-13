@@ -84,7 +84,7 @@ function TurmasPage() {
           <h1 className="text-2xl font-semibold tracking-tight text-ink">Turmas</h1>
           <p className="text-sm text-ink/55 mt-0.5 max-w-xl">
             Crie turmas (grupos de alunos) e escolha o que cada turma pode ver. Os alunos são atribuídos na tabela de{" "}
-            <b>Alunos</b>. Um aluno numa turma só vê o que a turma permite.
+            <b>Alunos</b> e podem estar em <b>mais que uma turma</b> — nesse caso veem a soma do que essas turmas permitem.
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
