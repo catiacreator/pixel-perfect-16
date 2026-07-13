@@ -292,6 +292,17 @@ select:focus {
   --color-terracotta-dark: #5B3FA0;
   --color-gold: #A78BE8;
 }
+/* Mini-curso "Conteúdo com IA" — paleta café + caramelo + creme (como o print). */
+.theme-cafe {
+  --color-terracotta: #6B3F2A;      /* castanho café — acento/fundo do herói */
+  --color-terracotta-dark: #3D2618; /* castanho escuro — caixas de destaque */
+  --color-gold: #C88A4E;            /* caramelo — realces */
+}
+.dark .theme-cafe {
+  --color-terracotta: #C9824F;      /* caramelo mais claro no escuro (texto legível) */
+  --color-terracotta-dark: #A9683C;
+  --color-gold: #D6A56A;
+}
 
 /* Vídeos do curso: esconde o botão de ecrã inteiro nativo (Safari + Chrome).
    Usamos o botão "expandir" próprio, que abre a 80% sem perder nitidez. */
