@@ -1216,3 +1216,65 @@ export const removerComentario = createServerFn({ method: "POST" })
     if (error) throw error;
     return { ok: true };
   });
+
+// ───────── Permissões de USO dos agentes (ex.: Cat.IA) ─────────
+// Quem pode usar cada agente: por turma(s) e/ou aluno(s) específico(s).
+// Guardado no blob da conta principal, em "__agente_perms__": { agenteId: { turmas, alunos } }.
+const AGENTE_PERMS_KEY = "__agente_perms__";
+type AgentePerms = { turmas: string[]; alunos: string[] };
+
+function lerAgentePerms(blob: Record<string, unknown>, agente: string): AgentePerms {
+  const mapa = (blob[AGENTE_PERMS_KEY] as Record<string, AgentePerms>) ?? {};
+  const p = mapa[agente] ?? { turmas: [], alunos: [] };
+  return { turmas: Array.isArray(p.turmas) ? p.turmas : [], alunos: Array.isArray(p.alunos) ? p.alunos : [] };
+}
+
+export const getAgentePerms = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { agente: string }) => z.object({ agente: z.string().max(60) }).parse(d))
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { blob } = await readOwnerBlob(supabaseAdmin);
+    return lerAgentePerms(blob, data.agente);
+  });
+
+export const setAgentePerms = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { agente: string; turmas: string[]; alunos: string[] }) =>
+    z.object({
+      agente: z.string().max(60),
+      turmas: z.array(z.string()).max(500),
+      alunos: z.array(z.string()).max(5000),
+    }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { uid, blob } = await readOwnerBlob(supabaseAdmin);
+    const mapa = { ...((blob[AGENTE_PERMS_KEY] as Record<string, AgentePerms>) ?? {}), [data.agente]: { turmas: data.turmas, alunos: data.alunos } };
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: uid, data: { ...blob, [AGENTE_PERMS_KEY]: mapa }, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
+    return { ok: true };
+  });
+
+// Qualquer autenticado verifica se pode usar o agente. Admin/moderador sempre podem.
+export const podeUsarAgente = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { agente: string }) => z.object({ agente: z.string().max(60) }).parse(d))
+  .handler(async ({ context, data }) => {
+    const email = emailFromContext(context);
+    if (isAdminEmail(email) || OWNER_EMAILS.includes(email)) return { pode: true, admin: true };
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const roles = await rolesOf(supabaseAdmin, context.userId);
+    if (roles.includes("admin") || roles.includes("moderator")) return { pode: true, admin: roles.includes("admin") };
+    const { blob } = await readOwnerBlob(supabaseAdmin);
+    const perms = lerAgentePerms(blob, data.agente);
+    if (perms.alunos.includes(context.userId)) return { pode: true, admin: false };
+    const turmas = (Array.isArray(blob[TURMAS_KEY]) ? blob[TURMAS_KEY] : []) as { id?: string; membros?: string[] }[];
+    const minhas = new Set(turmas.filter((t) => Array.isArray(t.membros) && t.membros.includes(context.userId)).map((t) => t.id));
+    return { pode: perms.turmas.some((tid) => minhas.has(tid)), admin: false };
+  });
