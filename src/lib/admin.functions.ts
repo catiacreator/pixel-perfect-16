@@ -874,12 +874,24 @@ export const getMinhaTurmaAcessos = createServerFn({ method: "POST" })
       return { restrito: true, acessos: Array.isArray(papeis.moderador) ? papeis.moderador : [...PAPEIS_PADRAO], categoria: null as string | null, modos: {} as Record<string, string> };
     }
 
-    // Aluno: turma explícita sobrepõe o papel.
+    // Aluno: turma(s) explícita(s) sobrepõem o papel. Um aluno pode estar em VÁRIAS
+    // turmas → o acesso é a UNIÃO dos acessos de todas elas (a mais permissiva vence).
     const turmas = (Array.isArray(blob[TURMAS_KEY]) ? blob[TURMAS_KEY] : []) as {
       membros?: string[]; acessos?: string[]; categoria?: string; modos?: Record<string, string>;
     }[];
-    const turma = turmas.find((t) => Array.isArray(t.membros) && t.membros.includes(context.userId));
-    if (turma) return { restrito: true, acessos: Array.isArray(turma.acessos) ? turma.acessos : [], categoria: turma.categoria ?? null, modos: turma.modos ?? {} };
+    const minhas = turmas.filter((t) => Array.isArray(t.membros) && t.membros.includes(context.userId));
+    if (minhas.length > 0) {
+      const acessos = Array.from(new Set(minhas.flatMap((t) => (Array.isArray(t.acessos) ? t.acessos : []))));
+      // modos: um nó concedido por qualquer turma fica livre; para os restantes, junta
+      // os modos (o "bloqueado" — que mostra contacto — vence o "em-breve").
+      const modos: Record<string, string> = {};
+      for (const t of minhas) for (const [id, m] of Object.entries(t.modos ?? {})) {
+        if (modos[id] !== "bloqueado") modos[id] = m;
+      }
+      // categoria: se qualquer turma NÃO restringe os links do topo, não restringe (null).
+      const categoria = minhas.every((t) => t.categoria === minhas[0].categoria) ? (minhas[0].categoria ?? null) : null;
+      return { restrito: true, acessos, categoria, modos };
+    }
     return { restrito: true, acessos: Array.isArray(papeis.aluno) ? papeis.aluno : [...PAPEIS_PADRAO], categoria: null as string | null, modos: {} as Record<string, string> };
   });
 
@@ -898,12 +910,12 @@ type MensagemRow = {
 };
 
 // Resolve a turma (id) do utilizador atual, se for aluno numa turma.
-function turmaDoUtilizador(blob: Record<string, unknown>, userId: string): string | null {
+// Todas as turmas (ids) de que o utilizador é membro (pode ser mais que uma).
+function turmasDoUtilizador(blob: Record<string, unknown>, userId: string): string[] {
   const turmas = (Array.isArray(blob[TURMAS_KEY]) ? blob[TURMAS_KEY] : []) as {
     id?: string; membros?: string[];
   }[];
-  const t = turmas.find((x) => Array.isArray(x.membros) && x.membros.includes(userId));
-  return t?.id ?? null;
+  return turmas.filter((x) => Array.isArray(x.membros) && x.membros.includes(userId) && x.id).map((x) => x.id as string);
 }
 
 function ordenarMensagens(ms: MensagemRow[]): MensagemRow[] {
@@ -921,9 +933,9 @@ export const getMensagens = createServerFn({ method: "POST" })
     const roles = await rolesOf(supabaseAdmin, context.userId);
     // Admin/owner recebe todas (para gerir).
     if (roles.includes("admin")) return ordenarMensagens(todas);
-    const minhaTurma = turmaDoUtilizador(blob, context.userId);
+    const minhasTurmas = turmasDoUtilizador(blob, context.userId);
     const visiveis = todas.filter(
-      (m) => m.turmaId === "todas" || (minhaTurma !== null && m.turmaId === minhaTurma),
+      (m) => m.turmaId === "todas" || minhasTurmas.includes(m.turmaId),
     );
     return ordenarMensagens(visiveis);
   });
