@@ -14,6 +14,7 @@ import {
   Palette,
   Shirt,
   MessageSquare,
+  Bot,
   Video,
   Trophy,
   Clock,
@@ -183,6 +184,7 @@ const PILARES: Record<string | number, PilarDef> = {
       { num: 7, id: "redes.agendar", label: "Publicar", to: "/metodo/pilar-2/redes-sociais?aba=agendar", icon: CalendarClock },
       { num: 1, id: "redes.automacao", label: "Automação para mensagens automáticas", to: "/metodo/pilar-2/redes-sociais?aba=automacao", icon: MessageSquare, secao: "Ferramentas Essenciais" },
       { num: 2, id: "redes.carousel-snap", label: "Carousel Snap", to: "/metodo/pilar-2/redes-sociais?aba=carousel-snap", icon: LayoutGrid },
+      { num: 3, label: "Assistente Cat.IA", to: "/metodo/pilar-2/redes-sociais?aba=assistente", icon: Bot },
     ],
   },
   1: {

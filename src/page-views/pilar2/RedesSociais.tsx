@@ -10,7 +10,7 @@ import { fillPilar2Prompt } from "@/lib/pilar2-fill";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import PillarHeader from "../../components/PillarHeader";
 import PromptCard from "../../components/PromptCard";
-import ConteudoAssistente from "../../components/ConteudoAssistente";
+import AgenteCatIa from "../../components/AgenteCatIa";
 import BoasVindasInstagram from "../../components/BoasVindasInstagram";
 import PlanoConteudo from "../../components/PlanoConteudo";
 import FormatosConteudo from "../../components/FormatosConteudo";
@@ -517,9 +517,10 @@ export default function RedesSociais() {
   // página à parte (rota própria) e não passa por aqui.
   const fmt = params.get("fmt") || "roteiros";
   const guardId = aba === "formatos" ? `redes.formatos.${fmt}` : `redes.${aba}`;
-  const conteudoBloqueado = bloqueadoParaAlunos && isBloqueado(guardId);
-  // Vista admin: a aba está "Em breve" p/ alunos, mas a admin vê o conteúdo.
-  const avisoAdminEmBreve = !bloqueadoParaAlunos && isBloqueado(guardId);
+  // O assistente Cat.IA tem gating PRÓPRIO (permissões por turma/aluno) — não passa
+  // pelo bloqueio de estrutura/turma, senão colidiam.
+  const conteudoBloqueado = aba !== "assistente" && bloqueadoParaAlunos && isBloqueado(guardId);
+  const avisoAdminEmBreve = aba !== "assistente" && !bloqueadoParaAlunos && isBloqueado(guardId);
   const [formato, setFormato] = useState<"reels" | "estatico" | null>(null);
   const [objetivo, setObjetivo] = useState<Objetivo>("autoridade");
 
@@ -679,7 +680,7 @@ export default function RedesSociais() {
 
         {aba === "desafio" && <Desafio30Dias />}
 
-        {aba === "assistente" && <ConteudoAssistente />}
+        {aba === "assistente" && <AgenteCatIa />}
 
         {aba === "plano" && <PlanoConteudo />}
 

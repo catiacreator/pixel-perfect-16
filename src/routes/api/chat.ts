@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { convertToModelMessages, streamText, type UIMessage } from "ai";
-import { resolveChatModel } from "@/lib/ai-gateway.server";
+import { resolveChatModel, resolveAnthropicModel } from "@/lib/ai-gateway.server";
 
 const SYSTEM_PROMPT = `Tu és a **Liv.IA**, assistente virtual da **Cátia Creator** (produtos: Protocolo Viral e Academia de IA).
 
@@ -143,7 +143,8 @@ export const Route = createFileRoute("/api/chat")({
 
         let model;
         try {
-          model = resolveChatModel();
+          // Prefere a Anthropic (Claude) se houver chave — fiável; senão, gateway grátis.
+          model = resolveAnthropicModel() ?? resolveChatModel();
         } catch (e) {
           return new Response(e instanceof Error ? e.message : "Missing AI key", { status: 500 });
         }
