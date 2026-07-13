@@ -140,7 +140,7 @@ export default function AgentesCreator() {
   );
 
   return (
-    <div className="theme-roxo">
+    <div className="theme-cafe">
       <PilarSidebar pilar="conteudo-ia" />
       <div className="lg:pl-[280px]">
         <Layout>{conteudo}</Layout>
