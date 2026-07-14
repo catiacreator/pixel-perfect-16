@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useMemo, useRef, useEffect } from "react";
-import { Search, Trash2, Coins, Check, Clock, UserPlus, ShieldCheck, Shield, FileDown, X } from "lucide-react";
+import { Search, Trash2, Coins, Check, Clock, UserPlus, ShieldCheck, Shield, FileDown, X, KeyRound } from "lucide-react";
 import { notify } from "@/lib/toast";
 import {
   listMentoradas,
@@ -10,6 +10,7 @@ import {
   adjustPoints,
   setApproval,
   createMentorada,
+  resetAlunoPassword,
   setUserRole,
   checkIsAdmin,
   getTurmas,
@@ -33,6 +34,7 @@ function MentoradasPage() {
   const adjust = useServerFn(adjustPoints);
   const approve = useServerFn(setApproval);
   const create = useServerFn(createMentorada);
+  const resetPwdFn = useServerFn(resetAlunoPassword);
   const setRole = useServerFn(setUserRole);
   const ctxFn = useServerFn(checkIsAdmin);
   const fetchTurmas = useServerFn(getTurmas);
@@ -92,6 +94,7 @@ function MentoradasPage() {
   const [aRemover, setARemover] = useState(false);
   // Pop-up de confirmação de remoção (evita enganos).
   const [remocao, setRemocao] = useState<{ ids: string[]; label: string } | null>(null);
+  const [resetPwd, setResetPwd] = useState<{ id: string; nome: string } | null>(null);
   const pedirRemoverVarios = () => {
     if (selectedIds.size === 0) return;
     setRemocao({ ids: [...selectedIds], label: `${selectedIds.size} contacto(s) selecionado(s)` });
@@ -402,6 +405,13 @@ function MentoradasPage() {
                     <Coins size={13} /> Pontos
                   </button>
                   <button
+                    onClick={() => setResetPwd({ id: m.id, nome: m.nome ?? m.email ?? "este aluno" })}
+                    className="inline-flex items-center gap-1 text-xs text-ink/60 hover:text-ink mr-3"
+                    title="Definir uma nova palavra-passe"
+                  >
+                    <KeyRound size={13} /> Senha
+                  </button>
+                  <button
                     onClick={() => setRemocao({ ids: [m.id], label: m.nome ?? m.email ?? "este contacto" })}
                     className="text-ink/40 hover:text-rose-700"
                     aria-label="Eliminar permanentemente"
@@ -457,6 +467,65 @@ function MentoradasPage() {
           onConfirm={executarRemocao}
         />
       )}
+
+      {resetPwd && (
+        <ResetPasswordDialog
+          nome={resetPwd.nome}
+          onClose={() => setResetPwd(null)}
+          onConfirm={async (password) => {
+            await resetPwdFn({ data: { userId: resetPwd.id, password } });
+            notify("Palavra-passe atualizada — partilha-a com o aluno.", "success");
+            setResetPwd(null);
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function ResetPasswordDialog({
+  nome, onClose, onConfirm,
+}: {
+  nome: string;
+  onClose: () => void;
+  onConfirm: (password: string) => Promise<void>;
+}) {
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-cream w-full max-w-md rounded-2xl p-6" onClick={(e) => e.stopPropagation()}>
+        <h2 className="text-lg font-semibold">Definir palavra-passe</h2>
+        <p className="text-xs text-ink/50 mt-1">
+          Define uma nova palavra-passe para <b>{nome}</b> e partilha-a com o aluno (ele pode mudá-la depois). Útil quando o email de recuperação não chega.
+        </p>
+        {erro && (
+          <div className="mt-4 rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-700">{erro}</div>
+        )}
+        <input
+          type="text"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Nova palavra-passe (mín. 6)"
+          className="mt-4 w-full h-11 px-4 rounded-full border border-[var(--color-border)] bg-white text-sm"
+        />
+        <div className="flex gap-2 mt-4">
+          <button onClick={onClose} className="flex-1 h-11 rounded-full border border-[var(--color-border)] text-sm">Cancelar</button>
+          <button
+            disabled={loading || password.length < 6}
+            onClick={async () => {
+              setLoading(true); setErro(null);
+              try { await onConfirm(password); }
+              catch (e) { setErro(e instanceof Error ? e.message : "Não foi possível."); }
+              finally { setLoading(false); }
+            }}
+            className="flex-1 h-11 rounded-full bg-terracotta text-cream text-sm font-semibold disabled:opacity-50"
+          >
+            {loading ? "A guardar…" : "Guardar palavra-passe"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
