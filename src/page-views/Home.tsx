@@ -83,15 +83,31 @@ const PRODUTOS = [
     cor: "#A9683C",
     icon: Package,
   },
+  {
+    key: "mini-curso-oculto",
+    tag: "Mini-curso · rascunho",
+    titulo: "Novo Mini-curso",
+    assinatura: "só tu vês isto",
+    desc: "Rascunho invisível para os alunos — só tu (admin) o vês. Preenche quando quiseres.",
+    to: "/mini-curso-oculto",
+    cta: "Abrir rascunho",
+    img: "/mini-curso-oculto.svg",
+    pos: "center",
+    cor: "#3F4A5A",
+    icon: Lock,
+    soAdmin: true,
+  },
 ];
 
 // Cada secção agrupa os cards pela sua chave; o resto vai para os cursos principais.
-const MINI_CURSOS = ["conteudo-ia"];
+const MINI_CURSOS = ["conteudo-ia", "mini-curso-oculto"];
 const MENTORIA = ["encontros"];
 
 export default function Home() {
   const bloqueado = useBloqueadoParaAlunos();
   const { isBloqueado, modoBloqueio } = useBloqueios();
+  // Cards "soAdmin" só aparecem para o admin (em vista de admin) — invisíveis para todos os outros.
+  const visivel = (p: (typeof PRODUTOS)[number]) => !(p as { soAdmin?: boolean }).soAdmin || !bloqueado;
   const [desbloquearOpen, setDesbloquearOpen] = useState(false);
   const orbRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -262,7 +278,7 @@ export default function Home() {
         <div className="max-w-[1400px] mx-auto">
           {/* Cursos principais */}
           <div className="flex flex-col sm:flex-row gap-4 md:gap-5">
-            {PRODUTOS.filter((p) => !MINI_CURSOS.includes(p.key) && !MENTORIA.includes(p.key)).map((p, i) => renderCard(p, i))}
+            {PRODUTOS.filter((p) => !MINI_CURSOS.includes(p.key) && !MENTORIA.includes(p.key) && visivel(p)).map((p, i) => renderCard(p, i))}
           </div>
 
           {/* Mini-cursos */}
@@ -272,7 +288,7 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col sm:flex-row justify-center sm:justify-start gap-4 md:gap-5">
-            {PRODUTOS.filter((p) => MINI_CURSOS.includes(p.key)).map((p, i) => renderCard(p, i))}
+            {PRODUTOS.filter((p) => MINI_CURSOS.includes(p.key) && visivel(p)).map((p, i) => renderCard(p, i))}
           </div>
 
           {/* Mentoria */}
@@ -282,7 +298,7 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col sm:flex-row justify-center sm:justify-start gap-4 md:gap-5">
-            {PRODUTOS.filter((p) => MENTORIA.includes(p.key)).map((p, i) => renderCard(p, i))}
+            {PRODUTOS.filter((p) => MENTORIA.includes(p.key) && visivel(p)).map((p, i) => renderCard(p, i))}
           </div>
         </div>
       </section>

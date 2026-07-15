@@ -14,6 +14,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegistoRouteImport } from './routes/registo'
 import { Route as ProtocoloRouteImport } from './routes/protocolo'
 import { Route as PendingRouteImport } from './routes/pending'
+import { Route as MiniCursoOcultoRouteImport } from './routes/mini-curso-oculto'
 import { Route as MinhaBaseRouteImport } from './routes/minha-base'
 import { Route as MeusProjetosRouteImport } from './routes/meus-projetos'
 import { Route as MetodoRouteImport } from './routes/metodo'
@@ -128,6 +129,11 @@ const ProtocoloRoute = ProtocoloRouteImport.update({
 const PendingRoute = PendingRouteImport.update({
   id: '/pending',
   path: '/pending',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MiniCursoOcultoRoute = MiniCursoOcultoRouteImport.update({
+  id: '/mini-curso-oculto',
+  path: '/mini-curso-oculto',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MinhaBaseRoute = MinhaBaseRouteImport.update({
@@ -636,6 +642,7 @@ export interface FileRoutesByFullPath {
   '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
+  '/mini-curso-oculto': typeof MiniCursoOcultoRoute
   '/pending': typeof PendingRoute
   '/protocolo': typeof ProtocoloRoute
   '/registo': typeof RegistoRoute
@@ -731,6 +738,7 @@ export interface FileRoutesByTo {
   '/mensagens': typeof MensagensRoute
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
+  '/mini-curso-oculto': typeof MiniCursoOcultoRoute
   '/pending': typeof PendingRoute
   '/protocolo': typeof ProtocoloRoute
   '/registo': typeof RegistoRoute
@@ -819,6 +827,7 @@ export interface FileRoutesById {
   '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
+  '/mini-curso-oculto': typeof MiniCursoOcultoRoute
   '/pending': typeof PendingRoute
   '/protocolo': typeof ProtocoloRoute
   '/registo': typeof RegistoRoute
@@ -917,6 +926,7 @@ export interface FileRouteTypes {
     | '/metodo'
     | '/meus-projetos'
     | '/minha-base'
+    | '/mini-curso-oculto'
     | '/pending'
     | '/protocolo'
     | '/registo'
@@ -1012,6 +1022,7 @@ export interface FileRouteTypes {
     | '/mensagens'
     | '/meus-projetos'
     | '/minha-base'
+    | '/mini-curso-oculto'
     | '/pending'
     | '/protocolo'
     | '/registo'
@@ -1099,6 +1110,7 @@ export interface FileRouteTypes {
     | '/metodo'
     | '/meus-projetos'
     | '/minha-base'
+    | '/mini-curso-oculto'
     | '/pending'
     | '/protocolo'
     | '/registo'
@@ -1197,6 +1209,7 @@ export interface RootRouteChildren {
   MetodoRoute: typeof MetodoRouteWithChildren
   MeusProjetosRoute: typeof MeusProjetosRoute
   MinhaBaseRoute: typeof MinhaBaseRoute
+  MiniCursoOcultoRoute: typeof MiniCursoOcultoRoute
   PendingRoute: typeof PendingRoute
   ProtocoloRoute: typeof ProtocoloRoute
   RegistoRoute: typeof RegistoRoute
@@ -1242,6 +1255,13 @@ declare module '@tanstack/react-router' {
       path: '/pending'
       fullPath: '/pending'
       preLoaderRoute: typeof PendingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mini-curso-oculto': {
+      id: '/mini-curso-oculto'
+      path: '/mini-curso-oculto'
+      fullPath: '/mini-curso-oculto'
+      preLoaderRoute: typeof MiniCursoOcultoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/minha-base': {
@@ -2182,6 +2202,7 @@ const rootRouteChildren: RootRouteChildren = {
   MetodoRoute: MetodoRouteWithChildren,
   MeusProjetosRoute: MeusProjetosRoute,
   MinhaBaseRoute: MinhaBaseRoute,
+  MiniCursoOcultoRoute: MiniCursoOcultoRoute,
   PendingRoute: PendingRoute,
   ProtocoloRoute: ProtocoloRoute,
   RegistoRoute: RegistoRoute,
