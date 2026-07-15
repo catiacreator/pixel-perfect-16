@@ -21,6 +21,7 @@ import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as EncontrosRouteImport } from './routes/encontros'
 import { Route as DocMestreRouteImport } from './routes/doc-mestre'
+import { Route as CriarProdutoRouteImport } from './routes/criar-produto'
 import { Route as ConteudoIaRouteImport } from './routes/conteudo-ia'
 import { Route as ConquistasRouteImport } from './routes/conquistas'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -162,6 +163,11 @@ const EncontrosRoute = EncontrosRouteImport.update({
 const DocMestreRoute = DocMestreRouteImport.update({
   id: '/doc-mestre',
   path: '/doc-mestre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CriarProdutoRoute = CriarProdutoRouteImport.update({
+  id: '/criar-produto',
+  path: '/criar-produto',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConteudoIaRoute = ConteudoIaRouteImport.update({
@@ -622,6 +628,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/conteudo-ia': typeof ConteudoIaRoute
+  '/criar-produto': typeof CriarProdutoRoute
   '/doc-mestre': typeof DocMestreRoute
   '/encontros': typeof EncontrosRoute
   '/glossario': typeof GlossarioRoute
@@ -717,6 +724,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/conteudo-ia': typeof ConteudoIaRoute
+  '/criar-produto': typeof CriarProdutoRoute
   '/doc-mestre': typeof DocMestreRoute
   '/encontros': typeof EncontrosRoute
   '/glossario': typeof GlossarioRoute
@@ -803,6 +811,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/conteudo-ia': typeof ConteudoIaRoute
+  '/criar-produto': typeof CriarProdutoRoute
   '/doc-mestre': typeof DocMestreRoute
   '/encontros': typeof EncontrosRoute
   '/glossario': typeof GlossarioRoute
@@ -900,6 +909,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/conquistas'
     | '/conteudo-ia'
+    | '/criar-produto'
     | '/doc-mestre'
     | '/encontros'
     | '/glossario'
@@ -995,6 +1005,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/conquistas'
     | '/conteudo-ia'
+    | '/criar-produto'
     | '/doc-mestre'
     | '/encontros'
     | '/glossario'
@@ -1080,6 +1091,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/conquistas'
     | '/conteudo-ia'
+    | '/criar-produto'
     | '/doc-mestre'
     | '/encontros'
     | '/glossario'
@@ -1177,6 +1189,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ConquistasRoute: typeof ConquistasRoute
   ConteudoIaRoute: typeof ConteudoIaRoute
+  CriarProdutoRoute: typeof CriarProdutoRoute
   DocMestreRoute: typeof DocMestreRoute
   EncontrosRoute: typeof EncontrosRoute
   GlossarioRoute: typeof GlossarioRoute
@@ -1278,6 +1291,13 @@ declare module '@tanstack/react-router' {
       path: '/doc-mestre'
       fullPath: '/doc-mestre'
       preLoaderRoute: typeof DocMestreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/criar-produto': {
+      id: '/criar-produto'
+      path: '/criar-produto'
+      fullPath: '/criar-produto'
+      preLoaderRoute: typeof CriarProdutoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/conteudo-ia': {
@@ -2154,6 +2174,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ConquistasRoute: ConquistasRoute,
   ConteudoIaRoute: ConteudoIaRoute,
+  CriarProdutoRoute: CriarProdutoRoute,
   DocMestreRoute: DocMestreRoute,
   EncontrosRoute: EncontrosRoute,
   GlossarioRoute: GlossarioRoute,

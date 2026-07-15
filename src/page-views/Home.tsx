@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import HeroRobot from "../components/HeroRobot";
-import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, X, Users } from "lucide-react";
+import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, X, Users, Package } from "lucide-react";
 
 const WHATSAPP_CATIA = "https://wa.link/jwr3yp";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
@@ -69,6 +69,19 @@ const PRODUTOS = [
     icon: Users,
     estruturaId: "encontros",
     soCapa: true,
+  },
+  {
+    key: "criar-produto",
+    tag: "Ferramenta",
+    titulo: "Criar Produto",
+    assinatura: "do zero à venda",
+    desc: "Ideias de produto, landing page, stories e posts — tudo pronto a copiar (ChatGPT/Claude).",
+    to: "/criar-produto",
+    cta: "Criar o meu produto",
+    img: "/criar-produto.svg",
+    pos: "center 32%",
+    cor: "#A9683C",
+    icon: Package,
   },
 ];
 
