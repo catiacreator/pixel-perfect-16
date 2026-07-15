@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 1280" width="720" height="1280">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#C88A4E"/>
+      <stop offset="0.55" stop-color="#A9683C"/>
+      <stop offset="1" stop-color="#6B3F2A"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.38" r="0.6">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="720" height="1280" fill="url(#bg)"/>
+  <rect width="720" height="1280" fill="url(#glow)"/>
+  <!-- caixa / produto -->
+  <g transform="translate(360 560)" fill="none" stroke="#FBF3E6" stroke-width="11" stroke-linejoin="round" stroke-linecap="round" opacity="0.96">
+    <path d="M-140 -60 L0 -130 L140 -60 L140 90 L0 160 L-140 90 Z"/>
+    <path d="M-140 -60 L0 10 L140 -60"/>
+    <path d="M0 10 L0 160"/>
+    <path d="M-70 -95 L70 -25" opacity="0.7"/>
+  </g>
+  <!-- brilho / faísca -->
+  <g transform="translate(360 300)" fill="#FBF3E6" opacity="0.95">
+    <path d="M0 -34 L9 -9 L34 0 L9 9 L0 34 L-9 9 L-34 0 L-9 -9 Z"/>
+  </g>
+</svg>
