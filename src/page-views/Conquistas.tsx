@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import Layout from "../components/Layout";
-import { getRanking } from "@/lib/admin.functions";
+import { getRanking, getPremioGeral } from "@/lib/admin.functions";
 import { getRankingMes } from "@/lib/gamificacao.functions";
 import { useProgresso } from "@/lib/use-progresso";
 import {
@@ -208,6 +208,8 @@ export default function Conquistas() {
           </div>
         </header>
 
+        <PremioGeralBanner />
+
         {/* Resumo */}
         <div className="grid md:grid-cols-3 gap-4 mb-6">
           <div className="bg-white rounded-2xl border border-[var(--color-border)] p-6">
@@ -401,3 +403,26 @@ function PodiumSpot({ emoji, lugar, premio }: { emoji: string; lugar: string; pr
   );
 }
 
+
+// Banner do prémio geral da plataforma (definido pelo admin em /admin/premios).
+function PremioGeralBanner() {
+  const fetchP = useServerFn(getPremioGeral);
+  const [p, setP] = useState<{ titulo: string; descricao: string; emoji: string; ativo: boolean } | null>(null);
+  useEffect(() => {
+    let vivo = true;
+    fetchP().then((v) => { if (vivo) setP(v as any); }).catch(() => {});
+    return () => { vivo = false; };
+  }, [fetchP]);
+
+  if (!p || !p.ativo || !p.titulo) return null;
+  return (
+    <div className="mb-8 flex items-start gap-4 rounded-2xl border border-terracotta/30 bg-gradient-to-br from-terracotta/[0.08] to-gold/[0.06] p-5">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/70 text-2xl">{p.emoji || "🏆"}</div>
+      <div className="min-w-0">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-terracotta">Prémio</p>
+        <h2 className="font-serif text-xl text-ink">{p.titulo}</h2>
+        {p.descricao && <p className="mt-1 text-sm text-ink/70 whitespace-pre-wrap">{p.descricao}</p>}
+      </div>
+    </div>
+  );
+}

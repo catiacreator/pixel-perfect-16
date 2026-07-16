@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Lock, Eye, ListTree } from "lucide-react";
 import { notify } from "@/lib/toast";
-import { ESTRUTURA, type Nodo, type NodoTipo } from "@/lib/estrutura";
+import { ESTRUTURA, MODO_PADRAO, type Nodo, type NodoTipo } from "@/lib/estrutura";
 import { useBloqueios, guardarBloqueios } from "@/lib/bloqueios";
 import { getModoBloqueio, setModoBloqueio, getTurmas, setTurmas, getGeralAtivo, setGeralAtivo } from "@/lib/admin.functions";
 import { type Turma } from "@/lib/turmas";
@@ -80,16 +80,24 @@ function EstruturaPage() {
     );
   };
 
-  // Estado do módulo: Livre (acessível) / Em breve / Bloqueado (unifica bloqueio + modo).
+  // Estado do módulo: Livre (acessível) / Em breve / Bloqueado / Oculto.
+  // Unifica bloqueio (lista global) + modo. Um nó com MODO_PADRAO (produto novo)
+  // aparece já no seu estado-padrão enquanto a admin não decidir nada.
+  const norm4 = (v?: string): "livre" | "em-breve" | "bloqueado" | "oculto" =>
+    v === "livre" ? "livre" : v === "bloqueado" ? "bloqueado" : v === "oculto" ? "oculto" : "em-breve";
   const estadoModulo = (id: string): "livre" | "em-breve" | "bloqueado" | "oculto" => {
-    if (!sel.has(id)) return "livre";
-    const m = modos[id];
-    return m === "bloqueado" ? "bloqueado" : m === "oculto" ? "oculto" : "em-breve";
+    if (sel.has(id)) return norm4(modos[id]);
+    if (modos[id] === "livre") return "livre";
+    if (modos[id] == null && MODO_PADRAO[id]) return norm4(MODO_PADRAO[id]);
+    return "livre";
   };
   const mudarEstadoModulo = async (id: string, v: string) => {
     const jaBloq = sel.has(id);
     if (v === "livre") {
       if (jaBloq) await toggle(id);
+      // Regista a decisão explícita — necessário para libertar um produto que
+      // nasce oculto por defeito (MODO_PADRAO), senão voltaria a esconder-se.
+      if (MODO_PADRAO[id] && modos[id] !== "livre") mudarModo(id, "livre");
     } else {
       if (!jaBloq) await toggle(id);
       mudarModo(id, v);

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import HeroRobot from "../components/HeroRobot";
-import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, X, Users, Package } from "lucide-react";
+import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, X, Users, Package, Rocket } from "lucide-react";
 
 const WHATSAPP_CATIA = "https://wa.link/jwr3yp";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
@@ -80,27 +80,28 @@ const PRODUTOS = [
     cta: "Criar o meu produto",
     img: "/criar-produto.svg",
     pos: "center 32%",
-    cor: "#A9683C",
+    cor: "#2F9E6E",
     icon: Package,
+    estruturaId: "criar-produto",
   },
   {
-    key: "mini-curso-oculto",
-    tag: "Mini-curso · rascunho",
-    titulo: "Novo Mini-curso",
-    assinatura: "só tu vês isto",
-    desc: "Rascunho invisível para os alunos — só tu (admin) o vês. Preenche quando quiseres.",
-    to: "/mini-curso-oculto",
-    cta: "Abrir rascunho",
-    img: "/mini-curso-oculto.svg",
+    key: "vendas-apps",
+    tag: "Mini-curso",
+    titulo: "Página de vendas e aplicações profissionais",
+    assinatura: "sem saber programar",
+    desc: "Cria as tuas páginas e aplicativos sem saber programar.",
+    to: "/vendas-apps",
+    cta: "Começar",
+    img: "/vendas-apps.svg",
     pos: "center",
-    cor: "#3F4A5A",
-    icon: Lock,
-    soAdmin: true,
+    cor: "#2E6F9E",
+    icon: Rocket,
+    estruturaId: "vendas-apps",
   },
 ];
 
 // Cada secção agrupa os cards pela sua chave; o resto vai para os cursos principais.
-const MINI_CURSOS = ["conteudo-ia", "mini-curso-oculto"];
+const MINI_CURSOS = ["conteudo-ia", "criar-produto", "vendas-apps"];
 const MENTORIA = ["encontros"];
 
 export default function Home() {

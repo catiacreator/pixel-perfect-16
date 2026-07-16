@@ -9,7 +9,7 @@
 
 import { useEffect, useState } from "react";
 import { getBloqueios, setBloqueios, getMinhaTurmaAcessos, getModoBloqueio, getGeralAtivo } from "@/lib/admin.functions";
-import { ESTRUTURA, BLOQUEIOS_PADRAO, type Nodo } from "@/lib/estrutura";
+import { ESTRUTURA, BLOQUEIOS_PADRAO, MODO_PADRAO, type Nodo } from "@/lib/estrutura";
 import { getPreviewTurma } from "@/lib/admin-view";
 
 const EVENT = "leveza:bloqueios";
@@ -103,19 +103,28 @@ export function useBloqueios() {
   // Concedido se o próprio nó OU algum descendente estiver concedido (permite
   // escolher página a página; um módulo fica acessível se tiver alguma página ligada).
   const turmaConcede = (id: string) => turma.grants.has(id) || desc(id).some((d) => turma.grants.has(d));
-
-  // Bloqueado para o aluno: "Em breve" global OU (restrito por turma e sem grant).
-  const isBloqueado = (id: string) => emBreve(id) || (turma.restrito && !turmaConcede(id));
-
-  // Modo do nó bloqueado: "bloqueado" (mostra contacto) ou "em-breve" (nada a
-  // fazer). Prioridade: modo da turma para o nó → modo geral do nó/módulo → em-breve.
   const moduloDe = (id: string) => antep(id)[0] ?? id;
+
+  // Decisão explícita da admin sobre o nó: está na lista global "Em breve" OU tem
+  // um modo guardado (o próprio ou o do módulo). Sem qualquer decisão, aplica-se o
+  // MODO_PADRAO — é o que garante que um produto NOVO nasce só-admin (oculto),
+  // mesmo que já exista uma lista de bloqueios guardada que não o mencione.
+  const temDecisao = (id: string) =>
+    global.has(id) || cacheModo[id] != null || cacheModo[moduloDe(id)] != null;
+  const padraoBloqueado = (id: string) => {
+    const m = MODO_PADRAO[id] ?? MODO_PADRAO[moduloDe(id)];
+    return !!m && m !== "livre" && !temDecisao(id);
+  };
+
+  // Bloqueado para o aluno: "Em breve" global OU só-admin por defeito (MODO_PADRAO)
+  // OU (restrito por turma e sem grant).
+  const isBloqueado = (id: string) => emBreve(id) || padraoBloqueado(id) || (turma.restrito && !turmaConcede(id));
   const norm = (v?: string): "em-breve" | "bloqueado" | "oculto" =>
     v === "bloqueado" ? "bloqueado" : v === "oculto" ? "oculto" : "em-breve";
   const modoBloqueio = (id: string): "em-breve" | "bloqueado" | "oculto" => {
     const t = turma.modos?.[id];
     if (t === "bloqueado" || t === "em-breve" || t === "oculto") return t;
-    return norm(cacheModo[id] ?? cacheModo[moduloDe(id)]);
+    return norm(cacheModo[id] ?? cacheModo[moduloDe(id)] ?? MODO_PADRAO[id] ?? MODO_PADRAO[moduloDe(id)]);
   };
 
   return { carregado: !!cacheGlobal, isBloqueado, isBloqueadoRaw: (id: string) => global.has(id), ids: [...global], categoriaTurma: turma.categoria ?? null, modoBloqueio };

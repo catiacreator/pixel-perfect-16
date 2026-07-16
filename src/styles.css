@@ -303,6 +303,17 @@ select:focus {
   --color-terracotta-dark: #A9683C;
   --color-gold: #D6A56A;
 }
+/* "Criar Produto" — paleta verde. */
+.theme-verde {
+  --color-terracotta: #2F9E6E;      /* verde — acento/botões/realces */
+  --color-terracotta-dark: #1F6B4A; /* verde escuro — caixas de destaque/gradiente */
+  --color-gold: #5BC08E;            /* verde claro — realces */
+}
+.dark .theme-verde {
+  --color-terracotta: #46B98C;      /* verde mais claro no escuro (texto legível) */
+  --color-terracotta-dark: #2F9E6E;
+  --color-gold: #6FCB9F;
+}
 
 /* Vídeos do curso: esconde o botão de ecrã inteiro nativo (Safari + Chrome).
    Usamos o botão "expandir" próprio, que abre a 80% sem perder nitidez. */

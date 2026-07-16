@@ -3,6 +3,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { isAdminEmail } from "@/lib/access";
 import { achatarEstrutura } from "@/lib/estrutura";
 import { mesCorrente, chaveMes, contarPor, type PostPublicado } from "@/lib/gamificacao";
+import { recomputarPontos, BONUS_KEY } from "@/lib/gamificacao.functions";
 import { z } from "zod";
 
 // A administradora principal (dona) — só ela pode adicionar/eliminar alunos e atribuir papéis.
@@ -129,14 +130,25 @@ export const listMentoradas = createServerFn({ method: "GET" })
   .handler(async ({ context }) => {
     await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const [{ data, error }, { data: roles }] = await Promise.all([
+    const [{ data, error }, { data: roles }, { data: docs }] = await Promise.all([
       supabaseAdmin
         .from("profiles")
         .select("id, nome, email, tier, pontos, sequencia, ultima_atividade, created_at, approved")
         .order("created_at", { ascending: false }),
       supabaseAdmin.from("user_roles").select("user_id, role"),
+      supabaseAdmin.from("master_documents").select("user_id, data"),
     ]);
     if (error) throw error;
+
+    // Quem já preencheu o Documento Mestre (para o botão verde/vermelho).
+    const docPreenchidoSet = new Set<string>();
+    for (const d of (docs ?? []) as { user_id: string; data: Record<string, unknown> }[]) {
+      const doc = ((d.data?.["leveza.doc-mestre.v1"] as Record<string, unknown>) ?? {});
+      const nome = String(doc.nome ?? "").trim();
+      const publico = String(doc.publico ?? "").trim();
+      const dores = Array.isArray(doc.dores) ? doc.dores.filter((x) => String(x ?? "").trim()).length : 0;
+      if (nome && (publico || dores >= 1)) docPreenchidoSet.add(d.user_id);
+    }
     // Papel "mais forte" por utilizador: admin > moderator > user.
     const rank = (r: string) => (r === "admin" ? 3 : r === "moderator" ? 2 : 1);
     const roleByUser = new Map<string, string>();
@@ -151,6 +163,7 @@ export const listMentoradas = createServerFn({ method: "GET" })
       ...m,
       role: roleByUser.get(m.id) ?? "user",
       codigo: mapaCodigos[m.id] ?? null,
+      docPreenchido: docPreenchidoSet.has(m.id),
     }));
   });
 
@@ -207,20 +220,23 @@ export const adjustPoints = createServerFn({ method: "POST" })
     await assertAdmin(context);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    const { data: profile } = await supabaseAdmin
-      .from("profiles")
-      .select("pontos")
-      .eq("id", data.userId)
-      .single();
-    const novoTotal = Math.max(0, (profile?.pontos ?? 0) + data.delta);
-
-    await supabaseAdmin.from("profiles").update({ pontos: novoTotal }).eq("id", data.userId);
+    // Persiste em __bonus__ (sobrevive ao recomputar) em vez de escrever direto
+    // em profiles.pontos — senão o próximo recálculo do aluno apagava o ajuste.
+    const { data: row } = await supabaseAdmin.from("master_documents").select("data").eq("user_id", data.userId).maybeSingle();
+    const blob = ((row?.data as Record<string, unknown>) ?? {});
+    const merged = { ...blob, [BONUS_KEY]: Math.trunc(Number(blob[BONUS_KEY]) || 0) + data.delta };
+    const up = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: data.userId, data: merged, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (up.error) throw up.error;
     await supabaseAdmin.from("pontos_log").insert({
       user_id: data.userId,
       delta: data.delta,
       motivo: data.motivo,
       criado_por: context.userId,
     });
+    const novoTotal = await recomputarPontos(data.userId);
     return { ok: true, novoTotal };
   });
 
@@ -367,7 +383,8 @@ export const grantConquista = createServerFn({ method: "POST" })
     await supabaseAdmin
       .from("mentorada_conquistas")
       .upsert({ user_id: data.userId, conquista_id: data.conquistaId });
-    return { ok: true };
+    const pontos = await recomputarPontos(data.userId);
+    return { ok: true, pontos };
   });
 
 export const revokeConquista = createServerFn({ method: "POST" })
@@ -383,6 +400,85 @@ export const revokeConquista = createServerFn({ method: "POST" })
       .delete()
       .eq("user_id", data.userId)
       .eq("conquista_id", data.conquistaId);
+    const pontos = await recomputarPontos(data.userId);
+    return { ok: true, pontos };
+  });
+
+// ── Criar / apagar prémios (conquistas) — só admin ──
+export const criarConquista = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { nome: string; emoji?: string; descricao?: string; pontos: number }) =>
+    z.object({
+      nome: z.string().min(1).max(80),
+      emoji: z.string().max(8).optional(),
+      descricao: z.string().max(300).optional(),
+      pontos: z.number().int().min(0).max(100000),
+    }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const base = data.nome.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "premio";
+    const slug = `${base}-${Math.random().toString(36).slice(2, 7)}`;
+    const { data: max } = await supabaseAdmin.from("conquistas").select("ordem").order("ordem", { ascending: false }).limit(1).maybeSingle();
+    const ordem = ((max?.ordem as number) ?? 0) + 1;
+    const { error } = await supabaseAdmin.from("conquistas").insert({
+      slug, nome: data.nome, emoji: data.emoji || "🏆", descricao: data.descricao || "", pontos: data.pontos, ordem,
+    });
+    if (error) throw error;
+    return { ok: true };
+  });
+
+export const apagarConquista = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { id: string }) => z.object({ id: z.string().uuid() }).parse(d))
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    // apaga também as atribuições (FK ON DELETE CASCADE trata disso)
+    const { error } = await supabaseAdmin.from("conquistas").delete().eq("id", data.id);
+    if (error) throw error;
+    return { ok: true };
+  });
+
+// ── Prémio geral da plataforma (visível a todos) ──
+const PREMIO_GERAL_KEY = "__premio-geral__";
+type PremioGeral = { titulo: string; descricao: string; emoji: string; ativo: boolean };
+
+export const getPremioGeral = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async () => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { blob } = await readOwnerBlob(supabaseAdmin);
+    const p = (blob[PREMIO_GERAL_KEY] as Partial<PremioGeral>) ?? {};
+    return {
+      titulo: typeof p.titulo === "string" ? p.titulo : "",
+      descricao: typeof p.descricao === "string" ? p.descricao : "",
+      emoji: typeof p.emoji === "string" && p.emoji ? p.emoji : "🏆",
+      ativo: p.ativo === true,
+    } as PremioGeral;
+  });
+
+export const setPremioGeral = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { titulo: string; descricao: string; emoji: string; ativo: boolean }) =>
+    z.object({
+      titulo: z.string().max(120),
+      descricao: z.string().max(600),
+      emoji: z.string().max(8),
+      ativo: z.boolean(),
+    }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { uid, blob } = await readOwnerBlob(supabaseAdmin);
+    const cfg: PremioGeral = { titulo: data.titulo.trim(), descricao: data.descricao.trim(), emoji: data.emoji.trim() || "🏆", ativo: data.ativo };
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: uid, data: { ...blob, [PREMIO_GERAL_KEY]: cfg }, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
     return { ok: true };
   });
 
@@ -654,7 +750,9 @@ export const getModoBloqueio = createServerFn({ method: "POST" })
 export const setModoBloqueio = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((d: { modos: Record<string, string> }) =>
-    z.object({ modos: z.record(z.string(), z.enum(["em-breve", "bloqueado", "oculto"])) }).parse(d),
+    // "livre" = decisão explícita de libertar um nó que nasce bloqueado por
+    // defeito (ver MODO_PADRAO). Os restantes são estados de bloqueio.
+    z.object({ modos: z.record(z.string(), z.enum(["livre", "em-breve", "bloqueado", "oculto"])) }).parse(d),
   )
   .handler(async ({ context, data }) => {
     await assertAdmin(context);
@@ -1146,6 +1244,43 @@ export const setFerramentaCodigo = createServerFn({ method: "POST" })
     const mapa = { ...((blob[FERRAMENTA_CODIGOS_KEY] as Record<string, string>) ?? {}), [data.chave]: data.codigo };
     const { error } = await supabaseAdmin.from("master_documents").upsert(
       { user_id: uid, data: { ...blob, [FERRAMENTA_CODIGOS_KEY]: mapa }, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (error) throw error;
+    return { ok: true };
+  });
+
+// ───────── Cat.IA (agente no ChatGPT): link + palavra-passe, editáveis ─────────
+// Guardado na conta dona sob "__cat_ia__". Lido por qualquer aluno autenticado
+// (para mostrar o link e a palavra-passe onde o Cat.IA principal aparece).
+const CAT_IA_KEY = "__cat_ia__";
+export const CAT_IA_URL_DEFAULT = "https://chatgpt.com/g/g-6a56643a8dbc8191a122f9580a3e7edf-cat-ia";
+export const CAT_IA_PASS_DEFAULT = "VIRAL26";
+
+export const getCatIaConfig = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async () => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { blob } = await readOwnerBlob(supabaseAdmin);
+    const c = (blob[CAT_IA_KEY] as { url?: string; password?: string }) ?? {};
+    return {
+      url: typeof c.url === "string" && c.url.trim() ? c.url.trim() : CAT_IA_URL_DEFAULT,
+      password: typeof c.password === "string" ? c.password : CAT_IA_PASS_DEFAULT,
+    };
+  });
+
+export const setCatIaConfig = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { url: string; password: string }) =>
+    z.object({ url: z.string().max(500), password: z.string().max(120) }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertAdmin(context);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { uid, blob } = await readOwnerBlob(supabaseAdmin);
+    const cfg = { url: data.url.trim(), password: data.password.trim() };
+    const { error } = await supabaseAdmin.from("master_documents").upsert(
+      { user_id: uid, data: { ...blob, [CAT_IA_KEY]: cfg }, updated_at: new Date().toISOString() },
       { onConflict: "user_id" },
     );
     if (error) throw error;
