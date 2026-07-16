@@ -15,6 +15,7 @@ import {
 const TAREFAS_KEY = "__tarefas__";
 const POSTS_KEY = "__posts__";
 const PREMIOS_KEY = "__premios-mes__"; // meses vencidos por este aluno
+export const BONUS_KEY = "__pontos-bonus__"; // pontos-bónus dados manualmente pelo admin
 const DOC_KEY = "leveza.doc-mestre.v1";
 
 // ── Helpers por aluno (linha master_documents do próprio) ──
@@ -66,18 +67,24 @@ async function recomputar(supabaseAdmin: any, userId: string, blob?: Blob): Prom
   const tarefas = (b[TAREFAS_KEY] as MapaTarefas) ?? {};
   const posts = (b[POSTS_KEY] as PostPublicado[]) ?? [];
   const premios = Array.isArray(b[PREMIOS_KEY]) ? (b[PREMIOS_KEY] as string[]) : [];
-  const total = calcularPontos({
+  const total = Math.max(0, calcularPontos({
     tarefas,
     posts,
     camposDocMestre: contarCamposDoc(b),
     pontosConquistas: await pontosConquistas(supabaseAdmin, userId),
     bonusVencedor: premios.length * 300,
-  });
+  }) + Math.trunc(Number(b[BONUS_KEY]) || 0)); // pontos-bónus manuais do admin
   await supabaseAdmin
     .from("profiles")
     .update({ pontos: total, tier: tierFor(total).label, updated_at: new Date().toISOString() })
     .eq("id", userId);
   return total;
+}
+
+// Recalcula os pontos de um aluno (usado pelas ações de admin: prémios, bónus).
+export async function recomputarPontos(userId: string): Promise<number> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  return recomputar(supabaseAdmin, userId);
 }
 
 // ── Ler o meu progresso (tarefas + posts + pontos) ──

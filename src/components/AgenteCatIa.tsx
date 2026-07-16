@@ -1,10 +1,14 @@
-import { Check, ExternalLink, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
+import { Check, ExternalLink, Sparkles, KeyRound, Loader2, Lock } from "lucide-react";
+import { useCatIaConfig } from "@/lib/cat-ia";
+import { podeUsarAgente } from "@/lib/admin.functions";
 
-const CAT_IA_CHATGPT_URL = "https://chatgpt.com/g/g-6a56643a8dbc8191a122f9580a3e7edf-cat-ia";
+const AGENTE_ID = "cat-ia";
 
-// Cartão que apresenta o Cat.IA no ChatGPT: o que tem, como funciona e o botão.
-// Aberto a todos (é só um link para o agente no ChatGPT).
-export default function AgenteCatIa() {
+// Cartão que apresenta o Cat.IA no ChatGPT (link + palavra-passe da config).
+function CartaoChatGPT() {
+  const catIa = useCatIaConfig();
   return (
     <div className="overflow-hidden rounded-2xl border border-terracotta/25 bg-white">
       <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-start">
@@ -40,16 +44,61 @@ export default function AgenteCatIa() {
             (a gratuita funciona; sem limites no ChatGPT Plus).
           </div>
 
-          <a
-            href={CAT_IA_CHATGPT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center gap-2 rounded-full bg-terracotta px-5 py-2.5 text-sm font-semibold text-cream hover:bg-terracotta-dark transition-colors"
-          >
-            <Sparkles size={15} /> Abrir o Cat.IA no ChatGPT <ExternalLink size={14} />
-          </a>
+          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+            <a
+              href={catIa.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full bg-terracotta px-5 py-2.5 text-sm font-semibold text-cream hover:bg-terracotta-dark transition-colors"
+            >
+              <Sparkles size={15} /> Abrir o Cat.IA no ChatGPT <ExternalLink size={14} />
+            </a>
+            {catIa.password && (
+              <span className="inline-flex items-center gap-1.5 text-[12.5px] text-ink/60">
+                <KeyRound size={13} className="text-terracotta" /> palavra-passe: <b className="text-ink/80 tracking-wide">{catIa.password}</b>
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
+}
+
+// O acesso é controlado em /admin/cat-ia (por turma/aluno). Aqui só se verifica.
+export default function AgenteCatIa() {
+  const check = useServerFn(podeUsarAgente);
+  const [estado, setEstado] = useState<{ pode: boolean; admin: boolean } | null>(null);
+
+  useEffect(() => {
+    let vivo = true;
+    check({ data: { agente: AGENTE_ID } })
+      .then((r) => { if (vivo) setEstado(r as { pode: boolean; admin: boolean }); })
+      .catch(() => { if (vivo) setEstado({ pode: false, admin: false }); });
+    return () => { vivo = false; };
+  }, [check]);
+
+  if (!estado) {
+    return (
+      <div className="flex items-center justify-center gap-2 py-20 text-ink/50">
+        <Loader2 size={18} className="animate-spin" /> A carregar…
+      </div>
+    );
+  }
+
+  if (!estado.pode && !estado.admin) {
+    return (
+      <div className="mx-auto max-w-md rounded-2xl border border-border bg-white p-8 text-center">
+        <span className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-terracotta/12 text-terracotta">
+          <Lock size={22} />
+        </span>
+        <h3 className="mb-1 font-serif text-xl text-ink">Assistente Cat.IA</h3>
+        <p className="text-[15px] text-ink/60">
+          Este assistente está disponível para turmas selecionadas. Fala com a Cátia para teres acesso.
+        </p>
+      </div>
+    );
+  }
+
+  return <CartaoChatGPT />;
 }

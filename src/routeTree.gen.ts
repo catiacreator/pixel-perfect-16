@@ -10,11 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as VitrineRouteImport } from './routes/vitrine'
+import { Route as VendasAppsRouteImport } from './routes/vendas-apps'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as RegistoRouteImport } from './routes/registo'
 import { Route as ProtocoloRouteImport } from './routes/protocolo'
 import { Route as PendingRouteImport } from './routes/pending'
-import { Route as MiniCursoOcultoRouteImport } from './routes/mini-curso-oculto'
 import { Route as MinhaBaseRouteImport } from './routes/minha-base'
 import { Route as MeusProjetosRouteImport } from './routes/meus-projetos'
 import { Route as MetodoRouteImport } from './routes/metodo'
@@ -76,6 +76,7 @@ import { Route as MetodoPilar1AprendaIaRouteImport } from './routes/metodo.pilar
 import { Route as MetodoConsultoriaIaComoUsarRouteImport } from './routes/metodo.consultoria-ia.como-usar'
 import { Route as AuthenticatedAdminTurmasRouteImport } from './routes/_authenticated/admin/turmas'
 import { Route as AuthenticatedAdminRankingRouteImport } from './routes/_authenticated/admin/ranking'
+import { Route as AuthenticatedAdminPremiosRouteImport } from './routes/_authenticated/admin/premios'
 import { Route as AuthenticatedAdminPapeisRouteImport } from './routes/_authenticated/admin/papeis'
 import { Route as AuthenticatedAdminMentoradasRouteImport } from './routes/_authenticated/admin/mentoradas'
 import { Route as AuthenticatedAdminMensagensRouteImport } from './routes/_authenticated/admin/mensagens'
@@ -84,6 +85,7 @@ import { Route as AuthenticatedAdminEstudioRouteImport } from './routes/_authent
 import { Route as AuthenticatedAdminEstruturaRouteImport } from './routes/_authenticated/admin/estrutura'
 import { Route as AuthenticatedAdminConteudoRouteImport } from './routes/_authenticated/admin/conteudo'
 import { Route as AuthenticatedAdminCodigosRouteImport } from './routes/_authenticated/admin/codigos'
+import { Route as AuthenticatedAdminCatIaRouteImport } from './routes/_authenticated/admin/cat-ia'
 import { Route as AuthenticatedAdminAcessosRouteImport } from './routes/_authenticated/admin/acessos'
 import { Route as MetodoPilar3PaginaVendasIndexRouteImport } from './routes/metodo.pilar-3.pagina-vendas.index'
 import { Route as MetodoPilar3CriarProdutoIndexRouteImport } from './routes/metodo.pilar-3.criar-produto.index'
@@ -111,6 +113,11 @@ const VitrineRoute = VitrineRouteImport.update({
   path: '/vitrine',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VendasAppsRoute = VendasAppsRouteImport.update({
+  id: '/vendas-apps',
+  path: '/vendas-apps',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -129,11 +136,6 @@ const ProtocoloRoute = ProtocoloRouteImport.update({
 const PendingRoute = PendingRouteImport.update({
   id: '/pending',
   path: '/pending',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MiniCursoOcultoRoute = MiniCursoOcultoRouteImport.update({
-  id: '/mini-curso-oculto',
-  path: '/mini-curso-oculto',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MinhaBaseRoute = MinhaBaseRouteImport.update({
@@ -452,6 +454,12 @@ const AuthenticatedAdminRankingRoute =
     path: '/ranking',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminPremiosRoute =
+  AuthenticatedAdminPremiosRouteImport.update({
+    id: '/premios',
+    path: '/premios',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminPapeisRoute =
   AuthenticatedAdminPapeisRouteImport.update({
     id: '/papeis',
@@ -499,6 +507,11 @@ const AuthenticatedAdminCodigosRoute =
     path: '/codigos',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminCatIaRoute = AuthenticatedAdminCatIaRouteImport.update({
+  id: '/cat-ia',
+  path: '/cat-ia',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
 const AuthenticatedAdminAcessosRoute =
   AuthenticatedAdminAcessosRouteImport.update({
     id: '/acessos',
@@ -642,11 +655,11 @@ export interface FileRoutesByFullPath {
   '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
-  '/mini-curso-oculto': typeof MiniCursoOcultoRoute
   '/pending': typeof PendingRoute
   '/protocolo': typeof ProtocoloRoute
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/vendas-apps': typeof VendasAppsRoute
   '/vitrine': typeof VitrineRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/api/chat': typeof ApiChatRoute
@@ -660,6 +673,7 @@ export interface FileRoutesByFullPath {
   '/metodo/saude': typeof MetodoSaudeRoute
   '/metodo/': typeof MetodoIndexRoute
   '/admin/acessos': typeof AuthenticatedAdminAcessosRoute
+  '/admin/cat-ia': typeof AuthenticatedAdminCatIaRoute
   '/admin/codigos': typeof AuthenticatedAdminCodigosRoute
   '/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
   '/admin/estrutura': typeof AuthenticatedAdminEstruturaRoute
@@ -668,6 +682,7 @@ export interface FileRoutesByFullPath {
   '/admin/mensagens': typeof AuthenticatedAdminMensagensRoute
   '/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
   '/admin/papeis': typeof AuthenticatedAdminPapeisRoute
+  '/admin/premios': typeof AuthenticatedAdminPremiosRoute
   '/admin/ranking': typeof AuthenticatedAdminRankingRoute
   '/admin/turmas': typeof AuthenticatedAdminTurmasRoute
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
@@ -738,11 +753,11 @@ export interface FileRoutesByTo {
   '/mensagens': typeof MensagensRoute
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
-  '/mini-curso-oculto': typeof MiniCursoOcultoRoute
   '/pending': typeof PendingRoute
   '/protocolo': typeof ProtocoloRoute
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/vendas-apps': typeof VendasAppsRoute
   '/vitrine': typeof VitrineRoute
   '/api/chat': typeof ApiChatRoute
   '/api/hotmart-webhook': typeof ApiHotmartWebhookRoute
@@ -750,6 +765,7 @@ export interface FileRoutesByTo {
   '/metodo/saude': typeof MetodoSaudeRoute
   '/metodo': typeof MetodoIndexRoute
   '/admin/acessos': typeof AuthenticatedAdminAcessosRoute
+  '/admin/cat-ia': typeof AuthenticatedAdminCatIaRoute
   '/admin/codigos': typeof AuthenticatedAdminCodigosRoute
   '/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
   '/admin/estrutura': typeof AuthenticatedAdminEstruturaRoute
@@ -758,6 +774,7 @@ export interface FileRoutesByTo {
   '/admin/mensagens': typeof AuthenticatedAdminMensagensRoute
   '/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
   '/admin/papeis': typeof AuthenticatedAdminPapeisRoute
+  '/admin/premios': typeof AuthenticatedAdminPremiosRoute
   '/admin/ranking': typeof AuthenticatedAdminRankingRoute
   '/admin/turmas': typeof AuthenticatedAdminTurmasRoute
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
@@ -827,11 +844,11 @@ export interface FileRoutesById {
   '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
-  '/mini-curso-oculto': typeof MiniCursoOcultoRoute
   '/pending': typeof PendingRoute
   '/protocolo': typeof ProtocoloRoute
   '/registo': typeof RegistoRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/vendas-apps': typeof VendasAppsRoute
   '/vitrine': typeof VitrineRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/api/chat': typeof ApiChatRoute
@@ -845,6 +862,7 @@ export interface FileRoutesById {
   '/metodo/saude': typeof MetodoSaudeRoute
   '/metodo/': typeof MetodoIndexRoute
   '/_authenticated/admin/acessos': typeof AuthenticatedAdminAcessosRoute
+  '/_authenticated/admin/cat-ia': typeof AuthenticatedAdminCatIaRoute
   '/_authenticated/admin/codigos': typeof AuthenticatedAdminCodigosRoute
   '/_authenticated/admin/conteudo': typeof AuthenticatedAdminConteudoRoute
   '/_authenticated/admin/estrutura': typeof AuthenticatedAdminEstruturaRoute
@@ -853,6 +871,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/mensagens': typeof AuthenticatedAdminMensagensRoute
   '/_authenticated/admin/mentoradas': typeof AuthenticatedAdminMentoradasRouteWithChildren
   '/_authenticated/admin/papeis': typeof AuthenticatedAdminPapeisRoute
+  '/_authenticated/admin/premios': typeof AuthenticatedAdminPremiosRoute
   '/_authenticated/admin/ranking': typeof AuthenticatedAdminRankingRoute
   '/_authenticated/admin/turmas': typeof AuthenticatedAdminTurmasRoute
   '/metodo/consultoria-ia/como-usar': typeof MetodoConsultoriaIaComoUsarRoute
@@ -926,11 +945,11 @@ export interface FileRouteTypes {
     | '/metodo'
     | '/meus-projetos'
     | '/minha-base'
-    | '/mini-curso-oculto'
     | '/pending'
     | '/protocolo'
     | '/registo'
     | '/reset-password'
+    | '/vendas-apps'
     | '/vitrine'
     | '/admin'
     | '/api/chat'
@@ -944,6 +963,7 @@ export interface FileRouteTypes {
     | '/metodo/saude'
     | '/metodo/'
     | '/admin/acessos'
+    | '/admin/cat-ia'
     | '/admin/codigos'
     | '/admin/conteudo'
     | '/admin/estrutura'
@@ -952,6 +972,7 @@ export interface FileRouteTypes {
     | '/admin/mensagens'
     | '/admin/mentoradas'
     | '/admin/papeis'
+    | '/admin/premios'
     | '/admin/ranking'
     | '/admin/turmas'
     | '/metodo/consultoria-ia/como-usar'
@@ -1022,11 +1043,11 @@ export interface FileRouteTypes {
     | '/mensagens'
     | '/meus-projetos'
     | '/minha-base'
-    | '/mini-curso-oculto'
     | '/pending'
     | '/protocolo'
     | '/registo'
     | '/reset-password'
+    | '/vendas-apps'
     | '/vitrine'
     | '/api/chat'
     | '/api/hotmart-webhook'
@@ -1034,6 +1055,7 @@ export interface FileRouteTypes {
     | '/metodo/saude'
     | '/metodo'
     | '/admin/acessos'
+    | '/admin/cat-ia'
     | '/admin/codigos'
     | '/admin/conteudo'
     | '/admin/estrutura'
@@ -1042,6 +1064,7 @@ export interface FileRouteTypes {
     | '/admin/mensagens'
     | '/admin/mentoradas'
     | '/admin/papeis'
+    | '/admin/premios'
     | '/admin/ranking'
     | '/admin/turmas'
     | '/metodo/consultoria-ia/como-usar'
@@ -1110,11 +1133,11 @@ export interface FileRouteTypes {
     | '/metodo'
     | '/meus-projetos'
     | '/minha-base'
-    | '/mini-curso-oculto'
     | '/pending'
     | '/protocolo'
     | '/registo'
     | '/reset-password'
+    | '/vendas-apps'
     | '/vitrine'
     | '/_authenticated/admin'
     | '/api/chat'
@@ -1128,6 +1151,7 @@ export interface FileRouteTypes {
     | '/metodo/saude'
     | '/metodo/'
     | '/_authenticated/admin/acessos'
+    | '/_authenticated/admin/cat-ia'
     | '/_authenticated/admin/codigos'
     | '/_authenticated/admin/conteudo'
     | '/_authenticated/admin/estrutura'
@@ -1136,6 +1160,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/mensagens'
     | '/_authenticated/admin/mentoradas'
     | '/_authenticated/admin/papeis'
+    | '/_authenticated/admin/premios'
     | '/_authenticated/admin/ranking'
     | '/_authenticated/admin/turmas'
     | '/metodo/consultoria-ia/como-usar'
@@ -1209,11 +1234,11 @@ export interface RootRouteChildren {
   MetodoRoute: typeof MetodoRouteWithChildren
   MeusProjetosRoute: typeof MeusProjetosRoute
   MinhaBaseRoute: typeof MinhaBaseRoute
-  MiniCursoOcultoRoute: typeof MiniCursoOcultoRoute
   PendingRoute: typeof PendingRoute
   ProtocoloRoute: typeof ProtocoloRoute
   RegistoRoute: typeof RegistoRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  VendasAppsRoute: typeof VendasAppsRoute
   VitrineRoute: typeof VitrineRoute
   ApiChatRoute: typeof ApiChatRoute
   ApiHotmartWebhookRoute: typeof ApiHotmartWebhookRoute
@@ -1227,6 +1252,13 @@ declare module '@tanstack/react-router' {
       path: '/vitrine'
       fullPath: '/vitrine'
       preLoaderRoute: typeof VitrineRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vendas-apps': {
+      id: '/vendas-apps'
+      path: '/vendas-apps'
+      fullPath: '/vendas-apps'
+      preLoaderRoute: typeof VendasAppsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/reset-password': {
@@ -1255,13 +1287,6 @@ declare module '@tanstack/react-router' {
       path: '/pending'
       fullPath: '/pending'
       preLoaderRoute: typeof PendingRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/mini-curso-oculto': {
-      id: '/mini-curso-oculto'
-      path: '/mini-curso-oculto'
-      fullPath: '/mini-curso-oculto'
-      preLoaderRoute: typeof MiniCursoOcultoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/minha-base': {
@@ -1691,6 +1716,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminRankingRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/premios': {
+      id: '/_authenticated/admin/premios'
+      path: '/premios'
+      fullPath: '/admin/premios'
+      preLoaderRoute: typeof AuthenticatedAdminPremiosRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/papeis': {
       id: '/_authenticated/admin/papeis'
       path: '/papeis'
@@ -1745,6 +1777,13 @@ declare module '@tanstack/react-router' {
       path: '/codigos'
       fullPath: '/admin/codigos'
       preLoaderRoute: typeof AuthenticatedAdminCodigosRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/cat-ia': {
+      id: '/_authenticated/admin/cat-ia'
+      path: '/cat-ia'
+      fullPath: '/admin/cat-ia'
+      preLoaderRoute: typeof AuthenticatedAdminCatIaRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/admin/acessos': {
@@ -1913,6 +1952,7 @@ const AuthenticatedAdminMentoradasRouteWithChildren =
 
 interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminAcessosRoute: typeof AuthenticatedAdminAcessosRoute
+  AuthenticatedAdminCatIaRoute: typeof AuthenticatedAdminCatIaRoute
   AuthenticatedAdminCodigosRoute: typeof AuthenticatedAdminCodigosRoute
   AuthenticatedAdminConteudoRoute: typeof AuthenticatedAdminConteudoRoute
   AuthenticatedAdminEstruturaRoute: typeof AuthenticatedAdminEstruturaRoute
@@ -1921,6 +1961,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminMensagensRoute: typeof AuthenticatedAdminMensagensRoute
   AuthenticatedAdminMentoradasRoute: typeof AuthenticatedAdminMentoradasRouteWithChildren
   AuthenticatedAdminPapeisRoute: typeof AuthenticatedAdminPapeisRoute
+  AuthenticatedAdminPremiosRoute: typeof AuthenticatedAdminPremiosRoute
   AuthenticatedAdminRankingRoute: typeof AuthenticatedAdminRankingRoute
   AuthenticatedAdminTurmasRoute: typeof AuthenticatedAdminTurmasRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
@@ -1929,6 +1970,7 @@ interface AuthenticatedAdminRouteRouteChildren {
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
     AuthenticatedAdminAcessosRoute: AuthenticatedAdminAcessosRoute,
+    AuthenticatedAdminCatIaRoute: AuthenticatedAdminCatIaRoute,
     AuthenticatedAdminCodigosRoute: AuthenticatedAdminCodigosRoute,
     AuthenticatedAdminConteudoRoute: AuthenticatedAdminConteudoRoute,
     AuthenticatedAdminEstruturaRoute: AuthenticatedAdminEstruturaRoute,
@@ -1938,6 +1980,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminMentoradasRoute:
       AuthenticatedAdminMentoradasRouteWithChildren,
     AuthenticatedAdminPapeisRoute: AuthenticatedAdminPapeisRoute,
+    AuthenticatedAdminPremiosRoute: AuthenticatedAdminPremiosRoute,
     AuthenticatedAdminRankingRoute: AuthenticatedAdminRankingRoute,
     AuthenticatedAdminTurmasRoute: AuthenticatedAdminTurmasRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
@@ -2202,11 +2245,11 @@ const rootRouteChildren: RootRouteChildren = {
   MetodoRoute: MetodoRouteWithChildren,
   MeusProjetosRoute: MeusProjetosRoute,
   MinhaBaseRoute: MinhaBaseRoute,
-  MiniCursoOcultoRoute: MiniCursoOcultoRoute,
   PendingRoute: PendingRoute,
   ProtocoloRoute: ProtocoloRoute,
   RegistoRoute: RegistoRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  VendasAppsRoute: VendasAppsRoute,
   VitrineRoute: VitrineRoute,
   ApiChatRoute: ApiChatRoute,
   ApiHotmartWebhookRoute: ApiHotmartWebhookRoute,

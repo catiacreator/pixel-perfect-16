@@ -12,6 +12,7 @@ export default function PromptCard({
   cor = "#C8487E",
   agente,
   agenteUrl,
+  agentePass,
   botaoCor,
 }: {
   numero?: number;
@@ -23,6 +24,7 @@ export default function PromptCard({
   cor?: string;
   agente?: string;
   agenteUrl?: string;
+  agentePass?: string;
   botaoCor?: string;
 }) {
   const [verPrompt, setVerPrompt] = useState(false);
@@ -86,6 +88,11 @@ export default function PromptCard({
           <span className="inline-flex items-center gap-1.5 text-[11px] text-ink/55">
             <Bot size={13} className="text-terracotta shrink-0" /> Agente: <b className="text-ink/75">{agente}</b>
           </span>
+          {agentePass && (
+            <span className="inline-flex items-center gap-1 text-[11px] text-ink/55">
+              · palavra-passe: <b className="text-ink/75 tracking-wide">{agentePass}</b>
+            </span>
+          )}
           {agenteUrl && (
             <a
               href={agenteUrl}

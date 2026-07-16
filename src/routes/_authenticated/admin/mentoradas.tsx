@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useMemo, useRef, useEffect } from "react";
-import { Search, Trash2, Coins, Check, Clock, UserPlus, ShieldCheck, Shield, FileDown, X, KeyRound } from "lucide-react";
+import { Search, Trash2, Coins, Check, Clock, UserPlus, ShieldCheck, Shield, FileDown, X, KeyRound, Trophy, Plus, Loader2 } from "lucide-react";
 import { notify } from "@/lib/toast";
 import {
   listMentoradas,
@@ -16,6 +16,10 @@ import {
   getTurmas,
   setTurmas,
   getMasterDocDeAluno,
+  listConquistas,
+  grantConquista,
+  revokeConquista,
+  getMentorada,
 } from "@/lib/admin.functions";
 import { SEM_TURMA_LABEL, type Turma } from "@/lib/turmas";
 import { formatarDocMestre, baixarTexto } from "@/lib/doc-mestre-export";
@@ -122,6 +126,7 @@ function MentoradasPage() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [bulkTurma, setBulkTurma] = useState("");
   const [adjusting, setAdjusting] = useState<{ id: string; nome: string } | null>(null);
+  const [premiar, setPremiar] = useState<{ id: string; nome: string } | null>(null);
   const [adding, setAdding] = useState(false);
 
   const filtered = useMemo(() => {
@@ -306,8 +311,12 @@ function MentoradasPage() {
                     <button
                       onClick={() => baixarDoc(m)}
                       disabled={baixando === m.id}
-                      title="Baixar Documento Mestre"
-                      className="inline-flex items-center gap-1 text-[11px] font-medium text-ink/55 hover:text-terracotta border border-[var(--color-border)] rounded-full px-2 py-0.5 disabled:opacity-50 transition-colors"
+                      title={(m as { docPreenchido?: boolean }).docPreenchido ? "Documento Mestre preenchido — clicar para baixar" : "Documento Mestre por preencher"}
+                      className={`inline-flex items-center gap-1 text-[11px] font-medium rounded-full px-2 py-0.5 disabled:opacity-50 transition-colors border ${
+                        (m as { docPreenchido?: boolean }).docPreenchido
+                          ? "text-emerald-700 border-emerald-300 bg-emerald-50 hover:bg-emerald-100"
+                          : "text-rose-600 border-rose-300 bg-rose-50 hover:bg-rose-100"
+                      }`}
                     >
                       <FileDown size={12} /> {baixando === m.id ? "…" : "Doc. Mestre"}
                     </button>
@@ -405,6 +414,13 @@ function MentoradasPage() {
                     <Coins size={13} /> Pontos
                   </button>
                   <button
+                    onClick={() => setPremiar({ id: m.id, nome: m.nome ?? m.email ?? "este aluno" })}
+                    className="inline-flex items-center gap-1 text-xs text-ink/60 hover:text-ink mr-3"
+                    title="Dar/tirar prémios"
+                  >
+                    <Trophy size={13} /> Prémios
+                  </button>
+                  <button
                     onClick={() => setResetPwd({ id: m.id, nome: m.nome ?? m.email ?? "este aluno" })}
                     className="inline-flex items-center gap-1 text-xs text-ink/60 hover:text-ink mr-3"
                     title="Definir uma nova palavra-passe"
@@ -443,6 +459,14 @@ function MentoradasPage() {
             qc.invalidateQueries({ queryKey: ["admin-mentoradas"] });
             setAdjusting(null);
           }}
+        />
+      )}
+
+      {premiar && (
+        <PremiarDialog
+          userId={premiar.id}
+          nome={premiar.nome}
+          onClose={() => { setPremiar(null); qc.invalidateQueries({ queryKey: ["admin-mentoradas"] }); }}
         />
       )}
 
@@ -587,6 +611,76 @@ function RoleBadge({ role }: { role: string }) {
       </span>
     );
   return <span className="text-xs text-ink/50">Aluno</span>;
+}
+
+// Dar/tirar prémios (conquistas) a um aluno.
+function PremiarDialog({ userId, nome, onClose }: { userId: string; nome: string; onClose: () => void }) {
+  const listar = useServerFn(listConquistas);
+  const grant = useServerFn(grantConquista);
+  const revoke = useServerFn(revokeConquista);
+  const fetchAluno = useServerFn(getMentorada);
+
+  const [todos, setTodos] = useState<any[]>([]);
+  const [tem, setTem] = useState<Set<string>>(new Set());
+  const [carregado, setCarregado] = useState(false);
+  const [aMexer, setAMexer] = useState<string | null>(null);
+
+  useEffect(() => {
+    let vivo = true;
+    Promise.all([listar(), fetchAluno({ data: { id: userId } })])
+      .then(([lista, aluno]) => {
+        if (!vivo) return;
+        setTodos((lista as any[]) ?? []);
+        setTem(new Set((((aluno as any)?.conquistas) ?? []).map((c: any) => c.conquista?.id).filter(Boolean)));
+      })
+      .catch(() => {})
+      .finally(() => { if (vivo) setCarregado(true); });
+    return () => { vivo = false; };
+  }, [listar, fetchAluno, userId]);
+
+  async function alternar(c: any) {
+    setAMexer(c.id);
+    try {
+      if (tem.has(c.id)) { await revoke({ data: { userId, conquistaId: c.id } }); setTem((s) => { const n = new Set(s); n.delete(c.id); return n; }); }
+      else { await grant({ data: { userId, conquistaId: c.id } }); setTem((s) => new Set(s).add(c.id)); }
+    } catch (e) { notify(e instanceof Error ? e.message : "Não foi possível.", "error"); }
+    finally { setAMexer(null); }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-cream w-full max-w-md rounded-2xl p-6 max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+        <div className="flex items-center gap-2"><Trophy size={17} className="text-terracotta" /><h2 className="text-lg font-semibold">Prémios — {nome}</h2></div>
+        <p className="text-xs text-ink/50 mt-1">Clica para dar/tirar. Os pontos entram no ranking. Cria prémios em <Link to="/admin/premios" className="text-terracotta font-semibold">Prémios</Link>.</p>
+        {!carregado ? (
+          <div className="mt-6 flex items-center gap-2 text-sm text-ink/50"><Loader2 size={15} className="animate-spin" /> A carregar…</div>
+        ) : todos.length === 0 ? (
+          <p className="mt-6 text-sm text-ink/50">Ainda não há prémios. Cria em <Link to="/admin/premios" className="text-terracotta font-semibold">Prémios</Link>.</p>
+        ) : (
+          <div className="mt-4 space-y-2">
+            {todos.map((c) => {
+              const on = tem.has(c.id);
+              return (
+                <button key={c.id} onClick={() => alternar(c)} disabled={aMexer === c.id}
+                  className={`flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors disabled:opacity-50 ${on ? "border-terracotta bg-terracotta/10" : "border-[var(--color-border)] bg-white hover:border-terracotta/40"}`}>
+                  <span className="text-xl">{c.emoji || "🏆"}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm font-medium text-ink truncate">{c.nome}</span>
+                    {c.descricao && <span className="block text-[12px] text-ink/50 truncate">{c.descricao}</span>}
+                  </span>
+                  <span className="shrink-0 text-[12px] font-semibold text-terracotta">+{c.pontos}</span>
+                  <span className={`shrink-0 flex h-6 w-6 items-center justify-center rounded-full ${on ? "bg-terracotta text-cream" : "bg-ink/10 text-ink/50"}`}>
+                    {aMexer === c.id ? <Loader2 size={12} className="animate-spin" /> : on ? <Check size={13} /> : <Plus size={13} />}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
+        <button onClick={onClose} className="mt-5 w-full h-11 rounded-full bg-ink text-cream text-sm font-medium hover:opacity-90">Fechar</button>
+      </div>
+    </div>
+  );
 }
 
 function AdjustDialog({

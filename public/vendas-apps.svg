@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 1280" width="720" height="1280">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5B93C4"/>
+      <stop offset="0.55" stop-color="#2E6F9E"/>
+      <stop offset="1" stop-color="#1C4A6E"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.38" r="0.6">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.26"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="720" height="1280" fill="url(#bg)"/>
+  <rect width="720" height="1280" fill="url(#glow)"/>
+  <!-- janela / browser -->
+  <g transform="translate(210 470)" fill="none" stroke="#EAF2FA" stroke-width="10" stroke-linejoin="round" stroke-linecap="round" opacity="0.96">
+    <rect x="0" y="0" width="300" height="220" rx="18"/>
+    <path d="M0 46 H300"/>
+    <circle cx="26" cy="23" r="6" fill="#EAF2FA" stroke="none"/>
+    <circle cx="52" cy="23" r="6" fill="#EAF2FA" stroke="none"/>
+    <circle cx="78" cy="23" r="6" fill="#EAF2FA" stroke="none"/>
+    <path d="M40 96 H150" opacity="0.8"/>
+    <path d="M40 132 H220" opacity="0.6"/>
+    <rect x="40" y="160" width="90" height="30" rx="15" fill="#EAF2FA" stroke="none" opacity="0.9"/>
+  </g>
+  <!-- faísca -->
+  <g transform="translate(360 300)" fill="#EAF2FA" opacity="0.95">
+    <path d="M0 -32 L8 -8 L32 0 L8 8 L0 32 L-8 8 L-32 0 L-8 -8 Z"/>
+  </g>
+</svg>

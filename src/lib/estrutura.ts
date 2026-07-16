@@ -201,6 +201,25 @@ export const ESTRUTURA: Nodo[] = [
       { id: "encontros.sessoes", label: "Sessões ao vivo", tipo: "pagina", to: "/encontros" },
     ],
   },
+  {
+    id: "criar-produto",
+    label: "Criar Produto",
+    tipo: "modulo",
+    to: "/criar-produto",
+    filhos: [
+      { id: "criar-produto.documento", label: "Documento Mestre", tipo: "pagina", to: "/criar-produto?aba=documento" },
+      { id: "criar-produto.esteira", label: "A tua esteira", tipo: "pagina", to: "/criar-produto?aba=esteira" },
+    ],
+  },
+  {
+    id: "vendas-apps",
+    label: "Página de vendas e aplicações profissionais",
+    tipo: "modulo",
+    to: "/vendas-apps",
+    filhos: [
+      { id: "vendas-apps.intro", label: "Introdução", tipo: "pagina", to: "/vendas-apps" },
+    ],
+  },
 ];
 
 // Bloqueios "Em breve" por defeito (enquanto a mentora não mexer no painel).
@@ -220,7 +239,18 @@ export const BLOQUEIOS_PADRAO: string[] = [
   "academia",
   "consultoria",
   "saude",
+  // Produtos novos: bloqueados por defeito (aparecem "Em breve" aos alunos).
+  "criar-produto",
+  "vendas-apps",
 ];
+
+// Modo de bloqueio por defeito de cada nó (quando a admin ainda não mexeu no
+// painel). "oculto" = nem aparece aos alunos; "em-breve"/"bloqueado" = ver
+// lib/bloqueios. Produtos novos entram "oculto" (só-admin, invisíveis).
+export const MODO_PADRAO: Record<string, string> = {
+  "criar-produto": "em-breve",
+  "vendas-apps": "em-breve",
+};
 
 // Lista achatada (útil para procurar por id / validar).
 export function achatarEstrutura(nodos: Nodo[] = ESTRUTURA): Nodo[] {

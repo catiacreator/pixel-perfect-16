@@ -4,14 +4,35 @@
 // vendas, sequência de stories e posts de feed (topo/meio/fundo de funil).
 // Lógica pura, sem React.
 
-import type { DocState } from "@/lib/doc-mestre";
+import { type DocState, EMPTY as DOC_EMPTY, padArray } from "@/lib/doc-mestre";
+
+// Documento Mestre PRÓPRIO deste produto (separado do Documento Mestre principal),
+// porque a página "Criar Produto" é vendida como produto individual.
+export const PRODUTO_DOC_KEY = "leveza.criar-produto.doc.v1";
+
+export function loadProdutoDocMestre(): DocState {
+  if (typeof window === "undefined") return DOC_EMPTY;
+  try {
+    const raw = window.localStorage.getItem(PRODUTO_DOC_KEY);
+    if (!raw) return DOC_EMPTY;
+    const parsed = JSON.parse(raw) as Partial<DocState>;
+    return {
+      ...DOC_EMPTY,
+      ...parsed,
+      dores: padArray((parsed.dores ?? []).slice(0, 5), 5),
+      desejos: padArray((parsed.desejos ?? []).slice(0, 5), 5),
+    };
+  } catch {
+    return DOC_EMPTY;
+  }
+}
 
 export type NivelKey = "low" | "medio" | "alto";
 
 export const NIVEIS: { key: NivelKey; rotulo: string; etiqueta: string; dica: string; cor: string }[] = [
-  { key: "low", rotulo: "Low ticket", etiqueta: "Porta de entrada", dica: "Barato e de decisão fácil — ebook, template, mini-aula (≈ 7€ a 47€).", cor: "#C88A4E" },
-  { key: "medio", rotulo: "Médio ticket", etiqueta: "Produto principal", dica: "O teu produto central — curso, comunidade, programa (≈ 97€ a 497€).", cor: "#A9683C" },
-  { key: "alto", rotulo: "Alto ticket", etiqueta: "Premium", dica: "Acompanhamento próximo — mentoria, consultoria (≈ 800€+).", cor: "#6B3F2A" },
+  { key: "low", rotulo: "Low ticket", etiqueta: "Porta de entrada", dica: "Barato e de decisão fácil — ebook, template, mini-aula (≈ 7€ a 47€).", cor: "#6FCB9F" },
+  { key: "medio", rotulo: "Médio ticket", etiqueta: "Produto principal", dica: "O teu produto central — curso, comunidade, programa (≈ 97€ a 497€).", cor: "#2F9E6E" },
+  { key: "alto", rotulo: "Alto ticket", etiqueta: "Premium", dica: "Acompanhamento próximo — mentoria, consultoria (≈ 800€+).", cor: "#1F6B4A" },
 ];
 
 export type ProdutoNivel = {
@@ -109,27 +130,149 @@ Preço / faixa: ${p.preco || "(a definir)"}`;
 const REGRAS = `Regras: usa a minha voz e o meu tom de marca; português de Portugal; linguagem simples e específica; SEM clichês ("fórmula mágica", "segredo revelado", "guia definitivo"). Entrega tudo pronto a copiar.`;
 
 // ────────────────────────────── prompts ──────────────────────────────
+// Ajuda a DESCOBRIR o público/dores/desejos (para quem não sabe preencher).
+export function promptDescobrirPublico(d: DocState): string {
+  return `Age como estratega de posicionamento e ajuda-me a DESCOBRIR o meu público-alvo, as suas dores e os seus desejos — para eu preencher o meu Documento Mestre.
+
+O que já sei sobre mim:
+Nome: ${d.nome || "(vazio)"}
+Profissão / especialidade: ${d.profissao || "(vazio)"}
+O que faço: ${d.oQueFaz || "(vazio)"}
+Como resolvo: ${d.comoResolve || "(vazio)"}
+
+Trabalha num destes dois modos, à minha escolha:
+
+MODO A — ENTREVISTA (se eu não souber responder sozinho):
+Faz-me perguntas UMA DE CADA VEZ, curtas e simples, e espera pela minha resposta antes da próxima (no máximo 6 a 8 perguntas). O objetivo é perceber quem eu ajudo e o que essas pessoas sentem.
+
+MODO B — ANÁLISE DO MEU INSTAGRAM (se eu anexar material):
+Se eu te anexar screenshots ou colar informação, analisa e infere o público. Usa o que eu enviar: a minha BIO, os meus 6 a 9 POSTS com mais alcance/gravações, os COMENTÁRIOS e MENSAGENS (DMs) que mais se repetem, e os INSIGHTS → Público (idade, género, localização).
+
+No FIM (em qualquer modo), entrega SÓ este bloco, EXATAMENTE neste formato — mantém as etiquetas em MAIÚSCULAS e cada item numerado numa linha própria, para eu colar de uma vez:
+
+PÚBLICO: <2 a 3 frases sobre quem é o público>
+DORES:
+1. <dor>
+2. <dor>
+3. <dor>
+4. <dor>
+5. <dor>
+DESEJOS:
+1. <desejo>
+2. <desejo>
+3. <desejo>
+4. <desejo>
+5. <desejo>
+
+Não acrescentes texto antes nem depois deste bloco.
+Regras: português de Portugal, linguagem simples e específica, na perspetiva do público (as palavras que ELES usariam), sem clichés.`;
+}
+
+// Distribui o output do prompt "Descobrir público" pelos campos do Documento
+// Mestre (público / 5 dores / 5 desejos). Tolerante a pequenas variações.
+export function parsePublicoResult(texto: string): { publico: string; dores: string[]; desejos: string[] } {
+  const t = (texto || "").replace(/\r/g, "");
+  const idxPub = t.search(/p[úu]blico\s*[:\-]/i);
+  const idxDor = t.search(/dores\s*[:\-]/i);
+  const idxDes = t.search(/desejos\s*[:\-]/i);
+
+  const semEtiqueta = (s: string) => s.replace(/^[^\n:]*[:\-]\s*/, "");
+
+  let publico = "";
+  if (idxPub >= 0) {
+    const fim = idxDor >= 0 ? idxDor : idxDes >= 0 ? idxDes : t.length;
+    publico = semEtiqueta(t.slice(idxPub, fim)).trim();
+  }
+
+  const itens = (bloco: string): string[] =>
+    semEtiqueta(bloco)
+      .replace(/\s+(\d+[.)])/g, "\n$1") // força uma linha por item mesmo em texto corrido
+      .split("\n")
+      .map((l) => l.trim().replace(/^\s*(?:\d+[.)]|[-•*])\s*/, "").trim())
+      .filter(Boolean);
+
+  let dores: string[] = [];
+  if (idxDor >= 0) dores = itens(t.slice(idxDor, idxDes >= 0 ? idxDes : t.length));
+
+  let desejos: string[] = [];
+  if (idxDes >= 0) desejos = itens(t.slice(idxDes));
+
+  return { publico, dores: dores.slice(0, 5), desejos: desejos.slice(0, 5) };
+}
+
 export function promptIdeiasEsteira(d: DocState): string {
   return `Age como estratega de produtos digitais para experts e mentores. Com base no meu Documento Mestre, desenha-me uma ESTEIRA DE PRODUTOS completa (uma "escada de valor") com 3 níveis para o meu público.
 
 ${contextoDoc(d)}
 
-Entrega EXATAMENTE 3 produtos, um por nível:
+Entrega EXATAMENTE 3 produtos (low, médio e alto ticket), CADA UM neste formato EXATO — mantém os cabeçalhos "=== ... ===" e as etiquetas, um campo por linha:
 
-1) LOW TICKET (porta de entrada — barato, decisão fácil, ≈ 7€ a 47€)
-2) MÉDIO TICKET (produto principal, ≈ 97€ a 497€)
-3) ALTO TICKET (premium / acompanhamento próximo, ≈ 800€+)
+=== LOW TICKET ===
+Nome: <nome magnético>
+Formato: <ebook, template, mini-curso, curso, comunidade, mentoria…>
+Transformação: <de X para Y, numa frase>
+Preço: <faixa em €, ex.: 27€>
+Para quem: <dentro do meu público>
+Porque vende: <a dor/desejo que resolve>
 
-Para CADA nível entrega:
-- Nome sugerido (magnético)
-- Formato (ebook, template, mini-curso, curso, comunidade, mentoria…)
-- Transformação em 1 frase ("de X para Y")
-- Para quem é (dentro do meu público)
-- Preço sugerido (em €)
-- Porque vende (a dor/desejo que resolve)
-- Como liga ao nível seguinte (a jornada do cliente entre eles)
+=== MÉDIO TICKET ===
+Nome: ...
+Formato: ...
+Transformação: ...
+Preço: ...
+Para quem: ...
+Porque vende: ...
 
-No fim, diz por qual devo começar e porquê. ${REGRAS}`;
+=== ALTO TICKET ===
+Nome: ...
+Formato: ...
+Transformação: ...
+Preço: ...
+Para quem: ...
+Porque vende: ...
+
+Depois dos 3 blocos, diz numa linha por qual começar e porquê. ${REGRAS}`;
+}
+
+// Distribui o resultado do prompt de ideias pelos 3 níveis (nome/formato/transformação/preço).
+export function parseEsteiraIdeias(texto: string): Record<NivelKey, Partial<ProdutoNivel>> {
+  const t = (texto || "").replace(/\r/g, "");
+  const idx = (re: RegExp) => { const m = t.match(re); return m && m.index != null ? m.index : -1; };
+  const pontos = ([
+    { key: "low" as NivelKey, i: idx(/low[\s-]*ticket/i) },
+    { key: "medio" as NivelKey, i: idx(/m[ée]dio[\s-]*ticket/i) },
+    { key: "alto" as NivelKey, i: idx(/alto[\s-]*ticket/i) },
+  ]).filter((p) => p.i >= 0).sort((a, b) => a.i - b.i);
+
+  const campo = (bloco: string, re: RegExp) => { const m = bloco.match(re); return m ? m[1].split("\n")[0].trim() : ""; };
+  const out: Record<NivelKey, Partial<ProdutoNivel>> = { low: {}, medio: {}, alto: {} };
+  pontos.forEach((p, n) => {
+    const bloco = t.slice(p.i, n + 1 < pontos.length ? pontos[n + 1].i : t.length);
+    out[p.key] = {
+      nome: campo(bloco, /nome\s*[:\-]\s*(.+)/i),
+      formato: campo(bloco, /formato\s*[:\-]\s*(.+)/i),
+      transformacao: campo(bloco, /transforma[çc][ãa]o\s*[:\-]\s*(.+)/i),
+      preco: campo(bloco, /pre[çc]o\s*[:\-]\s*(.+)/i),
+    };
+  });
+  return out;
+}
+
+// Separa o resultado dos posts de feed por fase do funil (topo/meio/fundo).
+export function parsePostsFunil(texto: string): { topo: string; meio: string; fundo: string } {
+  const t = (texto || "").replace(/\r/g, "");
+  const idx = (re: RegExp) => { const m = t.match(re); return m && m.index != null ? m.index : -1; };
+  const pontos = ([
+    { k: "topo" as const, i: idx(/topo\s*de\s*funil|===\s*topo/i) },
+    { k: "meio" as const, i: idx(/meio\s*de\s*funil|===\s*meio/i) },
+    { k: "fundo" as const, i: idx(/fundo\s*de\s*funil|===\s*fundo/i) },
+  ]).filter((p) => p.i >= 0).sort((a, b) => a.i - b.i);
+  const res: { topo: string; meio: string; fundo: string } = { topo: "", meio: "", fundo: "" };
+  pontos.forEach((p, n) => {
+    const bloco = t.slice(p.i, n + 1 < pontos.length ? pontos[n + 1].i : t.length);
+    res[p.k] = bloco.replace(/^.*(?:\n|$)/, "").trim(); // tira a linha do cabeçalho
+  });
+  return res;
 }
 
 export function promptLandingPage(d: DocState, rotulo: string, p: ProdutoNivel): string {
@@ -151,7 +294,8 @@ Entrega cada secção já com o texto pronto:
 9. Garantia
 10. FAQ (5 perguntas com resposta)
 11. CTA final
-${REGRAS}`;
+
+Entrega só o texto da página, pronto a colar (sem comentários antes nem depois). ${REGRAS}`;
 }
 
 export function promptStories(d: DocState, rotulo: string, p: ProdutoNivel): string {
@@ -166,7 +310,9 @@ Entrega 3 dias de stories (5 a 7 por dia):
 - Dia 2 — Doutrinar: a nova forma + prova/bastidores + quebra de objeções.
 - Dia 3 — Vender: abre a oferta, mostra o produto, urgência real, CTA para o Direct ("manda a palavra [PALAVRA]").
 
-Para CADA story: o que MOSTRAR + o TEXTO/legenda + o CTA. Usa enquetes/caixas de pergunta onde fizer sentido. ${REGRAS}`;
+Para CADA story: o que MOSTRAR + o TEXTO/legenda + o CTA. Usa enquetes/caixas de pergunta onde fizer sentido.
+
+Entrega só a sequência, pronta a colar (sem comentários antes nem depois). ${REGRAS}`;
 }
 
 export function promptPostsFunil(d: DocState, rotulo: string, p: ProdutoNivel): string {

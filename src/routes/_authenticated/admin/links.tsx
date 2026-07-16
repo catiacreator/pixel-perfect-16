@@ -65,6 +65,22 @@ const SECCOES: Seccao[] = [
       { nome: "Plano de Posts", path: "/metodo/pilar-2/redes-sociais?aba=plano" },
       { nome: "30 posts em 30 dias", path: "/metodo/pilar-2/redes-sociais?aba=desafio" },
       { nome: "Publicar", path: "/metodo/pilar-2/redes-sociais?aba=agendar" },
+      { nome: "Assistente Cat.IA", path: "/metodo/pilar-2/redes-sociais?aba=assistente" },
+    ],
+  },
+  {
+    titulo: "Mini-cursos & Ferramentas",
+    paginas: [
+      { nome: "Primeiro Mês de Posts", path: "/conteudo-ia" },
+      { nome: "Criar Produto", path: "/criar-produto" },
+      { nome: "Página de vendas e apps", path: "/vendas-apps" },
+    ],
+  },
+  {
+    titulo: "Robôs (ChatGPT)",
+    paginas: [
+      { nome: "N.IA — guia da plataforma", path: "https://chatgpt.com/g/g-6a41b537791c8191a386fc6731cd45f6-n-ia" },
+      { nome: "Cat.IA — criação de conteúdo", path: "https://chatgpt.com/g/g-6a56643a8dbc8191a122f9580a3e7edf-cat-ia" },
     ],
   },
   {
@@ -119,6 +135,8 @@ const SECCOES: Seccao[] = [
       { nome: "Códigos de acesso", path: "/admin/codigos" },
       { nome: "Estrutura & Bloqueios", path: "/admin/estrutura" },
       { nome: "Papéis & Permissões", path: "/admin/papeis" },
+      { nome: "Cat.IA (link + permissões)", path: "/admin/cat-ia" },
+      { nome: "Prémios", path: "/admin/premios" },
       { nome: "Links (esta página)", path: "/admin/links" },
       { nome: "Ranking", path: "/admin/ranking" },
       { nome: "Conteúdo", path: "/admin/conteudo" },
@@ -153,7 +171,7 @@ function LinksPage() {
             </div>
             <div className="divide-y divide-[var(--color-border)]">
               {s.paginas.map((p) => {
-                const url = DOMINIO + p.path;
+                const url = p.path.startsWith("http") ? p.path : DOMINIO + p.path;
                 return (
                   <div key={p.path} className="flex items-center gap-3 px-4 py-2.5">
                     <span className="text-sm text-ink font-medium w-48 shrink-0 truncate">{p.nome}</span>
