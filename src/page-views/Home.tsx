@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
 import HeroRobot from "../components/HeroRobot";
-import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, X, Users, Package, Rocket } from "lucide-react";
+import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, X, Users, Package, Rocket, LineChart } from "lucide-react";
 
 const WHATSAPP_CATIA = "https://wa.link/jwr3yp";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
@@ -98,10 +98,24 @@ const PRODUTOS = [
     icon: Rocket,
     estruturaId: "vendas-apps",
   },
+  {
+    key: "maquina-analises",
+    tag: "Ferramenta",
+    titulo: "Máquina de Análises",
+    assinatura: "o teu plano de 30 dias",
+    desc: "Envia os prints do teu perfil e recebe a análise completa + 30 dias de conteúdo pronto a gravar.",
+    to: "/maquina-analises",
+    cta: "Começar",
+    img: "/maquina-analises.svg",
+    pos: "center",
+    cor: "#C13584",
+    icon: LineChart,
+    estruturaId: "maquina-analises",
+  },
 ];
 
 // Cada secção agrupa os cards pela sua chave; o resto vai para os cursos principais.
-const MINI_CURSOS = ["conteudo-ia", "criar-produto", "vendas-apps"];
+const MINI_CURSOS = ["conteudo-ia", "criar-produto", "vendas-apps", "maquina-analises"];
 const MENTORIA = ["encontros"];
 
 export default function Home() {

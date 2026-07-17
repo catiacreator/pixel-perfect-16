@@ -116,9 +116,18 @@ export function useBloqueios() {
     return !!m && m !== "livre" && !temDecisao(id);
   };
 
+  // Decisão explícita FORTE da admin: pôr um módulo em "oculto" ou "bloqueado" é
+  // uma escolha por nó que tem de valer sempre — mesmo com o "Geral" desligado ou
+  // sem o nó na lista global. (Sem isto, o "oculto" guardava mas não se aplicava.)
+  const modoForte = (id: string) => {
+    const m = turma.modos?.[id] ?? cacheModo[id] ?? cacheModo[moduloDe(id)];
+    return m === "oculto" || m === "bloqueado";
+  };
+
   // Bloqueado para o aluno: "Em breve" global OU só-admin por defeito (MODO_PADRAO)
-  // OU (restrito por turma e sem grant).
-  const isBloqueado = (id: string) => emBreve(id) || padraoBloqueado(id) || (turma.restrito && !turmaConcede(id));
+  // OU decisão forte (oculto/bloqueado) OU (restrito por turma e sem grant).
+  const isBloqueado = (id: string) =>
+    emBreve(id) || padraoBloqueado(id) || modoForte(id) || (turma.restrito && !turmaConcede(id));
   const norm = (v?: string): "em-breve" | "bloqueado" | "oculto" =>
     v === "bloqueado" ? "bloqueado" : v === "oculto" ? "oculto" : "em-breve";
   const modoBloqueio = (id: string): "em-breve" | "bloqueado" | "oculto" => {

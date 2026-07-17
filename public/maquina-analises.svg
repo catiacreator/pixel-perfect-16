@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" fill="none">
+  <defs>
+    <linearGradient id="mag" x1="0" y1="0" x2="400" y2="300" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#833AB4"/>
+      <stop offset=".45" stop-color="#C13584"/>
+      <stop offset=".75" stop-color="#E1306C"/>
+      <stop offset="1" stop-color="#F77737"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#mag)"/>
+
+  <!-- cartão do relatório -->
+  <rect x="96" y="52" width="208" height="196" rx="16" fill="#fff" fill-opacity=".95"/>
+
+  <!-- barras a subir = análise -->
+  <rect x="126" y="170" width="26" height="44" rx="5" fill="#833AB4" fill-opacity=".55"/>
+  <rect x="163" y="146" width="26" height="68" rx="5" fill="#C13584" fill-opacity=".7"/>
+  <rect x="200" y="112" width="26" height="102" rx="5" fill="#E1306C"/>
+  <rect x="237" y="134" width="26" height="80" rx="5" fill="#F77737" fill-opacity=".8"/>
+
+  <!-- linha de tendência -->
+  <path d="M132 158 L176 132 L213 96 L250 118" stroke="#262626" stroke-opacity=".65" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="213" cy="96" r="6" fill="#262626" fill-opacity=".8"/>
+
+  <!-- linhas de texto do relatório -->
+  <rect x="126" y="76" width="88" height="9" rx="4.5" fill="#262626" fill-opacity=".22"/>
+  <rect x="126" y="93" width="54" height="7" rx="3.5" fill="#262626" fill-opacity=".13"/>
+
+  <!-- rodapé: plano de 30 dias -->
+  <rect x="126" y="228" width="148" height="7" rx="3.5" fill="#262626" fill-opacity=".13"/>
+</svg>

@@ -19,6 +19,7 @@ import { Route as MinhaBaseRouteImport } from './routes/minha-base'
 import { Route as MeusProjetosRouteImport } from './routes/meus-projetos'
 import { Route as MetodoRouteImport } from './routes/metodo'
 import { Route as MensagensRouteImport } from './routes/mensagens'
+import { Route as MaquinaAnalisesRouteImport } from './routes/maquina-analises'
 import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as EncontrosRouteImport } from './routes/encontros'
 import { Route as DocMestreRouteImport } from './routes/doc-mestre'
@@ -156,6 +157,11 @@ const MetodoRoute = MetodoRouteImport.update({
 const MensagensRoute = MensagensRouteImport.update({
   id: '/mensagens',
   path: '/mensagens',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MaquinaAnalisesRoute = MaquinaAnalisesRouteImport.update({
+  id: '/maquina-analises',
+  path: '/maquina-analises',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GlossarioRoute = GlossarioRouteImport.update({
@@ -651,6 +657,7 @@ export interface FileRoutesByFullPath {
   '/doc-mestre': typeof DocMestreRoute
   '/encontros': typeof EncontrosRoute
   '/glossario': typeof GlossarioRoute
+  '/maquina-analises': typeof MaquinaAnalisesRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
@@ -750,6 +757,7 @@ export interface FileRoutesByTo {
   '/doc-mestre': typeof DocMestreRoute
   '/encontros': typeof EncontrosRoute
   '/glossario': typeof GlossarioRoute
+  '/maquina-analises': typeof MaquinaAnalisesRoute
   '/mensagens': typeof MensagensRoute
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
@@ -840,6 +848,7 @@ export interface FileRoutesById {
   '/doc-mestre': typeof DocMestreRoute
   '/encontros': typeof EncontrosRoute
   '/glossario': typeof GlossarioRoute
+  '/maquina-analises': typeof MaquinaAnalisesRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
   '/meus-projetos': typeof MeusProjetosRoute
@@ -941,6 +950,7 @@ export interface FileRouteTypes {
     | '/doc-mestre'
     | '/encontros'
     | '/glossario'
+    | '/maquina-analises'
     | '/mensagens'
     | '/metodo'
     | '/meus-projetos'
@@ -1040,6 +1050,7 @@ export interface FileRouteTypes {
     | '/doc-mestre'
     | '/encontros'
     | '/glossario'
+    | '/maquina-analises'
     | '/mensagens'
     | '/meus-projetos'
     | '/minha-base'
@@ -1129,6 +1140,7 @@ export interface FileRouteTypes {
     | '/doc-mestre'
     | '/encontros'
     | '/glossario'
+    | '/maquina-analises'
     | '/mensagens'
     | '/metodo'
     | '/meus-projetos'
@@ -1230,6 +1242,7 @@ export interface RootRouteChildren {
   DocMestreRoute: typeof DocMestreRoute
   EncontrosRoute: typeof EncontrosRoute
   GlossarioRoute: typeof GlossarioRoute
+  MaquinaAnalisesRoute: typeof MaquinaAnalisesRoute
   MensagensRoute: typeof MensagensRoute
   MetodoRoute: typeof MetodoRouteWithChildren
   MeusProjetosRoute: typeof MeusProjetosRoute
@@ -1315,6 +1328,13 @@ declare module '@tanstack/react-router' {
       path: '/mensagens'
       fullPath: '/mensagens'
       preLoaderRoute: typeof MensagensRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/maquina-analises': {
+      id: '/maquina-analises'
+      path: '/maquina-analises'
+      fullPath: '/maquina-analises'
+      preLoaderRoute: typeof MaquinaAnalisesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/glossario': {
@@ -2241,6 +2261,7 @@ const rootRouteChildren: RootRouteChildren = {
   DocMestreRoute: DocMestreRoute,
   EncontrosRoute: EncontrosRoute,
   GlossarioRoute: GlossarioRoute,
+  MaquinaAnalisesRoute: MaquinaAnalisesRoute,
   MensagensRoute: MensagensRoute,
   MetodoRoute: MetodoRouteWithChildren,
   MeusProjetosRoute: MeusProjetosRoute,
