@@ -1,6 +1,6 @@
 import { Link } from "@/lib/router-compat";
 import { useLocation, useRouter } from "@tanstack/react-router";
-import { FileText, Mail, Map, Database, Award, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, ChevronDown, Instagram, GraduationCap, Eye } from "lucide-react";
+import { FileText, Mail, Map, Database, Award, Menu, X, ArrowUpRight, ArrowLeft, Trophy, Shield, ChevronDown, Instagram, GraduationCap, Eye, CalendarDays, Sparkles, Package, Rocket, LineChart, Users, type LucideIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { initMasterDocSync } from "@/lib/master-doc-sync";
@@ -13,12 +13,45 @@ import PreviewTurmaModal from "@/components/PreviewTurmaModal";
 import EmManutencao from "@/components/EmManutencao";
 import MarcarEtapa from "@/components/MarcarEtapa";
 import NIaTopButton from "@/components/NIaTopButton";
+import BuscaGlobal from "@/components/BuscaGlobal";
 import { useAccess } from "@/lib/use-access";
 import { useAdminView, setAdminView, abrirPreviewTurma, setPreviewTurma, useBloqueadoParaAlunos } from "@/lib/admin-view";
 import { useBloqueios } from "@/lib/bloqueios";
 import { categoriaDesativaLinks } from "@/lib/turmas";
 import { nodeIdParaRota } from "@/lib/estrutura";
 import { isAdminEmail, type ModuleKey } from "@/lib/access";
+
+// Menu "Cursos": tudo o que existe, por hierarquia — cada grupo separado por
+// uma linha fina. Os ids são os do registo da ESTRUTURA: é o que permite
+// esconder (ou marcar "Em breve") o que a aluna ainda não pode abrir.
+const GRUPOS_CURSOS: {
+  titulo: string;
+  itens: { id: string; to: string; label: string; sub: string; cor: string; icon: LucideIcon }[];
+}[] = [
+  {
+    titulo: "Cursos",
+    itens: [
+      { id: "jornada", to: "/protocolo", label: "Leveza no Digital", sub: "Mentoria · Instagram", cor: "#C8487E", icon: Instagram },
+      { id: "redes", to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas", label: "Conteúdo Todo Dia", sub: "Método · redes sociais", cor: "#D2547F", icon: CalendarDays },
+      { id: "academia", to: "/metodo/pilar-1/aprenda-ia", label: "Academia de IA", sub: "Ferramentas · aulas", cor: "#2E7CB8", icon: GraduationCap },
+    ],
+  },
+  {
+    titulo: "Mini-cursos & Ferramentas",
+    itens: [
+      { id: "conteudo-ia", to: "/conteudo-ia", label: "Primeiro Mês de Posts", sub: "Mini-curso", cor: "#7C56C9", icon: Sparkles },
+      { id: "criar-produto", to: "/criar-produto", label: "Criar Produto", sub: "A tua esteira", cor: "#2F9E6E", icon: Package },
+      { id: "vendas-apps", to: "/vendas-apps", label: "Páginas de vendas e apps", sub: "Sem programar", cor: "#2E6F9E", icon: Rocket },
+      { id: "maquina-analises", to: "/maquina-analises", label: "Máquina de Análises", sub: "Plano de 30 dias", cor: "#C13584", icon: LineChart },
+    ],
+  },
+  {
+    titulo: "Mentoria",
+    itens: [
+      { id: "encontros", to: "/encontros", label: "Encontros", sub: "Sessões ao vivo", cor: "#A2004E", icon: Users },
+    ],
+  },
+];
 
 const NAV = [
   { to: "/", label: "Início", icon: Map },
@@ -137,33 +170,48 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <ChevronDown size={13} className={`transition-transform ${prodOpen ? "rotate-180" : ""}`} />
               </button>
               {prodOpen && !soMiniCurso && (
-                <div className="absolute left-0 mt-2 w-64 bg-white border border-[var(--color-border)] rounded-2xl shadow-[0_20px_50px_-20px_rgba(0,0,0,0.4)] p-2 z-50">
-                  <Link
-                    to="/protocolo"
-                    onClick={() => setProdOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-ink/5 transition-colors"
-                  >
-                    <span className="w-9 h-9 rounded-lg bg-[#C8487E]/12 text-[#C8487E] flex items-center justify-center shrink-0">
-                      <Instagram size={16} />
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block text-sm font-semibold text-ink">Leveza no Digital</span>
-                      <span className="block text-[11px] text-ink/50">Mentoria · Instagram</span>
-                    </span>
-                  </Link>
-                  <Link
-                    to="/metodo/pilar-1/aprenda-ia"
-                    onClick={() => setProdOpen(false)}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-ink/5 transition-colors"
-                  >
-                    <span className="w-9 h-9 rounded-lg bg-[#2E7CB8]/12 text-[#2E7CB8] flex items-center justify-center shrink-0">
-                      <GraduationCap size={16} />
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block text-sm font-semibold text-ink">Academia de IA</span>
-                      <span className="block text-[11px] text-ink/50">Ferramentas · aulas</span>
-                    </span>
-                  </Link>
+                <div className="absolute left-0 mt-2 w-[19rem] max-h-[75vh] overflow-y-auto bg-white border border-[var(--color-border)] rounded-2xl shadow-[0_20px_50px_-20px_rgba(0,0,0,0.4)] p-2 z-50">
+                  {GRUPOS_CURSOS.map((grupo) => {
+                    // "oculto" desaparece; "Em breve" fica visível, com etiqueta.
+                    const itens = grupo.itens.filter(
+                      (it) => !bloqueadoParaAlunos || !isBloqueado(it.id) || modoBloqueio(it.id) !== "oculto",
+                    );
+                    if (!itens.length) return null;
+                    return (
+                      <div key={grupo.titulo} className="pt-1 first:pt-0 mt-1 first:mt-0 border-t first:border-t-0 border-[var(--color-border)]">
+                        <p className="px-3 pt-2 pb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-ink/35">
+                          {grupo.titulo}
+                        </p>
+                        {itens.map((it) => {
+                          const emBreve = bloqueadoParaAlunos && isBloqueado(it.id);
+                          return (
+                            <Link
+                              key={it.id}
+                              to={it.to}
+                              onClick={() => setProdOpen(false)}
+                              className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-ink/5 transition-colors"
+                            >
+                              <span
+                                className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0"
+                                style={{ backgroundColor: `${it.cor}1F`, color: it.cor }}
+                              >
+                                <it.icon size={16} />
+                              </span>
+                              <span className="min-w-0 flex-1">
+                                <span className="block text-sm font-semibold text-ink truncate">{it.label}</span>
+                                <span className="block text-[11px] text-ink/50 truncate">{it.sub}</span>
+                              </span>
+                              {emBreve && (
+                                <span className="shrink-0 text-[9px] font-semibold uppercase tracking-wider text-terracotta/80 border border-terracotta/25 rounded-full px-1.5 py-0.5">
+                                  Em breve
+                                </span>
+                              )}
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -201,6 +249,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
           {/* Direita */}
           <div className="flex items-center gap-2 justify-end">
+            {signedIn && <BuscaGlobal />}
             {signedIn && <NIaTopButton />}
             {signedIn && (
               soMiniCurso ? (
