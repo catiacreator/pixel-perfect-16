@@ -124,10 +124,21 @@ export function useBloqueios() {
     return m === "oculto" || m === "bloqueado";
   };
 
-  // Bloqueado para o aluno: "Em breve" global OU só-admin por defeito (MODO_PADRAO)
-  // OU decisão forte (oculto/bloqueado) OU (restrito por turma e sem grant).
-  const isBloqueado = (id: string) =>
-    emBreve(id) || padraoBloqueado(id) || modoForte(id) || (turma.restrito && !turmaConcede(id));
+  // Bloqueado para o aluno. Ordem de precedência (do mais específico ao default):
+  //  1) Modo definido PARA A TURMA neste nó (a admin decidiu para esta turma) → vence.
+  //  2) "Em breve" global (lista) = porta de lançamento → PREDOMINA mesmo sobre grants.
+  //  3) Turma restrita: um grant explícito ao nó MOSTRA-o, vencendo o oculto/bloqueado
+  //     e o default (MODO_PADRAO) do Geral. É o que permite libertar uma ferramenta
+  //     para turmas específicas sem a tirar do oculto para as outras.
+  //  4) Contexto sem turma restrita (ex.: pré-visualização/aberto): defaults do Geral.
+  const isBloqueado = (id: string) => {
+    const tm = turma.modos?.[id];
+    if (tm === "oculto" || tm === "bloqueado" || tm === "em-breve") return true;
+    if (tm === "livre") return false;
+    if (emBreve(id)) return true;
+    if (turma.restrito) return !turmaConcede(id);
+    return modoForte(id) || padraoBloqueado(id);
+  };
   const norm = (v?: string): "em-breve" | "bloqueado" | "oculto" =>
     v === "bloqueado" ? "bloqueado" : v === "oculto" ? "oculto" : "em-breve";
   const modoBloqueio = (id: string): "em-breve" | "bloqueado" | "oculto" => {
