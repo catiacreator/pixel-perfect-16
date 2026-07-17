@@ -27,7 +27,7 @@ type Formato = {
 const FORMATOS: Formato[] = [
   {
     id: "roteiros", icon: Mic, nome: "Yap Content", etapa: "Topo · atrair + ligação", cor: "#2E7CB8",
-    agente: "cat.ia — Yap Content",
+    agente: "ChatGPT",
     resumo: "Falar solto para a câmara. A tua presença é o conteúdo.",
     como: "Não te dá um texto para ler — dá-te um esqueleto para falar em cima: gancho falado, uma ideia só, gatilho de história, o teu ângulo e o convite. O objetivo é gravares hoje, na tua voz, sem produção. Volume acima de perfeição.",
     ideal: "Quando queres aparecer todos os dias, construir autoridade e ligação, e aquecer a audiência antes de vender.",
@@ -325,11 +325,13 @@ export default function FormatosConteudo() {
             </>
           )}
 
-          {/* Agente */}
+          {/* Agente (ou ChatGPT normal, quando o formato não tem agente próprio) */}
           <div className="flex items-center gap-2 flex-wrap rounded-xl bg-cream-warm/50 border border-border px-3 py-2.5">
             <span className="inline-flex items-center gap-2 text-sm text-ink/70">
               <Bot size={16} className="text-terracotta shrink-0" />
-              Agente no ChatGPT: <b className="text-ink">{f.agente}</b>
+              {f.agente === "ChatGPT"
+                ? <>Copia o prompt (em <b className="text-ink">Criar Conteúdo</b>) e cola no <b className="text-ink">ChatGPT</b>.</>
+                : <>Agente no ChatGPT: <b className="text-ink">{f.agente}</b></>}
             </span>
             {agenteUrl(f.agente) && (
               <a
@@ -339,7 +341,7 @@ export default function FormatosConteudo() {
                 className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-cream rounded-full px-3 py-1.5 transition-opacity hover:opacity-90 ml-auto"
                 style={{ background: "#C8487E" }}
               >
-                Abrir agente <ArrowUpRight size={13} />
+                {f.agente === "ChatGPT" ? "Abrir ChatGPT" : "Abrir agente"} <ArrowUpRight size={13} />
               </a>
             )}
           </div>

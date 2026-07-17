@@ -86,7 +86,10 @@ export default function PromptCard({
       {agente && (
         <div className="mt-3 pt-3 border-t border-border flex items-center gap-2 flex-wrap">
           <span className="inline-flex items-center gap-1.5 text-[11px] text-ink/55">
-            <Bot size={13} className="text-terracotta shrink-0" /> Agente: <b className="text-ink/75">{agente}</b>
+            <Bot size={13} className="text-terracotta shrink-0" />
+            {agente === "ChatGPT"
+              ? <>Cola este prompt no <b className="text-ink/75">ChatGPT</b></>
+              : <>Agente: <b className="text-ink/75">{agente}</b></>}
           </span>
           {agentePass && (
             <span className="inline-flex items-center gap-1 text-[11px] text-ink/55">
@@ -101,7 +104,7 @@ export default function PromptCard({
               className={`inline-flex items-center gap-1.5 text-[11px] font-semibold text-cream rounded-full px-2.5 py-1 transition-opacity ml-auto ${botaoCor ? "hover:opacity-90" : "bg-ink hover:bg-terracotta"}`}
               style={botaoCor ? { background: botaoCor } : undefined}
             >
-              Abrir agente no ChatGPT <ArrowUpRight size={12} />
+              {agente === "ChatGPT" ? "Abrir ChatGPT" : "Abrir agente no ChatGPT"} <ArrowUpRight size={12} />
             </a>
           )}
         </div>
