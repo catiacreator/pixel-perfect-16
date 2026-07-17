@@ -283,3 +283,104 @@ Após as 3 respostas, entregue o ESTUDO COMPLETO no seguinte formato:
 
 export const PROMPT_CONSULTORIA_CABELO = `// TODO: prompt da Consultoria de Cabelo ainda não foi enviado pelo usuário.
 // Quando chegar, substituir este arquivo pelo conteúdo verbatim.`;
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Variantes "JÁ TENHO": para quem já tem tom de voz / identidade visual feitos.
+// A pessoa anexa o material que já existe (textos, prints, brand book) e o
+// ChatGPT devolve NO MESMO FORMATO que os parsers leem — por isso o botão
+// "Preencher campos automaticamente" funciona igual.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const PROMPT_TOM_DE_VOZ_EXISTENTE = `Eu JÁ TENHO o meu tom de voz. Não quero criar um novo — quero que organizes o que já existe no formato certo para eu colar na minha plataforma.
+
+O QUE TE VOU DAR (usa tudo o que eu anexar ou colar aqui):
+- Textos e legendas que já escrevi (posts, stories, bio, emails, site)
+- O meu manual de marca / brand book, se tiver (PDF ou prints)
+- Prints do meu Instagram (bio, posts, respostas a comentários, mensagens)
+- Notas soltas sobre como falo e no que acredito
+
+O QUE FAZER:
+1. Lê tudo e identifica o meu tom REAL — as palavras, o ritmo e as manias que EU já uso. Não inventes um tom novo nem "melhores" o meu.
+2. Se faltar informação para algum campo, faz-me perguntas curtas, UMA DE CADA VEZ, até teres o suficiente.
+3. Só depois entrega o resultado final.
+
+FORMATO DO RESULTADO (obrigatório — copia as etiquetas "Campo:" tal e qual):
+
+Campo: tom_de_voz
+[Regras concretas de escrita: como escrevo, ritmo e tamanho das frases, tratamento (tu/você), palavras que uso muito, palavras que evito, uso de emojis e pontuação. Termina com 2 frases típicas minhas, retiradas do material.]
+
+Campo: crenca_central
+[A crença que sustenta a minha marca, em 1 ou 2 frases, nas minhas palavras.]
+
+Campo: opinioes_polemicas
+[3 a 5 opiniões que eu defendo mesmo que incomodem — uma por linha.]
+
+Campo: cases
+[3 casos reais que encontres no material: quem era o cliente, a situação antes, o que eu fiz, o resultado depois. Se não houver no material, escreve [FALTA: caso] nessa linha para eu preencher.]
+
+REGRAS:
+- TEXTO PURO. Nada de markdown: sem asteriscos, sem cardinais, sem listas com hífen. Se precisares de destacar, usa MAIÚSCULAS.
+- Não escrevas nada antes nem depois do bloco dos 4 campos.
+- Português de Portugal. Sem clichés de branding.`;
+
+export const PROMPT_IDENTIDADE_VISUAL_EXISTENTE = `Eu JÁ TENHO a minha identidade visual. Não quero criar uma nova — quero que organizes o que já existe no formato certo para eu colar na minha plataforma.
+
+O QUE TE VOU DAR (usa tudo o que eu anexar ou colar aqui):
+- Prints do meu Instagram / feed / site
+- Os meus posts e capas de carrossel
+- O meu manual de marca / brand book, logótipo, paleta (PDF ou imagens)
+- Fotos minhas e do meu ambiente de trabalho
+- Notas sobre cores e fontes que já uso
+
+O QUE FAZER:
+1. Analisa as imagens e o material e EXTRAI a identidade que JÁ existe: cores (dá-me os códigos #hex aproximados que vês), fontes, clima das imagens, elementos recorrentes.
+2. Se faltar informação, faz-me perguntas curtas, UMA DE CADA VEZ.
+3. Só depois entrega o KIT FINAL.
+
+FORMATO DO RESULTADO (obrigatório — copia os títulos palavra por palavra, o portal lê automaticamente):
+
+🧠 1. VIBE DA MARCA
+[frase de 1-2 linhas descrevendo a sensação visual que já existe]
+
+🎨 2. PALETA
+Cor 1: [nome] #hex ([função])
+Cor 2: [nome] #hex ([função])
+Cor 3: [nome] #hex ([função])
+Cor 4: [nome] #hex ([função])
+Cor 5: [nome] #hex ([função])
+
+🔤 3. TIPOGRAFIA
+Título:
+[Nome da fonte] (link Google Fonts se souberes)
+[características visuais em 2-3 traços]
+
+Corpo:
+[Nome da fonte] (link Google Fonts se souberes)
+[características visuais em 2-3 traços]
+
+🖼️ 4. ESTILO DE IMAGEM
+[tratamento fotográfico, clima, luz e cenário que já uso]
+
+🧩 5. ELEMENTOS VISUAIS
+[3-5 elementos recorrentes que já aparecem: texturas, formas, ícones, stickers]
+
+🚫 6. ANTIPADRÕES VISUAIS
+[3-5 coisas que NÃO combinam com esta identidade]
+
+✍️ 7. PROMPT PRA CAPA DE CARROSSEL
+[prompt pronto para gerar uma capa no MEU estilo atual]
+
+🎬 8. PROMPT PRA CAPA DE REELS
+[prompt pronto para thumbnail de Reels no meu estilo]
+
+📸 9. PROMPT PRA IMAGEM LIFESTYLE/BASTIDOR
+[prompt pronto para imagem de bastidor/ambiente no meu estilo]
+
+🖨️ 10. TIPOGRAFIA MANUSCRITA
+[Nome da fonte manuscrita, se existir]
+(link Google Fonts se souberes)
+
+REGRAS:
+- Se não conseguires ver alguma coisa nas imagens, escreve [FALTA: ...] em vez de inventar.
+- Não escrevas nada depois da secção 10.
+- Português de Portugal. Sem clichés de branding.`;

@@ -6,7 +6,7 @@ import PromptCard from "../../components/PromptCard";
 import SaveBar from "../../components/SaveBar";
 import { ArrowRight, Wand2, Printer } from "lucide-react";
 import { usePilar2 } from "@/lib/pilar2-hooks";
-import { PROMPT_TOM_DE_VOZ } from "@/data/prompts/pilar2-tom-visual";
+import { PROMPT_TOM_DE_VOZ, PROMPT_TOM_DE_VOZ_EXISTENTE } from "@/data/prompts/pilar2-tom-visual";
 import { parseTomDeVoz } from "@/lib/pilar2-parsers";
 
 function Area({
@@ -70,8 +70,15 @@ export default function TomDeVoz() {
         <PromptCard
           numero={4}
           titulo="Tom de voz da marca"
-          descricao="Os 4 campos abaixo são extraídos automaticamente do resultado do ChatGPT."
+          descricao="Ainda não tens? Cria do zero — os 4 campos abaixo são extraídos automaticamente do resultado do ChatGPT."
           prompt={PROMPT_TOM_DE_VOZ}
+        />
+
+        <PromptCard
+          titulo="Já tenho o meu tom de voz"
+          descricao="Anexa no ChatGPT o que já tens (textos, legendas, prints do Instagram, brand book) e ele devolve os 4 campos prontos a colar aqui."
+          prompt={PROMPT_TOM_DE_VOZ_EXISTENTE}
+          rotuloBotao="Copiar prompt (já tenho)"
         />
 
         <div className="rounded-2xl border border-border bg-white p-5 mb-6">
