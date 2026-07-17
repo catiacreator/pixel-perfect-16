@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "@/lib/router-compat";
-import { Film, Sparkles, MessageCircle, LayoutGrid, ArrowRight, ArrowUpRight, Bot, ImageIcon } from "lucide-react";
+import { Film, Sparkles, MessageCircle, LayoutGrid, ArrowRight, ArrowUpRight, Bot, ImageIcon, Mic, Check, X as XIcon } from "lucide-react";
 import { agenteUrl } from "@/lib/agentes-catia";
 import VideoPlaceholder from "./VideoPlaceholder";
 
@@ -26,11 +26,11 @@ type Formato = {
 
 const FORMATOS: Formato[] = [
   {
-    id: "roteiros", icon: Film, nome: "Roteiros simples", etapa: "Topo · atrair", cor: "#2E7CB8",
-    agente: "cat.ia — Criação de Roteiros Simples",
-    resumo: "O roteiro base, curto e fácil de gravar hoje.",
-    como: "Entrega logo um roteiro curto (gancho → desenvolvimento → CTA), sem fase de perguntas. Dá 3 opções de gancho para escolher. Serve para destravar — melhor um roteiro simples publicado do que um perfeito na gaveta.",
-    ideal: "Quando quer publicar rápido e sem complicar.",
+    id: "roteiros", icon: Mic, nome: "Yap Content", etapa: "Topo · atrair + ligação", cor: "#2E7CB8",
+    agente: "cat.ia — Yap Content",
+    resumo: "Falar solto para a câmara. A tua presença é o conteúdo.",
+    como: "Não te dá um texto para ler — dá-te um esqueleto para falar em cima: gancho falado, uma ideia só, gatilho de história, o teu ângulo e o convite. O objetivo é gravares hoje, na tua voz, sem produção. Volume acima de perfeição.",
+    ideal: "Quando queres aparecer todos os dias, construir autoridade e ligação, e aquecer a audiência antes de vender.",
   },
   {
     id: "reels", icon: Sparkles, nome: "Reels virais", etapa: "Topo · atrair + reter", cor: "#C8487E",
@@ -110,6 +110,85 @@ const REELS_MODELOS: ReelModelo[] = [
     ideal: "Explicar visualmente uma parte do teu método.",
   },
 ];
+
+// Teoria do Yap Content — os ingredientes + regras de ouro, antes do gerador.
+const YAP_INGREDIENTES = [
+  { n: "1", t: "Gancho falado (0–3s)", d: "Make or break. Uma opinião forte, uma dor, ou algo que corta o scroll. Não é só o que dizes — é como o dizes." },
+  { n: "2", t: "Uma ideia só", d: "Um yap, um ponto. Se tens três ideias, tens três vídeos. A dispersão mata a retenção." },
+  { n: "3", t: "História ou exemplo", d: "Dá carne à ideia: um caso, um \"no outro dia…\". É aqui que se cria a ligação." },
+  { n: "4", t: "A tua opinião / a virada", d: "O teu ângulo, o que ninguém está a dizer. É isto que te dá autoridade." },
+  { n: "5", t: "Convite (CTA)", d: "Leve, não agressivo. Um pedido claro, um só: \"segue para a parte 2\", \"guarda isto\"." },
+];
+const YAP_OURO = [
+  "Olha para a lente, não para ti no ecrã — é assim que crias contacto visual.",
+  "Energia um pouco acima do teu normal — a câmara \"come\" energia.",
+  "Cadência e pausas fazem metade do trabalho. Não corras.",
+  "Publica antes de estares pronta — o cringe desaparece com a prática.",
+];
+const YAP_ERROS = [
+  "Ler um guião (ouve-se logo e mata a naturalidade).",
+  "Enrolar nos primeiros segundos sem gancho.",
+  "Meter ideias a mais.",
+  "Energia morta ou monótona.",
+  "Desistir aos 5 vídeos porque \"ninguém viu\".",
+];
+
+function YapTeoria() {
+  return (
+    <div className="space-y-5">
+      <div>
+        <p className="text-[10px] tracking-[0.14em] uppercase text-ink/45 mb-1.5">O que é</p>
+        <p className="text-sm text-ink/75 leading-relaxed">
+          Yap é falar. Pegas no telemóvel, olhas para a lente como quem olha para uma amiga, e despejas uma ideia
+          com convicção — sem guião decorado, sem produção. Funciona porque as pessoas não seguem edições,
+          <b> seguem pessoas</b>. Quando falas solto, a tua cadência e a tua energia constroem confiança em segundos.
+        </p>
+      </div>
+
+      <div>
+        <p className="text-[10px] tracking-[0.14em] uppercase text-ink/45 mb-2.5">Os 5 ingredientes de um bom yap (≈60s)</p>
+        <div className="space-y-2">
+          {YAP_INGREDIENTES.map((i) => (
+            <div key={i.n} className="flex gap-3 rounded-xl border border-border bg-cream-warm/25 p-3">
+              <span className="w-6 h-6 rounded-full bg-[#2E7CB8]/12 text-[#2E7CB8] text-[12px] font-bold flex items-center justify-center shrink-0">{i.n}</span>
+              <div>
+                <p className="text-[13.5px] font-semibold text-ink">{i.t}</p>
+                <p className="text-[12.5px] text-ink/60 leading-relaxed">{i.d}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid sm:grid-cols-2 gap-3">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50/50 p-3.5">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-emerald-700 mb-2">Regras de ouro</p>
+          <ul className="space-y-1.5">
+            {YAP_OURO.map((r) => (
+              <li key={r} className="flex gap-2 text-[12.5px] text-ink/70 leading-relaxed">
+                <Check size={14} className="text-emerald-600 shrink-0 mt-0.5" /> {r}
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="rounded-xl border border-rose-200 bg-rose-50/50 p-3.5">
+          <p className="text-[11px] font-bold uppercase tracking-wider text-rose-600 mb-2">Erros a evitar</p>
+          <ul className="space-y-1.5">
+            {YAP_ERROS.map((r) => (
+              <li key={r} className="flex gap-2 text-[12.5px] text-ink/70 leading-relaxed">
+                <XIcon size={14} className="text-rose-500 shrink-0 mt-0.5" /> {r}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      <p className="text-[12.5px] text-ink/55 italic">
+        Equipamento não é desculpa — um telemóvel e um mini-micro chegam. Volume acima de perfeição.
+      </p>
+    </div>
+  );
+}
 
 function ExemplosGrid({ bg }: { bg: string }) {
   return (
@@ -226,6 +305,9 @@ export default function FormatosConteudo() {
                 <p className="text-[10px] tracking-[0.14em] uppercase text-ink/45 mb-2">Vídeo · a Cátia explica</p>
                 <VideoPlaceholder label={`Vídeo — ${f.nome} (substitua pelo embed quando gravar)`} />
               </div>
+
+              {/* Teoria do Yap Content (só neste formato) */}
+              {f.id === "roteiros" && <YapTeoria />}
 
               {/* Como funciona */}
               <div>

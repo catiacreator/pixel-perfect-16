@@ -35,7 +35,7 @@ export const ESTRUTURA: Nodo[] = [
         to: "/metodo/pilar-2/redes-sociais?aba=formatos",
         filhos: [
           { id: "redes.formatos.reels-serie", label: "Cria a tua série", tipo: "subpagina", to: "/metodo/pilar-2/reels-em-serie" },
-          { id: "redes.formatos.roteiros", label: "Roteiros simples", tipo: "subpagina", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=roteiros" },
+          { id: "redes.formatos.roteiros", label: "Yap Content", tipo: "subpagina", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=roteiros" },
           { id: "redes.formatos.reels", label: "Reels virais", tipo: "subpagina", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=reels" },
           { id: "redes.formatos.carrossel", label: "Carrosséis que vendem", tipo: "subpagina", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=carrossel" },
           { id: "redes.formatos.stories", label: "Stories que vendem", tipo: "subpagina", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=stories" },

@@ -20,7 +20,7 @@ const PONTOS_POR_POST = 15;
 type Post = { id: string; tipo: string; titulo: string; conteudo: string; link: string; data: string; hora: string; pubId?: string };
 
 const FONTES = [
-  { id: "roteiros-simples", label: "Roteiros simples", cor: "#2E7CB8", multi: true },
+  { id: "roteiros-simples", label: "Yap Content", cor: "#2E7CB8", multi: true },
   { id: "reels-virais", label: "Reels virais", cor: "#C8487E", multi: true },
   { id: "stories", label: "Stories", cor: "#F0A766", multi: false },
   { id: "carrosseis", label: "Carrosséis", cor: "#9E7FEC", multi: false },

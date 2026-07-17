@@ -172,7 +172,7 @@ const PILARES: Record<string | number, PilarDef> = {
         num: 3, id: "redes.formatos", label: "Formatos de Conteúdo", to: "/metodo/pilar-2/reels-em-serie", icon: Book,
         children: [
           { label: "↳ Cria a tua série", to: "/metodo/pilar-2/reels-em-serie", id: "redes.formatos.reels-serie" },
-          { label: "↳ Roteiros simples", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=roteiros", id: "redes.formatos.roteiros" },
+          { label: "↳ Yap Content", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=roteiros", id: "redes.formatos.roteiros" },
           { label: "↳ Reels virais", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=reels", id: "redes.formatos.reels" },
           { label: "↳ Carrosséis que vendem", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=carrossel", id: "redes.formatos.carrossel" },
           { label: "↳ Stories que vendem", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=stories", id: "redes.formatos.stories" },
