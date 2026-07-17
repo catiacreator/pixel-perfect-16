@@ -19,8 +19,8 @@ import {
   Check,
   Loader2,
   Wand2,
-  Play,
 } from "lucide-react";
+import VideoPlaceholder from "../components/VideoPlaceholder";
 import { Link } from "@/lib/router-compat";
 import { useRouter } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
@@ -399,14 +399,52 @@ export default function DocMestre() {
           </div>
         </div>
 
-        {/* Vídeo */}
-        <div className="print:hidden mb-6 rounded-2xl overflow-hidden border border-border bg-ink/90 aspect-video flex items-center justify-center text-cream">
-          <div className="text-center">
-            <div className="w-14 h-14 rounded-full bg-cream/15 flex items-center justify-center mx-auto mb-2">
-              <Play size={20} className="ml-0.5" />
-            </div>
-            <p className="text-sm opacity-80">Vídeo de explicação (3 min)</p>
+        {/* Como funciona — explicação para quem chega à página */}
+        <div className="print:hidden mb-6 rounded-3xl border border-border bg-white p-6 md:p-7">
+          <div className="flex items-center gap-2 mb-4">
+            <Sparkles size={18} className="text-terracotta" />
+            <h2 className="font-serif text-xl text-ink">Como funciona o teu Documento Mestre</h2>
           </div>
+
+          <div className="grid md:grid-cols-3 gap-4 mb-5">
+            <div className="rounded-2xl bg-cream/60 border border-border p-4">
+              <p className="text-xs font-bold uppercase tracking-wider text-terracotta mb-1.5">Para que serve</p>
+              <p className="text-sm text-ink/70 leading-relaxed">
+                É o mapa central do teu projeto: quem serves, o que resolves, a tua voz e a tua oferta.
+                Preenches uma vez e passa a <strong>alimentar o resto da plataforma</strong> — os prompts de
+                conteúdo, a esteira de produtos e os teus posts nascem já com esta base.
+              </p>
+            </div>
+            <div className="rounded-2xl bg-cream/60 border border-border p-4">
+              <p className="text-xs font-bold uppercase tracking-wider text-terracotta mb-1.5">Como funciona</p>
+              <p className="text-sm text-ink/70 leading-relaxed">
+                Cada campo é uma peça do teu posicionamento. À medida que preenches, ganhas clareza — e o que
+                escreves fica <strong>guardado automaticamente</strong>. Podes voltar quando quiseres, editar e
+                completar aos poucos. Não tens de acertar tudo à primeira.
+              </p>
+            </div>
+            <div className="rounded-2xl bg-cream/60 border border-border p-4">
+              <p className="text-xs font-bold uppercase tracking-wider text-terracotta mb-1.5">Como preencher</p>
+              <p className="text-sm text-ink/70 leading-relaxed">
+                Responde com as tuas palavras, sem te preocupares com a forma. Se travares num campo, usa o
+                botão <strong>“Preencher com IA”</strong> — dás meia dúzia de pistas e a IA propõe um rascunho
+                que depois ajustas ao teu jeito.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-2.5 rounded-2xl bg-terracotta/[0.06] border border-terracotta/20 px-4 py-3">
+            <Check size={16} className="text-terracotta shrink-0 mt-0.5" />
+            <p className="text-[13px] text-ink/70 leading-relaxed">
+              <strong>Dica:</strong> não precisas de preencher tudo de uma vez. Começa pelos campos que já
+              tens claros e volta aos outros mais tarde — o teu progresso fica sempre salvo.
+            </p>
+          </div>
+        </div>
+
+        {/* Espaço reservado do vídeo de explicação — só a Cátia (admin) o vê */}
+        <div className="print:hidden mb-6">
+          <VideoPlaceholder label="Espaço reservado — vídeo de explicação do Documento Mestre (3 min). Substitui pelo embed quando gravares." />
         </div>
 
         {/* Ações — abaixo do vídeo */}
