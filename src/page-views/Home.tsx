@@ -7,6 +7,7 @@ import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, 
 const WHATSAPP_CATIA = "https://wa.link/jwr3yp";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
 import { useBloqueios } from "@/lib/bloqueios";
+import { useAccess } from "@/lib/use-access";
 
 // Porta de entrada: dois produtos independentes.
 const PRODUTOS = [
@@ -121,6 +122,7 @@ const MENTORIA = ["encontros"];
 export default function Home() {
   const bloqueado = useBloqueadoParaAlunos();
   const { isBloqueado, modoBloqueio } = useBloqueios();
+  const { signedIn, loading: authLoading } = useAccess();
   // Cards "soAdmin" só aparecem para o admin (em vista de admin) — invisíveis para todos os outros.
   const visivel = (p: (typeof PRODUTOS)[number]) => !(p as { soAdmin?: boolean }).soAdmin || !bloqueado;
   const [desbloquearOpen, setDesbloquearOpen] = useState(false);
@@ -234,6 +236,63 @@ export default function Home() {
       </Wrapper>
     );
   };
+
+  // Enquanto ainda não se sabe se há sessão, mostra um spinner (não pisca login
+  // nem cards). Assim que se confirma o login, os cards aparecem logo — sem
+  // esperar pela verificação de admin.
+  if (!signedIn && authLoading) {
+    return (
+      <Layout>
+        <div className="min-h-[70vh] flex items-center justify-center">
+          <div className="w-8 h-8 rounded-full border-2 border-terracotta/30 border-t-terracotta animate-spin" />
+        </div>
+      </Layout>
+    );
+  }
+
+  // Sem login → não mostra cards; mostra uma porta de entrada com botão de login.
+  if (!signedIn) {
+    return (
+      <Layout>
+        <section className="relative px-4 md:px-10 pt-6 pb-16">
+          <div
+            className="relative max-w-[1100px] mx-auto overflow-hidden rounded-[28px] md:rounded-[40px] text-center"
+            style={{ background: "radial-gradient(130% 130% at 82% 16%, #F0A766 0%, #C8487E 55%, #2E7CB8 100%)" }}
+          >
+            <div
+              className="pointer-events-none absolute inset-0 opacity-[0.08]"
+              style={{ backgroundImage: "radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)", backgroundSize: "24px 24px" }}
+            />
+            <div className="relative px-6 md:px-12 py-16 md:py-24 flex flex-col items-center">
+              <span className="inline-flex items-center gap-2 text-[11px] tracking-[0.3em] uppercase text-white/80 mb-5">
+                <span className="w-2 h-2 rounded-full bg-white/90" /> Leveza no Digital
+              </span>
+              <h1 className="font-serif text-3xl md:text-5xl text-white leading-tight max-w-2xl">
+                O teu ambiente de evolução com IA
+              </h1>
+              <p className="text-white/85 text-base md:text-lg mt-4 max-w-xl">
+                Entra na tua conta para acederes à mentoria, aos mini-cursos e às ferramentas.
+              </p>
+              <Link
+                to="/auth"
+                className="mt-8 inline-flex items-center gap-2 rounded-full bg-white text-ink px-7 py-3.5 text-sm md:text-base font-semibold shadow-lg hover:bg-white/90 transition-colors"
+              >
+                <Lock size={17} /> Entrar
+              </Link>
+              <a
+                href={WHATSAPP_CATIA}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-5 text-[13px] text-white/75 hover:text-white underline underline-offset-2"
+              >
+                Ainda não tens acesso? Fala com a Cátia
+              </a>
+            </div>
+          </div>
+        </section>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
