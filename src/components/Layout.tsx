@@ -12,7 +12,6 @@ import ModulePaywall from "@/components/ModulePaywall";
 import PreviewTurmaModal from "@/components/PreviewTurmaModal";
 import EmManutencao from "@/components/EmManutencao";
 import MarcarEtapa from "@/components/MarcarEtapa";
-import CatIaTopButton from "@/components/CatIaTopButton";
 import NIaTopButton from "@/components/NIaTopButton";
 import { useAccess } from "@/lib/use-access";
 import { useAdminView, setAdminView, abrirPreviewTurma, setPreviewTurma, useBloqueadoParaAlunos } from "@/lib/admin-view";
@@ -203,7 +202,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {/* Direita */}
           <div className="flex items-center gap-2 justify-end">
             {signedIn && <NIaTopButton />}
-            {signedIn && <CatIaTopButton />}
             {signedIn && (
               soMiniCurso ? (
                 <span
