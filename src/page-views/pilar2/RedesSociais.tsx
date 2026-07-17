@@ -23,7 +23,7 @@ import { getFerramentaCodigo, setFerramentaCodigo } from "@/lib/admin.functions"
 import EmManutencao from "@/components/EmManutencao";
 
 const AGENTE_POR_FORMATO: Record<string, string> = {
-  roteiros: "cat.ia — Yap Content",
+  roteiros: "ChatGPT",
   reels: "cat.ia — Criação de Reels Virais",
   stories: "cat.ia — Criação de Stories que Vendem",
   carrossel: "cat.ia — Criação de Posts que Vendem (Carrossel)",
