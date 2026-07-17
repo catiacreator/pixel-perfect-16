@@ -12,6 +12,36 @@ import { useEffect, type ReactNode } from "react";
 import AppToaster from "@/components/AppToaster";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { supabase } from "@/integrations/supabase/client";
+
+// O link de "repor palavra-passe" traz uma sessão de recuperação. Se o
+// redirect_to não estiver na lista permitida do Supabase, ele cai no Site URL
+// (a página inicial) e a pessoa fica só com login feito, sem chegar ao ecrã de
+// definir a nova palavra-passe. Isto apanha esse caso em QUALQUER página e
+// encaminha para /reset-password.
+function RecoveryRedirect() {
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const jaEstaNaPagina = () => window.location.pathname.startsWith("/reset-password");
+
+    // 1) Evento oficial do Supabase (funciona mesmo que o endereço já tenha sido limpo).
+    const { data: sub } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY" && !jaEstaNaPagina()) {
+        window.location.replace("/reset-password");
+      }
+    });
+
+    // 2) Rede de segurança: tokens de recuperação ainda no endereço.
+    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+    const query = new URLSearchParams(window.location.search);
+    if ((hash.get("type") === "recovery" || query.get("type") === "recovery") && !jaEstaNaPagina()) {
+      window.location.replace(`/reset-password${window.location.search}${window.location.hash}`);
+    }
+
+    return () => sub.subscription.unsubscribe();
+  }, []);
+  return null;
+}
 
 function NotFoundComponent() {
   return (
@@ -129,6 +159,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <RecoveryRedirect />
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
       <AppToaster />
