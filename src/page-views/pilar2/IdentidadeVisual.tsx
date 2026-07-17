@@ -7,7 +7,7 @@ import PromptCard from "../../components/PromptCard";
 import SaveBar from "../../components/SaveBar";
 import { ArrowRight, ExternalLink, Wand2, Printer, Copy, Check } from "lucide-react";
 import { usePilar2 } from "@/lib/pilar2-hooks";
-import { PROMPT_IDENTIDADE_VISUAL } from "@/data/prompts/pilar2-tom-visual";
+import { PROMPT_IDENTIDADE_VISUAL, PROMPT_IDENTIDADE_VISUAL_EXISTENTE } from "@/data/prompts/pilar2-tom-visual";
 import { parseIdentidadeVisual } from "@/lib/pilar2-parsers";
 
 function Area({
@@ -192,8 +192,15 @@ export default function IdentidadeVisual() {
         <PromptCard
           numero={5}
           titulo="Análise de identidade visual"
-          descricao="Gera vibe, paleta, tipografia, estilo, elementos e 3 prompts de imagem."
+          descricao="Ainda não tens? Cria do zero — gera vibe, paleta, tipografia, estilo, elementos e 3 prompts de imagem."
           prompt={PROMPT_IDENTIDADE_VISUAL}
+        />
+
+        <PromptCard
+          titulo="Já tenho a minha identidade visual"
+          descricao="Anexa no ChatGPT o que já tens (prints do feed, posts, brand book, logótipo, paleta) e ele devolve o kit completo pronto a colar aqui."
+          prompt={PROMPT_IDENTIDADE_VISUAL_EXISTENTE}
+          rotuloBotao="Copiar prompt (já tenho)"
         />
 
         <div className="rounded-2xl border border-border bg-white p-5 mb-6">
