@@ -1,6 +1,6 @@
 // Links dos GPTs (agentes Cat.IA) no ChatGPT, por nome do agente.
 export const AGENTE_URL: Record<string, string> = {
-  "cat.ia — Criação de Roteiros Simples":
+  "cat.ia — Yap Content":
     "https://chatgpt.com/g/g-6a4b7ac6e15c8191a9e2fe408d6c52c9-cat-ia-criacao-de-roteiros-simples",
   "cat.ia — Criação de Reels Virais":
     "https://chatgpt.com/g/g-6a4b7b87e8a481918f6cc14082d0f597-cat-ia-criacao-de-reels-virais",

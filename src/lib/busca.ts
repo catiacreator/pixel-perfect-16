@@ -33,7 +33,7 @@ const SINONIMOS: Record<string, string> = {
   "redes.formatos.carrossel": "carrossel slides post",
   "redes.formatos.reels": "reels video viral",
   "redes.formatos.stories": "stories story",
-  "redes.formatos.roteiros": "guiao script gravar",
+  "redes.formatos.roteiros": "yap content falar camara autentico roteiro guiao script gravar",
   "redes.plano": "calendario agenda planeamento",
   "redes.desafio": "30 dias posts consistencia",
   "redes.assistente": "cat.ia robot chatgpt agente",

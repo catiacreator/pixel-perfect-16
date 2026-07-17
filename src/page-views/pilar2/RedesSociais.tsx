@@ -4,7 +4,7 @@ import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import VideoPlaceholder from "../../components/VideoPlaceholder";
 import ColarResultado from "../../components/ColarResultado";
-import { ArrowRight, ArrowUpRight, Smartphone, Copy, Check, ChevronDown, ClipboardPaste, Play, FileText, Eye, EyeOff, MessageSquare, Bot, Lock, Film, Sparkles, MessageCircle, LayoutGrid, AlignLeft, Zap, type LucideIcon } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Smartphone, Copy, Check, ChevronDown, ClipboardPaste, Play, FileText, Eye, EyeOff, MessageSquare, Bot, Lock, Mic, Sparkles, MessageCircle, LayoutGrid, AlignLeft, Zap, type LucideIcon } from "lucide-react";
 import { agenteUrl } from "@/lib/agentes-catia";
 import { fillPilar2Prompt } from "@/lib/pilar2-fill";
 import { usePilar2 } from "@/lib/pilar2-hooks";
@@ -23,7 +23,7 @@ import { getFerramentaCodigo, setFerramentaCodigo } from "@/lib/admin.functions"
 import EmManutencao from "@/components/EmManutencao";
 
 const AGENTE_POR_FORMATO: Record<string, string> = {
-  roteiros: "cat.ia — Criação de Roteiros Simples",
+  roteiros: "cat.ia — Yap Content",
   reels: "cat.ia — Criação de Reels Virais",
   stories: "cat.ia — Criação de Stories que Vendem",
   carrossel: "cat.ia — Criação de Posts que Vendem (Carrossel)",
@@ -31,7 +31,7 @@ const AGENTE_POR_FORMATO: Record<string, string> = {
 
 // Ícone + cor por formato — assinala o objetivo/função de cada card.
 const FORMATO_META: Record<string, { Icon: LucideIcon; cor: string }> = {
-  roteiros: { Icon: Film, cor: "#2E7CB8" },
+  roteiros: { Icon: Mic, cor: "#2E7CB8" },
   reels: { Icon: Sparkles, cor: "#C8487E" },
   stories: { Icon: MessageCircle, cor: "#F0A766" },
   carrossel: { Icon: LayoutGrid, cor: "#9E7FEC" },

@@ -66,16 +66,19 @@ const card = (id: string, titulo: string, descricao: string, tarefa: TarefaFn): 
   },
 });
 
-// ── cat.ia — Criação de Roteiros Simples ──
-const tRoteiros: TarefaFn = (cta) => `🎬 TAREFA — ROTEIRO SIMPLES (REELS ATÉ 30s)
-Crie 1 roteiro simples, fácil de gravar hoje, para um Reels de até 30 segundos.
-- Tema: escolha UMA das minhas dores/desejos acima (ou eu digo o tema).
-- Público e tom: use o meu contexto.
-Entregue:
-1. 3 OPÇÕES DE GANCHO (0–3s) — frases fortes que fazem parar o scroll
-2. DESENVOLVIMENTO CURTO — 3 a 4 falas diretas (o que digo/mostro)
-3. 1 CTA — ${cta}
-+ 1 linha de TEXTO NA TELA e 1 dica de gravação.
+// ── cat.ia — Yap Content ──
+const tYap: TarefaFn = (cta) => `🎤 TAREFA — YAP CONTENT (falar solto para a câmara, até 60s)
+Cria o ESQUELETO de um yap: um vídeo em que eu falo direto para a lente, sem ler. NÃO me dês um texto para decorar — dá-me pontos para falar em cima, na minha voz. Um yap precisa de um mapa para falar, não de um guião para ler.
+- Tema: escolhe UMA das minhas dores/desejos acima (ou eu digo o tema).
+- UM yap = UMA ideia só. Se aparecerem várias, guarda as outras para outros yaps.
+Entrega, por esta ordem:
+1. GANCHO FALADO (0–3s) — 2 a 3 opções de primeira frase, ditas em voz alta, que cortam o scroll: opinião forte, dor, ou frase que desarma. Sem "hoje vou falar sobre".
+2. A IDEIA CENTRAL — em UMA frase, o único ponto deste yap.
+3. HISTÓRIA / EXEMPLO — não escrevas a história; dá-me o gatilho para eu preencher com a minha: "conta aqui a tua experiência com ___" ou "o caso da cliente que ___".
+4. O ÂNGULO / A VIRADA — a minha opinião, o que ninguém está a dizer sobre isto (1 a 2 linhas de direção, não texto para ler).
+5. O CONVITE (CTA) — um só, leve: ${cta}.
++ 1 REGRA DE OURO para este yap (ex.: pausa depois do gancho, energia acima do normal, olhar para a lente e não para ti no ecrã).
+Lembra-te: volume acima de perfeição — o objetivo é gravar hoje, não fazer o vídeo perfeito.
 
 ${REGRAS}`;
 
@@ -135,7 +138,7 @@ Marque com ★ os 5 que melhor servem o objetivo acima. Cada gancho numa linha, 
 ${REGRAS}`;
 
 export const CRIAR_CONTEUDO: ConteudoCard[] = [
-  card("roteiros", "Roteiro simples (para gravar já)", "Um roteiro base — 3 ganchos, desenvolvimento curto e chamada — pronto a gravar em até 30s.", tRoteiros),
+  card("roteiros", "Yap Content", "O esqueleto de um yap para gravar já — gancho falado, uma ideia só, gatilho de história, o teu ângulo e o convite. Pontos para falar em cima, não texto para ler.", tYap),
   card("reels", "Reels virais", "Roteiro de até 40s com 4 ganchos, 2 desenvolvimentos e 'me segue aí' a meio — para reter e crescer.", tReels),
   card("carrossel", "Carrosséis que vendem", "Carrossel de 8 slides (autoridade + salvamentos + venda indireta), com legenda em PAS e hashtags.", tCarrossel),
   card("stories", "Stories que vendem", "Sequência de 5 a 7 Stories (dor → agitação → prova → objeção → CTA) + roteiro de Direct.", tStories),
