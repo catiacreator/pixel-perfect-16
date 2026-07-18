@@ -313,6 +313,281 @@ export const createMentorada = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+// ───────── Gestão de contas de alunos (só a dona) ─────────
+// IMPORTANTE: master_documents.user_id tem ON DELETE CASCADE. Apagar a conta
+// apaga o Documento Mestre NO MESMO INSTANTE, e um novo registo gera um id novo.
+// Por isso nunca se apaga uma conta a pensar que a pessoa "se regista outra vez
+// sem perder nada". Por ordem crescente de destruição:
+//   1. alterarEmailAluno      — corrige o email, mantém o id → não perde nada.
+//   2. transferirDadosAluno   — move tudo de uma conta antiga para uma nova.
+//   3. apagarMentoradaCompleto— apaga a conta e todos os vestígios.
+
+const CODIGO_ALUNO_KEY = "__codigo-aluno__";
+
+/** Lê o blob da dona e escreve-o de volta já transformado. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+async function atualizarOwnerBlob(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  supabaseAdmin: any,
+  transformar: (blob: Record<string, unknown>) => Record<string, unknown>,
+) {
+  const { uid, blob } = await readOwnerBlob(supabaseAdmin);
+  const { error } = await supabaseAdmin.from("master_documents").upsert(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    { user_id: uid, data: transformar(blob) as any, updated_at: new Date().toISOString() },
+    { onConflict: "user_id" },
+  );
+  if (error) throw error;
+}
+
+/**
+ * Aplica uma transformação a cada sítio do blob da dona que guarda ids de alunos:
+ * membros das turmas, permissões de agentes, mapa código→aluno e comentários.
+ */
+function mapearRefsDeAluno(
+  blob: Record<string, unknown>,
+  // Devolve o novo array de ids (permite remover ou substituir).
+  mapIds: (ids: string[]) => string[],
+  // Devolve o comentário transformado, ou null para o deitar fora.
+  mapComentario: (c: ComentarioBlob) => ComentarioBlob | null,
+  // Renomeia a chave do mapa código→aluno (ou devolve null para a remover).
+  renomear: (id: string) => string | null,
+): Record<string, unknown> {
+  const turmas = (Array.isArray(blob[TURMAS_KEY]) ? blob[TURMAS_KEY] : []) as {
+    membros?: string[];
+  }[];
+  const perms = { ...((blob[AGENTE_PERMS_KEY] as Record<string, AgentePerms>) ?? {}) };
+  for (const id of Object.keys(perms)) {
+    perms[id] = { ...perms[id], alunos: mapIds(perms[id]?.alunos ?? []) };
+  }
+  const codigos: Record<string, string> = {};
+  for (const [id, codigo] of Object.entries(
+    (blob[CODIGO_ALUNO_KEY] as Record<string, string>) ?? {},
+  )) {
+    const destino = renomear(id);
+    if (destino) codigos[destino] = codigo;
+  }
+  const coments = (Array.isArray(blob[COMENT_KEY]) ? blob[COMENT_KEY] : []) as ComentarioBlob[];
+  return {
+    ...blob,
+    [TURMAS_KEY]: turmas.map((t) => ({ ...t, membros: mapIds(t.membros ?? []) })),
+    [AGENTE_PERMS_KEY]: perms,
+    [CODIGO_ALUNO_KEY]: codigos,
+    [COMENT_KEY]: coments.map(mapComentario).filter(Boolean) as ComentarioBlob[],
+  };
+}
+
+/** Tira do blob da dona todas as referências a um aluno. */
+function limparRefsDoAluno(blob: Record<string, unknown>, userId: string) {
+  return mapearRefsDeAluno(
+    blob,
+    (ids) => ids.filter((i) => i !== userId),
+    (c) => (c.userId === userId ? null : c),
+    (id) => (id === userId ? null : id),
+  );
+}
+
+/** Substitui o id antigo pelo novo em todo o blob da dona. */
+function trocarIdNoBlob(blob: Record<string, unknown>, antigo: string, novo: string) {
+  const troca = (i: string) => (i === antigo ? novo : i);
+  return mapearRefsDeAluno(
+    blob,
+    (ids) => Array.from(new Set(ids.map(troca))),
+    // Os comentários mantêm-se, mas passam a pertencer à conta nova — senão
+    // ficariam órfãos assim que a conta antiga fosse apagada.
+    (c) => (c.userId === antigo ? { ...c, userId: novo } : c),
+    troca,
+  );
+}
+
+/** Impede mexer na conta da própria dona. */
+async function assertNaoEDona(supabaseAdmin: any, userId: string) {
+  const { data } = await supabaseAdmin.from("profiles").select("email").eq("id", userId).single();
+  const email = (data?.email ?? "").trim().toLowerCase();
+  if (OWNER_EMAILS.includes(email)) throw new Error("Não podes fazer isto à conta principal.");
+  return email;
+}
+
+// 1. Corrigir o email de quem se registou com o email errado. Mantém o MESMO id,
+//    por isso Documento Mestre, pontos, conquistas e turma ficam todos intactos.
+export const alterarEmailAluno = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { userId: string; email: string }) =>
+    z.object({ userId: z.string().uuid(), email: z.string().email() }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertOwner(context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const emailAntigo = await assertNaoEDona(supabaseAdmin, data.userId);
+    const emailNovo = data.email.trim().toLowerCase();
+
+    const { error } = await supabaseAdmin.auth.admin.updateUserById(data.userId, {
+      email: emailNovo,
+      email_confirm: true,
+    });
+    if (error) throw new Error(error.message);
+    await supabaseAdmin.from("profiles").update({ email: emailNovo }).eq("id", data.userId);
+
+    // As compras da Hotmart são indexadas por email. Fixa-as a este id antes que
+    // o email antigo deixe de corresponder, senão a aluna perde os módulos que comprou.
+    if (emailAntigo && emailAntigo !== emailNovo) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabaseAdmin as any)
+        .from("module_purchases")
+        .update({ user_id: data.userId })
+        .eq("email", emailAntigo)
+        .is("user_id", null);
+    }
+    return { ok: true, emailAntigo, emailNovo };
+  });
+
+// 2. A aluna voltou a registar-se (conta nova, id novo) e queremos devolver-lhe
+//    o que tinha. Move o Documento Mestre, pontos, conquistas, turma e código.
+//    O que a conta antiga tem ganha, porque a nova está vazia.
+export const transferirDadosAluno = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { origemUserId: string; destinoEmail: string; apagarOrigem?: boolean }) =>
+    z
+      .object({
+        origemUserId: z.string().uuid(),
+        destinoEmail: z.string().email(),
+        apagarOrigem: z.boolean().optional(),
+      })
+      .parse(d),
+  )
+  .handler(async ({ context, data: entrada }) => {
+    await assertOwner(context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    // A dona sabe o email da conta nova, não o id interno — resolve-se aqui.
+    const destinoEmail = entrada.destinoEmail.trim().toLowerCase();
+    const { data: contaNova } = await supabaseAdmin
+      .from("profiles")
+      .select("id")
+      .eq("email", destinoEmail)
+      .maybeSingle();
+    if (!contaNova?.id) {
+      throw new Error(`Não existe nenhuma conta com o email ${destinoEmail}. A pessoa já se registou?`);
+    }
+    const data = {
+      origemUserId: entrada.origemUserId,
+      destinoUserId: contaNova.id as string,
+      apagarOrigem: entrada.apagarOrigem,
+    };
+    if (data.origemUserId === data.destinoUserId) throw new Error("As contas são a mesma.");
+    await assertNaoEDona(supabaseAdmin, data.origemUserId);
+    await assertNaoEDona(supabaseAdmin, data.destinoUserId);
+
+    // Documento Mestre: a origem sobrepõe-se, mas preserva o que a nova já tenha.
+    const { data: origem } = await supabaseAdmin
+      .from("master_documents")
+      .select("data")
+      .eq("user_id", data.origemUserId)
+      .maybeSingle();
+    const { data: destino } = await supabaseAdmin
+      .from("master_documents")
+      .select("data")
+      .eq("user_id", data.destinoUserId)
+      .maybeSingle();
+    const fundido = {
+      ...((destino?.data as Record<string, unknown>) ?? {}),
+      ...((origem?.data as Record<string, unknown>) ?? {}),
+    };
+    const { error: errDoc } = await supabaseAdmin.from("master_documents").upsert(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      { user_id: data.destinoUserId, data: fundido as any, updated_at: new Date().toISOString() },
+      { onConflict: "user_id" },
+    );
+    if (errDoc) throw errDoc;
+
+    // Pontos e tier viajam com a pessoa.
+    const { data: perfilOrigem } = await supabaseAdmin
+      .from("profiles")
+      .select("tier, pontos, sequencia")
+      .eq("id", data.origemUserId)
+      .maybeSingle();
+    if (perfilOrigem) {
+      await supabaseAdmin
+        .from("profiles")
+        .update({
+          tier: perfilOrigem.tier,
+          pontos: perfilOrigem.pontos,
+          sequencia: perfilOrigem.sequencia,
+        })
+        .eq("id", data.destinoUserId);
+    }
+
+    // Histórico de pontos e conquistas. As conquistas podem colidir (unique
+    // user_id+conquista_id), por isso ignoram-se as que a conta nova já tenha.
+    await supabaseAdmin
+      .from("pontos_log")
+      .update({ user_id: data.destinoUserId })
+      .eq("user_id", data.origemUserId);
+    const { data: conquistas } = await supabaseAdmin
+      .from("mentorada_conquistas")
+      .select("conquista_id")
+      .eq("user_id", data.origemUserId);
+    for (const c of conquistas ?? []) {
+      await supabaseAdmin
+        .from("mentorada_conquistas")
+        .upsert(
+          { user_id: data.destinoUserId, conquista_id: c.conquista_id },
+          { onConflict: "user_id,conquista_id", ignoreDuplicates: true },
+        );
+    }
+
+    // Compras por email seguem o email da conta nova.
+    const { data: perfilDestino } = await supabaseAdmin
+      .from("profiles")
+      .select("email")
+      .eq("id", data.destinoUserId)
+      .maybeSingle();
+    if (perfilDestino?.email) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabaseAdmin as any)
+        .from("module_purchases")
+        .update({ user_id: data.destinoUserId })
+        .eq("email", perfilDestino.email);
+    }
+
+    // Turma, código e permissões de agentes passam a apontar para o id novo.
+    await atualizarOwnerBlob(supabaseAdmin, (blob) =>
+      trocarIdNoBlob(blob, data.origemUserId, data.destinoUserId),
+    );
+
+    if (data.apagarOrigem) {
+      const { error } = await supabaseAdmin.auth.admin.deleteUser(data.origemUserId);
+      if (error) throw new Error(error.message);
+    }
+    return { ok: true, origemApagada: !!data.apagarOrigem };
+  });
+
+// 3. Apagar mesmo tudo. O CASCADE trata das tabelas com chave estrangeira
+//    (profiles, master_documents, user_roles, pontos_log, mentorada_conquistas),
+//    mas o blob da dona e as compras por email ficariam para trás — e as compras
+//    devolviam acesso sozinhas se a pessoa se voltasse a registar com o mesmo email.
+export const apagarMentoradaCompleto = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: { userId: string; apagarCompras?: boolean }) =>
+    z.object({ userId: z.string().uuid(), apagarCompras: z.boolean().optional() }).parse(d),
+  )
+  .handler(async ({ context, data }) => {
+    await assertOwner(context.userId);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const email = await assertNaoEDona(supabaseAdmin, data.userId);
+
+    // Limpar as referências ANTES de apagar a conta: depois do delete já não
+    // há forma de saber o email para as compras.
+    await atualizarOwnerBlob(supabaseAdmin, (blob) => limparRefsDoAluno(blob, data.userId));
+    if (data.apagarCompras && email) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (supabaseAdmin as any).from("module_purchases").delete().eq("email", email);
+    }
+    const { error } = await supabaseAdmin.auth.admin.deleteUser(data.userId);
+    if (error) throw new Error(error.message);
+    return { ok: true, email, comprasApagadas: !!data.apagarCompras };
+  });
+
 // Atribuir papel (só a dona): admin | moderator | user. Substitui os papéis existentes.
 export const setUserRole = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
