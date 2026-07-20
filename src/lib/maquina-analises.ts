@@ -6,6 +6,8 @@
 // copiar nada à mão — cola uma vez e a plataforma preenche.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import type { DocState } from "./doc-mestre";
+
 export type Oferta = { desc: string; preco: string; link: string; /** veio do prompt */ auto?: boolean };
 
 export type FormAnalise = {
@@ -157,6 +159,63 @@ Tira os temas do calendário do Documento 1. Escreve, prontos a gravar:
 - Legenda completa + CTA
 
 Escreve na voz da pessoa, tal como aparece nos screenshots. Nada de texto de exemplo: isto é para ela publicar tal e qual.`;
+}
+
+// ─── Documento Mestre como fonte ─────────────────────────────────────────────
+// Quem já preencheu o Documento Mestre não tem de repetir o público, as dores
+// nem os produtos: sai tudo de lá. Só fica a faltar o que é próprio desta
+// análise — os screenshots e os objetivos do mês.
+//
+// Nota: o faturamento fica de fora de propósito. Não entra em nenhum dos dois
+// documentos que o prompt produz, e este texto vai ser colado num chat externo.
+
+export type FonteAnalise = "doc" | "zero";
+
+export type DadosDoDoc = {
+  /** Campos do passo dos objetivos já preenchidos. */
+  campos: Partial<FormAnalise>;
+  /** Bloco "DADOS DESTA CONTA" do prompt final. */
+  dados: string;
+  /** false = Documento Mestre ainda vazio, não vale a pena oferecer. */
+  temConteudo: boolean;
+};
+
+export function docMestreParaAnalise(d: DocState): DadosDoDoc {
+  const dores = d.dores.filter((x) => x.trim());
+  const desejos = d.desejos.filter((x) => x.trim());
+  const produtos = d.produtos.filter((p) => p.nome.trim() || p.descricao.trim());
+
+  const ofertas: Oferta[] = produtos.map((p) => ({
+    desc: [p.nome.trim(), p.descricao.trim()].filter(Boolean).join(" — "),
+    preco: p.ticketMedio.trim(),
+    link: "",
+    auto: true,
+  }));
+
+  const campos: Partial<FormAnalise> = {};
+  if (ofertas.length) campos.ofertas = ofertas;
+  if (d.publico.trim()) campos.avatar = d.publico.trim();
+  if (dores.length) campos.dor = dores[0];
+
+  const dados = [
+    d.nome.trim() && `- Nome: ${d.nome.trim()}`,
+    d.profissao.trim() && `- Profissão: ${d.profissao.trim()}`,
+    d.tempoAtuacao.trim() && `- Tempo de atuação: ${d.tempoAtuacao.trim()}`,
+    d.localizacao.trim() && `- Localização: ${d.localizacao.trim()}`,
+    d.oQueFaz.trim() && `- O que faz: ${d.oQueFaz.trim()}`,
+    d.comoResolve.trim() && `- Como resolve: ${d.comoResolve.trim()}`,
+    d.publico.trim() && `- Público-alvo: ${d.publico.trim()}`,
+    dores.length && `- Dores do público: ${dores.join(" | ")}`,
+    desejos.length && `- Desejos do público: ${desejos.join(" | ")}`,
+    ...ofertas.map((o) => `- Vende: ${o.desc}${o.preco ? ` | ${o.preco}` : ""}`),
+    d.tomDeVoz.trim() && `- Tom de voz: ${d.tomDeVoz.trim()}`,
+    (d.horasDia.trim() || d.diasSemana.trim()) &&
+      `- Disponibilidade para conteúdo: ${[d.horasDia.trim() && `${d.horasDia.trim()} por dia`, d.diasSemana.trim() && `${d.diasSemana.trim()} dias por semana`].filter(Boolean).join(", ")}`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+
+  return { campos, dados, temConteudo: !!dados };
 }
 
 /** Apanha "Etiqueta: valor" em qualquer linha (com ou sem hífen à frente). */

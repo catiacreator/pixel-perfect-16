@@ -28,6 +28,7 @@ export const ESTRUTURA: Nodo[] = [
     filhos: [
       { id: "redes.boas-vindas", label: "Boas-vindas", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas" },
       { id: "redes.bio", label: "Posicionamento e Bio", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=bio" },
+      { id: "maquina-analises", label: "Máquina de Análises", tipo: "pagina", to: "/maquina-analises" },
       {
         id: "redes.formatos",
         label: "Formatos de Conteúdo",
@@ -218,15 +219,6 @@ export const ESTRUTURA: Nodo[] = [
     to: "/vendas-apps",
     filhos: [
       { id: "vendas-apps.intro", label: "Introdução", tipo: "pagina", to: "/vendas-apps" },
-    ],
-  },
-  {
-    id: "maquina-analises",
-    label: "Máquina de Análises",
-    tipo: "modulo",
-    to: "/maquina-analises",
-    filhos: [
-      { id: "maquina-analises.intro", label: "Introdução", tipo: "pagina", to: "/maquina-analises" },
     ],
   },
 ];

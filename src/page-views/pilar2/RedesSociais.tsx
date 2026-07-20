@@ -14,6 +14,7 @@ import AgenteCatIa from "../../components/AgenteCatIa";
 import BoasVindasInstagram from "../../components/BoasVindasInstagram";
 import PlanoConteudo from "../../components/PlanoConteudo";
 import FormatosConteudo from "../../components/FormatosConteudo";
+import PlanoLeveza from "../../components/PlanoLeveza";
 import Desafio30Dias from "../../components/Desafio30Dias";
 import { CRIAR_CONTEUDO, type Objetivo } from "@/data/criar-conteudo";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
@@ -523,6 +524,7 @@ export default function RedesSociais() {
   const avisoAdminEmBreve = aba !== "assistente" && !bloqueadoParaAlunos && isBloqueado(guardId);
   const [formato, setFormato] = useState<"reels" | "estatico" | null>(null);
   const [objetivo, setObjetivo] = useState<Objetivo>("autoridade");
+  const [subCriar, setSubCriar] = useState<"prompts" | "plano-leveza">("prompts");
 
   // ─── Calendário Editorial ───
   const [cal, setCal] = useState<DiaCal[]>(emptyCal);
@@ -685,6 +687,30 @@ export default function RedesSociais() {
         {aba === "plano" && <PlanoConteudo />}
 
         {aba === "criar" && (
+          <>
+            {/* Duas formas de criar: peça a peça (prompts) ou o plano inteiro de uma vez. */}
+            <div className="flex gap-1.5 mb-6 p-1 rounded-full bg-ink/5 w-fit">
+              {([
+                { id: "prompts", label: "Prompts prontos" },
+                { id: "plano-leveza", label: "Plano Leveza" },
+              ] as const).map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => setSubCriar(t.id)}
+                  className={`px-4 py-2 rounded-full text-[13px] font-semibold transition-colors ${
+                    subCriar === t.id ? "bg-white text-ink shadow-sm" : "text-ink/55 hover:text-ink"
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </>
+        )}
+
+        {aba === "criar" && subCriar === "plano-leveza" && <PlanoLeveza />}
+
+        {aba === "criar" && subCriar === "prompts" && (
           <>
             <div className="rounded-2xl border border-terracotta/25 bg-terracotta/5 p-5 mb-6">
               <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">Criar Conteúdo · Prompts prontos</p>

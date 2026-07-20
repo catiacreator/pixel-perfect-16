@@ -5,8 +5,10 @@ import { LineChart, Check, RotateCcw, Wand2, Plus, X, ArrowRight, ArrowLeft } fr
 import { PROMPT_EXTRAIR_PERFIL } from "@/data/prompts/maquina-analises";
 import {
   FORM_VAZIO, OBJETIVOS, lerDadosPerfil, loadAnalise, saveAnalise, montarPromptAnalise,
-  type FormAnalise, type Oferta,
+  docMestreParaAnalise,
+  type FormAnalise, type Oferta, type FonteAnalise,
 } from "@/lib/maquina-analises";
+import { loadInitial as loadDocMestre } from "@/lib/doc-mestre";
 
 const COR = "#C13584";
 const CARTOES = [
@@ -16,7 +18,19 @@ const CARTOES = [
 ] as const;
 type CartaoKey = (typeof CARTOES)[number]["key"];
 
-const PASSOS = ["Screenshots", "Dados do perfil", "Objetivos", "Resultado"];
+// Os passos dependem da fonte. Quem usa o Documento Mestre salta a extração:
+// o público, as dores e os produtos já estão preenchidos.
+const PASSOS_ZERO = [
+  { n: 1, nome: "Screenshots" },
+  { n: 2, nome: "Dados do perfil" },
+  { n: 3, nome: "Objetivos" },
+  { n: 4, nome: "Resultado" },
+];
+const PASSOS_DOC = [
+  { n: 1, nome: "Screenshots" },
+  { n: 3, nome: "Objetivos" },
+  { n: 4, nome: "Resultado" },
+];
 
 function Campo({ label, ajuda, children }: { label: string; ajuda?: string; children: React.ReactNode }) {
   return (
@@ -34,6 +48,8 @@ const inputCls =
 
 export default function MaquinaAnalises() {
   const [passo, setPasso] = useState(1);
+  const [fonte, setFonte] = useState<FonteAnalise | null>(null);
+  const [docTemConteudo, setDocTemConteudo] = useState(false);
   const [imagens, setImagens] = useState<Record<CartaoKey, string[]>>({ bio: [], feed: [], reels: [] });
   const [saida, setSaida] = useState("");
   const [form, setForm] = useState<FormAnalise>(FORM_VAZIO);
@@ -42,11 +58,16 @@ export default function MaquinaAnalises() {
   const alvo = useRef<CartaoKey | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
+  const PASSOS = fonte === "doc" ? PASSOS_DOC : PASSOS_ZERO;
+  // Para onde ir a partir dos screenshots e para onde voltar dos objetivos.
+  const depoisDosScreenshots = fonte === "doc" ? 3 : 2;
+
   // Recupera o que estava a meio (as imagens não dá — são só desta sessão).
   useEffect(() => {
     const e = loadAnalise();
     setSaida(e.saida);
     setForm(e.form);
+    setDocTemConteudo(docMestreParaAnalise(loadDocMestre()).temConteudo);
   }, []);
   useEffect(() => { saveAnalise({ saida, form }); }, [saida, form]);
 
@@ -92,12 +113,29 @@ export default function MaquinaAnalises() {
     setPasso(4);
   };
 
+  // Puxa o Documento Mestre: preenche os campos e serve de "dados desta conta"
+  // no prompt final, no lugar da extração que se saltou.
+  const usarDocMestre = () => {
+    const { campos, dados } = docMestreParaAnalise(loadDocMestre());
+    setForm((f) => ({ ...f, ...campos }));
+    setSaida(dados);
+    setPreencheu(true);
+    setFonte("doc");
+    setPasso(1);
+  };
+
+  const comecarDoZero = () => {
+    setFonte("zero");
+    setPasso(1);
+  };
+
   const recomecar = () => {
     Object.values(imagens).flat().forEach((u) => URL.revokeObjectURL(u));
     setImagens({ bio: [], feed: [], reels: [] });
     setSaida("");
     setForm(FORM_VAZIO);
     setPreencheu(false);
+    setFonte(null);
     setPasso(1);
   };
 
@@ -116,32 +154,74 @@ export default function MaquinaAnalises() {
           </div>
         </div>
 
-        {/* Passos */}
-        <div className="flex items-center gap-1.5 my-6 flex-wrap">
-          {PASSOS.map((p, i) => {
-            const n = i + 1;
-            const feito = passo > n;
-            const atual = passo === n;
-            return (
-              <div key={p} className="flex items-center gap-2 flex-1 min-w-[130px]">
-                <span className="w-7 h-7 rounded-full text-[12px] font-bold flex items-center justify-center shrink-0 transition-all"
-                  style={
-                    atual ? { background: COR, color: "#fff", boxShadow: `0 0 0 4px ${COR}22` }
-                    : feito ? { background: "#833AB4", color: "#fff" }
-                    : { background: "var(--color-border)", color: "#9a9a9f" }
-                  }>
-                  {feito ? <Check size={13} /> : n}
-                </span>
-                <span className={`text-[12.5px] font-semibold ${atual || feito ? "text-ink" : "text-ink/40"}`}>{p}</span>
-              </div>
-            );
-          })}
-        </div>
+        {/* Passos — numerados pela ordem que a pessoa vê, não pelo estado interno */}
+        {fonte && (
+          <div className="flex items-center gap-1.5 my-6 flex-wrap">
+            {PASSOS.map((p, i) => {
+              const feito = passo > p.n;
+              const atual = passo === p.n;
+              return (
+                <div key={p.n} className="flex items-center gap-2 flex-1 min-w-[130px]">
+                  <span className="w-7 h-7 rounded-full text-[12px] font-bold flex items-center justify-center shrink-0 transition-all"
+                    style={
+                      atual ? { background: COR, color: "#fff", boxShadow: `0 0 0 4px ${COR}22` }
+                      : feito ? { background: "#833AB4", color: "#fff" }
+                      : { background: "var(--color-border)", color: "#9a9a9f" }
+                    }>
+                    {feito ? <Check size={13} /> : i + 1}
+                  </span>
+                  <span className={`text-[12.5px] font-semibold ${atual || feito ? "text-ink" : "text-ink/40"}`}>{p.nome}</span>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* ── Passo 0 · De onde vêm os dados ── */}
+        {!fonte && (
+          <div className="rounded-2xl border border-border bg-white p-6 mt-6">
+            <h2 className="font-serif text-xl text-ink mb-1">Por onde queres começar?</h2>
+            <p className="text-sm text-ink/60 mb-5">
+              Se já preencheste o Documento Mestre, aproveitamos o que lá está e poupas um passo inteiro.
+            </p>
+            <div className="grid md:grid-cols-2 gap-3.5">
+              <button
+                onClick={usarDocMestre}
+                disabled={!docTemConteudo}
+                className="text-left rounded-xl border-2 p-5 transition-colors disabled:opacity-55 disabled:cursor-not-allowed"
+                style={docTemConteudo
+                  ? { borderStyle: "solid", borderColor: "#833AB4", background: "#faf5ff" }
+                  : { borderStyle: "dashed", borderColor: "var(--color-border)", background: "#fafafa" }}
+              >
+                <div className="text-2xl mb-1.5">📗</div>
+                <p className="text-[14px] font-bold text-ink mb-1">Buscar do Documento Mestre</p>
+                <p className="text-[12.5px] text-ink/60">
+                  {docTemConteudo
+                    ? "Traz o teu público, as dores e os produtos. Só tens de juntar os screenshots e dizer os objetivos."
+                    : "O teu Documento Mestre ainda está vazio. Preenche-o primeiro para usares esta opção."}
+                </p>
+              </button>
+
+              <button
+                onClick={comecarDoZero}
+                className="text-left rounded-xl border-2 p-5 transition-colors"
+                style={{ borderStyle: "dashed", borderColor: "#e3c7d6", background: "#fffafc" }}
+              >
+                <div className="text-2xl mb-1.5">✍️</div>
+                <p className="text-[14px] font-bold text-ink mb-1">Criar do zero</p>
+                <p className="text-[12.5px] text-ink/60">
+                  Extrai os dados do perfil a partir dos screenshots e preenche tudo à mão. Serve para analisar
+                  qualquer conta, não só a tua.
+                </p>
+              </button>
+            </div>
+          </div>
+        )}
 
         <input ref={fileInput} type="file" accept="image/*" multiple className="hidden" onChange={aoEscolher} />
 
         {/* ── Passo 1 · Screenshots ── */}
-        {passo === 1 && (
+        {fonte && passo === 1 && (
           <div className="rounded-2xl border border-border bg-white p-6">
             <h2 className="font-serif text-xl text-ink mb-1">Coloca os screenshots do perfil</h2>
             <p className="text-sm text-ink/60 mb-5">
@@ -184,8 +264,16 @@ export default function MaquinaAnalises() {
                 </div>
               ))}
             </div>
-            <div className="flex justify-end mt-6">
-              <button onClick={() => setPasso(2)} className="px-6 py-3 rounded-xl text-white text-sm font-bold inline-flex items-center gap-1.5" style={{ background: COR }}>
+            {fonte === "doc" && (
+              <p className="text-[12.5px] text-ink/55 mt-5 rounded-xl bg-[#faf5ff] border border-[#e9d5ff] px-3.5 py-2.5">
+                📗 Os teus dados do Documento Mestre já estão carregados. A seguir é só dizer os objetivos.
+              </p>
+            )}
+            <div className="flex items-center justify-between mt-6">
+              <button onClick={() => setFonte(null)} className="text-[13px] font-semibold text-ink/50 hover:text-ink inline-flex items-center gap-1.5">
+                <ArrowLeft size={14} /> Mudar a origem dos dados
+              </button>
+              <button onClick={() => setPasso(depoisDosScreenshots)} className="px-6 py-3 rounded-xl text-white text-sm font-bold inline-flex items-center gap-1.5" style={{ background: COR }}>
                 Continuar <ArrowRight size={15} />
               </button>
             </div>
@@ -357,7 +445,7 @@ export default function MaquinaAnalises() {
             </div>
 
             <div className="flex justify-between mt-5">
-              <button onClick={() => setPasso(2)} className="px-5 py-3 rounded-xl bg-ink/5 text-ink/70 text-sm font-bold inline-flex items-center gap-1.5">
+              <button onClick={() => setPasso(depoisDosScreenshots === 3 ? 1 : 2)} className="px-5 py-3 rounded-xl bg-ink/5 text-ink/70 text-sm font-bold inline-flex items-center gap-1.5">
                 <ArrowLeft size={15} /> Voltar
               </button>
               <button onClick={gerar} className="px-6 py-3 rounded-xl text-white text-sm font-bold" style={{ background: COR }}>
