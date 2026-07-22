@@ -1237,8 +1237,15 @@ export const getMinhaTurmaAcessos = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    // A conta dona vê sempre tudo, mesmo que a linha em user_roles falte ou
+    // esteja errada. É o mesmo princípio do ADMIN_EMAILS em lib/access.ts —
+    // "para nunca perder acesso" — que aqui não estava a ser respeitado: quem
+    // entra no painel por email ficava, ainda assim, restrito no conteúdo.
+    const email = emailFromContext(context);
     const roles = await rolesOf(supabaseAdmin, context.userId);
-    if (roles.includes("admin")) return { restrito: false, acessos: [] as string[], categoria: null as string | null, modos: {} as Record<string, string> };
+    if (isAdminEmail(email) || OWNER_EMAILS.includes(email) || roles.includes("admin")) {
+      return { restrito: false, acessos: [] as string[], categoria: null as string | null, modos: {} as Record<string, string> };
+    }
 
     const { blob } = await readOwnerBlob(supabaseAdmin);
     const papeis = (blob[PAPEIS_KEY] as { aluno?: string[]; moderador?: string[] }) ?? {};
@@ -1304,8 +1311,12 @@ export const getMensagens = createServerFn({ method: "POST" })
     const { blob } = await readOwnerBlob(supabaseAdmin);
     const todas = (Array.isArray(blob[MENSAGENS_KEY]) ? blob[MENSAGENS_KEY] : []) as MensagemRow[];
     const roles = await rolesOf(supabaseAdmin, context.userId);
-    // Admin/owner recebe todas (para gerir).
-    if (roles.includes("admin")) return ordenarMensagens(todas);
+    // Admin/owner recebe todas (para gerir) — por email OU por papel, para a
+    // conta dona não depender da linha em user_roles.
+    const emailMsg = emailFromContext(context);
+    if (isAdminEmail(emailMsg) || OWNER_EMAILS.includes(emailMsg) || roles.includes("admin")) {
+      return ordenarMensagens(todas);
+    }
     const minhasTurmas = turmasDoUtilizador(blob, context.userId);
     const visiveis = todas.filter(
       (m) => m.turmaId === "todas" || minhasTurmas.includes(m.turmaId),

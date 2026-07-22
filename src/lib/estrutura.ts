@@ -27,8 +27,8 @@ export const ESTRUTURA: Nodo[] = [
     to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas",
     filhos: [
       { id: "redes.boas-vindas", label: "Boas-vindas", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas" },
-      { id: "redes.bio", label: "Posicionamento e Bio", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=bio" },
       { id: "maquina-analises", label: "Máquina de Análises", tipo: "pagina", to: "/maquina-analises" },
+      { id: "redes.bio", label: "Posicionamento e Bio", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=bio" },
       {
         id: "redes.formatos",
         label: "Formatos de Conteúdo",

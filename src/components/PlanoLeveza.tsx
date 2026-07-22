@@ -4,12 +4,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { Link } from "@/lib/router-compat";
-import { CalendarDays, Upload, X, Sparkles, ArrowRight } from "lucide-react";
+import { CalendarDays, Upload, X, Sparkles, ArrowRight, RotateCcw } from "lucide-react";
 import PromptCard from "@/components/PromptCard";
 import { notify } from "@/lib/toast";
 import { loadInitial as loadDocMestre } from "@/lib/doc-mestre";
+import { HYDRATED_EVENT } from "@/lib/master-doc-sync";
 import {
-  BRIEFING_VAZIO, montarPromptPlanoLeveza, type BriefingLeveza,
+  BRIEFING_VAZIO, DURACOES, montarPromptPlanoLeveza, type BriefingLeveza,
 } from "@/data/prompts/plano-leveza";
 import { getUsosPlanoLeveza, registarUsoPlanoLeveza } from "@/lib/plano-leveza.functions";
 
@@ -57,33 +58,64 @@ export default function PlanoLeveza() {
   const [restantes, setRestantes] = useState<number | null>(null);
   const [aGerar, setAGerar] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  // Assim que a pessoa mexe num campo, deixamos de sobrescrever com o Doc Mestre.
+  const editado = useRef(false);
 
   const lerUsos = useServerFn(getUsosPlanoLeveza);
   const registarUso = useServerFn(registarUsoPlanoLeveza);
 
   useEffect(() => {
-    setB(briefingDoDocMestre());
+    // O Documento Mestre vem do servidor de forma assíncrona (ver
+    // master-doc-sync). Preenchemos ao montar E de novo quando a hidratação
+    // chega — senão o briefing ficaria vazio em quem acabou de abrir a app.
+    // Não mexemos se a pessoa já começou a editar.
+    const preencher = () => { if (!editado.current) setB(briefingDoDocMestre()); };
+    preencher();
+    window.addEventListener(HYDRATED_EVENT, preencher);
+
     lerUsos({ data: undefined })
       .then((r) => setRestantes(r.restantes))
       .catch(() => setRestantes(null)); // sem sessão/servidor: não bloqueia a interface
+
+    return () => window.removeEventListener(HYDRATED_EVENT, preencher);
   }, [lerUsos]);
 
-  const set = (k: keyof BriefingLeveza, v: string) => setB((s) => ({ ...s, [k]: v }));
+  const set = (k: keyof BriefingLeveza, v: string) => {
+    editado.current = true;
+    setB((s) => ({ ...s, [k]: v }));
+  };
+
+  // Botão "Voltar a puxar do Documento Mestre": reassume o Doc Mestre como fonte.
+  const repuxarDoDoc = () => { editado.current = false; setB(briefingDoDocMestre()); };
 
   const aoCarregarFicheiro = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     e.target.value = "";
     if (!f) return;
-    if (f.size > 2_000_000) {
-      notify("O ficheiro é muito grande (máximo 2 MB).", "error");
+    if (f.size > 8_000_000) {
+      notify("O ficheiro é muito grande (máximo 8 MB).", "error");
       return;
     }
+    const isPdf = f.type === "application/pdf" || f.name.toLowerCase().endsWith(".pdf");
     try {
-      const txt = await f.text();
+      let txt: string;
+      if (isPdf) {
+        // Extrai o texto do PDF (mesmo padrão do Documento Mestre).
+        const { getDocumentProxy, extractText } = await import("unpdf");
+        const pdf = await getDocumentProxy(new Uint8Array(await f.arrayBuffer()));
+        const res = await extractText(pdf, { mergePages: true });
+        txt = Array.isArray(res.text) ? res.text.join("\n") : res.text;
+      } else {
+        txt = await f.text();
+      }
       // Se for o .html do artefacto, tira as etiquetas para sobrar só o texto.
       const limpo = /<[a-z][\s\S]*>/i.test(txt)
         ? txt.replace(/<script[\s\S]*?<\/script>/gi, " ").replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<[^>]+>/g, " ").replace(/\s{2,}/g, " ")
         : txt;
+      if (!limpo.trim()) {
+        notify("Não consegui ler texto desse ficheiro. Se o PDF for uma imagem digitalizada, cola o texto à mão.", "error");
+        return;
+      }
       setAnalise(limpo.trim());
       setNomeFicheiro(f.name);
       notify("Análise carregada ✓", "success");
@@ -99,8 +131,22 @@ export default function PlanoLeveza() {
     }
     setAGerar(true);
     try {
-      const r = await registarUso({ data: undefined });
-      setRestantes(r.restantes);
+      // O contador (limite de 2/mês) vive no servidor. Se o servidor não estiver
+      // configurado ou não responder, NÃO bloqueamos a geração: o essencial é
+      // entregar o prompt, que se monta aqui mesmo, sem API. Só se o limite for
+      // atingido de propósito é que travamos.
+      try {
+        const r = await registarUso({ data: undefined });
+        setRestantes(r.restantes);
+      } catch (contadorErro) {
+        const msg = contadorErro instanceof Error ? contadorErro.message : "";
+        if (/já usaste|limite|restantes/i.test(msg)) {
+          notify(msg, "error");
+          return;
+        }
+        // Servidor indisponível/por configurar — segue em frente sem contar.
+        console.warn("Contador do Plano Estratégico indisponível:", contadorErro);
+      }
       setPrompt(montarPromptPlanoLeveza(b, analise));
       notify("Plano gerado ✓", "success");
     } catch (err) {
@@ -112,12 +158,31 @@ export default function PlanoLeveza() {
 
   const semUsos = restantes !== null && restantes <= 0;
 
+  // Recomeçar: limpa tudo e volta a puxar o Documento Mestre do zero.
+  const recomecar = () => {
+    editado.current = false;
+    setB(briefingDoDocMestre());
+    setAnalise("");
+    setNomeFicheiro("");
+    setPrompt("");
+    notify("Recomeçado — briefing puxado do Documento Mestre.", "success");
+  };
+
   return (
     <>
       <div className="rounded-2xl border p-5 mb-6" style={{ borderColor: `${COR}40`, background: `${COR}0d` }}>
-        <p className="text-[10px] tracking-[0.2em] uppercase font-semibold mb-1" style={{ color: COR }}>
-          Plano Leveza · 90 dias
-        </p>
+        <div className="flex items-start justify-between gap-3">
+          <p className="text-[10px] tracking-[0.2em] uppercase font-semibold mb-1" style={{ color: COR }}>
+            Plano Estratégico · 90 dias
+          </p>
+          <button
+            onClick={recomecar}
+            className="shrink-0 inline-flex items-center gap-1.5 text-[12px] font-semibold text-ink/50 hover:text-ink transition-colors"
+            title="Limpar tudo e recomeçar"
+          >
+            <RotateCcw size={13} /> Recomeçar
+          </button>
+        </div>
         <h2 className="font-serif text-2xl text-ink mb-1.5">O teu calendário completo, escrito de uma vez</h2>
         <p className="text-sm text-ink/60 leading-relaxed">
           Junta o teu <b>Documento Mestre</b> com a <b>análise do teu perfil</b> e devolve um prompt que gera
@@ -146,7 +211,7 @@ export default function PlanoLeveza() {
           </Link>
           . Serve para o plano partir dos teus números reais, não de suposições.
         </p>
-        <input ref={fileInput} type="file" accept=".txt,.md,.html,.htm,.json" className="hidden" onChange={aoCarregarFicheiro} />
+        <input ref={fileInput} type="file" accept=".pdf,.txt,.md,.html,.htm,.json" className="hidden" onChange={aoCarregarFicheiro} />
         <div className="ml-8">
           {nomeFicheiro ? (
             <div className="inline-flex items-center gap-2 rounded-xl border px-3.5 py-2" style={{ borderColor: `${COR}55`, background: `${COR}0d` }}>
@@ -161,7 +226,23 @@ export default function PlanoLeveza() {
               <Upload size={15} /> Carregar ficheiro da análise
             </button>
           )}
-          <p className="text-[11.5px] text-ink/40 mt-2">Aceita .txt, .md, .html ou .json — até 2 MB. Opcional, mas o plano fica muito melhor com ele.</p>
+          <p className="text-[11.5px] text-ink/40 mt-2">Aceita PDF, .txt, .md, .html ou .json — até 8 MB.</p>
+
+          {/* Alternativa ao ficheiro: colar o texto direto. */}
+          <div className="flex items-center gap-3 my-3">
+            <span className="h-px flex-1 bg-border" />
+            <span className="text-[11px] uppercase tracking-wider text-ink/40">ou cola aqui</span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+          <textarea
+            value={nomeFicheiro ? "" : analise}
+            onChange={(e) => { setAnalise(e.target.value); setNomeFicheiro(""); }}
+            disabled={!!nomeFicheiro}
+            rows={4}
+            placeholder={nomeFicheiro ? "Ficheiro carregado acima. Remove-o para colar texto." : "Cola aqui o texto da análise que o Claude te deu…"}
+            className="w-full rounded-xl border border-border p-3 text-sm text-ink outline-none focus:border-[#C8487E] transition-colors resize-y disabled:bg-ink/5 disabled:text-ink/40"
+          />
+          <p className="text-[11.5px] text-ink/40 mt-2">Ficheiro ou texto colado — só precisas de um. É opcional, mas o plano fica muito melhor com a análise.</p>
         </div>
       </div>
 
@@ -188,11 +269,17 @@ export default function PlanoLeveza() {
           <Campo label="Oferta de entrada"><input className={inputCls} value={b.ofertaEntrada} onChange={(e) => set("ofertaEntrada", e.target.value)} /></Campo>
           <Campo label="Oferta de fundo" ajuda="alto valor"><input className={inputCls} value={b.ofertaFundo} onChange={(e) => set("ofertaFundo", e.target.value)} /></Campo>
           <Campo label="Palavras-chave de CTA"><input className={inputCls} value={b.ctas} onChange={(e) => set("ctas", e.target.value)} placeholder="GUIA, DESAFIO, EU QUERO" /></Campo>
-          <Campo label="Duração do plano"><input className={inputCls} value={b.duracao} onChange={(e) => set("duracao", e.target.value)} /></Campo>
+          <Campo label="Duração do plano">
+            <select className={inputCls} value={b.duracao} onChange={(e) => set("duracao", e.target.value)}>
+              {DURACOES.map((d) => (
+                <option key={d} value={d}>{d.split(" — ")[0]}</option>
+              ))}
+            </select>
+          </Campo>
           <Campo label="Restrições de voz" ajuda="o que nunca dizer"><input className={inputCls} value={b.restricoes} onChange={(e) => set("restricoes", e.target.value)} /></Campo>
         </div>
 
-        <button onClick={() => setB(briefingDoDocMestre())} className="text-[12.5px] font-semibold mt-4 underline" style={{ color: COR }}>
+        <button onClick={repuxarDoDoc} className="text-[12.5px] font-semibold mt-4 underline" style={{ color: COR }}>
           Voltar a puxar do Documento Mestre
         </button>
       </div>
@@ -206,7 +293,7 @@ export default function PlanoLeveza() {
           style={{ background: COR }}
         >
           <Sparkles size={16} />
-          {aGerar ? "A gerar…" : semUsos ? "Sem planos disponíveis este mês" : "Gerar o meu Plano Leveza"}
+          {aGerar ? "A gerar…" : semUsos ? "Sem planos disponíveis este mês" : "Gerar o meu Plano Estratégico"}
         </button>
       ) : (
         <>
@@ -218,7 +305,7 @@ export default function PlanoLeveza() {
             </p>
           </div>
           <PromptCard
-            titulo="O teu Plano Leveza de 90 dias"
+            titulo="O teu Plano Estratégico de 90 dias"
             descricao="Cola no Claude. Devolve o calendário completo, com todas as peças escritas."
             prompt={prompt}
             rotuloBotao="Copiar prompt"

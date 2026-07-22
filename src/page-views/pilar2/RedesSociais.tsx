@@ -12,6 +12,7 @@ import PillarHeader from "../../components/PillarHeader";
 import PromptCard from "../../components/PromptCard";
 import AgenteCatIa from "../../components/AgenteCatIa";
 import BoasVindasInstagram from "../../components/BoasVindasInstagram";
+import PilaresConteudo from "../../components/PilaresConteudo";
 import PlanoConteudo from "../../components/PlanoConteudo";
 import FormatosConteudo from "../../components/FormatosConteudo";
 import PlanoLeveza from "../../components/PlanoLeveza";
@@ -42,7 +43,9 @@ const FORMATO_META: Record<string, { Icon: LucideIcon; cor: string }> = {
 
 const TITULOS: Record<string, string> = {
   formatos: "Formatos de Conteúdo",
+  pilares: "Os teus Pilares de Conteúdo",
   criar: "Criar Conteúdo",
+  avulsos: "Posts avulsos",
   plano: "Plano de Posts",
   desafio: "30 posts em 30 dias",
   assistente: "Assistente Cat.IA",
@@ -524,7 +527,6 @@ export default function RedesSociais() {
   const avisoAdminEmBreve = aba !== "assistente" && !bloqueadoParaAlunos && isBloqueado(guardId);
   const [formato, setFormato] = useState<"reels" | "estatico" | null>(null);
   const [objetivo, setObjetivo] = useState<Objetivo>("autoridade");
-  const [subCriar, setSubCriar] = useState<"prompts" | "plano-leveza">("prompts");
 
   // ─── Calendário Editorial ───
   const [cal, setCal] = useState<DiaCal[]>(emptyCal);
@@ -678,6 +680,8 @@ export default function RedesSociais() {
         <>
         {aba === "boas-vindas" && <BoasVindasInstagram />}
 
+        {aba === "pilares" && <PilaresConteudo />}
+
         {aba === "formatos" && <FormatosConteudo />}
 
         {aba === "desafio" && <Desafio30Dias />}
@@ -686,38 +690,21 @@ export default function RedesSociais() {
 
         {aba === "plano" && <PlanoConteudo />}
 
-        {aba === "criar" && (
-          <>
-            {/* Duas formas de criar: peça a peça (prompts) ou o plano inteiro de uma vez. */}
-            <div className="flex gap-1.5 mb-6 p-1 rounded-full bg-ink/5 w-fit">
-              {([
-                { id: "prompts", label: "Prompts prontos" },
-                { id: "plano-leveza", label: "Plano Leveza" },
-              ] as const).map((t) => (
-                <button
-                  key={t.id}
-                  onClick={() => setSubCriar(t.id)}
-                  className={`px-4 py-2 rounded-full text-[13px] font-semibold transition-colors ${
-                    subCriar === t.id ? "bg-white text-ink shadow-sm" : "text-ink/55 hover:text-ink"
-                  }`}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </div>
-          </>
-        )}
+        {/* Criar Conteúdo = só o Plano Estratégico: recebe o Documento Mestre,
+            usa a Máquina de Análises e gera o plano no Claude. */}
+        {aba === "criar" && <PlanoLeveza />}
 
-        {aba === "criar" && subCriar === "plano-leveza" && <PlanoLeveza />}
-
-        {aba === "criar" && subCriar === "prompts" && (
+        {/* Posts avulsos — vive nas Aulas: "quero só um post", peça a peça. */}
+        {aba === "avulsos" && (
           <>
             <div className="rounded-2xl border border-terracotta/25 bg-terracotta/5 p-5 mb-6">
-              <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">Criar Conteúdo · Prompts prontos</p>
-              <h2 className="font-serif text-2xl text-ink mb-1.5">Transforme o seu método em posts</h2>
+              <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">Aula · Posts avulsos</p>
+              <h2 className="font-serif text-2xl text-ink mb-1.5">Precisas só de um post?</h2>
               <p className="text-sm text-ink/60 leading-relaxed">
-                Escolha o <b>formato</b> e o <b>objetivo</b>. Copie o prompt (já vem com o seu Documento Mestre) e use-o
-                com o <b>agente Cat.IA</b> indicado no ChatGPT. Depois cole o resultado no <b>Plano de Posts</b>.
+                Isto é para quando queres <b>um post de cada vez</b>, sem o plano todo. Escolhe o <b>formato</b> e o
+                <b> objetivo</b>, copia o prompt (já vem com o teu Documento Mestre) e usa-o com o <b>agente Cat.IA</b>.
+                Depois cola o resultado no <b>Plano de Posts</b>. Para o mês inteiro de uma vez, usa antes o{" "}
+                <Link to="/metodo/pilar-2/redes-sociais?aba=criar" className="font-semibold text-terracotta">Plano Estratégico</Link>.
               </p>
             </div>
 

@@ -27,6 +27,15 @@ export type BriefingLeveza = {
   restricoes: string;
 };
 
+// Durações possíveis do plano. O texto é o que vai no prompt (a IA lê-o), por
+// isso inclui as semanas e os 3 posts/dia — dá-lhe o tamanho exato a produzir.
+export const DURACOES = [
+  "15 dias — cerca de 2 semanas, 3 posts por dia",
+  "30 dias — cerca de 4 semanas, 3 posts por dia",
+  "60 dias — cerca de 9 semanas, 3 posts por dia",
+  "90 dias — 13 semanas, 3 posts por dia",
+] as const;
+
 export const BRIEFING_VAZIO: BriefingLeveza = {
   nome: "",
   handle: "",
@@ -41,7 +50,7 @@ export const BRIEFING_VAZIO: BriefingLeveza = {
   ofertaEntrada: "",
   ofertaFundo: "",
   ctas: "",
-  duracao: "90 dias / 13 semanas — 3 posts por dia",
+  duracao: DURACOES[3], // 90 dias por defeito
   restricoes: 'sem "fórmula mágica", "segredo", "guia definitivo"',
 };
 
@@ -88,7 +97,7 @@ Noite: tipo (reel ou story). Se reel → fala corrida natural (mesmas regras). S
 Regras de voz (aplicam-se a tudo): idioma e tom do briefing; sempre "tu"; frases curtas; sem travessões no corpo; sem jargão sem tradução; respeita as restrições de voz do briefing. Antes de fechar cada fala, relê e pergunta: "isto soa a alguém a explicar a uma amiga, ou a ler um relatório?". Se soa a relatório, reescreve.
 
 5) Arcos e CTA
-Organiza os 3 meses: Mês 1 = alcance (lançar séries, relatable, sem vender), Mês 2 = autoridade (mostrar o método, começar colabs, isca paga suave), Mês 3 = prova + venda (casos, comunidade, oferta de fundo). CTA forte só no fundo de funil; nos posts de topo, CTA leve ou nenhum. Máx. 1-2 CTA fortes por semana.
+Divide a duração escolhida (ver briefing) em três fases iguais. Fase inicial = alcance (lançar séries, relatable, sem vender). Fase intermédia = autoridade (mostrar o método, começar colabs, isca paga suave). Fase final = prova + venda (casos, comunidade, oferta de fundo). Ajusta o ritmo à duração: num plano curto (15-30 dias) cada fase é mais comprimida e a venda entra mais cedo; num plano de 90 dias há espaço para construir devagar. CTA forte só no fundo de funil; nos posts de topo, CTA leve ou nenhum. Máx. 1-2 CTA fortes por semana.
 
 6) O ARTEFACTO — HTML autocontido e interativo
 Entrega um único ficheiro .html (todo o CSS e JS inline; sem bibliotecas externas obrigatórias; sem depender de localStorage para funcionar — usa estado em memória e oferece exportar/importar):
@@ -100,11 +109,27 @@ Entrega um único ficheiro .html (todo o CSS e JS inline; sem bibliotecas extern
 - Painel "Como tornar cada peça viral" no topo, com as regras: os 3 primeiros segundos, texto grande no primeiro frame (igual em toda a série), cortes a cada 2-3s, mostrar a cara, relatable 2x/semana, pedir partilha, séries, carrossel salvável, CTA no sítio certo, horário de pico, repetir o que rebentou.
 - Identidade visual: usa as cores/estética da marca da pessoa (se não houver, usa uma paleta limpa e legível). Design arrumado, tipografia confortável, responsivo em telemóvel.
 
-7) Verificação antes de entregar
+7) BLOCO PARA A PLATAFORMA (importante — escreve isto SEMPRE, no fim)
+Depois do HTML, escreve em TEXTO SIMPLES (não dentro do HTML) um bloco que a
+plataforma "Plano de Posts" importa com um clique. Regras exatas:
+- Começa com uma linha só com: @@LEVEZA
+- Uma linha de cabeçalho por peça, exatamente neste formato:
+  @@DIA <número> | <tipo> | <título curto>
+  onde <tipo> é uma de três palavras, tal e qual: Reel, Carrossel, Noite.
+- A seguir ao cabeçalho, o conteúdo COMPLETO dessa peça (várias linhas: gancho,
+  fala/slides, legenda, hashtags, dica viral — tudo o que já escreveste).
+- A peça seguinte começa noutra linha @@DIA. Nunca comeces uma linha de conteúdo
+  com "@@DIA" nem com "@@".
+- Percorre todos os dias por ordem (Dia 1 Reel, Dia 1 Carrossel, Dia 1 Noite,
+  Dia 2 Reel, …). Termina com uma linha só com: @@FIM
+Este bloco tem de conter TODAS as peças do plano, exatamente as mesmas do HTML.
+
+8) Verificação antes de entregar
 - Confirma que existem TODOS os dias do plano, cada um com as 3 peças completas.
 - Confirma que nenhuma fala tem passos numerados nem soa a manual.
 - Confirma que o HTML abre sem erros de consola e que copiar/estados/filtros funcionam.
-- Entrega o ficheiro .html e um resumo de 3-4 linhas do que foi criado.`;
+- Confirma que o bloco @@LEVEZA tem uma entrada @@DIA por cada peça do plano.
+- Entrega o ficheiro .html, o bloco @@LEVEZA e um resumo de 3-4 linhas.`;
 
 /**
  * Monta o prompt final: briefing preenchido + instruções + a análise da
@@ -144,4 +169,49 @@ ${analise.trim()}
   return `${bloco0}${briefing}
 
 ${BLOCO_2}`;
+}
+
+// ─── Importação para o Plano de Posts ────────────────────────────────────────
+// O bloco @@LEVEZA que o prompt manda a IA produzir. Cada peça é:
+//   @@DIA <n> | <tipo> | <título>
+//   <conteúdo em várias linhas>
+// Isto lê esse bloco e devolve as peças, para o Plano de Posts as agendar.
+
+export type PecaLeveza = { dia: number; tipo: "Reel" | "Carrossel" | "Noite"; titulo: string; conteudo: string };
+
+function normalizarTipo(t: string): PecaLeveza["tipo"] {
+  const s = t.trim().toLowerCase();
+  if (s.startsWith("carro")) return "Carrossel";
+  if (s.startsWith("noite") || s.startsWith("story") || s.startsWith("stor")) return "Noite";
+  return "Reel";
+}
+
+/**
+ * Lê o texto colado (o resultado inteiro do Claude serve — procura-se o bloco).
+ * Tolerante: aceita @@DIA em qualquer sítio, ignora o resto.
+ */
+export function parsePlanoLeveza(texto: string): PecaLeveza[] {
+  if (!texto) return [];
+  // Limita ao bloco @@LEVEZA…@@FIM se existir; senão usa o texto todo.
+  const ini = texto.indexOf("@@LEVEZA");
+  let corpo = ini >= 0 ? texto.slice(ini) : texto;
+  const fim = corpo.indexOf("@@FIM");
+  if (fim >= 0) corpo = corpo.slice(0, fim);
+
+  const linhas = corpo.split("\n");
+  const pecas: PecaLeveza[] = [];
+  let atual: PecaLeveza | null = null;
+  const cabecalho = /^\s*@@DIA\s+(\d+)\s*\|\s*([^|]+?)\s*\|\s*(.*)$/i;
+
+  for (const linha of linhas) {
+    const m = linha.match(cabecalho);
+    if (m) {
+      if (atual) { atual.conteudo = atual.conteudo.trim(); pecas.push(atual); }
+      atual = { dia: parseInt(m[1], 10), tipo: normalizarTipo(m[2]), titulo: m[3].trim() || "Post", conteudo: "" };
+    } else if (atual) {
+      atual.conteudo += linha + "\n";
+    }
+  }
+  if (atual) { atual.conteudo = atual.conteudo.trim(); pecas.push(atual); }
+  return pecas;
 }

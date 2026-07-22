@@ -7,6 +7,7 @@ import {
 import { useProgresso } from "@/lib/use-progresso";
 import { chaveMes, chaveSemana } from "@/lib/gamificacao";
 import { getRankingMes } from "@/lib/gamificacao.functions";
+import { parsePlanoLeveza, type PecaLeveza } from "@/data/prompts/plano-leveza";
 
 // Plano de Conteúdo — a aluna cola até 4 resultados do ChatGPT; a plataforma
 // parte-os em posts, ela agenda dia/mês/hora, e tudo aparece no calendário
@@ -54,6 +55,8 @@ export default function PlanoConteudo() {
   const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [aberto, setAberto] = useState<string | null>(null);
   const [aviso, setAviso] = useState("");
+  const [planoLevezaDraft, setPlanoLevezaDraft] = useState("");
+  const [abaImport, setAbaImport] = useState<"plano-leveza" | "pecas">("plano-leveza");
   const [mes, setMes] = useState(() => { const d = new Date(); return { y: d.getFullYear(), m: d.getMonth() }; });
 
   // Gamificação: publicar um post grava-o no servidor (conta para pontos e para
@@ -105,6 +108,39 @@ export default function PlanoConteudo() {
     update((prev) => [...prev, ...novos]);
     setDrafts((d) => ({ ...d, [fonteId]: "" }));
     flash(`${novos.length} ${novos.length === 1 ? "post adicionado" : "posts adicionados"} — agora agende no calendário ✓`);
+  };
+
+  // Importa o Plano Leveza completo: já traz o tipo e o dia de cada peça, por
+  // isso agendamos logo (Dia 1 = hoje, Dia 2 = amanhã, …).
+  const TIPO_LABEL: Record<PecaLeveza["tipo"], string> = {
+    Reel: "Reels virais",
+    Carrossel: "Carrosséis",
+    Noite: "Stories",
+  };
+  const importarPlanoLeveza = () => {
+    const pecas = parsePlanoLeveza(planoLevezaDraft);
+    if (!pecas.length) {
+      flash('Não encontrei o bloco do Plano Estratégico. Cola o resultado inteiro do Claude (com as linhas @@DIA).');
+      return;
+    }
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+    const novos: Post[] = pecas.map((p) => {
+      const d = new Date(hoje);
+      d.setDate(d.getDate() + Math.max(0, p.dia - 1));
+      return {
+        id: uid(),
+        tipo: TIPO_LABEL[p.tipo],
+        titulo: p.titulo,
+        conteudo: p.conteudo,
+        link: "",
+        data: iso(d.getFullYear(), d.getMonth(), d.getDate()),
+        hora: "",
+      };
+    });
+    update((prev) => [...prev, ...novos]);
+    setPlanoLevezaDraft("");
+    flash(`${novos.length} posts do Plano Estratégico importados e agendados a partir de hoje ✓`);
   };
 
   const setPost = (id: string, patch: Partial<Post>) => update((prev) => prev.map((p) => (p.id === id ? { ...p, ...patch } : p)));
@@ -167,30 +203,78 @@ export default function PlanoConteudo() {
         </div>
       </div>
 
-      {/* Colar resultados */}
+      {/* Importar — duas formas, em abas: o Plano Leveza inteiro ou peça a peça. */}
       <div>
-        <p className="text-sm font-semibold text-ink mb-3">1 · Cole os resultados do ChatGPT (até 4 tipos)</p>
-        <div className="grid sm:grid-cols-2 gap-3">
-          {FONTES.map((f) => (
-            <div key={f.id} className="rounded-2xl border border-border bg-white p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="w-2.5 h-2.5 rounded-full" style={{ background: f.cor }} />
-                <p className="text-sm font-semibold text-ink">{f.label}</p>
-                <span className="text-[10px] text-ink/40 ml-auto">{f.multi ? "vira vários posts" : "vira 1 post"}</span>
-              </div>
-              <textarea
-                rows={3}
-                value={drafts[f.id] || ""}
-                onChange={(e) => setDrafts((d) => ({ ...d, [f.id]: e.target.value }))}
-                placeholder={`Cole aqui o resultado de "${f.label}"…`}
-                className="w-full rounded-xl border border-border p-2.5 text-sm outline-none focus:border-terracotta transition-colors resize-none mb-2"
-              />
-              <button onClick={() => adicionar(f.id, f.label, f.multi)} className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full bg-ink text-cream hover:bg-terracotta transition-colors">
-                <Plus size={14} /> Adicionar ao plano
-              </button>
-            </div>
+        <p className="text-sm font-semibold text-ink mb-3">1 · Traz os teus posts</p>
+        <div className="flex gap-1.5 mb-4 p-1 rounded-full bg-ink/5 w-fit">
+          {([
+            { id: "plano-leveza", label: "Plano Estratégico" },
+            { id: "pecas", label: "Peça a peça" },
+          ] as const).map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setAbaImport(t.id)}
+              className={`px-4 py-2 rounded-full text-[13px] font-semibold transition-colors ${
+                abaImport === t.id ? "bg-white text-ink shadow-sm" : "text-ink/55 hover:text-ink"
+              }`}
+            >
+              {t.label}
+            </button>
           ))}
         </div>
+
+        {abaImport === "plano-leveza" && (
+          <div className="rounded-2xl border p-5" style={{ borderColor: "#C8487E40", background: "#C8487E0d" }}>
+            <div className="flex items-center gap-2 mb-1">
+              <Sparkles size={16} style={{ color: "#C8487E" }} />
+              <p className="text-sm font-semibold text-ink">Importar o teu Plano Estratégico</p>
+            </div>
+            <p className="text-[13px] text-ink/60 mb-3 leading-relaxed">
+              Fizeste o <Link to="/metodo/pilar-2/redes-sociais?aba=criar" className="font-semibold" style={{ color: "#C8487E" }}>Plano Estratégico</Link> e
+              correste-o no Claude? Cola aqui o resultado <b>inteiro</b>. Cada peça entra já com o tipo certo e
+              <b> agendada dia a dia a partir de hoje</b> — não tens de colar uma a uma.
+            </p>
+            <textarea
+              rows={3}
+              value={planoLevezaDraft}
+              onChange={(e) => setPlanoLevezaDraft(e.target.value)}
+              placeholder="Cola aqui tudo o que o Claude devolveu (com as linhas @@DIA)…"
+              className="w-full rounded-xl border border-border p-2.5 text-sm outline-none focus:border-[#C8487E] transition-colors resize-none mb-2 bg-white"
+            />
+            <button
+              onClick={importarPlanoLeveza}
+              className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full text-cream transition-colors"
+              style={{ background: "#C8487E" }}
+            >
+              <Sparkles size={14} /> Importar e agendar
+            </button>
+          </div>
+        )}
+
+        {abaImport === "pecas" && (
+          <div className="grid sm:grid-cols-2 gap-3">
+            {FONTES.map((f) => (
+              <div key={f.id} className="rounded-2xl border border-border bg-white p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: f.cor }} />
+                  <p className="text-sm font-semibold text-ink">{f.label}</p>
+                  <span className="text-[10px] text-ink/40 ml-auto">{f.multi ? "vira vários posts" : "vira 1 post"}</span>
+                </div>
+                <textarea
+                  rows={3}
+                  value={drafts[f.id] || ""}
+                  onChange={(e) => setDrafts((d) => ({ ...d, [f.id]: e.target.value }))}
+                  placeholder={`Cole aqui o resultado de "${f.label}"…`}
+                  className="w-full rounded-xl border border-border p-2.5 text-sm outline-none focus:border-terracotta transition-colors resize-none mb-2"
+                />
+                <button onClick={() => adicionar(f.id, f.label, f.multi)} className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full bg-ink text-cream hover:bg-terracotta transition-colors">
+                  <Plus size={14} /> Adicionar ao plano
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
         {aviso && <p className="text-xs text-sage mt-3 font-medium">{aviso}</p>}
       </div>
 
@@ -235,7 +319,20 @@ export default function PlanoConteudo() {
 
                   {expandido && (
                     <div className="px-3.5 pb-4 border-t border-border pt-3">
-                      <pre className="text-xs bg-cream rounded-xl p-3 whitespace-pre-wrap text-ink/70 leading-relaxed max-h-64 overflow-y-auto mb-3">{p.conteudo}</pre>
+                      <label className="text-[11px] tracking-[0.1em] uppercase text-ink/45 mb-1.5 block">Título</label>
+                      <input
+                        value={p.titulo}
+                        onChange={(e) => setPost(p.id, { titulo: e.target.value })}
+                        className="w-full rounded-lg border border-border p-2 text-sm outline-none focus:border-terracotta transition-colors mb-3"
+                      />
+
+                      <label className="text-[11px] tracking-[0.1em] uppercase text-ink/45 mb-1.5 block">Conteúdo do post</label>
+                      <textarea
+                        value={p.conteudo}
+                        onChange={(e) => setPost(p.id, { conteudo: e.target.value })}
+                        rows={8}
+                        className="w-full text-xs bg-cream rounded-xl p-3 leading-relaxed text-ink/80 outline-none focus:border-terracotta border border-border resize-y mb-3 font-mono"
+                      />
 
                       <div className="grid sm:grid-cols-2 gap-3 mb-3">
                         <div>

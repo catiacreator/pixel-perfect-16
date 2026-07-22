@@ -55,7 +55,12 @@ export default function QuickIdeas() {
   }
 
   return (
-    <div ref={wrapRef} className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+    // Em telemóvel/tablet sobe acima da barra de navegação inferior, senão
+    // ficaria por cima da última aba.
+    <div
+      ref={wrapRef}
+      className="fixed right-6 z-50 flex flex-col items-end gap-3 bottom-[calc(1.5rem+64px+env(safe-area-inset-bottom))] lg:bottom-6"
+    >
       {open && (
         <div className="w-[300px] max-w-[calc(100vw-3rem)] bg-white border border-[var(--color-border)] rounded-2xl shadow-[0_24px_60px_-20px_rgba(0,0,0,0.4)] overflow-hidden">
           <div className="px-4 py-3 border-b border-[var(--color-border)] flex items-center justify-between">

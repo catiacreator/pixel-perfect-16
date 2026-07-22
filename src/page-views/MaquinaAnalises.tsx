@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import Layout from "../components/Layout";
 import PromptCard from "../components/PromptCard";
+import PilarBreadcrumb from "../components/PilarBreadcrumb";
+import { Link } from "@/lib/router-compat";
 import { LineChart, Check, RotateCcw, Wand2, Plus, X, ArrowRight, ArrowLeft } from "lucide-react";
 import { PROMPT_EXTRAIR_PERFIL } from "@/data/prompts/maquina-analises";
 import {
@@ -9,6 +11,7 @@ import {
   type FormAnalise, type Oferta, type FonteAnalise,
 } from "@/lib/maquina-analises";
 import { loadInitial as loadDocMestre } from "@/lib/doc-mestre";
+import { HYDRATED_EVENT } from "@/lib/master-doc-sync";
 
 const COR = "#C13584";
 const CARTOES = [
@@ -67,7 +70,13 @@ export default function MaquinaAnalises() {
     const e = loadAnalise();
     setSaida(e.saida);
     setForm(e.form);
-    setDocTemConteudo(docMestreParaAnalise(loadDocMestre()).temConteudo);
+    // O Documento Mestre vem do servidor de forma assíncrona; reavaliamos quando
+    // a hidratação chega, senão o botão "Buscar do Documento Mestre" ficaria
+    // desativado para quem acabou de abrir a app.
+    const ver = () => setDocTemConteudo(docMestreParaAnalise(loadDocMestre()).temConteudo);
+    ver();
+    window.addEventListener(HYDRATED_EVENT, ver);
+    return () => window.removeEventListener(HYDRATED_EVENT, ver);
   }, []);
   useEffect(() => { saveAnalise({ saida, form }); }, [saida, form]);
 
@@ -141,6 +150,7 @@ export default function MaquinaAnalises() {
 
   return (
     <Layout>
+      <PilarBreadcrumb pilar="redes" pilarLabel="Conteúdo Todo Dia" backTo="/protocolo" backLabel="Voltar à Leveza no Digital" />
       <div style={{ ["--cor" as string]: COR }} className="px-5 md:px-10 py-8 max-w-3xl mx-auto">
         {/* Cabeçalho */}
         <div className="flex items-center gap-3 mb-1">
@@ -475,7 +485,8 @@ export default function MaquinaAnalises() {
                   <>Carrega em <strong>Copiar prompt</strong> aqui em baixo.</>,
                   <>Abre o <a href="https://claude.ai/new" target="_blank" rel="noopener noreferrer" className="font-semibold underline" style={{ color: COR }}>claude.ai</a> (a conta gratuita chega).</>,
                   <><strong>Anexa os mesmos screenshots</strong> que puseste no passo 1 (o clip 📎).</>,
-                  <>Cola o prompt e envia. O Claude devolve o <strong>relatório com o plano de 30 dias</strong> e o <strong>caderno de roteiros e carrosséis</strong>.</>,
+                  <>Cola o prompt e envia. O Claude devolve <strong>um relatório de análise</strong>, em texto simples.</>,
+                  <><strong>Guarda esse texto como .txt</strong> para o levares ao Plano Estratégico.</>,
                 ].map((t, i) => (
                   <li key={i} className="flex gap-2.5">
                     <span className="w-5 h-5 rounded-full text-[10.5px] font-bold text-white flex items-center justify-center shrink-0 mt-0.5" style={{ background: COR }}>
@@ -500,12 +511,11 @@ export default function MaquinaAnalises() {
                 O que vais receber
               </p>
               <p className="text-[12.5px] text-ink/55 mb-4">
-                O Claude devolve-te estes dois documentos.
+                Um relatório em texto, leve — de propósito, para não gastar créditos. O conteúdo (Reels e carrosséis) vem depois, no Plano Estratégico.
               </p>
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid gap-4">
                 {[
-                  { k: "Análise · Plano 30 dias", t: "Relatório de análise", d: "Diagnóstico, bio, padrões vencedores e 30 dias de conteúdo, 3 publicações por dia." },
-                  { k: "Caderno de conteúdo", t: "Roteiros + Carrosséis", d: "8 roteiros de Reels passo a passo e 6 carrosséis slide a slide, com legendas." },
+                  { k: "Análise do perfil", t: "Relatório em texto", d: "Diagnóstico honesto, bio proposta, os padrões que já funcionam, ajustes imediatos e métricas a acompanhar." },
                 ].map((doc) => (
                   <div key={doc.t} className="rounded-2xl border border-border overflow-hidden">
                     <div className="h-[100px] flex items-end p-3.5" style={{ background: "linear-gradient(135deg,#833AB4,#C13584,#E1306C,#F77737)" }}>
@@ -518,6 +528,24 @@ export default function MaquinaAnalises() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* Passo seguinte — senão a análise fica presa num chat externo. */}
+            <div className="rounded-2xl border-2 p-5 mb-5" style={{ borderColor: `${COR}40`, background: `${COR}0d` }}>
+              <p className="text-[11px] font-bold uppercase tracking-wider mb-1" style={{ color: COR }}>Próximo passo</p>
+              <h3 className="font-serif text-lg text-ink mb-1.5">Leva esta análise ao teu Plano Estratégico</h3>
+              <p className="text-[13px] text-ink/60 leading-relaxed mb-4">
+                No Claude, <b>guarda o que ele te devolveu</b> (o relatório) como ficheiro — em <b>.txt, .md ou .html</b>.
+                Depois, no <b>Plano Estratégico</b>, carregas esse ficheiro e o plano de 90 dias parte da tua análise real,
+                não de suposições.
+              </p>
+              <Link
+                to="/metodo/pilar-2/redes-sociais?aba=criar"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-cream text-sm font-semibold"
+                style={{ background: COR }}
+              >
+                Ir para o Plano Estratégico <ArrowRight size={15} />
+              </Link>
             </div>
 
             <div className="flex justify-between">

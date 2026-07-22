@@ -85,7 +85,7 @@ export function montarPromptAnalise(dadosPerfil: string, f: FormAnalise): string
     f.promo ? `- A promover este mês: ${f.promo}` : "",
   ].filter(Boolean).join("\n");
 
-  return `Age como o analista de perfis de Instagram da Cátia Creator. Anexei os screenshots de um perfil. Produz DOIS documentos completos, em português de Portugal, seguindo o método abaixo à risca.
+  return `Age como o analista de perfis de Instagram da Cátia Creator. Anexei os screenshots de um perfil. Produz UM documento de análise completo, em português de Portugal, seguindo o método abaixo à risca. NÃO escrevas roteiros nem carrosséis: isto é só a análise.
 
 ═══════════════════════════════════════
 DADOS DESTA CONTA
@@ -112,7 +112,7 @@ PADRÃO CRÍTICO (aprendido em casos reais, procura-o):
 O conteúdo pessoal/relatable (que não tem nada a ver com o nicho técnico) tem consistentemente 3 a 10x mais alcance do que o conteúdo educativo. Se isso acontecer nesta conta, nomeia-o sem rodeios.
 
 ═══════════════════════════════════════
-DOCUMENTO 1 — ${modoB ? "PLANO DE ACELERAÇÃO" : "ANÁLISE COMPLETA · PLANO DE CONTEÚDO 30 DIAS"}
+${modoB ? "ANÁLISE · PLANO DE ACELERAÇÃO" : "ANÁLISE COMPLETA DO PERFIL"}
 ═══════════════════════════════════════
 1. CAPA: kicker, nome, nicho · @handle, linha de dados (seguidores · publicações${modoB ? " · meta" : ""}), e uma frase-chave em itálico (2 linhas máx.) que resuma o diagnóstico central.
 
@@ -124,41 +124,19 @@ DOCUMENTO 1 — ${modoB ? "PLANO DE ACELERAÇÃO" : "ANÁLISE COMPLETA · PLANO 
 
 4. ${modoB ? "OS FORMATOS VENCEDORES" : "O PADRÃO QUE JÁ FUNCIONA"}: parágrafo introdutório + tabela de 3 colunas (Publicação/Gancho | Views | Porque funcionou), 5 a 10 linhas com dados reais, ordenadas do maior para o menor. Última linha: "Resto do conteúdo (média)" com o intervalo. Fecha com a fórmula repetível.
 
-5. PLANO DE CONTEÚDO · 30 DIAS · 3 PUBLICAÇÕES POR DIA. Tabela por semana (Dia | Pub 1 manhã | Pub 2 tarde | Pub 3 noite), dias 1 a 30 completos.
-   - Pub 1 (manhã): SEMPRE Reel com a pessoa em câmara, no formato vencedor identificado.
-   - Pub 2 (tarde): SEMPRE carrossel educativo que aprofunda o tema da manhã.
-   - Pub 3 (noite): Reel ou carrossel alternados, ângulo diferente (pessoal, CTA, prova social, prático).
-   - 1 CTA explícito por semana, máximo 2.
-   - Distribuição: 60% provocação/revelação, 30% pessoal relatable, 10% prova social.
-   - Semana 1: dor/reconhecimento. Semana 2: ferramentas/processo. Semana 3: casos/resultados. Semana 4: serviço mostrado, não vendido. Dias 29-30: fecho e CTA final.
-   - Reutiliza os ganchos que já viralizaram, marcados com "[reuso do gancho]".
-   - Nota: os Stories amplificam, não contam como publicações.
+5. AJUSTES IMEDIATOS: 5 ajustes numerados por ordem de impacto. Inclui sempre bio, fixar 3 Reels, destaque de testemunhos e resposta automática de DM.
 
-6. AJUSTES IMEDIATOS: 5 ajustes numerados por ordem de impacto. Inclui sempre bio, fixar 3 Reels, destaque de testemunhos e resposta automática de DM.
+6. MÉTRICAS A ACOMPANHAR: ${modoB ? "tabela de 5 colunas (Métrica | Semana 1 | 2 | 3 | 4+30)" : "tabela de 4 colunas (Métrica | Mínima | Base | Otimista)"}, 6 a 7 métricas ligadas ao objetivo.
 
-7. MÉTRICAS A ACOMPANHAR: ${modoB ? "tabela de 5 colunas (Métrica | Semana 1 | 2 | 3 | 4+30)" : "tabela de 4 colunas (Métrica | Mínima | Base | Otimista)"}, 6 a 7 métricas ligadas ao objetivo.
-
-8. CARTA DE FECHO: nome, vírgula. Parágrafo 1: o que já funciona (com dados). Parágrafo 2: o que está a travar, sem suavizar. Parágrafo 3: o que muda em 30 dias, com números do cenário base. Frase-chave em itálico. "Boa sorte com os 30 dias." Assinatura: "Cátia Creator".
+7. CARTA DE FECHO: nome, vírgula. Parágrafo 1: o que já funciona (com dados). Parágrafo 2: o que está a travar, sem suavizar. Parágrafo 3: o que muda em 30 dias, com números do cenário base. Frase-chave em itálico. "Boa sorte." Assinatura: "Cátia Creator".
 
 ═══════════════════════════════════════
-DOCUMENTO 2 — CADERNO DE CONTEÚDO
+FORMATO DE ENTREGA
 ═══════════════════════════════════════
-Tira os temas do calendário do Documento 1. Escreve, prontos a gravar:
-
-8 ROTEIROS DE REELS, cada um com:
-- Título e o dia do plano a que corresponde
-- Gancho (a primeira frase, palavra a palavra — os 3 primeiros segundos decidem tudo)
-- Desenvolvimento passo a passo, com o que dizer e o que mostrar em cada momento
-- Fecho com CTA
-- Legenda completa + hashtags
-
-6 CARROSSÉIS, cada um com:
-- Título e o dia do plano
-- Slide a slide (capa até ao último), com o texto exato de cada slide
-- Indicação visual de cada slide
-- Legenda completa + CTA
-
-Escreve na voz da pessoa, tal como aparece nos screenshots. Nada de texto de exemplo: isto é para ela publicar tal e qual.`;
+Entrega em TEXTO SIMPLES, pronto a copiar e a guardar como .txt. NÃO faças PDF,
+HTML nem artefacto interativo — só texto corrido. É este ficheiro que a pessoa vai
+carregar depois no Plano Estratégico, que se encarrega de escrever os posts todos.
+Não escrevas roteiros nem carrosséis aqui: para o conteúdo, é o Plano Estratégico.`;
 }
 
 // ─── Documento Mestre como fonte ─────────────────────────────────────────────

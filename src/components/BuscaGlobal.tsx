@@ -7,6 +7,13 @@ import { useBloqueadoParaAlunos } from "@/lib/admin-view";
 
 // Pesquisa global: ícone no topo → sobreposição com barra e resultados ao vivo.
 // A lista sai do registo da ESTRUTURA, por isso está sempre atualizada.
+
+/** Abre a pesquisa a partir de fora (ex.: a lupa da barra inferior). */
+export const EVENTO_ABRIR_BUSCA = "leveza:busca-abrir";
+export function abrirBusca() {
+  window.dispatchEvent(new CustomEvent(EVENTO_ABRIR_BUSCA));
+}
+
 export default function BuscaGlobal() {
   const [aberto, setAberto] = useState(false);
   const [q, setQ] = useState("");
@@ -38,8 +45,15 @@ export default function BuscaGlobal() {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") { e.preventDefault(); setAberto((v) => !v); }
       if (e.key === "Escape") setAberto(false);
     };
+    // A lupa da barra inferior (telemóvel/tablet) abre por evento — a barra vive
+    // no Layout e não tem forma de tocar neste estado.
+    const onAbrir = () => setAberto(true);
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    window.addEventListener(EVENTO_ABRIR_BUSCA, onAbrir);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      window.removeEventListener(EVENTO_ABRIR_BUSCA, onAbrir);
+    };
   }, []);
 
   const abrirItem = (item: ItemBusca) => { setAberto(false); navegar(item.to); };

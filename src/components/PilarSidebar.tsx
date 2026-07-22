@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import { useLocation } from "@tanstack/react-router";
+import { anunciarPilarMenu, useAbrirPilarMenu } from "@/lib/pilar-menu";
 import {
   ArrowLeft,
   ChevronDown,
@@ -8,6 +9,7 @@ import {
   X,
   Search,
   Compass,
+  LineChart,
   Sparkles,
   Sparkle,
   Mic,
@@ -166,10 +168,17 @@ const PILARES: Record<string | number, PilarDef> = {
     title: "Conteúdo Todo Dia",
     enabled: true,
     items: [
-      { num: 1, id: "redes.boas-vindas", label: "Boas-vindas", to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas", icon: Compass },
-      { num: 2, id: "redes.bio", label: "Posicionamento e Bio", to: "/metodo/pilar-2/redes-sociais?aba=bio", icon: UserCircle2 },
+      // ── Módulo: o caminho a fazer (Doc Mestre → Plano → Publicar) ──
+      { num: 1, id: "redes.boas-vindas", label: "Boas-vindas", to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas", icon: Compass, secao: "Cria o teu plano" },
+      { num: 2, id: "redes.pilares", label: "Os teus Pilares de Conteúdo", to: "/metodo/pilar-2/redes-sociais?aba=pilares", icon: Compass },
+      { num: 3, id: "maquina-analises", label: "Máquina de Análises", to: "/maquina-analises", icon: LineChart },
+      { num: 4, id: "redes.criar", label: "Criar Conteúdo", to: "/metodo/pilar-2/redes-sociais?aba=criar", icon: Sparkle },
+      { num: 5, id: "redes.plano", label: "Plano de Posts", to: "/metodo/pilar-2/redes-sociais?aba=plano", icon: CalendarDays },
+      { num: 6, id: "redes.agendar", label: "Publicar", to: "/metodo/pilar-2/redes-sociais?aba=agendar", icon: CalendarClock },
+      // ── Módulo: aulas (aprender os conceitos) ──
+      { num: 1, id: "redes.bio", label: "Posicionamento e Bio", to: "/metodo/pilar-2/redes-sociais?aba=bio", icon: UserCircle2, secao: "Aulas" },
       {
-        num: 3, id: "redes.formatos", label: "Formatos de Conteúdo", to: "/metodo/pilar-2/reels-em-serie", icon: Book,
+        num: 2, id: "redes.formatos", label: "Formatos de Conteúdo", to: "/metodo/pilar-2/reels-em-serie", icon: Book,
         children: [
           { label: "↳ Cria a tua série", to: "/metodo/pilar-2/reels-em-serie", id: "redes.formatos.reels-serie" },
           { label: "↳ Yap Content", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=roteiros", id: "redes.formatos.roteiros" },
@@ -178,10 +187,9 @@ const PILARES: Record<string | number, PilarDef> = {
           { label: "↳ Stories que vendem", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=stories", id: "redes.formatos.stories" },
         ],
       },
-      { num: 4, id: "redes.criar", label: "Criar Conteúdo", to: "/metodo/pilar-2/redes-sociais?aba=criar", icon: Sparkle },
-      { num: 5, id: "redes.plano", label: "Plano de Posts", to: "/metodo/pilar-2/redes-sociais?aba=plano", icon: CalendarDays },
-      { num: 6, id: "redes.desafio", label: "30 posts em 30 dias", to: "/metodo/pilar-2/redes-sociais?aba=desafio", icon: Zap },
-      { num: 7, id: "redes.agendar", label: "Publicar", to: "/metodo/pilar-2/redes-sociais?aba=agendar", icon: CalendarClock },
+      { num: 3, id: "redes.avulsos", label: "Posts avulsos", to: "/metodo/pilar-2/redes-sociais?aba=avulsos", icon: Sparkle },
+      { num: 4, id: "redes.desafio", label: "30 posts em 30 dias", to: "/metodo/pilar-2/redes-sociais?aba=desafio", icon: Zap },
+      // ── Módulo: ferramentas soltas ──
       { num: 1, id: "redes.automacao", label: "Automação para mensagens automáticas", to: "/metodo/pilar-2/redes-sociais?aba=automacao", icon: MessageSquare, secao: "Ferramentas Essenciais" },
       { num: 2, id: "redes.carousel-snap", label: "Carousel Snap", to: "/metodo/pilar-2/redes-sociais?aba=carousel-snap", icon: LayoutGrid },
       { num: 3, label: "Assistente Cat.IA", to: "/metodo/pilar-2/redes-sociais?aba=assistente", icon: Bot },
@@ -554,17 +562,17 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
 export default function PilarSidebar({ pilar }: { pilar: SidebarKey }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Quem abre este menu em telemóvel/tablet é o hamburger do canto superior
+  // esquerdo, no cabeçalho. O botão flutuante que existia aqui em baixo à
+  // esquerda foi removido: chocava com a barra de navegação inferior.
+  useAbrirPilarMenu(useCallback(() => setMobileOpen(true), []));
+  useEffect(() => {
+    anunciarPilarMenu(true);
+    return () => anunciarPilarMenu(false);
+  }, []);
+
   return (
     <>
-      {/* Mobile toggle */}
-      <button
-        onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed bottom-5 left-5 z-40 w-12 h-12 rounded-full bg-ink text-cream shadow-lg flex items-center justify-center"
-        aria-label="Abrir menu do pilar"
-      >
-        <Menu size={18} />
-      </button>
-
       {/* Desktop fixed sidebar */}
       <aside
         className="hidden lg:block fixed left-0 top-0 bottom-0 w-[280px] z-30"
