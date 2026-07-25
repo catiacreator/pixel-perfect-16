@@ -81,13 +81,19 @@ export default function PlanoConteudo() {
     }
   };
 
-  // Carrega uma vez (só leitura).
+  // Carrega ao montar e recarrega quando o estado é hidratado/muda de perfil —
+  // o plano de posts pertence ao perfil ativo, por isso tem de refletir a troca.
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(KEY);
-      const p = raw ? JSON.parse(raw) : null;
-      if (Array.isArray(p?.posts)) setPosts(p.posts.map((x: any) => ({ data: "", hora: "", ...x })));
-    } catch { /* ignora */ }
+    const carregar = () => {
+      try {
+        const raw = localStorage.getItem(KEY);
+        const p = raw ? JSON.parse(raw) : null;
+        setPosts(Array.isArray(p?.posts) ? p.posts.map((x: any) => ({ data: "", hora: "", ...x })) : []);
+      } catch { setPosts([]); }
+    };
+    carregar();
+    window.addEventListener("leveza:hydrated", carregar);
+    return () => window.removeEventListener("leveza:hydrated", carregar);
   }, []);
 
   // Persistência EXPLÍCITA em cada alteração — evita a corrida de mount que apagava os dados.

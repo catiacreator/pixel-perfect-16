@@ -18,6 +18,7 @@ import type { Json } from "@/integrations/supabase/types";
 // A sessão volátil do assistente fica de fora de propósito.
 const SYNC_KEYS = [
   "leveza.doc-mestre.v1",
+  "leveza.perfis.v1",
   "leveza.pilar2.v1",
   "leveza.minha-base.v1",
   "leveza.calendario.v1",

@@ -12,8 +12,9 @@ import ModulePaywall from "@/components/ModulePaywall";
 import PreviewTurmaModal from "@/components/PreviewTurmaModal";
 import EmManutencao from "@/components/EmManutencao";
 import MarcarEtapa from "@/components/MarcarEtapa";
-import NIaTopButton, { N_IA_URL } from "@/components/NIaTopButton";
-import BuscaGlobal, { abrirBusca } from "@/components/BuscaGlobal";
+import { N_IA_URL } from "@/components/NIaTopButton";
+import PerfilBar from "@/components/PerfilBar";
+import { abrirBusca } from "@/components/BuscaGlobal";
 import { useAccess } from "@/lib/use-access";
 import { useAdminView, setAdminView, abrirPreviewTurma, setPreviewTurma, useBloqueadoParaAlunos } from "@/lib/admin-view";
 import { useBloqueios } from "@/lib/bloqueios";
@@ -310,29 +311,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             })}
           </nav>
 
-          {/* Direita */}
+          {/* Direita — a Pesquisa, o N.IA e o Documento Mestre passaram para a
+              segunda barra (PerfilBar), para o cabeçalho não ficar cheio. */}
           <div className="flex items-center gap-2 justify-end">
-            {signedIn && <BuscaGlobal />}
-            {signedIn && <NIaTopButton />}
-            {signedIn && (
-              soMiniCurso ? (
-                <span
-                  title="Disponível no método completo"
-                  className="hidden lg:inline-flex items-center gap-1.5 text-[13px] pl-4 pr-3 py-2 bg-ink/20 text-ink/40 rounded-full font-medium cursor-not-allowed"
-                >
-                  <FileText size={13} strokeWidth={2.25} /> Documento
-                  <ArrowUpRight size={13} strokeWidth={2.25} />
-                </span>
-              ) : (
-                <Link
-                  to="/doc-mestre"
-                  className="hidden lg:inline-flex items-center gap-1.5 text-[13px] pl-4 pr-3 py-2 bg-ink text-cream rounded-full font-medium transition-all hover:-translate-y-0.5 active:scale-[0.97]"
-                >
-                  <FileText size={13} strokeWidth={2.25} /> Documento
-                  <ArrowUpRight size={13} strokeWidth={2.25} />
-                </Link>
-              )
-            )}
             {isAdmin && (
               <div className="hidden lg:inline-flex items-center gap-0.5 p-0.5 rounded-full border border-ink/15 bg-white" title="Pré-visualizar como aluno ou admin (só muda a vista)">
                 <button
@@ -429,6 +410,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </nav>
         )}
       </header>
+
+      {/* Segunda barra: perfil ativo + Documento Mestre (só com sessão). */}
+      {signedIn && <PerfilBar />}
 
       <main className="flex-1 w-full">
         {gateModule && accessLoading ? (
