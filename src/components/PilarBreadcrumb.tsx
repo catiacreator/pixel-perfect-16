@@ -1,4 +1,5 @@
 import { Link } from "@/lib/router-compat";
+import { useRouter } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 
 export default function PilarBreadcrumb({
@@ -6,21 +7,37 @@ export default function PilarBreadcrumb({
   pilarLabel,
   backTo,
   backLabel,
+  historyBack = false,
 }: {
   pilar: 1 | 2 | 3 | 4 | "academia" | "redes";
   pilarLabel: string;
   backTo: string;
   backLabel: string;
+  /** true = volta à página anterior no histórico (em vez de ir para backTo).
+   *  backTo fica como recurso, para quando se abre a página diretamente. */
+  historyBack?: boolean;
 }) {
+  const router = useRouter();
+  const voltar = () => {
+    if (typeof window !== "undefined" && window.history.length > 1) router.history.back();
+    else router.navigate({ to: backTo });
+  };
+
+  const classesVoltar =
+    "inline-flex items-center gap-2 text-[11px] tracking-[0.2em] uppercase text-ink/55 hover:text-ink transition-colors";
+
   return (
     <div className="w-full border-b border-[var(--color-border)]">
       <div className="max-w-[1280px] mx-auto px-5 md:px-10 py-4 flex items-center justify-between flex-wrap gap-3">
-        <Link
-          to={backTo}
-          className="inline-flex items-center gap-2 text-[11px] tracking-[0.2em] uppercase text-ink/55 hover:text-ink transition-colors"
-        >
-          <ArrowLeft size={13} strokeWidth={2} /> {backLabel}
-        </Link>
+        {historyBack ? (
+          <button onClick={voltar} className={classesVoltar}>
+            <ArrowLeft size={13} strokeWidth={2} /> {backLabel}
+          </button>
+        ) : (
+          <Link to={backTo} className={classesVoltar}>
+            <ArrowLeft size={13} strokeWidth={2} /> {backLabel}
+          </Link>
+        )}
 
         {typeof pilar === "number" && (
         <div className="flex items-center gap-3 text-[11px] tracking-[0.25em] uppercase">
