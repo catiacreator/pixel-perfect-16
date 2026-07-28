@@ -132,6 +132,11 @@ export function useBloqueios() {
   //     para turmas específicas sem a tirar do oculto para as outras.
   //  4) Contexto sem turma restrita (ex.: pré-visualização/aberto): defaults do Geral.
   const isBloqueado = (id: string) => {
+    // Um nó concedido por QUALQUER turma da aluna fica livre — vence o modo da
+    // própria turma. Sem isto, uma aluna em várias turmas via tudo escondido:
+    // uma turma concede o módulo, outra tinha-o em oculto/bloqueado, e o modo
+    // ganhava ao acesso. (A união de turmas é sempre a mais permissiva.)
+    if (turma.restrito && turmaConcede(id)) return false;
     const tm = turma.modos?.[id];
     if (tm === "oculto" || tm === "bloqueado" || tm === "em-breve") return true;
     if (tm === "livre") return false;
