@@ -95,9 +95,14 @@ function VencedorAlerta() {
   const { data } = useSuspenseQuery({ queryKey: ["alerta-vencedor"], queryFn: () => fetchAlerta() });
   const mut = useMutation({
     mutationFn: (v: { userId: string; mes: string }) => premiar({ data: v }),
-    onSuccess: () => {
+    onSuccess: (r: { jaPremiado?: boolean }) => {
       qc.invalidateQueries({ queryKey: ["alerta-vencedor"] });
-      notify("Vencedor premiado — +300 pontos e sessão de 30 min. 🎉", "success");
+      notify(
+        r?.jaPremiado
+          ? "Anúncio reenviado a todos (com o Top 5). 🎉"
+          : "Vencedor anunciado a todos — +300 pontos e sessão de 30 min. 🎉",
+        "success",
+      );
     },
     onError: (e: unknown) => notify(e instanceof Error ? e.message : "Erro ao premiar", "error"),
   });
@@ -121,7 +126,7 @@ function VencedorAlerta() {
         <p className="text-sm text-ink mt-0.5">
           <b>{data.lider.nome}</b> lidera com <b>{data.lider.posts}</b> post{data.lider.posts === 1 ? "" : "s"} este mês.
           {jaPremiado ? (
-            <span className="text-emerald-700 font-semibold"> Vencedor já anunciado ✓</span>
+            <span className="text-emerald-700 font-semibold"> Vencedor anunciado ✓ — podes reenviar a mensagem corrigida.</span>
           ) : destaque ? (
             <span className="text-amber-700 font-semibold"> Dia {data.dia} — hora de anunciar o vencedor!</span>
           ) : (
@@ -129,17 +134,17 @@ function VencedorAlerta() {
           )}
         </p>
       </div>
-      {!jaPremiado && (
-        <button
-          onClick={() => mut.mutate({ userId: data.lider!.userId, mes: data.mes })}
-          disabled={mut.isPending}
-          className={`shrink-0 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-full transition-colors disabled:opacity-50 ${
-            destaque ? "bg-amber-600 text-white hover:bg-amber-700" : "bg-ink text-cream hover:bg-terracotta"
-          }`}
-        >
-          <Crown size={15} /> {mut.isPending ? "A premiar…" : "Anunciar vencedor (sessão 30 min)"}
-        </button>
-      )}
+      {/* Botão sempre disponível: anuncia (e envia a mensagem a todos com o Top 5).
+          Se já foi anunciado, permite reenviar a versão corrigida sem duplicar pontos. */}
+      <button
+        onClick={() => mut.mutate({ userId: data.lider!.userId, mes: data.mes })}
+        disabled={mut.isPending}
+        className={`shrink-0 inline-flex items-center gap-2 text-sm font-semibold px-4 py-2.5 rounded-full transition-colors disabled:opacity-50 ${
+          jaPremiado ? "bg-white border border-[var(--color-border)] text-ink hover:bg-ink/5" : destaque ? "bg-amber-600 text-white hover:bg-amber-700" : "bg-ink text-cream hover:bg-terracotta"
+        }`}
+      >
+        <Crown size={15} /> {mut.isPending ? "A enviar…" : jaPremiado ? "Reenviar anúncio (com Top 5)" : "Anunciar vencedor (sessão 30 min)"}
+      </button>
     </div>
   );
 }

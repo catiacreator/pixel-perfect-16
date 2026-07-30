@@ -1406,23 +1406,67 @@ export const premiarVencedor = createServerFn({ method: "POST" })
       .maybeSingle();
     const blob = (row?.data as Record<string, unknown>) ?? {};
     const premios = Array.isArray(blob[PREMIOS_KEY_G]) ? (blob[PREMIOS_KEY_G] as string[]) : [];
-    if (premios.includes(data.mes)) return { ok: true, jaPremiado: true };
-    premios.push(data.mes);
+
+    // Os +300 e a sessão só se dão UMA vez por mês. O anúncio (mensagem a todos)
+    // pode ser reenviado — substitui o anterior, sem voltar a somar pontos.
+    const jaPremiado = premios.includes(data.mes);
+    let novo: number | undefined;
+    if (!jaPremiado) {
+      premios.push(data.mes);
+      await supabaseAdmin.from("master_documents").upsert(
+        { user_id: data.userId, data: { ...blob, [PREMIOS_KEY_G]: premios }, updated_at: new Date().toISOString() },
+        { onConflict: "user_id" },
+      );
+      const { data: prof } = await supabaseAdmin.from("profiles").select("pontos").eq("id", data.userId).maybeSingle();
+      novo = (prof?.pontos ?? 0) + 300;
+      await supabaseAdmin.from("profiles").update({ pontos: novo, updated_at: new Date().toISOString() }).eq("id", data.userId);
+      await supabaseAdmin.from("pontos_log").insert({
+        user_id: data.userId,
+        delta: 300,
+        motivo: `Vencedor do mês ${data.mes} — sessão de 30 min`,
+        criado_por: context.userId,
+      });
+    }
+
+    // ── Anúncio a TODA a gente (alunos + admins) — vencedor + Top 5 por pontos ──
+    // Nome e nº de posts do vencedor:
+    const { data: profVenc } = await supabaseAdmin.from("profiles").select("nome").eq("id", data.userId).maybeSingle();
+    const nomeVenc = (profVenc?.nome as string) || "Aluno";
+    const postsVenc = contarPor((blob[POSTS_KEY_G] as PostPublicado[]) ?? [], chaveMes)[data.mes] ?? 0;
+    // Top 5 por pontos:
+    const { data: top } = await supabaseAdmin
+      .from("profiles").select("nome, pontos").order("pontos", { ascending: false }).limit(5);
+    const linhasTop = (top ?? []).map(
+      (r: { nome: string | null; pontos: number | null }, i: number) => `${i + 1}. ${r.nome || "Aluno"} — ${r.pontos ?? 0} pts`,
+    ).join("\n");
+    const [ano, m] = data.mes.split("-");
+    const MESES = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+    const nomeMes = `${MESES[Number(m) - 1] ?? m} de ${ano}`;
+    const corpo =
+      `🏆 Vencedor de ${nomeMes}: ${nomeVenc}, com ${postsVenc} post${postsVenc === 1 ? "" : "s"} este mês! ` +
+      `Ganha uma sessão de 30 minutos. 🎉\n\n` +
+      `Top 5 do mês (por pontos):\n${linhasTop}\n\n` +
+      `Parabéns a todas — e bora criar mais este mês! 💛`;
+
+    // Escreve/atualiza a mensagem na conta dona, com id determinístico por mês
+    // (reenviar substitui em vez de duplicar). turmaId "todas" → chega a todos.
+    const { uid: ownerUid, blob: ownerBlob } = await readOwnerBlob(supabaseAdmin);
+    const msgs = (Array.isArray(ownerBlob[MENSAGENS_KEY]) ? ownerBlob[MENSAGENS_KEY] : []) as MensagemRow[];
+    const semEsta = msgs.filter((x) => x.id !== `vencedor-${data.mes}`);
+    const anuncio: MensagemRow = {
+      id: `vencedor-${data.mes}`,
+      titulo: `🏆 Vencedor de ${nomeMes}`,
+      corpo,
+      turmaId: "todas",
+      data: new Date().toISOString(),
+      autor: "Cátia",
+    };
     await supabaseAdmin.from("master_documents").upsert(
-      { user_id: data.userId, data: { ...blob, [PREMIOS_KEY_G]: premios }, updated_at: new Date().toISOString() },
+      { user_id: ownerUid, data: { ...ownerBlob, [MENSAGENS_KEY]: [anuncio, ...semEsta] }, updated_at: new Date().toISOString() },
       { onConflict: "user_id" },
     );
-    // Soma +300 já (a recompute do aluno mantém o total consistente: base + prémios×300).
-    const { data: prof } = await supabaseAdmin.from("profiles").select("pontos").eq("id", data.userId).maybeSingle();
-    const novo = (prof?.pontos ?? 0) + 300;
-    await supabaseAdmin.from("profiles").update({ pontos: novo, updated_at: new Date().toISOString() }).eq("id", data.userId);
-    await supabaseAdmin.from("pontos_log").insert({
-      user_id: data.userId,
-      delta: 300,
-      motivo: `Vencedor do mês ${data.mes} — sessão de 30 min`,
-      criado_por: context.userId,
-    });
-    return { ok: true, novoTotal: novo };
+
+    return { ok: true, novoTotal: novo, jaPremiado, anuncioEnviado: true };
   });
 
 // Ranking visível a qualquer aluno autenticado (top 50 por pontos).
