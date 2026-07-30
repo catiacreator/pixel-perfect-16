@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState, useMemo, useRef, useEffect } from "react";
-import { Search, Trash2, Coins, Check, Clock, UserPlus, ShieldCheck, Shield, FileDown, X, KeyRound, Trophy, Plus, Loader2 } from "lucide-react";
+import { Search, Trash2, Coins, Check, Clock, UserPlus, ShieldCheck, Shield, FileDown, FileUp, X, KeyRound, Trophy, Plus, Loader2 } from "lucide-react";
 import { notify } from "@/lib/toast";
 import {
   listMentoradas,
@@ -20,9 +20,13 @@ import {
   grantConquista,
   revokeConquista,
   getMentorada,
+  criarUploadDocAluno,
+  guardarDocAluno,
+  getDocsAluno,
 } from "@/lib/admin.functions";
 import { SEM_TURMA_LABEL, type Turma } from "@/lib/turmas";
 import { formatarDocMestre, baixarTexto } from "@/lib/doc-mestre-export";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/_authenticated/admin/mentoradas")({
   validateSearch: (s: Record<string, unknown>): { aluno?: string } => (typeof s.aluno === "string" ? { aluno: s.aluno } : {}),
@@ -127,6 +131,7 @@ function MentoradasPage() {
   const [bulkTurma, setBulkTurma] = useState("");
   const [adjusting, setAdjusting] = useState<{ id: string; nome: string } | null>(null);
   const [premiar, setPremiar] = useState<{ id: string; nome: string } | null>(null);
+  const [docsAluno, setDocsAluno] = useState<{ id: string; nome: string } | null>(null);
   const [adding, setAdding] = useState(false);
 
   const filtered = useMemo(() => {
@@ -421,6 +426,13 @@ function MentoradasPage() {
                     <Trophy size={13} /> Prémios
                   </button>
                   <button
+                    onClick={() => setDocsAluno({ id: m.id, nome: m.nome ?? m.email ?? "este aluno" })}
+                    className="inline-flex items-center gap-1 text-xs text-ink/60 hover:text-ink mr-3"
+                    title="Enviar Análise de Perfil e Calendário"
+                  >
+                    <FileUp size={13} /> Ficheiros
+                  </button>
+                  <button
                     onClick={() => setResetPwd({ id: m.id, nome: m.nome ?? m.email ?? "este aluno" })}
                     className="inline-flex items-center gap-1 text-xs text-ink/60 hover:text-ink mr-3"
                     title="Definir uma nova palavra-passe"
@@ -468,6 +480,10 @@ function MentoradasPage() {
           nome={premiar.nome}
           onClose={() => { setPremiar(null); qc.invalidateQueries({ queryKey: ["admin-mentoradas"] }); }}
         />
+      )}
+
+      {docsAluno && (
+        <DocsAlunoDialog userId={docsAluno.id} nome={docsAluno.nome} onClose={() => setDocsAluno(null)} />
       )}
 
       {adding && (
@@ -678,6 +694,88 @@ function PremiarDialog({ userId, nome, onClose }: { userId: string; nome: string
           </div>
         )}
         <button onClick={onClose} className="mt-5 w-full h-11 rounded-full bg-ink text-cream text-sm font-medium hover:opacity-90">Fechar</button>
+      </div>
+    </div>
+  );
+}
+
+// Envio dos 2 documentos pessoais de um aluno (Análise de Perfil + Calendário).
+// Upload direto ao Storage privado via URL assinado; a referência fica no aluno.
+function DocsAlunoDialog({ userId, nome, onClose }: { userId: string; nome: string; onClose: () => void }) {
+  const criar = useServerFn(criarUploadDocAluno);
+  const guardar = useServerFn(guardarDocAluno);
+  const getDocs = useServerFn(getDocsAluno);
+  const [estado, setEstado] = useState<{ analise: { nome: string; data: string } | null; calendario: { nome: string; data: string } | null } | null>(null);
+  const [aEnviar, setAEnviar] = useState<string | null>(null);
+  const refAnalise = useRef<HTMLInputElement>(null);
+  const refCalendario = useRef<HTMLInputElement>(null);
+
+  const carregar = () =>
+    getDocs({ data: { userId } }).then((r) => setEstado(r)).catch(() => setEstado({ analise: null, calendario: null }));
+  useEffect(() => { carregar(); }, []);
+
+  async function enviar(tipo: "analise" | "calendario", file: File) {
+    setAEnviar(tipo);
+    try {
+      const { path, token } = await criar({ data: { userId, tipo, nome: file.name } });
+      const { error } = await supabase.storage.from("documentos-alunos").uploadToSignedUrl(path, token, file);
+      if (error) throw error;
+      await guardar({ data: { userId, tipo, path, nome: file.name } });
+      notify("Ficheiro enviado.", "success");
+      await carregar();
+    } catch (e) {
+      notify(e instanceof Error ? e.message : "Não foi possível enviar o ficheiro.", "error");
+    } finally {
+      setAEnviar(null);
+    }
+  }
+
+  const TIPOS = [
+    { id: "analise" as const, label: "Análise de Perfil", ref: refAnalise },
+    { id: "calendario" as const, label: "Calendário de Conteúdo", ref: refCalendario },
+  ];
+
+  return (
+    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={onClose}>
+      <div className="bg-cream w-full max-w-md rounded-2xl p-6" onClick={(e) => e.stopPropagation()}>
+        <h2 className="text-lg font-semibold">Ficheiros — {nome}</h2>
+        <p className="text-xs text-ink/50 mt-1">
+          Envia os 2 documentos. O aluno vê-os em <b>A minha jornada → Meus documentos</b> (só ele os descarrega).
+        </p>
+        <div className="mt-4 space-y-3">
+          {TIPOS.map((t) => {
+            const atual = estado?.[t.id];
+            return (
+              <div key={t.id} className="rounded-xl border border-[var(--color-border)] bg-white p-3.5">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-ink">{t.label}</p>
+                    <p className={`text-[11px] truncate ${atual ? "text-emerald-700" : "text-ink/45"}`}>
+                      {atual ? `✓ ${atual.nome}` : "Ainda não enviado"}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => t.ref.current?.click()}
+                    disabled={aEnviar === t.id}
+                    className="shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-full bg-ink text-cream hover:bg-terracotta disabled:opacity-50"
+                  >
+                    <FileUp size={13} /> {aEnviar === t.id ? "A enviar…" : atual ? "Substituir" : "Enviar"}
+                  </button>
+                </div>
+                <input
+                  ref={t.ref}
+                  type="file"
+                  accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"
+                  className="hidden"
+                  onChange={(e) => { const f = e.target.files?.[0]; if (f) enviar(t.id, f); e.target.value = ""; }}
+                />
+              </div>
+            );
+          })}
+        </div>
+        <button onClick={onClose} className="mt-5 w-full h-11 rounded-full border border-[var(--color-border)] text-sm">
+          Fechar
+        </button>
       </div>
     </div>
   );
