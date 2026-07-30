@@ -309,6 +309,18 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </Link>
               );
             })}
+
+            {/* Agentes Creator — app externa (Lovable) */}
+            {signedIn && (
+              <a
+                href="https://agentescreator.lovable.app"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="relative px-3.5 py-2 rounded-full text-[13px] text-ink/70 hover:text-ink hover:bg-ink/10 transition-all inline-flex items-center gap-1"
+              >
+                Agentes Creator <ArrowUpRight size={13} strokeWidth={2} />
+              </a>
+            )}
           </nav>
 
           {/* Direita — a Pesquisa, o N.IA e o Documento Mestre passaram para a
