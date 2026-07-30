@@ -34,6 +34,7 @@ import {
 } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
 import { getMeusDocumentos } from "@/lib/admin.functions";
+import TrilhoGuiado from "../components/TrilhoGuiado";
 
 const CALENDAR_STORAGE_KEY = "leveza.calendario.v1";
 
@@ -486,6 +487,9 @@ export default function MinhaBase() {
             </div>
           </div>
         </section>
+
+        {/* O TEU PERCURSO — o trilho guiado (por onde começo → próximo passo) */}
+        <TrilhoGuiado />
 
         {/* MEUS DOCUMENTOS */}
         <section className="mt-10">
