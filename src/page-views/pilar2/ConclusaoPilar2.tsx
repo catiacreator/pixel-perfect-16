@@ -6,7 +6,6 @@ import PillarHeader from "../../components/PillarHeader";
 import { Crown, Trophy, Check, ArrowUpRight, Search, Compass, Sparkles, Mic, Palette, PartyPopper, Instagram, Lightbulb } from "lucide-react";
 
 const ITENS = [
-  { icon: Search, label: "Fiz a pesquisa de mercado e mapeei as dores do público", to: "/metodo/pilar-2/pesquisa-mercado" },
   { icon: Compass, label: "Criei o meu método (nome, promessa e pilares)", to: "/metodo/pilar-2/metodo" },
   { icon: Sparkles, label: "Defini os meus arquétipos (marca e cliente)", to: "/metodo/pilar-2/identidade" },
   { icon: Mic, label: "Defini o meu tom de voz e linguagem", to: "/metodo/pilar-2/tom-de-voz" },

@@ -785,19 +785,6 @@ export default function DocMestre() {
           )}
         </div>
 
-        {/* CTA */}
-        <div className="print:hidden rounded-2xl border border-terracotta bg-gradient-to-br from-white to-cream-warm/60 p-6 text-center">
-          <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">Próximo passo</p>
-          <p className="font-serif text-xl md:text-2xl text-ink mb-4">
-            Pesquisa de Mercado
-          </p>
-          <Link
-            to="/metodo/pilar-2/pesquisa-mercado"
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-full bg-ink text-cream text-sm font-semibold hover:bg-terracotta transition-colors"
-          >
-            Ir para a Pesquisa de Mercado <ArrowRight size={15} />
-          </Link>
-        </div>
       </div>
 
       {/* Modal import */}

@@ -517,22 +517,30 @@ export default function MaquinaAnalises() {
               </div>
             </div>
 
-            {/* Passo seguinte — senão a análise fica presa num chat externo. */}
+            {/* Passo seguinte — a bifurcação do fluxo, só aqui no fim da análise. */}
             <div className="rounded-2xl border-2 p-5 mb-5" style={{ borderColor: `${COR}40`, background: `${COR}0d` }}>
-              <p className="text-[11px] font-bold uppercase tracking-wider mb-1" style={{ color: COR }}>Próximo passo</p>
-              <h3 className="font-serif text-lg text-ink mb-1.5">Leva esta análise ao teu Plano Estratégico</h3>
+              <p className="text-[11px] font-bold uppercase tracking-wider mb-1" style={{ color: COR }}>Escolhe por onde continuar</p>
               <p className="text-[13px] text-ink/60 leading-relaxed mb-4">
-                No Claude, <b>guarda o que ele te devolveu</b> (o relatório) como ficheiro — em <b>.txt, .md ou .html</b>.
-                Depois, no <b>Plano Estratégico</b>, carregas esse ficheiro e o plano de 90 dias parte da tua análise real,
-                não de suposições.
+                A tua análise está pronta. Agora leva-a ao conteúdo:
               </p>
-              <Link
-                to="/metodo/pilar-2/redes-sociais?aba=criar"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-cream text-sm font-semibold"
-                style={{ background: COR }}
-              >
-                Ir para o Plano Estratégico <ArrowRight size={15} />
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link
+                  to="/metodo/pilar-2/redes-sociais?aba=plano"
+                  className="group inline-flex flex-1 items-center justify-between gap-2 px-5 py-3 rounded-full text-cream text-sm font-semibold"
+                  style={{ background: COR }}
+                >
+                  Plano de Posts · Conteúdo Viral
+                  <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+                </Link>
+                <Link
+                  to="/criacao-livre"
+                  className="group inline-flex flex-1 items-center justify-between gap-2 px-5 py-3 rounded-full text-cream text-sm font-semibold"
+                  style={{ background: COR }}
+                >
+                  Criação Livre
+                  <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+                </Link>
+              </div>
             </div>
 
             <div className="flex justify-between">

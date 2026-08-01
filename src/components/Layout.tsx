@@ -14,6 +14,7 @@ import EmManutencao from "@/components/EmManutencao";
 import MarcarEtapa from "@/components/MarcarEtapa";
 import { N_IA_URL } from "@/components/NIaTopButton";
 import PerfilBar from "@/components/PerfilBar";
+import ProximoPasso from "@/components/ProximoPasso";
 import { abrirBusca } from "@/components/BuscaGlobal";
 import { useAccess } from "@/lib/use-access";
 import { useAdminView, setAdminView, abrirPreviewTurma, setPreviewTurma, useBloqueadoParaAlunos } from "@/lib/admin-view";
@@ -435,6 +436,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         ) : (
           <>
             {children}
+            <ProximoPasso />
             <MarcarEtapa />
           </>
         )}
