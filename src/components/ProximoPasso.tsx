@@ -35,12 +35,12 @@ export default function ProximoPasso() {
         <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.15em] text-terracotta">
           {bifurcacao ? "Escolhe por onde continuar" : "Próximo passo"}
         </p>
-        <div className="flex flex-col gap-3 sm:flex-row">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           {lista.map((p) => (
             <Link
               key={p.to}
               to={p.to}
-              className="group inline-flex flex-1 items-center justify-between gap-2 rounded-full bg-terracotta px-5 py-3 text-sm font-semibold text-cream transition-colors hover:bg-terracotta-dark"
+              className="group inline-flex items-center gap-2 rounded-full bg-terracotta px-5 py-3 text-sm font-semibold text-cream transition-colors hover:bg-terracotta-dark"
             >
               {p.titulo}
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
