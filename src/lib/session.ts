@@ -25,19 +25,39 @@ function storageKey(): string | null {
 }
 
 /** Devolve a sessão guardada (se existir e não estiver expirada), senão null. */
-export function readStoredSession(): StoredSession | null {
-  if (typeof window === "undefined") return null;
-  const key = storageKey();
-  if (!key) return null;
+// Acesso automático APENAS em desenvolvimento local com a chave fictícia
+// (a que contém "dummy_local_only"). No site publicado (Lovable) a chave é real
+// e `import.meta.env.DEV` é falso, por isso isto nunca ativa em produção.
+function devFallbackSession(): StoredSession | null {
   try {
-    const raw = window.localStorage.getItem(key);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    const sess: StoredSession | undefined = parsed?.access_token ? parsed : parsed?.currentSession;
-    if (!sess?.access_token) return null;
-    if (sess.expires_at && sess.expires_at < Math.floor(Date.now() / 1000)) return null;
-    return sess;
+    if (!import.meta.env.DEV) return null;
+    const k = (import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string | undefined) || "";
+    if (!k.includes("dummy_local_only")) return null;
+    return {
+      access_token: "dev-local",
+      user: { id: "dev-admin", email: "catiasmgon@gmail.com", user_metadata: { nome: "Cátia" } },
+    };
   } catch {
     return null;
   }
+}
+
+export function readStoredSession(): StoredSession | null {
+  if (typeof window === "undefined") return null;
+  const key = storageKey();
+  if (key) {
+    try {
+      const raw = window.localStorage.getItem(key);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        const sess: StoredSession | undefined = parsed?.access_token ? parsed : parsed?.currentSession;
+        if (sess?.access_token && !(sess.expires_at && sess.expires_at < Math.floor(Date.now() / 1000))) {
+          return sess;
+        }
+      }
+    } catch {
+      /* ignora — cai no fallback de dev abaixo */
+    }
+  }
+  return devFallbackSession();
 }

@@ -33,8 +33,7 @@ const GRUPOS_CURSOS: {
   {
     titulo: "Cursos",
     itens: [
-      { id: "jornada", to: "/protocolo", label: "Leveza no Digital", sub: "Mentoria · Instagram", cor: "#C8487E", icon: Instagram },
-      { id: "redes", to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas", label: "Conteúdo Todo Dia", sub: "Método · redes sociais", cor: "#D2547F", icon: CalendarDays },
+      { id: "jornada", to: "/metodo", label: "Leveza no Digital", sub: "Mentoria · Instagram", cor: "#C8487E", icon: Instagram },
       { id: "academia", to: "/metodo/pilar-1/aprenda-ia", label: "Academia de IA", sub: "Ferramentas · aulas", cor: "#2E7CB8", icon: GraduationCap },
     ],
   },

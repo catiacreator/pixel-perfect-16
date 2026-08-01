@@ -78,7 +78,27 @@ Mantém a MESMA forma (gancho, ritmo, estrutura) em TODOS os episódios — é a
 
 function contextoBloco(userContext?: string): string {
   const c = userContext?.trim();
-  return c ? `\n\n## SOBRE A CRIADORA (Documento Mestre — usa o nicho, público, dores e tom dela)\n${c}` : "";
+  return c
+    ? `\n\n## SOBRE A CRIADORA (Documento Mestre — usa o nicho, público, dores e tom dela)\n${c}`
+    : "";
+}
+
+// Ajusta o registo mantendo a mesma alma do método (proximidade + autoridade).
+const TONS: Record<string, string> = {
+  proximo: `\n\n## TOM PEDIDO: PRÓXIMO
+Íntimo e caloroso, como uma amiga a falar contigo à mesa da cozinha. Trata por "tu", linguagem do dia a dia, ritmo de fala. 1–2 emojis por bloco como pontuação emocional. Aproxima-te ao máximo, sem perder a autoridade por especificidade.`,
+  descontraido: `\n\n## TOM PEDIDO: DESCONTRAÍDO
+Leve, divertido e com humor. Trata por "tu", brinca com a situação, usa exageros simpáticos e uma piada ou imagem inesperada quando encaixa. 1–2 emojis por bloco. Continua útil e específico — o humor serve a mensagem, não a tapa.`,
+  inspirador: `\n\n## TOM PEDIDO: INSPIRADOR
+Motivador e encorajador, que eleva e move à ação. Trata por "tu", frases com ritmo que dão vontade de agir, foca na transformação e no que a pessoa é capaz. Evita clichés de coach vazios — a inspiração vem de cenas concretas e verdades específicas.`,
+  direto: `\n\n## TOM PEDIDO: DIRETO
+Sem rodeios, ao ponto. Frases curtas e práticas, uma ideia por linha, zero enchimento. Trata por "tu". No máximo 1 emoji. Diz o que fazer e porquê, rápido — continua caloroso, mas sem voltas.`,
+  formal: `\n\n## TOM PEDIDO: FORMAL
+Eleva o registo sem perder o calor: trata a pessoa por "você", frases um pouco mais compostas, zero gíria e menos "amiga do café". No máximo 1 emoji (de preferência nenhum). Continua humano, próximo e específico — nunca corporativo, frio ou distante.`,
+};
+
+function tomBloco(tom?: string): string {
+  return TONS[tom || "proximo"] || TONS.proximo;
 }
 
 function promptNomes(p: {
@@ -89,6 +109,7 @@ function promptNomes(p: {
   evitar?: string[];
   userContext?: string;
   modo?: "exata" | "explorar";
+  tom?: string;
 }): string {
   const evitar = (p.evitar || []).filter(Boolean);
   const explorar = p.modo === "explorar";
@@ -96,6 +117,7 @@ function promptNomes(p: {
     ? `Gera 6 nomes de série que EXPLORAM À VOLTA da ideia da criadora — sem te prenderes à formulação exata. Fica sempre claramente dentro do tema "${p.ideia}", mas atravessa 3–4 ÂNGULOS diferentes e MELHORADOS do mesmo tema (sub-temas, dores adjacentes, promessas mais fortes, o inimigo comum) — para ela ver caminhos que talvez não tivesse pensado. No campo "temaNota", resume em 1 frase os ângulos que exploraste.`
     : `Gera 6 nomes de série centrados EXATAMENTE na ideia da criadora "${p.ideia}" (não fujas do tema). Se o tema estiver estreito demais (ex: "postar 1 reel por semana"), alarga-o o mínimo para aguentar 30+ partes (ex: "hábitos para postar sempre") e explica isso em 1 frase no campo "temaNota".`;
   return `${VOZ}
+${tomBloco(p.tom)}
 
 ${METODO_NOMES}
 ${contextoBloco(p.userContext)}
@@ -129,6 +151,7 @@ function promptRoteiros(p: {
   userContext?: string;
   desde?: number;
   jaEntregues?: string[];
+  tom?: string;
 }): string {
   const n = Math.min(Math.max(p.quantidade || 7, 1), 10);
   const desde = Math.max(p.desde || 0, 0);
@@ -140,6 +163,7 @@ function promptRoteiros(p: {
       ? `\nJá existem ${desde} episódios nesta série — NÃO os repitas, continua o arco a partir do episódio ${inicio}. Episódios já feitos:\n${p.jaEntregues.map((e, i) => `${i + 1}. ${e}`).join("\n")}\n`
       : "";
   return `${VOZ}
+${tomBloco(p.tom)}
 
 ${METODO_ROTEIROS}
 ${contextoBloco(p.userContext)}
@@ -205,6 +229,7 @@ export const Route = createFileRoute("/api/reels-serie")({
           desde?: number;
           jaEntregues?: string[];
           modo?: "exata" | "explorar";
+          tom?: string;
         };
         try {
           body = await request.json();
@@ -252,7 +277,10 @@ export const Route = createFileRoute("/api/reels-serie")({
         const erros: string[] = [];
         for (const p of provedores) {
           try {
-            const { text } = await generateText({ model: p.model as Parameters<typeof generateText>[0]["model"], prompt });
+            const { text } = await generateText({
+              model: p.model as Parameters<typeof generateText>[0]["model"],
+              prompt,
+            });
             const data = extrairJson(text);
             return Response.json(data, { headers: { "x-ia-provider": p.nome } });
           } catch (e) {

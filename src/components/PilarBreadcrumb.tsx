@@ -1,6 +1,7 @@
 import { Link } from "@/lib/router-compat";
 import { useRouter } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
+import WizardJornada from "@/components/WizardJornada";
 
 export default function PilarBreadcrumb({
   pilar,
@@ -27,6 +28,7 @@ export default function PilarBreadcrumb({
     "inline-flex items-center gap-2 text-[11px] tracking-[0.2em] uppercase text-ink/55 hover:text-ink transition-colors";
 
   return (
+    <>
     <div className="w-full border-b border-[var(--color-border)]">
       <div className="max-w-[1280px] mx-auto px-5 md:px-10 py-4 flex items-center justify-between flex-wrap gap-3">
         {historyBack ? (
@@ -79,5 +81,7 @@ export default function PilarBreadcrumb({
         )}
       </div>
     </div>
+    <WizardJornada />
+    </>
   );
 }

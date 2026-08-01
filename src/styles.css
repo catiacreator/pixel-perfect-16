@@ -14,11 +14,11 @@
   --color-ink: #111111;
   --color-ink-soft: #6E6256;
   --color-muted: #8A7C6C;
-  --color-terracotta: #6B3F2A;
-  --color-terracotta-dark: #532F1F;
+  --color-terracotta: #C13584;
+  --color-terracotta-dark: #9C3360;
   --color-berry: #B23C6E;
   --color-berry-dark: #8E2F58;
-  --color-gold: #B8794A;
+  --color-gold: #F56040;
   --color-sage: #0F5C4D;
   --color-blue: #B8794A;
   --color-emerald: #14B88A;
@@ -171,11 +171,11 @@
   --color-ink: #111111;
   --color-ink-soft: #6E6256;
   --color-muted: #8A7C6C;
-  --color-terracotta: #6B3F2A;
-  --color-terracotta-dark: #532F1F;
+  --color-terracotta: #C13584;
+  --color-terracotta-dark: #9C3360;
   --color-berry: #B23C6E;
   --color-berry-dark: #8E2F58;
-  --color-gold: #B8794A;
+  --color-gold: #F56040;
   --color-sage: #0F5C4D;
   --color-blue: #B8794A;
   --color-emerald: #14B88A;
@@ -273,9 +273,9 @@ select:focus {
 /* Tema de cor por módulo — sobrepõe a cor de acento (primária/gold) no scope.
    Mantém fundo/preto/branco quente globais; muda só os acentos do módulo. */
 .theme-jornada {
-  --color-terracotta: #A9743F;
-  --color-terracotta-dark: #7E5228;
-  --color-gold: #C99A5B;
+  --color-terracotta: #C13584;
+  --color-terracotta-dark: #9C3360;
+  --color-gold: #F56040;
 }
 .theme-academia {
   --color-terracotta: #2E7CB8;
@@ -294,14 +294,14 @@ select:focus {
 }
 /* Mini-curso "Conteúdo com IA" — paleta café + caramelo + creme (como o print). */
 .theme-cafe {
-  --color-terracotta: #6B3F2A;      /* castanho café — acento/fundo do herói */
-  --color-terracotta-dark: #3D2618; /* castanho escuro — caixas de destaque */
-  --color-gold: #C88A4E;            /* caramelo — realces */
+  --color-terracotta: #C13584;
+  --color-terracotta-dark: #9C3360;
+  --color-gold: #F56040;
 }
 .dark .theme-cafe {
-  --color-terracotta: #C9824F;      /* caramelo mais claro no escuro (texto legível) */
-  --color-terracotta-dark: #A9683C;
-  --color-gold: #D6A56A;
+  --color-terracotta: #E1306C;
+  --color-terracotta-dark: #C13584;
+  --color-gold: #FCAF45;
 }
 /* "Criar Produto" — paleta verde. */
 .theme-verde {

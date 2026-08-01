@@ -1,16 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import PilarSidebar from "@/components/PilarSidebar";
 import MaquinaAnalises from "@/page-views/MaquinaAnalises";
 
-// A Máquina de Análises pertence ao módulo "Conteúdo Todo Dia", por isso mostra
-// o mesmo menu do curso (à esquerda) e o link de voltar, como as outras páginas.
+// A Máquina de Análises abre a partir do fluxo da jornada, sem menu lateral.
 function MaquinaAnalisesRoute() {
   return (
     <div className="theme-redes">
-      <PilarSidebar pilar="redes" />
-      <div className="lg:pl-[280px]">
-        <MaquinaAnalises />
-      </div>
+      <MaquinaAnalises />
     </div>
   );
 }

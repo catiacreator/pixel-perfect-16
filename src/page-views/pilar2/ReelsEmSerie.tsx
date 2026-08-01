@@ -11,6 +11,10 @@ import {
   FileDown,
   CalendarPlus,
   ArrowUpRight,
+  Save,
+  Trash2,
+  PlayCircle,
+  Library,
 } from "lucide-react";
 import { Link } from "@/lib/router-compat";
 import { useServerFn } from "@tanstack/react-start";
@@ -21,6 +25,12 @@ import PillarHeader from "../../components/PillarHeader";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import { perfilContexto, readDocMestre, type DocMestre } from "@/lib/pilar4-prompts";
 import { adicionarPostsPlano } from "@/lib/plano-conteudo";
+import {
+  loadSeries,
+  guardarSerie,
+  removerSerie,
+  type SerieGuardada,
+} from "@/lib/reels-series-storage";
 
 type NomeSugestao = {
   nome: string;
@@ -42,22 +52,29 @@ type Roteiro = {
 
 type Etapa = "ideia" | "nomes" | "roteiros";
 
+type Tom = "proximo" | "descontraido" | "inspirador" | "direto" | "formal";
+
+// Registos de voz que a pessoa pode escolher para os roteiros.
+const TONS: { key: Tom; label: string; desc: string }[] = [
+  { key: "proximo", label: "Próximo", desc: 'Íntimo e caloroso, por "tu" — conversa de amiga.' },
+  { key: "descontraido", label: "Descontraído", desc: "Leve e divertido, com humor e boa disposição." },
+  { key: "inspirador", label: "Inspirador", desc: "Motivador, que eleva e move à ação." },
+  { key: "direto", label: "Direto", desc: "Sem rodeios, frases curtas e práticas ao ponto." },
+  { key: "formal", label: "Formal", desc: 'Registo composto, por "você" — sem gíria.' },
+];
+
+// Aceita valores antigos ("pessoal") e desconhecidos, caindo em "proximo".
+function normalizarTom(v?: string): Tom {
+  const achado = TONS.find((t) => t.key === v);
+  if (achado) return achado.key;
+  return v === "pessoal" ? "proximo" : "proximo";
+}
+
+const tomLabel = (v?: string): string => TONS.find((t) => t.key === normalizarTom(v))?.label || "Próximo";
 
 // Junta um roteiro num bloco de texto pronto a copiar/gravar.
 function roteiroTexto(r: Roteiro): string {
-  return [
-    r.gancho,
-    "",
-    r.dorCulpa,
-    "",
-    r.corpo,
-    "",
-    r.transicao,
-    "",
-    r.passo1,
-    r.passo2,
-    r.passo3,
-  ]
+  return [r.gancho, "", r.dorCulpa, "", r.corpo, "", r.transicao, "", r.passo1, r.passo2, r.passo3]
     .join("\n")
     .trim();
 }
@@ -98,16 +115,36 @@ export default function ReelsEmSerie() {
     .join(", ");
 
   const [etapa, setEtapa] = useState<Etapa>("ideia");
+  // Vista da 1.ª etapa: hub (2 cards) → criar (formulário) ou biblioteca (séries guardadas).
+  const [inicio, setInicio] = useState<"hub" | "criar" | "biblioteca">("hub");
   const [ideia, setIdeia] = useState("");
   const [modo, setModo] = useState<"exata" | "explorar">("exata");
+  const [tom, setTom] = useState<Tom>("proximo");
+
+  // Séries guardadas (na conta do aluno). Recarrega quando o Supabase hidrata.
+  const [serieId, setSerieId] = useState<string | null>(null);
+  const [guardadas, setGuardadas] = useState<SerieGuardada[]>([]);
+  useEffect(() => {
+    const carregar = () => setGuardadas(loadSeries());
+    carregar();
+    window.addEventListener("leveza:hydrated", carregar);
+    return () => window.removeEventListener("leveza:hydrated", carregar);
+  }, []);
 
   // Limite de 5 séries por mês (servidor, por aluno; admin ilimitado).
   const usoFn = useServerFn(getUsoReelsSerie);
   const consumirFn = useServerFn(consumirReelsSerie);
-  const [uso, setUso] = useState<{ usados: number; limite: number; restantes: number; ilimitado: boolean } | null>(null);
+  const [uso, setUso] = useState<{
+    usados: number;
+    limite: number;
+    restantes: number;
+    ilimitado: boolean;
+  } | null>(null);
   useEffect(() => {
     usoFn()
-      .then((r) => setUso(r as { usados: number; limite: number; restantes: number; ilimitado: boolean }))
+      .then((r) =>
+        setUso(r as { usados: number; limite: number; restantes: number; ilimitado: boolean }),
+      )
       .catch(() => {});
   }, [usoFn]);
   const semSaldo = !!uso && !uso.ilimitado && uso.restantes <= 0;
@@ -137,6 +174,7 @@ export default function ReelsEmSerie() {
   const [maisN, setMaisN] = useState(3);
   const [entregas, setEntregas] = useState<string[]>([]);
   const [roteiros, setRoteiros] = useState<Roteiro[]>([]);
+  const [dataAgenda, setDataAgenda] = useState(""); // YYYY-MM-DD para "Guardar no calendário"
 
   async function chamar(payload: Record<string, unknown>) {
     setLoading(true);
@@ -169,6 +207,7 @@ export default function ReelsEmSerie() {
       oferta,
       direcao: direcao || undefined,
       modo,
+      tom,
       evitar: opts?.mais ? nomes.map((n) => n.nome) : undefined,
     });
     if (!data) return;
@@ -183,7 +222,9 @@ export default function ReelsEmSerie() {
     const cont = !!opts?.mais && roteiros.length > 0;
     // Limite mensal — só conta séries NOVAS (continuações não gastam saldo).
     if (!cont && uso && !uso.ilimitado && uso.restantes <= 0) {
-      setErro(`Atingiste o limite de ${uso.limite} séries este mês. Volta no próximo mês para gerares mais.`);
+      setErro(
+        `Atingiste o limite de ${uso.limite} séries este mês. Volta no próximo mês para gerares mais.`,
+      );
       return;
     }
     const qtd = cont ? opts!.mais! : quantidade;
@@ -194,6 +235,7 @@ export default function ReelsEmSerie() {
       publico,
       oferta,
       quantidade: qtd,
+      tom,
       desde: cont ? roteiros.length : 0,
       jaEntregues: cont ? entregas : undefined,
     });
@@ -203,14 +245,24 @@ export default function ReelsEmSerie() {
       const base = roteiros.length;
       const novos: Roteiro[] = (data.roteiros || []).map((r: Roteiro, i: number) => {
         const num = base + i + 1;
-        return { ...r, n: num, gancho: String(r.gancho || "").replace(/parte\s*\d+/i, `parte ${num}`) };
+        return {
+          ...r,
+          n: num,
+          gancho: String(r.gancho || "").replace(/parte\s*\d+/i, `parte ${num}`),
+        };
       });
-      setEntregas([...entregas, ...(data.entregas || [])]);
-      setRoteiros([...roteiros, ...novos]);
+      const entregasNext = [...entregas, ...(data.entregas || [])];
+      const roteirosNext = [...roteiros, ...novos];
+      setEntregas(entregasNext);
+      setRoteiros(roteirosNext);
+      persistirSerie(entregasNext, roteirosNext);
     } else {
-      setEntregas(data.entregas || []);
-      setRoteiros(data.roteiros || []);
+      const entregasNext = data.entregas || [];
+      const roteirosNext = data.roteiros || [];
+      setEntregas(entregasNext);
+      setRoteiros(roteirosNext);
       setEtapa("roteiros");
+      persistirSerie(entregasNext, roteirosNext, { novaSerie: true });
       // Série nova gerada com sucesso → gasta 1 crédito do mês.
       if (!uso?.ilimitado) {
         try {
@@ -223,6 +275,50 @@ export default function ReelsEmSerie() {
     }
   }
 
+  // Grava a série atual na conta do aluno (cria na 1.ª vez, atualiza depois).
+  // É o que permite reabrir a série e continuá-la sem repetir episódios.
+  function persistirSerie(
+    entregasAtuais: string[],
+    roteirosAtuais: Roteiro[],
+    opts?: { novaSerie?: boolean },
+  ) {
+    if (!nomeSel || roteirosAtuais.length === 0) return;
+    const id = opts?.novaSerie ? undefined : serieId || undefined;
+    const s = guardarSerie({
+      id,
+      nome: nomeSel,
+      ideia,
+      publico,
+      oferta,
+      tom,
+      entregas: entregasAtuais,
+      roteiros: roteirosAtuais,
+    });
+    setSerieId(s.id);
+    setGuardadas(loadSeries());
+  }
+
+  // Reabre uma série guardada — repõe o histórico para continuar de onde ficou.
+  function abrirSerie(s: SerieGuardada) {
+    setSerieId(s.id);
+    setNomeSel(s.nome);
+    setNomes([{ nome: s.nome }]);
+    setIdeia(s.ideia);
+    if (s.publico) setPublico(s.publico);
+    if (s.oferta) setOferta(s.oferta);
+    if (s.tom) setTom(normalizarTom(s.tom));
+    setEntregas(s.entregas);
+    setRoteiros(s.roteiros);
+    setErro(null);
+    setEtapa("roteiros");
+  }
+
+  function apagarSerie(id: string) {
+    removerSerie(id);
+    setGuardadas(loadSeries());
+    if (serieId === id) setSerieId(null);
+  }
+
   function recomecar() {
     setEtapa("ideia");
     setNomes([]);
@@ -231,6 +327,9 @@ export default function ReelsEmSerie() {
     setRoteiros([]);
     setDirecao("");
     setErro(null);
+    setSerieId(null);
+    setDataAgenda("");
+    setInicio("hub");
   }
 
   function descarregarTudo() {
@@ -243,7 +342,9 @@ export default function ReelsEmSerie() {
       "",
       "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
       "",
-      ...roteiros.map((r) => `EPISÓDIO ${r.n}\n\n${roteiroTexto(r)}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`),
+      ...roteiros.map(
+        (r) => `EPISÓDIO ${r.n}\n\n${roteiroTexto(r)}\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`,
+      ),
     ]
       .filter((l) => l !== undefined)
       .join("\n");
@@ -262,7 +363,7 @@ export default function ReelsEmSerie() {
 
   function exportarPdf() {
     const esc = (s: string) =>
-      (s || "").replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c] as string));
+      (s || "").replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c] as string);
     const arco = entregas.length
       ? `<div class="arco"><h3>O arco da série</h3><ol>${entregas.map((e) => `<li>${esc(e)}</li>`).join("")}</ol></div>`
       : "";
@@ -302,12 +403,22 @@ export default function ReelsEmSerie() {
     setTimeout(() => w.print(), 350);
   }
 
+  // Guardar a série explicitamente (na conta do aluno), com confirmação visível.
+  const [serieGuardadaOk, setSerieGuardadaOk] = useState(false);
+  function guardarSerieManual() {
+    if (!nomeSel || roteiros.length === 0) return;
+    persistirSerie(entregas, roteiros);
+    setSerieGuardadaOk(true);
+    setTimeout(() => setSerieGuardadaOk(false), 4000);
+  }
+
   const [guardados, setGuardados] = useState(0);
   function guardarNoCalendario() {
     const itens = roteiros.map((r) => ({
       tipo: "Reel",
       titulo: `${nomeSel || "Série"} — Ep. ${r.n}: ${r.gancho}`.slice(0, 90),
       conteudo: roteiroTexto(r),
+      data: dataAgenda || "",
     }));
     const n = adicionarPostsPlano(itens);
     setGuardados(n);
@@ -364,96 +475,271 @@ export default function ReelsEmSerie() {
 
         {/* ETAPA 1 — A IDEIA */}
         {etapa === "ideia" && (
-          <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6">
-            <label className="mb-1.5 block text-sm font-semibold text-ink">A tua ideia ou tema</label>
-            <p className="mb-2 text-xs text-ink/55">
-              Amplo é ouro. "Hábitos para postar sempre" &gt; "como postar 1 reel por semana".
-            </p>
-            <textarea
-              value={ideia}
-              onChange={(e) => setIdeia(e.target.value)}
-              rows={3}
-              placeholder="Ex.: organização de casa para mães cansadas"
-              className="w-full resize-none rounded-xl border border-[var(--color-border)] bg-[#FCFAF6] px-4 py-3 text-sm text-ink outline-none focus:border-terracotta"
-            />
-
-            {/* Modo: focar na ideia vs. explorar variações à volta */}
-            <div className="mt-4">
-              <p className="mb-2 text-sm font-semibold text-ink">O que queres que eu sugira?</p>
-              <div className="grid gap-2 sm:grid-cols-2">
+          <>
+            {/* HUB — 2 cards: criar uma série nova ou abrir a biblioteca */}
+            {inicio === "hub" && (
+              <div className="grid gap-4 sm:grid-cols-2">
                 <button
-                  type="button"
-                  onClick={() => setModo("exata")}
-                  className={`rounded-xl border px-4 py-3 text-left transition-colors ${
-                    modo === "exata"
-                      ? "border-terracotta bg-terracotta/8"
-                      : "border-[var(--color-border)] bg-white hover:border-terracotta/50"
-                  }`}
+                  onClick={() => setInicio("criar")}
+                  className="group flex flex-col rounded-2xl border border-[var(--color-border)] bg-white p-6 text-left transition-colors hover:border-terracotta"
                 >
-                  <span className={`block text-sm font-semibold ${modo === "exata" ? "text-terracotta-dark" : "text-ink"}`}>
-                    A minha ideia
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-terracotta/10 text-terracotta">
+                    <Sparkles size={20} />
                   </span>
-                  <span className="mt-0.5 block text-xs text-ink/55">Séries centradas exatamente no que escreveste.</span>
+                  <p className="mt-4 font-serif text-lg text-ink">Cria a tua série</p>
+                  <p className="mt-1 text-sm text-ink/60">
+                    Uma ideia entra, uma série de Reels sai — nomes que travam o dedo e roteiros
+                    prontos para gravar.
+                  </p>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-terracotta">
+                    Começar <ArrowUpRight size={15} />
+                  </span>
                 </button>
+
                 <button
-                  type="button"
-                  onClick={() => setModo("explorar")}
-                  className={`rounded-xl border px-4 py-3 text-left transition-colors ${
-                    modo === "explorar"
-                      ? "border-terracotta bg-terracotta/8"
-                      : "border-[var(--color-border)] bg-white hover:border-terracotta/50"
-                  }`}
+                  onClick={() => setInicio("biblioteca")}
+                  className="group flex flex-col rounded-2xl border border-[var(--color-border)] bg-white p-6 text-left transition-colors hover:border-terracotta"
                 >
-                  <span className={`block text-sm font-semibold ${modo === "explorar" ? "text-terracotta-dark" : "text-ink"}`}>
-                    Explorar à volta
+                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-terracotta/10 text-terracotta">
+                    <Library size={20} />
                   </span>
-                  <span className="mt-0.5 block text-xs text-ink/55">A minha ideia + ângulos melhorados do mesmo tema.</span>
+                  <p className="mt-4 flex items-center gap-2 font-serif text-lg text-ink">
+                    As tuas séries
+                    {guardadas.length > 0 && (
+                      <span className="rounded-full bg-terracotta/10 px-2 py-0.5 text-xs font-semibold text-terracotta">
+                        {guardadas.length}
+                      </span>
+                    )}
+                  </p>
+                  <p className="mt-1 text-sm text-ink/60">
+                    Reabre, continua ou agenda as séries que guardaste — sem repetir episódios.
+                  </p>
+                  <span className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-terracotta">
+                    {guardadas.length > 0 ? "Ver biblioteca" : "Ainda vazia"} <ArrowUpRight size={15} />
+                  </span>
                 </button>
               </div>
-            </div>
-
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              <div>
-                <label className="mb-1.5 block text-sm font-semibold text-ink">Para quem é</label>
-                <input
-                  value={publico}
-                  onChange={(e) => setPublico(e.target.value)}
-                  placeholder="O teu público / avatar"
-                  className="w-full rounded-xl border border-[var(--color-border)] bg-[#FCFAF6] px-4 py-2.5 text-sm text-ink outline-none focus:border-terracotta"
-                />
-              </div>
-              <div>
-                <label className="mb-1.5 block text-sm font-semibold text-ink">
-                  O que vendes <span className="font-normal text-ink/45">(opcional)</span>
-                </label>
-                <input
-                  value={oferta}
-                  onChange={(e) => setOferta(e.target.value)}
-                  placeholder="Serviço / produto — para os CTA"
-                  className="w-full rounded-xl border border-[var(--color-border)] bg-[#FCFAF6] px-4 py-2.5 text-sm text-ink outline-none focus:border-terracotta"
-                />
-              </div>
-            </div>
-            {prefilled && (
-              <p className="mt-2 text-xs text-ink/45">
-                ✨ Preenchi o público e a oferta a partir do teu Documento Mestre. Podes editar.
-              </p>
             )}
 
+            {/* CRIAR — o formulário da ideia */}
+            {inicio === "criar" && (
+            <>
             <button
-              onClick={() => gerarNomes()}
-              disabled={loading || !ideia.trim()}
-              className="mt-5 inline-flex items-center gap-2 rounded-full bg-terracotta px-6 py-3 text-sm font-medium text-cream transition-colors hover:bg-terracotta-dark disabled:opacity-40"
+              onClick={() => setInicio("hub")}
+              className="mb-4 inline-flex items-center gap-1.5 text-sm text-ink/55 hover:text-terracotta"
             >
-              {loading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
-              {loading ? "A pensar em nomes…" : "Sugerir nomes de série"}
+              <ArrowLeft size={14} /> Voltar
             </button>
+            <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6">
+              <label className="mb-1.5 block text-sm font-semibold text-ink">
+                A tua ideia ou tema
+              </label>
+              <p className="mb-2 text-xs text-ink/55">
+                Amplo é ouro. "Hábitos para postar sempre" &gt; "como postar 1 reel por semana".
+              </p>
+              <textarea
+                value={ideia}
+                onChange={(e) => setIdeia(e.target.value)}
+                rows={3}
+                placeholder="Ex.: organização de casa para mães cansadas"
+                className="w-full resize-none rounded-xl border border-[var(--color-border)] bg-[#FCFAF6] px-4 py-3 text-sm text-ink outline-none focus:border-terracotta"
+              />
 
-            <div className="mt-4 flex items-start gap-2 rounded-xl border border-terracotta/25 bg-terracotta/[0.06] px-3.5 py-2.5 text-xs text-ink/70">
-              <span aria-hidden>ℹ️</span>
-              <span>Cada pessoa pode gerar até <strong className="font-semibold">5 séries por mês</strong>.</span>
+              {/* Modo: focar na ideia vs. explorar variações à volta */}
+              <div className="mt-4">
+                <p className="mb-2 text-sm font-semibold text-ink">O que queres que eu sugira?</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <button
+                    type="button"
+                    onClick={() => setModo("exata")}
+                    className={`rounded-xl border px-4 py-3 text-left transition-colors ${
+                      modo === "exata"
+                        ? "border-terracotta bg-terracotta/8"
+                        : "border-[var(--color-border)] bg-white hover:border-terracotta/50"
+                    }`}
+                  >
+                    <span
+                      className={`block text-sm font-semibold ${modo === "exata" ? "text-terracotta-dark" : "text-ink"}`}
+                    >
+                      A minha ideia
+                    </span>
+                    <span className="mt-0.5 block text-xs text-ink/55">
+                      Séries centradas exatamente no que escreveste.
+                    </span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setModo("explorar")}
+                    className={`rounded-xl border px-4 py-3 text-left transition-colors ${
+                      modo === "explorar"
+                        ? "border-terracotta bg-terracotta/8"
+                        : "border-[var(--color-border)] bg-white hover:border-terracotta/50"
+                    }`}
+                  >
+                    <span
+                      className={`block text-sm font-semibold ${modo === "explorar" ? "text-terracotta-dark" : "text-ink"}`}
+                    >
+                      Explorar à volta
+                    </span>
+                    <span className="mt-0.5 block text-xs text-ink/55">
+                      A minha ideia + ângulos melhorados do mesmo tema.
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Tom: escolher o registo da voz (próximo, descontraído, inspirador…) */}
+              <div className="mt-4">
+                <p className="mb-2 text-sm font-semibold text-ink">Que tom queres na tua voz?</p>
+                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {TONS.map((t) => {
+                    const ativo = tom === t.key;
+                    return (
+                      <button
+                        key={t.key}
+                        type="button"
+                        onClick={() => setTom(t.key)}
+                        aria-pressed={ativo}
+                        className={`rounded-xl border px-4 py-3 text-left transition-colors ${
+                          ativo
+                            ? "border-terracotta bg-terracotta/8"
+                            : "border-[var(--color-border)] bg-white hover:border-terracotta/50"
+                        }`}
+                      >
+                        <span
+                          className={`block text-sm font-semibold ${ativo ? "text-terracotta-dark" : "text-ink"}`}
+                        >
+                          {t.label}
+                        </span>
+                        <span className="mt-0.5 block text-xs text-ink/55">{t.desc}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label className="mb-1.5 block text-sm font-semibold text-ink">Para quem é</label>
+                  <input
+                    value={publico}
+                    onChange={(e) => setPublico(e.target.value)}
+                    placeholder="O teu público / avatar"
+                    className="w-full rounded-xl border border-[var(--color-border)] bg-[#FCFAF6] px-4 py-2.5 text-sm text-ink outline-none focus:border-terracotta"
+                  />
+                </div>
+                <div>
+                  <label className="mb-1.5 block text-sm font-semibold text-ink">
+                    O que vendes <span className="font-normal text-ink/45">(opcional)</span>
+                  </label>
+                  <input
+                    value={oferta}
+                    onChange={(e) => setOferta(e.target.value)}
+                    placeholder="Serviço / produto — para os CTA"
+                    className="w-full rounded-xl border border-[var(--color-border)] bg-[#FCFAF6] px-4 py-2.5 text-sm text-ink outline-none focus:border-terracotta"
+                  />
+                </div>
+              </div>
+              {prefilled && (
+                <p className="mt-2 text-xs text-ink/45">
+                  ✨ Preenchi o público e a oferta a partir do teu Documento Mestre. Podes editar.
+                </p>
+              )}
+
+              <button
+                onClick={() => gerarNomes()}
+                disabled={loading || !ideia.trim()}
+                className="mt-5 inline-flex items-center gap-2 rounded-full bg-terracotta px-6 py-3 text-sm font-medium text-cream transition-colors hover:bg-terracotta-dark disabled:opacity-40"
+              >
+                {loading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+                {loading ? "A pensar em nomes…" : "Sugerir nomes de série"}
+              </button>
+
+              <div className="mt-4 flex items-start gap-2 rounded-xl border border-terracotta/25 bg-terracotta/[0.06] px-3.5 py-2.5 text-xs text-ink/70">
+                <span aria-hidden>ℹ️</span>
+                <span>
+                  Cada pessoa pode gerar até{" "}
+                  <strong className="font-semibold">5 séries por mês</strong>.
+                </span>
+              </div>
             </div>
-          </div>
+            </>
+            )}
+
+            {/* AS TUAS SÉRIES — biblioteca de cards; entrar mostra os roteiros */}
+            {inicio === "biblioteca" && (
+            <>
+            <button
+              onClick={() => setInicio("hub")}
+              className="mb-4 inline-flex items-center gap-1.5 text-sm text-ink/55 hover:text-terracotta"
+            >
+              <ArrowLeft size={14} /> Voltar
+            </button>
+            <div className="rounded-2xl border border-[var(--color-border)] bg-white p-6">
+                <div className="mb-1 flex items-center gap-2">
+                  <Library size={16} className="text-terracotta" />
+                  <p className="text-sm font-semibold text-ink">As tuas séries</p>
+                  {guardadas.length > 0 && (
+                    <span className="rounded-full bg-terracotta/10 px-2 py-0.5 text-[11px] font-semibold text-terracotta">
+                      {guardadas.length}
+                    </span>
+                  )}
+                </div>
+                <p className="mb-4 text-xs text-ink/55">
+                  Cada card é uma série guardada. Clica para abrir os roteiros — copiar, exportar,
+                  agendar ou continuar de onde ficaste, sem repetir episódios.
+                </p>
+                {guardadas.length === 0 ? (
+                  <div className="rounded-2xl border border-dashed border-[var(--color-border)] bg-[#FCFAF6] px-4 py-8 text-center">
+                    <p className="text-sm text-ink/60">Ainda não guardaste nenhuma série.</p>
+                    <button
+                      onClick={() => setInicio("criar")}
+                      className="mt-3 inline-flex items-center gap-2 rounded-full bg-terracotta px-5 py-2.5 text-sm font-medium text-cream transition-colors hover:bg-terracotta-dark"
+                    >
+                      <Sparkles size={15} /> Cria a tua série
+                    </button>
+                  </div>
+                ) : (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {guardadas.map((s) => (
+                    <div
+                      key={s.id}
+                      className="group relative rounded-2xl border border-[var(--color-border)] bg-[#FCFAF6] transition-colors hover:border-terracotta"
+                    >
+                      <button
+                        onClick={() => abrirSerie(s)}
+                        className="block w-full p-5 pr-12 text-left"
+                        aria-label={`Abrir a série ${s.nome}`}
+                      >
+                        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-terracotta/10 text-terracotta">
+                          <Film size={17} />
+                        </span>
+                        <p className="mt-3 line-clamp-2 font-serif text-base leading-snug text-ink">
+                          {s.nome}
+                        </p>
+                        <p className="mt-1 text-xs text-ink/55">
+                          {s.roteiros.length} {s.roteiros.length === 1 ? "episódio" : "episódios"}
+                          {s.tom ? ` · ${tomLabel(s.tom)}` : ""}
+                        </p>
+                        <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-terracotta">
+                          <PlayCircle size={14} /> Abrir roteiros
+                        </span>
+                      </button>
+                      <button
+                        onClick={() => apagarSerie(s.id)}
+                        aria-label={`Apagar série ${s.nome}`}
+                        className="absolute right-3 top-3 inline-flex items-center justify-center rounded-full border border-[var(--color-border)] bg-white p-2 text-ink/40 transition-colors hover:border-red-300 hover:text-red-500"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+                )}
+              </div>
+              </>
+            )}
+          </>
         )}
 
         {/* ETAPA 2 — OS NOMES */}
@@ -473,7 +759,8 @@ export default function ReelsEmSerie() {
             )}
 
             <p className="mb-3 font-serif text-lg text-ink">
-              Escolhe o nome da série <span className="text-ink/45">(o que puxa o dedo a parar)</span>
+              Escolhe o nome da série{" "}
+              <span className="text-ink/45">(o que puxa o dedo a parar)</span>
             </p>
 
             <div className="grid gap-3">
@@ -541,13 +828,17 @@ export default function ReelsEmSerie() {
                   min={1}
                   max={10}
                   value={quantidade}
-                  onChange={(e) => setQuantidade(Math.min(Math.max(parseInt(e.target.value, 10) || 1, 1), 10))}
+                  onChange={(e) =>
+                    setQuantidade(Math.min(Math.max(parseInt(e.target.value, 10) || 1, 1), 10))
+                  }
                   aria-label="Número de episódios"
                   className="h-10 w-20 rounded-xl border border-[var(--color-border)] bg-white px-3 text-center text-sm text-ink outline-none focus:border-terracotta"
                 />
                 <span className="text-sm text-ink/55">episódios</span>
               </div>
-              <p className="mb-4 text-xs text-ink/45">Até 10 de cada vez — depois podes pedir a continuação.</p>
+              <p className="mb-4 text-xs text-ink/45">
+                Até 10 de cada vez — depois podes pedir a continuação.
+              </p>
               <button
                 onClick={() => gerarRoteiros()}
                 disabled={loading || !nomeSel || semSaldo}
@@ -576,38 +867,78 @@ export default function ReelsEmSerie() {
         {/* ETAPA 3 — OS ROTEIROS */}
         {etapa === "roteiros" && (
           <div>
-            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-              <div>
+            <div className="mb-5">
+              <div className="mb-4">
                 <p className="font-serif text-xl text-ink">{nomeSel}</p>
-                <p className="text-sm text-ink/55">{roteiros.length} episódios prontos para gravar</p>
+                <p className="text-sm text-ink/55">
+                  {roteiros.length} episódios prontos para gravar
+                </p>
               </div>
-              <div className="flex flex-wrap gap-2">
-                <CopyButton text={copiarTudoTexto} />
+
+              {/* Barra de ações agrupada por função: Guardar · Exportar · Agendar */}
+              <div className="flex flex-col gap-3 rounded-2xl border border-[var(--color-border)] bg-white p-3 md:flex-row md:flex-wrap md:items-center">
+                {/* Guardar na biblioteca (ação principal) */}
                 <button
-                  onClick={descarregarTudo}
-                  className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-white px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-terracotta"
+                  onClick={guardarSerieManual}
+                  className={`inline-flex items-center justify-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors ${
+                    serieGuardadaOk
+                      ? "bg-terracotta/10 text-terracotta-dark"
+                      : "bg-terracotta text-cream hover:bg-terracotta-dark"
+                  }`}
                 >
-                  <Download size={15} /> .txt
+                  {serieGuardadaOk ? <Check size={15} /> : <Save size={15} />}
+                  {serieGuardadaOk ? "Série guardada" : "Guardar série"}
                 </button>
-                <button
-                  onClick={exportarPdf}
-                  className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-white px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-terracotta"
-                >
-                  <FileDown size={15} /> Exportar PDF
-                </button>
-                <button
-                  onClick={guardarNoCalendario}
-                  className="inline-flex items-center gap-2 rounded-full bg-terracotta px-4 py-2 text-sm font-medium text-cream transition-colors hover:bg-terracotta-dark"
-                >
-                  <CalendarPlus size={15} /> Guardar no calendário
-                </button>
+
+                <span className="hidden h-7 w-px bg-[var(--color-border)] md:block" />
+
+                {/* Exportar / copiar */}
+                <div className="flex flex-wrap items-center gap-2">
+                  <CopyButton text={copiarTudoTexto} />
+                  <button
+                    onClick={descarregarTudo}
+                    className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-white px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-terracotta"
+                  >
+                    <Download size={15} /> .txt
+                  </button>
+                  <button
+                    onClick={exportarPdf}
+                    className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-white px-4 py-2 text-sm font-medium text-ink transition-colors hover:border-terracotta"
+                  >
+                    <FileDown size={15} /> PDF
+                  </button>
+                </div>
+
+                {/* Agendar no calendário */}
+                <div className="flex flex-wrap items-center gap-2 md:ml-auto">
+                  <label className="inline-flex items-center gap-2 rounded-full border border-[var(--color-border)] bg-white px-3 py-2 text-sm text-ink/70">
+                    <span className="whitespace-nowrap text-xs font-medium text-ink/55">Data</span>
+                    <input
+                      type="date"
+                      value={dataAgenda}
+                      onChange={(e) => setDataAgenda(e.target.value)}
+                      aria-label="Data para agendar no calendário"
+                      className="bg-transparent text-sm text-ink outline-none"
+                    />
+                  </label>
+                  <button
+                    onClick={guardarNoCalendario}
+                    className="inline-flex items-center gap-2 rounded-full border border-terracotta bg-white px-4 py-2 text-sm font-medium text-terracotta transition-colors hover:bg-terracotta/5"
+                  >
+                    <CalendarPlus size={15} /> Guardar no calendário
+                  </button>
+                </div>
               </div>
             </div>
 
             {guardados > 0 && (
               <div className="mb-5 flex flex-wrap items-center gap-2 rounded-xl border border-terracotta/30 bg-terracotta/[0.06] px-4 py-3 text-sm text-ink">
                 <Check size={16} className="text-terracotta" />
-                {guardados} {guardados === 1 ? "episódio guardado" : "episódios guardados"} no calendário de conteúdo — agora escolhe a data de cada um.
+                {guardados} {guardados === 1 ? "episódio guardado" : "episódios guardados"} no
+                calendário de conteúdo
+                {dataAgenda
+                  ? ` para ${dataAgenda.split("-").reverse().join("/")} — podes ajustar cada um lá.`
+                  : " — agora escolhe a data de cada um."}
                 <Link
                   to="/metodo/pilar-2/redes-sociais?aba=plano"
                   className="inline-flex items-center gap-1 font-semibold text-terracotta hover:text-terracotta-dark"
@@ -637,7 +968,10 @@ export default function ReelsEmSerie() {
             {/* Roteiros */}
             <div className="space-y-4">
               {roteiros.map((r) => (
-                <div key={r.n} className="rounded-2xl border border-[var(--color-border)] bg-white p-5">
+                <div
+                  key={r.n}
+                  className="rounded-2xl border border-[var(--color-border)] bg-white p-5"
+                >
                   <div className="mb-3 flex items-center justify-between gap-3">
                     <span className="rounded-full bg-terracotta/10 px-3 py-1 text-xs font-semibold text-terracotta">
                       Episódio {r.n}
@@ -660,15 +994,16 @@ export default function ReelsEmSerie() {
             </div>
 
             <div className="mt-6 rounded-xl border border-dashed border-[var(--color-border)] bg-white px-4 py-3 text-sm text-ink/60">
-              💡 Lê cada roteiro em voz alta e troca qualquer palavra que tu não dirias — o método vive
-              da tua voz. A estrutura e a primeira versão são minhas; a voz é tua.
+              💡 Lê cada roteiro em voz alta e troca qualquer palavra que tu não dirias — o método
+              vive da tua voz. A estrutura e a primeira versão são minhas; a voz é tua.
             </div>
 
             {/* Continuar a série — gera mais episódios sem perder os atuais */}
             <div className="mt-6 rounded-2xl border border-terracotta/30 bg-white p-5">
               <p className="mb-1 text-sm font-semibold text-ink">Continuar a série</p>
               <p className="mb-3 text-sm text-ink/55">
-                Gera mais episódios a partir do {roteiros.length + 1}º — os {roteiros.length} atuais mantêm-se.
+                Gera mais episódios a partir do {roteiros.length + 1}º — os {roteiros.length} atuais
+                mantêm-se.
               </p>
               <div className="flex flex-wrap items-center gap-2">
                 <input
@@ -676,7 +1011,9 @@ export default function ReelsEmSerie() {
                   min={1}
                   max={10}
                   value={maisN}
-                  onChange={(e) => setMaisN(Math.min(Math.max(parseInt(e.target.value, 10) || 1, 1), 10))}
+                  onChange={(e) =>
+                    setMaisN(Math.min(Math.max(parseInt(e.target.value, 10) || 1, 1), 10))
+                  }
                   aria-label="Quantos episódios a mais"
                   className="h-10 w-20 rounded-xl border border-[var(--color-border)] bg-white px-3 text-center text-sm text-ink outline-none focus:border-terracotta"
                 />
@@ -685,7 +1022,11 @@ export default function ReelsEmSerie() {
                   disabled={loading}
                   className="inline-flex items-center gap-2 rounded-full bg-terracotta px-5 py-2.5 text-sm font-medium text-cream transition-colors hover:bg-terracotta-dark disabled:opacity-40"
                 >
-                  {loading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
+                  {loading ? (
+                    <Loader2 size={16} className="animate-spin" />
+                  ) : (
+                    <Sparkles size={16} />
+                  )}
                   {loading ? "A escrever…" : `Gerar mais ${maisN} episódios`}
                 </button>
               </div>

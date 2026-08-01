@@ -22,6 +22,7 @@ export default function PillarHeader({
   titulo,
   tituloHighlight,
   subtitulo,
+  bg,
 }: {
   numeral: string;
   icon: ReactNode;
@@ -29,6 +30,8 @@ export default function PillarHeader({
   titulo: string;
   tituloHighlight?: string;
   subtitulo?: string;
+  /** Fundo personalizado (CSS background). Se omitido, usa o gradiente terracotta. */
+  bg?: string;
 }) {
   const roman = toRoman(numeral);
   const parts = titulo.split(/ — | – /);
@@ -37,7 +40,12 @@ export default function PillarHeader({
 
   return (
     <div className="px-4 md:px-10 pt-5 md:pt-7">
-      <header className="relative overflow-hidden rounded-[28px] md:rounded-[34px] text-white bg-gradient-to-br from-terracotta to-terracotta-dark max-w-[1280px] mx-auto">
+      <header
+        className={`relative overflow-hidden rounded-[28px] md:rounded-[34px] text-white max-w-[1280px] mx-auto ${
+          bg ? "" : "bg-gradient-to-br from-terracotta to-terracotta-dark"
+        }`}
+        style={bg ? { background: bg } : undefined}
+      >
         {/* padrão de pontos */}
         <div
           aria-hidden
@@ -45,19 +53,19 @@ export default function PillarHeader({
           style={{ backgroundImage: "radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)", backgroundSize: "24px 24px" }}
         />
 
-        <div className="relative px-6 md:px-12 py-9 md:py-12 grid grid-cols-[3.2rem_1fr] md:grid-cols-[5.5rem_1fr] gap-5 md:gap-9 items-start">
+        <div className="relative px-6 md:px-10 py-5 md:py-7 grid grid-cols-[2.2rem_1fr] md:grid-cols-[3.5rem_1fr] gap-4 md:gap-6 items-start">
           {/* Numeral */}
-          <div className="font-editorial text-[3.2rem] md:text-[5.5rem] leading-[0.85] text-white/25 tabular-nums select-none -mt-1" aria-hidden>
+          <div className="font-editorial text-[2.2rem] md:text-[3.5rem] leading-[0.85] text-white/25 tabular-nums select-none -mt-0.5" aria-hidden>
             {roman}
           </div>
 
           {/* Bloco de título */}
           <div className="min-w-0">
-            <p className="text-[11px] tracking-[0.28em] uppercase text-white/80 font-medium mb-3 md:mb-4">
+            <p className="text-[10px] tracking-[0.28em] uppercase text-white/80 font-medium mb-1.5 md:mb-2">
               {pilarLabel}
             </p>
 
-            <h1 className="font-editorial uppercase text-[2.2rem] md:text-[3.75rem] lg:text-[4.4rem] leading-[0.92] tracking-[-0.02em] text-white">
+            <h1 className="font-editorial uppercase text-[1.6rem] md:text-[2.4rem] lg:text-[2.8rem] leading-[0.95] tracking-[-0.02em] text-white">
               {titleLead && <><span className="text-white/55">{titleLead}</span>{" "}</>}
               <span>{titleRest}</span>
               {tituloHighlight && (
@@ -72,7 +80,7 @@ export default function PillarHeader({
             </h1>
 
             {(subtitulo || icon) && (
-              <div className="mt-6 md:mt-8 flex items-center gap-4">
+              <div className="mt-3 md:mt-4 flex items-center gap-3">
                 {icon && (
                   <div className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-white/15 border border-white/25 backdrop-blur-sm flex items-center justify-center text-white shrink-0">
                     {icon}

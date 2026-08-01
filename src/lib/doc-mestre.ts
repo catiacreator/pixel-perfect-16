@@ -45,6 +45,25 @@ export function padArray(arr: string[], n: number): string[] {
   return out;
 }
 
+// Percentagem de preenchimento do Documento Mestre (0–100).
+// Campos-base + as 5 dores (paridade com a lógica de pontos do servidor).
+const DOC_CAMPOS_BASE: (keyof DocState)[] = [
+  "nome",
+  "profissao",
+  "oQueFaz",
+  "comoResolve",
+  "publico",
+  "tomDeVoz",
+];
+
+export function docMestrePct(d?: DocState): number {
+  const doc = d ?? loadInitial();
+  const base = DOC_CAMPOS_BASE.filter((k) => String(doc[k] ?? "").trim()).length;
+  const dores = (doc.dores || []).filter((x) => x.trim()).length;
+  const total = DOC_CAMPOS_BASE.length + 5; // 6 + 5 = 11
+  return Math.round(((base + dores) / total) * 100);
+}
+
 // Lê o Documento Mestre do localStorage (browser). No servidor devolve EMPTY.
 export function loadInitial(): DocState {
   if (typeof window === "undefined") return EMPTY;

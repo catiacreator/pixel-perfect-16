@@ -18,19 +18,6 @@ const CARDS = [
     icon: Compass,
     estruturaId: "jornada",
   },
-  {
-    key: "instagram",
-    tag: "Conteúdo · Instagram",
-    titulo: "Conteúdo Todo Dia",
-    desc: "Transforma o teu método em posts, linha editorial e calendário — para crescer com consistência.",
-    to: "/metodo/pilar-2/redes-sociais",
-    cta: "Criar conteúdo",
-    img: "/redes-sociais.png?v=3",
-    pos: "center 42%",
-    cor: "#C8487E",
-    icon: Instagram,
-    estruturaId: "redes",
-  },
 ];
 
 export default function ProtocoloViral() {
@@ -53,28 +40,7 @@ export default function ProtocoloViral() {
           </p>
         </div>
 
-        {/* Começa aqui → Documento Mestre */}
-        <Link
-          to="/doc-mestre"
-          className="fade-up group relative flex items-center gap-4 md:gap-5 rounded-3xl bg-gradient-to-r from-terracotta to-terracotta-dark text-cream p-6 md:p-7 mb-5 md:mb-6 overflow-hidden transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_28px_55px_-26px_rgba(90,40,25,0.7)]"
-        >
-          <span aria-hidden className="pointer-events-none absolute -top-16 -right-10 w-64 h-64 rounded-full bg-white/10 blur-2xl" />
-          <span className="relative w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-white/15 flex items-center justify-center shrink-0">
-            <FileText size={22} strokeWidth={1.75} />
-          </span>
-          <div className="relative min-w-0 flex-1">
-            <p className="text-[11px] tracking-[0.28em] uppercase text-cream/80 font-semibold">Começa aqui</p>
-            <h2 className="font-display text-2xl md:text-3xl leading-tight mt-0.5">Documento Mestre</h2>
-            <p className="text-sm text-cream/85 mt-1.5 leading-relaxed max-w-lg">
-              A base que alimenta todo o teu conteúdo. Preenche uma vez — usa em todo o método.
-            </p>
-          </div>
-          <span className="relative w-11 h-11 rounded-full border border-cream/50 flex items-center justify-center shrink-0 transition-all duration-300 group-hover:bg-cream group-hover:text-terracotta group-hover:translate-x-0.5">
-            <ArrowUpRight size={17} strokeWidth={2.25} />
-          </span>
-        </Link>
-
-        <div className="grid md:grid-cols-2 gap-5 md:gap-6">
+        <div className="grid gap-5 md:gap-6 max-w-2xl">
           {CARDS.map((c, i) => {
             const Icon = c.icon;
             const eid = (c as { estruturaId?: string }).estruturaId;

@@ -24,9 +24,12 @@ function uid(): string {
   return `p_${Date.now().toString(36)}_${Math.floor(Math.random() * 1e6).toString(36)}`;
 }
 
-/** Acrescenta posts ao Plano de Posts (por agendar). Devolve quantos criou. */
+/**
+ * Acrescenta posts ao Plano de Posts. Cada item pode trazer `data` (YYYY-MM-DD)
+ * e `hora` — se vierem vazios, o post fica "por agendar". Devolve quantos criou.
+ */
 export function adicionarPostsPlano(
-  itens: { tipo: string; titulo: string; conteudo: string }[],
+  itens: { tipo: string; titulo: string; conteudo: string; data?: string; hora?: string }[],
 ): number {
   if (typeof window === "undefined" || !itens.length) return 0;
   let posts: PlanoPost[] = [];
@@ -45,8 +48,8 @@ export function adicionarPostsPlano(
     titulo: it.titulo,
     conteudo: it.conteudo,
     link: "",
-    data: "",
-    hora: "",
+    data: it.data || "",
+    hora: it.hora || "",
   }));
   try {
     window.localStorage.setItem(PLANO_KEY, JSON.stringify({ posts: [...posts, ...novos] }));

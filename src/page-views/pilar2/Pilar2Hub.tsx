@@ -60,7 +60,9 @@ export default function Pilar2Hub() {
         <p className="text-[11px] tracking-[0.28em] uppercase text-ink/45 font-medium mb-5">As etapas do Pilar 2</p>
         <div className="space-y-4">
           {isLoading && <p className="text-sm text-ink/50">Carregando etapas…</p>}
-          {data?.etapas.map((e, idx) => (
+          {data?.etapas
+            .filter((e) => e.slug !== "pesquisa-mercado" && e.slug !== "metodo")
+            .map((e, idx) => (
             <div key={e.id} className="relative">
               <EtapaCard
                 icon={ICONS[e.slug] ?? <BookOpen size={18} />}

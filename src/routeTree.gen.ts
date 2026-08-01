@@ -21,9 +21,11 @@ import { Route as MetodoRouteImport } from './routes/metodo'
 import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as MaquinaAnalisesRouteImport } from './routes/maquina-analises'
 import { Route as GlossarioRouteImport } from './routes/glossario'
+import { Route as FormatosRouteImport } from './routes/formatos'
 import { Route as EncontrosRouteImport } from './routes/encontros'
 import { Route as DocMestreRouteImport } from './routes/doc-mestre'
 import { Route as CriarProdutoRouteImport } from './routes/criar-produto'
+import { Route as CriacaoLivreRouteImport } from './routes/criacao-livre'
 import { Route as ConteudoIaRouteImport } from './routes/conteudo-ia'
 import { Route as ConquistasRouteImport } from './routes/conquistas'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -169,6 +171,11 @@ const GlossarioRoute = GlossarioRouteImport.update({
   path: '/glossario',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FormatosRoute = FormatosRouteImport.update({
+  id: '/formatos',
+  path: '/formatos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EncontrosRoute = EncontrosRouteImport.update({
   id: '/encontros',
   path: '/encontros',
@@ -182,6 +189,11 @@ const DocMestreRoute = DocMestreRouteImport.update({
 const CriarProdutoRoute = CriarProdutoRouteImport.update({
   id: '/criar-produto',
   path: '/criar-produto',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CriacaoLivreRoute = CriacaoLivreRouteImport.update({
+  id: '/criacao-livre',
+  path: '/criacao-livre',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConteudoIaRoute = ConteudoIaRouteImport.update({
@@ -653,9 +665,11 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/conteudo-ia': typeof ConteudoIaRoute
+  '/criacao-livre': typeof CriacaoLivreRoute
   '/criar-produto': typeof CriarProdutoRoute
   '/doc-mestre': typeof DocMestreRoute
   '/encontros': typeof EncontrosRoute
+  '/formatos': typeof FormatosRoute
   '/glossario': typeof GlossarioRoute
   '/maquina-analises': typeof MaquinaAnalisesRoute
   '/mensagens': typeof MensagensRoute
@@ -753,9 +767,11 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/conteudo-ia': typeof ConteudoIaRoute
+  '/criacao-livre': typeof CriacaoLivreRoute
   '/criar-produto': typeof CriarProdutoRoute
   '/doc-mestre': typeof DocMestreRoute
   '/encontros': typeof EncontrosRoute
+  '/formatos': typeof FormatosRoute
   '/glossario': typeof GlossarioRoute
   '/maquina-analises': typeof MaquinaAnalisesRoute
   '/mensagens': typeof MensagensRoute
@@ -844,9 +860,11 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/conteudo-ia': typeof ConteudoIaRoute
+  '/criacao-livre': typeof CriacaoLivreRoute
   '/criar-produto': typeof CriarProdutoRoute
   '/doc-mestre': typeof DocMestreRoute
   '/encontros': typeof EncontrosRoute
+  '/formatos': typeof FormatosRoute
   '/glossario': typeof GlossarioRoute
   '/maquina-analises': typeof MaquinaAnalisesRoute
   '/mensagens': typeof MensagensRoute
@@ -946,9 +964,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/conquistas'
     | '/conteudo-ia'
+    | '/criacao-livre'
     | '/criar-produto'
     | '/doc-mestre'
     | '/encontros'
+    | '/formatos'
     | '/glossario'
     | '/maquina-analises'
     | '/mensagens'
@@ -1046,9 +1066,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/conquistas'
     | '/conteudo-ia'
+    | '/criacao-livre'
     | '/criar-produto'
     | '/doc-mestre'
     | '/encontros'
+    | '/formatos'
     | '/glossario'
     | '/maquina-analises'
     | '/mensagens'
@@ -1136,9 +1158,11 @@ export interface FileRouteTypes {
     | '/auth'
     | '/conquistas'
     | '/conteudo-ia'
+    | '/criacao-livre'
     | '/criar-produto'
     | '/doc-mestre'
     | '/encontros'
+    | '/formatos'
     | '/glossario'
     | '/maquina-analises'
     | '/mensagens'
@@ -1238,9 +1262,11 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ConquistasRoute: typeof ConquistasRoute
   ConteudoIaRoute: typeof ConteudoIaRoute
+  CriacaoLivreRoute: typeof CriacaoLivreRoute
   CriarProdutoRoute: typeof CriarProdutoRoute
   DocMestreRoute: typeof DocMestreRoute
   EncontrosRoute: typeof EncontrosRoute
+  FormatosRoute: typeof FormatosRoute
   GlossarioRoute: typeof GlossarioRoute
   MaquinaAnalisesRoute: typeof MaquinaAnalisesRoute
   MensagensRoute: typeof MensagensRoute
@@ -1344,6 +1370,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GlossarioRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/formatos': {
+      id: '/formatos'
+      path: '/formatos'
+      fullPath: '/formatos'
+      preLoaderRoute: typeof FormatosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/encontros': {
       id: '/encontros'
       path: '/encontros'
@@ -1363,6 +1396,13 @@ declare module '@tanstack/react-router' {
       path: '/criar-produto'
       fullPath: '/criar-produto'
       preLoaderRoute: typeof CriarProdutoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/criacao-livre': {
+      id: '/criacao-livre'
+      path: '/criacao-livre'
+      fullPath: '/criacao-livre'
+      preLoaderRoute: typeof CriacaoLivreRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/conteudo-ia': {
@@ -2257,9 +2297,11 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ConquistasRoute: ConquistasRoute,
   ConteudoIaRoute: ConteudoIaRoute,
+  CriacaoLivreRoute: CriacaoLivreRoute,
   CriarProdutoRoute: CriarProdutoRoute,
   DocMestreRoute: DocMestreRoute,
   EncontrosRoute: EncontrosRoute,
+  FormatosRoute: FormatosRoute,
   GlossarioRoute: GlossarioRoute,
   MaquinaAnalisesRoute: MaquinaAnalisesRoute,
   MensagensRoute: MensagensRoute,

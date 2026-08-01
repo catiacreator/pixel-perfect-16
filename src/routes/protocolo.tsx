@@ -1,12 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
-import ProtocoloViral from "@/page-views/ProtocoloViral";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 
+// Página intermédia escondida — vai direto para o fluxo da jornada.
 export const Route = createFileRoute("/protocolo")({
-  head: () => ({
-    meta: [
-      { title: "Leveza no Digital — não é sorte, é método" },
-      { name: "description", content: "A mentoria de criação e viralização no Instagram: a tua jornada + criar para o Instagram." },
-    ],
-  }),
-  component: ProtocoloViral,
+  beforeLoad: () => {
+    throw redirect({ to: "/metodo" });
+  },
 });

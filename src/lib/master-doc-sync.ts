@@ -27,6 +27,8 @@ const SYNC_KEYS = [
   "leveza.aulas-concluidas.v1",
   "leveza.agenda.v1",
   "leveza.ideias-rapidas.v1",
+  "leveza.plano-conteudo.v1",
+  "leveza.reels-series.v1",
 ];
 
 // Disparado depois de o localStorage ser hidratado a partir do Supabase.
@@ -39,9 +41,7 @@ let hydrating = false;
 let pushTimer: ReturnType<typeof setTimeout> | null = null;
 
 const origSetItem =
-  typeof window !== "undefined"
-    ? window.localStorage.setItem.bind(window.localStorage)
-    : null;
+  typeof window !== "undefined" ? window.localStorage.setItem.bind(window.localStorage) : null;
 
 function installInterceptor() {
   if (typeof window === "undefined" || !origSetItem) return;

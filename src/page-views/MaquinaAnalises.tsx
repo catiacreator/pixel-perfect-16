@@ -194,7 +194,7 @@ export default function MaquinaAnalises() {
             <p className="text-sm text-ink/60 mb-5">
               Se já preencheste o Documento Mestre, aproveitamos o que lá está e poupas um passo inteiro.
             </p>
-            <div className="grid md:grid-cols-2 gap-3.5">
+            <div className="grid gap-3.5">
               <button
                 onClick={usarDocMestre}
                 disabled={!docTemConteudo}
@@ -209,19 +209,6 @@ export default function MaquinaAnalises() {
                   {docTemConteudo
                     ? "Traz o teu público, as dores e os produtos. Só tens de juntar os screenshots e dizer os objetivos."
                     : "O teu Documento Mestre ainda está vazio. Preenche-o primeiro para usares esta opção."}
-                </p>
-              </button>
-
-              <button
-                onClick={comecarDoZero}
-                className="text-left rounded-xl border-2 p-5 transition-colors"
-                style={{ borderStyle: "dashed", borderColor: "#e3c7d6", background: "#fffafc" }}
-              >
-                <div className="text-2xl mb-1.5">✍️</div>
-                <p className="text-[14px] font-bold text-ink mb-1">Criar do zero</p>
-                <p className="text-[12.5px] text-ink/60">
-                  Extrai os dados do perfil a partir dos screenshots e preenche tudo à mão. Serve para analisar
-                  qualquer conta, não só a tua.
                 </p>
               </button>
             </div>
