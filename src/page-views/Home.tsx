@@ -304,14 +304,14 @@ export default function Home() {
         style={{ background: "radial-gradient(circle at center, #F0A766 0%, #C8487E 35%, transparent 62%)" }}
       />
 
-      {/* Hero removido — fica só o robô pequeno num canto à direita */}
-      <section className="px-4 md:px-10 pt-4 md:pt-6 pb-1">
-        <div className="max-w-[1400px] mx-auto flex justify-end pr-2 md:pr-4">
-          <div className="fade-up" style={{ animationDelay: "120ms" }}>
-            <HeroRobot scale={0.4} />
-          </div>
-        </div>
-      </section>
+      {/* Robô flutuante — canto direito, fixo, não bloqueia cliques */}
+      <div
+        className="pointer-events-none fixed right-3 top-32 z-20 hidden lg:block fade-up"
+        style={{ animationDelay: "120ms" }}
+      >
+        <HeroRobot scale={0.4} />
+      </div>
+      <div className="pt-4 md:pt-6" />
 
       {/* Dois caminhos — mesmo contentor do hero (max-w-[1400px] + px-4/px-10) p/ alinhar à esquerda */}
       <section className="px-4 md:px-10 pt-8 md:pt-12 pb-20 md:pb-28">
