@@ -18,7 +18,8 @@ function proximos(path: string, aba?: string): Passo[] {
   // fim, depois de a análise estar criada (ver MaquinaAnalises, passo 4).
   if (path.startsWith("/maquina-analises")) return [];
   if (path.startsWith("/metodo/pilar-2/reels-em-serie")) return [];
-  if (path.startsWith("/metodo/pilar-2")) return [{ titulo: "Os teus pilares de conteúdo", to: "/metodo/pilar-2/redes-sociais?aba=pilares" }];
+  // Páginas do "Criar autoridade" (identidade, tom de voz, etc.) — sem botão "Os teus pilares".
+  if (path.startsWith("/metodo/pilar-2")) return [];
   return [];
 }
 
