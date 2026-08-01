@@ -9,7 +9,7 @@ import { ArrowRight } from "lucide-react";
 type Passo = { titulo: string; to: string };
 
 function proximos(path: string, aba?: string): Passo[] {
-  if (path.startsWith("/doc-mestre")) return [{ titulo: "Criar autoridade", to: "/metodo/pilar-2" }];
+  if (path.startsWith("/doc-mestre")) return [{ titulo: "Criar autoridade", to: "/metodo/pilar-2/identidade" }];
   if (path.startsWith("/metodo/pilar-2/redes-sociais")) {
     if (aba === "pilares") return [{ titulo: "Analisar o teu perfil", to: "/maquina-analises" }];
     return []; // outras abas de conteúdo — não fazem parte da linha do fluxo

@@ -31,7 +31,7 @@ type CardDef = {
 // Paleta Instagram — cada card a sua cor.
 const CAMINHO: CardDef[] = [
   { key: "cerebro", passo: "Passo 1", icon: Brain, titulo: "O teu segundo cérebro", sub: "O Documento Mestre que alimenta tudo.", to: "/doc-mestre", cor: "#833AB4", cor2: "#5851DB" },
-  { key: "autoridade", passo: "Passo 2", icon: Crown, titulo: "Criar autoridade", sub: "Mostra o que sabes às pessoas certas.", to: "/metodo/pilar-2", cor: "#C13584", cor2: "#833AB4" },
+  { key: "autoridade", passo: "Passo 2", icon: Crown, titulo: "Criar autoridade", sub: "Mostra o que sabes às pessoas certas.", to: "/metodo/pilar-2/identidade", cor: "#C13584", cor2: "#833AB4" },
   { key: "pilares", passo: "Passo 3", icon: LayoutGrid, titulo: "Os teus pilares de conteúdo", sub: "Os temas que vais dominar.", to: "/metodo/pilar-2/redes-sociais?aba=pilares", cor: "#E1306C", cor2: "#C13584" },
   { key: "analise", passo: "Passo 4", icon: LineChart, titulo: "Analisar o teu perfil", sub: "Vê o que resulta e o que falta.", to: "/maquina-analises", cor: "#F56040", cor2: "#E1306C" },
 ];

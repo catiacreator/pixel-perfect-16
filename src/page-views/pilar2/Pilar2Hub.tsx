@@ -7,6 +7,7 @@ import PillarHeader from "../../components/PillarHeader";
 import EtapaCard from "../../components/EtapaCard";
 import { Crown, Search, Compass, Palette, Heart, Video, Trophy, BookOpen, Play } from "lucide-react";
 import { getPilarBySlug } from "@/lib/pilares.functions";
+import { useBloqueadoParaAlunos } from "@/lib/admin-view";
 
 const ICONS: Record<string, ReactElement> = {
   "pesquisa-mercado": <Search size={18} />,
@@ -41,6 +42,7 @@ const SUBLINKS: Record<string, { label: string; to: string }[]> = {
 
 export default function Pilar2Hub() {
   const fetchPilar = useServerFn(getPilarBySlug);
+  const soAlunos = useBloqueadoParaAlunos();
   const { data, isLoading } = useQuery({
     queryKey: ["pilar", "pilar-2"],
     queryFn: () => fetchPilar({ data: { slug: "pilar-2" } }),
@@ -57,11 +59,14 @@ export default function Pilar2Hub() {
         subtitulo={data?.descricao ?? ""}
       />
       <div className="px-5 md:px-10 pt-10 md:pt-14 pb-16 max-w-[1280px] mx-auto">
+        {/* As etapas são só para o admin — os alunos entram no conteúdo pelo fluxo. */}
+        {!soAlunos && (
+        <>
         <p className="text-[11px] tracking-[0.28em] uppercase text-ink/45 font-medium mb-5">As etapas do Pilar 2</p>
         <div className="space-y-4">
           {isLoading && <p className="text-sm text-ink/50">Carregando etapas…</p>}
           {data?.etapas
-            .filter((e) => e.slug !== "pesquisa-mercado" && e.slug !== "metodo")
+            .filter((e) => e.slug !== "pesquisa-mercado" && e.slug !== "metodo" && e.slug !== "videos")
             .map((e, idx) => (
             <div key={e.id} className="relative">
               <EtapaCard
@@ -80,6 +85,8 @@ export default function Pilar2Hub() {
             </div>
           ))}
         </div>
+        </>
+        )}
       </div>
     </Layout>
   );
