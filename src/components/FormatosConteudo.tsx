@@ -2,7 +2,16 @@ import { useState } from "react";
 import { Link, useSearchParams } from "@/lib/router-compat";
 import { Film, Sparkles, MessageCircle, LayoutGrid, ArrowRight, ArrowUpRight, Bot, ImageIcon, Mic, Check, X as XIcon } from "lucide-react";
 import { agenteUrl } from "@/lib/agentes-catia";
+import { useBloqueadoParaAlunos } from "@/lib/admin-view";
 import VideoPlaceholder from "./VideoPlaceholder";
+import PromptCard from "./PromptCard";
+import { CRIAR_CONTEUDO, type Objetivo } from "@/data/criar-conteudo";
+
+const OBJETIVOS: { id: Objetivo; label: string }[] = [
+  { id: "autoridade", label: "Autoridade" },
+  { id: "seguidores", label: "Seguidores" },
+  { id: "vendas", label: "Vendas" },
+];
 
 // Formatos de Conteúdo — a navegação entre formatos é feita pelo submenu da
 // barra lateral (Roteiros simples · Reels virais · Carrosséis · Stories).
@@ -191,6 +200,9 @@ function YapTeoria() {
 }
 
 function ExemplosGrid({ bg }: { bg: string }) {
+  // Espaços reservados de exemplos — só o admin os vê. Alunos não veem nada.
+  const soAlunos = useBloqueadoParaAlunos();
+  if (soAlunos) return null;
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
       {[0, 1, 2].map((i) => (
@@ -254,10 +266,12 @@ function ReelsModelos({ cor }: { cor: string }) {
 
 export default function FormatosConteudo() {
   const [params] = useSearchParams();
+  const [objetivo, setObjetivo] = useState<Objetivo>("autoridade");
   const fmt = params.get("fmt");
   const ativo = FORMATOS.some((x) => x.id === fmt) ? (fmt as string) : FORMATOS[0].id;
   const f = FORMATOS.find((x) => x.id === ativo) || FORMATOS[0];
   const Icon = f.icon;
+  const cardPrompt = CRIAR_CONTEUDO.find((c) => c.id === f.id);
 
   return (
     <div className="space-y-6">
@@ -296,16 +310,10 @@ export default function FormatosConteudo() {
 
         <div className="p-5 space-y-5">
           {f.id === "reels" ? (
-            // Reels virais → menu de modelos de Reel (cada um com vídeo e exemplos)
+            // Reels virais → menu de modelos de Reel
             <ReelsModelos cor={f.cor} />
           ) : (
             <>
-              {/* Vídeo */}
-              <div>
-                <p className="text-[10px] tracking-[0.14em] uppercase text-ink/45 mb-2">Vídeo · a Cátia explica</p>
-                <VideoPlaceholder label={`Vídeo — ${f.nome} (substitua pelo embed quando gravar)`} />
-              </div>
-
               {/* Teoria do Yap Content (só neste formato) */}
               {f.id === "roteiros" && <YapTeoria />}
 
@@ -315,45 +323,37 @@ export default function FormatosConteudo() {
                 <p className="text-sm text-ink/75 leading-relaxed mb-2">{f.como}</p>
                 <p className="text-[13px] text-ink/60"><b className="text-ink/80">Ideal:</b> {f.ideal}</p>
               </div>
-
-              {/* Exemplos */}
-              <div>
-                <p className="text-[10px] tracking-[0.14em] uppercase text-ink/45 mb-2">Exemplos</p>
-                <ExemplosGrid bg="bg-cream-warm/30" />
-                <p className="text-[11px] text-ink/40 mt-2">Espaço reservado — coloque aqui prints/exemplos deste formato.</p>
-              </div>
             </>
           )}
 
-          {/* Agente (ou ChatGPT normal, quando o formato não tem agente próprio) */}
-          <div className="flex items-center gap-2 flex-wrap rounded-xl bg-cream-warm/50 border border-border px-3 py-2.5">
-            <span className="inline-flex items-center gap-2 text-sm text-ink/70">
-              <Bot size={16} className="text-terracotta shrink-0" />
-              {f.agente === "ChatGPT"
-                ? <>Copia o prompt (em <b className="text-ink">Criar Conteúdo</b>) e cola no <b className="text-ink">ChatGPT</b>.</>
-                : <>Agente no ChatGPT: <b className="text-ink">{f.agente}</b></>}
-            </span>
-            {agenteUrl(f.agente) && (
-              <a
-                href={agenteUrl(f.agente)}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-cream rounded-full px-3 py-1.5 transition-opacity hover:opacity-90 ml-auto"
-                style={{ background: "#C8487E" }}
-              >
-                {f.agente === "ChatGPT" ? "Abrir ChatGPT" : "Abrir agente"} <ArrowUpRight size={13} />
-              </a>
-            )}
-          </div>
+          {/* Prompt deste formato — já vem com o teu Documento Mestre */}
+          {cardPrompt && (
+            <div>
+              <p className="text-[10px] tracking-[0.14em] uppercase text-ink/45 mb-2">O teu prompt</p>
+              <div className="flex flex-wrap gap-2 mb-3">
+                {OBJETIVOS.map((o) => (
+                  <button
+                    key={o.id}
+                    onClick={() => setObjetivo(o.id)}
+                    className={`text-sm px-4 py-1.5 rounded-full border transition-colors ${objetivo === o.id ? "bg-gradient-to-br from-terracotta to-terracotta-dark text-cream border-transparent" : "bg-white border-border text-ink hover:border-terracotta/50"}`}
+                  >
+                    {o.label}
+                  </button>
+                ))}
+              </div>
+              <PromptCard
+                titulo={cardPrompt.titulo}
+                descricao={cardPrompt.descricao}
+                prompt={cardPrompt.prompts[objetivo]}
+                rotuloBotao="Copiar prompt"
+                agente={f.agente}
+                agenteUrl={agenteUrl(f.agente)}
+                botaoCor="#C8487E"
+              />
+            </div>
+          )}
         </div>
       </div>
-
-      <Link
-        to="/metodo/pilar-2/redes-sociais?aba=criar"
-        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-semibold hover:bg-terracotta transition-colors"
-      >
-        Ir para Criar Conteúdo <ArrowRight size={15} />
-      </Link>
     </div>
   );
 }
