@@ -87,9 +87,9 @@ export default function ConsultoriaImagem() {
 
         <div className="rounded-2xl border border-terracotta bg-white p-5 text-center">
           <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">Próximo passo</p>
-          <p className="font-serif text-lg text-ink mb-3">Redes Sociais</p>
+          <p className="font-serif text-lg text-ink mb-3">Os teus pilares de conteúdo</p>
           <Link
-            to="/metodo/pilar-2/redes-sociais"
+            to="/metodo/pilar-2/redes-sociais?aba=pilares"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-semibold"
           >
             Continuar <ArrowRight size={15} />

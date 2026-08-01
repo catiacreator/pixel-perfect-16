@@ -10,7 +10,7 @@ import { useFluxoProgresso } from "@/lib/fluxo-jornada";
 type Passo = { key: string; label: string; to: string; cor: string };
 
 const PASSOS: Passo[] = [
-  { key: "cerebro", label: "Segundo cérebro", to: "/doc-mestre", cor: "#833AB4" },
+  { key: "cerebro", label: "Documento Mestre", to: "/doc-mestre", cor: "#833AB4" },
   { key: "autoridade", label: "Autoridade", to: "/metodo/pilar-2/identidade", cor: "#C13584" },
   { key: "pilares", label: "Pilares", to: "/metodo/pilar-2/redes-sociais?aba=pilares", cor: "#E1306C" },
   { key: "analise", label: "Analisar perfil", to: "/maquina-analises", cor: "#F56040" },

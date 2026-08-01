@@ -29,26 +29,20 @@ export default function ProximoPasso() {
   const lista = proximos(loc.pathname, aba);
   if (!lista.length) return null;
 
-  const bifurcacao = lista.length > 1;
   return (
     <div className="mx-auto max-w-[1280px] px-5 md:px-10 pb-16">
-      <div className="mx-auto rounded-2xl border border-[var(--color-border)] bg-white p-5 md:max-w-[50%]">
-        <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.15em] text-terracotta">
-          {bifurcacao ? "Escolhe por onde continuar" : "Próximo passo"}
-        </p>
-        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-          {lista.map((p) => (
-            <Link
-              key={p.to}
-              to={p.to}
-              className="group inline-flex items-center gap-2 rounded-full bg-terracotta px-5 py-3 text-sm font-semibold text-cream transition-colors hover:bg-terracotta-dark"
-            >
-              {p.titulo}
-              <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
-            </Link>
-          ))}
+      {lista.map((p) => (
+        <div key={p.to} className="mx-auto rounded-2xl border border-terracotta bg-white p-5 text-center md:max-w-[600px]">
+          <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">Próximo passo</p>
+          <p className="font-serif text-lg text-ink mb-3">{p.titulo}</p>
+          <Link
+            to={p.to}
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-semibold"
+          >
+            Continuar <ArrowRight size={15} />
+          </Link>
         </div>
-      </div>
+      ))}
     </div>
   );
 }
