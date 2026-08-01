@@ -30,7 +30,11 @@ import {
   X,
   Pencil,
   Trash2,
+  FolderDown,
 } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { getMeusDocumentos } from "@/lib/admin.functions";
+import TrilhoGuiado from "../components/TrilhoGuiado";
 
 const CALENDAR_STORAGE_KEY = "leveza.calendario.v1";
 
@@ -372,6 +376,17 @@ export default function MinhaBase() {
   const [calVersion, setCalVersion] = useState(0);
   const [ideiasFor, setIdeiasFor] = useState<string | null>(null);
 
+  // Documentos que a Cátia enviou a esta aluna (Análise de Perfil + Calendário).
+  const fetchMeusDocs = useServerFn(getMeusDocumentos);
+  const [docsPopup, setDocsPopup] = useState(false);
+  const [meusDocs, setMeusDocs] = useState<{
+    analise: { nome: string; url: string } | null;
+    calendario: { nome: string; url: string } | null;
+  } | null>(null);
+  useEffect(() => {
+    fetchMeusDocs().then((r) => setMeusDocs(r as typeof meusDocs)).catch(() => setMeusDocs({ analise: null, calendario: null }));
+  }, [fetchMeusDocs]);
+
   useEffect(() => {
     setState(loadState());
     setNome(loadName());
@@ -473,6 +488,9 @@ export default function MinhaBase() {
           </div>
         </section>
 
+        {/* O TEU PERCURSO — o trilho guiado (por onde começo → próximo passo) */}
+        <TrilhoGuiado />
+
         {/* MEUS DOCUMENTOS */}
         <section className="mt-10">
           <div className="flex items-center gap-2 mb-4">
@@ -513,8 +531,74 @@ export default function MinhaBase() {
                 </div>
               );
             })}
+
+            {/* Documentos enviados pela Cátia — abre popup com os 2 ficheiros */}
+            <button
+              onClick={() => setDocsPopup(true)}
+              className="text-left rounded-2xl border border-terracotta/30 bg-terracotta/[0.04] p-4 flex items-center gap-4 hover:bg-terracotta/[0.08] transition-colors"
+            >
+              <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center text-terracotta shrink-0">
+                <FolderDown size={20} strokeWidth={1.75} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="font-display text-base text-ink leading-tight">Documentos da Cátia</p>
+                <p className="text-xs text-ink/55 mt-0.5">
+                  {meusDocs && (meusDocs.analise || meusDocs.calendario)
+                    ? "Análise de Perfil e Calendário — prontos a descarregar"
+                    : "Análise de Perfil e Calendário — em breve"}
+                </p>
+              </div>
+              <ExternalLink size={14} className="text-terracotta shrink-0" />
+            </button>
           </div>
         </section>
+
+        {/* POPUP — Documentos da Cátia */}
+        {docsPopup && (
+          <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setDocsPopup(false)}>
+            <div className="bg-cream w-full max-w-md rounded-2xl p-6" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between gap-3 mb-1">
+                <h2 className="font-display text-lg text-ink">Documentos da Cátia</h2>
+                <button onClick={() => setDocsPopup(false)} className="text-ink/40 hover:text-ink" aria-label="Fechar"><X size={18} /></button>
+              </div>
+              <p className="text-xs text-ink/55 mb-4">Os teus documentos pessoais, prontos a descarregar.</p>
+              <div className="space-y-3">
+                {[
+                  { doc: meusDocs?.analise, label: "Análise de Perfil", icon: Target },
+                  { doc: meusDocs?.calendario, label: "Calendário de Conteúdo", icon: CalendarIcon },
+                ].map((it) => {
+                  const Icon = it.icon;
+                  return (
+                    <div key={it.label} className="rounded-xl border border-[var(--color-border)] bg-white p-3.5 flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-terracotta/10 flex items-center justify-center text-terracotta shrink-0">
+                        <Icon size={18} />
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-semibold text-ink">{it.label}</p>
+                        <p className="text-[11px] text-ink/45 truncate">{it.doc ? it.doc.nome : "Ainda não disponível"}</p>
+                      </div>
+                      {it.doc ? (
+                        <a
+                          href={it.doc.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="shrink-0 inline-flex items-center gap-1.5 text-xs font-semibold px-3.5 py-2 rounded-full bg-ink text-cream hover:bg-terracotta transition-colors"
+                        >
+                          <Download size={13} /> Descarregar
+                        </a>
+                      ) : (
+                        <span className="shrink-0 text-[11px] text-ink/40 px-2">em breve</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              <button onClick={() => setDocsPopup(false)} className="mt-5 w-full h-11 rounded-full border border-[var(--color-border)] text-sm">
+                Fechar
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* CALENDÁRIO */}
         <section className="mt-10">

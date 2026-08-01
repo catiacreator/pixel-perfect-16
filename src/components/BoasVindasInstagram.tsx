@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "@/lib/router-compat";
-import { FileText, Compass, Sparkles, LineChart, CalendarDays, Rocket, ArrowRight } from "lucide-react";
+import { FileText, Compass, Sparkles, CalendarDays, Rocket, ArrowRight } from "lucide-react";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import { readDocMestre, type DocMestre } from "@/lib/pilar4-prompts";
 
@@ -25,19 +25,15 @@ const PASSOS: Passo[] = [
     longo: "Os 3 a 5 grandes temas que organizam tudo o que publicas. Cada post nasce de um pilar e serve um objetivo: autoridade, seguidores ou vendas.",
   },
   {
-    n: "2", label: "Máquina de Análises", icon: LineChart, to: "/maquina-analises", curto: "Onde estás",
-    longo: "Analisa o teu perfil a partir de screenshots e devolve um relatório em texto — o retrato real da tua conta hoje. Guarda-o para o levares ao passo seguinte.",
+    n: "2", label: "Criar Conteúdo", icon: Sparkles, to: "/metodo/pilar-2/redes-sociais?aba=criar", curto: "O teu plano",
+    longo: "Junta o Documento Mestre com os teus pilares e gera o teu Plano Estratégico: um calendário com todas as peças escritas, pronto para copiar.",
   },
   {
-    n: "3", label: "Criar Conteúdo", icon: Sparkles, to: "/metodo/pilar-2/redes-sociais?aba=criar", curto: "O teu plano",
-    longo: "Junta o Documento Mestre com a análise e gera o teu Plano Estratégico: um calendário com todas as peças escritas, pronto para copiar.",
-  },
-  {
-    n: "4", label: "Plano de Posts", icon: CalendarDays, to: "/metodo/pilar-2/redes-sociais?aba=plano", curto: "Agendar",
+    n: "3", label: "Plano de Posts", icon: CalendarDays, to: "/metodo/pilar-2/redes-sociais?aba=plano", curto: "Agendar",
     longo: "Importas o plano e ele fica guardado no teu calendário editorial. Aqui editas o conteúdo de cada post, mudas os dias e organizas o mês.",
   },
   {
-    n: "5", label: "Publicar", icon: Rocket, to: "/metodo/pilar-2/redes-sociais?aba=agendar", curto: "Pôr no ar",
+    n: "4", label: "Publicar", icon: Rocket, to: "/metodo/pilar-2/redes-sociais?aba=agendar", curto: "Pôr no ar",
     longo: "Publicas no Instagram e marcas cada post como publicado. Cada publicação conta pontos nas tuas Vitórias.",
   },
 ];

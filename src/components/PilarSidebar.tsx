@@ -9,7 +9,6 @@ import {
   X,
   Search,
   Compass,
-  LineChart,
   Sparkles,
   Sparkle,
   Mic,
@@ -171,10 +170,9 @@ const PILARES: Record<string | number, PilarDef> = {
       // ── Módulo: o caminho a fazer (Doc Mestre → Plano → Publicar) ──
       { num: 1, id: "redes.boas-vindas", label: "Boas-vindas", to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas", icon: Compass, secao: "Cria o teu plano" },
       { num: 2, id: "redes.pilares", label: "Os teus Pilares de Conteúdo", to: "/metodo/pilar-2/redes-sociais?aba=pilares", icon: Compass },
-      { num: 3, id: "maquina-analises", label: "Máquina de Análises", to: "/maquina-analises", icon: LineChart },
-      { num: 4, id: "redes.criar", label: "Criar Conteúdo", to: "/metodo/pilar-2/redes-sociais?aba=criar", icon: Sparkle },
-      { num: 5, id: "redes.plano", label: "Plano de Posts", to: "/metodo/pilar-2/redes-sociais?aba=plano", icon: CalendarDays },
-      { num: 6, id: "redes.agendar", label: "Publicar", to: "/metodo/pilar-2/redes-sociais?aba=agendar", icon: CalendarClock },
+      { num: 3, id: "redes.criar", label: "Criar Conteúdo", to: "/metodo/pilar-2/redes-sociais?aba=criar", icon: Sparkle },
+      { num: 4, id: "redes.plano", label: "Plano de Posts", to: "/metodo/pilar-2/redes-sociais?aba=plano", icon: CalendarDays },
+      { num: 5, id: "redes.agendar", label: "Publicar", to: "/metodo/pilar-2/redes-sociais?aba=agendar", icon: CalendarClock },
       // ── Módulo: aulas (aprender os conceitos) ──
       { num: 1, id: "redes.bio", label: "Posicionamento e Bio", to: "/metodo/pilar-2/redes-sociais?aba=bio", icon: UserCircle2, secao: "Aulas" },
       {
