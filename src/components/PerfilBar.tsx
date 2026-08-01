@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "@/lib/router-compat";
-import { FileText, ArrowUpRight, ChevronDown, Check, Plus, Pencil, UserCircle2 } from "lucide-react";
+import { FileText, ArrowUpRight, ChevronDown, Check, Plus, Pencil, UserCircle2, CalendarDays } from "lucide-react";
 import { usePerfis, selecionarPerfil, criarSegundoPerfil, renomearPerfil } from "@/lib/perfis";
 import BuscaGlobal from "@/components/BuscaGlobal";
 import NIaTopButton from "@/components/NIaTopButton";
@@ -104,6 +104,16 @@ export default function PerfilBar() {
             </div>
           )}
         </div>
+
+        {/* Atalho Plano de Posts */}
+        <Link
+          to="/metodo/pilar-2/redes-sociais?aba=plano"
+          className="inline-flex items-center gap-1.5 text-[13px] pl-2.5 pr-2.5 py-1.5 rounded-full border border-ink/15 bg-white text-ink hover:border-terracotta/50 transition-colors"
+          title="Plano de Posts"
+        >
+          <CalendarDays size={14} className="text-terracotta" />
+          <span className="hidden sm:inline">Plano de Posts</span>
+        </Link>
 
         {/* Botão Documento Mestre */}
         <Link

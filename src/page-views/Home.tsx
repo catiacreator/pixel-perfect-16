@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
-import HeroRobot from "../components/HeroRobot";
 import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, X, Users, Package, Rocket, LineChart } from "lucide-react";
 
 const WHATSAPP_CATIA = "https://wa.link/jwr3yp";
@@ -304,13 +303,6 @@ export default function Home() {
         style={{ background: "radial-gradient(circle at center, #F0A766 0%, #C8487E 35%, transparent 62%)" }}
       />
 
-      {/* Robô flutuante — canto direito, fixo, não bloqueia cliques */}
-      <div
-        className="pointer-events-none fixed right-3 top-32 z-20 hidden lg:block fade-up"
-        style={{ animationDelay: "120ms" }}
-      >
-        <HeroRobot scale={0.4} />
-      </div>
       <div className="pt-4 md:pt-6" />
 
       {/* Dois caminhos — mesmo contentor do hero (max-w-[1400px] + px-4/px-10) p/ alinhar à esquerda */}
