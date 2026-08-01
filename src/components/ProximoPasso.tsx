@@ -31,7 +31,7 @@ export default function ProximoPasso() {
   const bifurcacao = lista.length > 1;
   return (
     <div className="mx-auto max-w-[1280px] px-5 md:px-10 pb-16">
-      <div className="rounded-2xl border border-[var(--color-border)] bg-white p-5">
+      <div className="rounded-2xl border border-[var(--color-border)] bg-white p-5 md:max-w-[50%]">
         <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.15em] text-terracotta">
           {bifurcacao ? "Escolhe por onde continuar" : "Próximo passo"}
         </p>
