@@ -82,7 +82,7 @@ export default function Identidade() {
       <PillarHeader
         numeral="✦"
         icon={null}
-        pilarLabel="Etapa 3 · Descoberta"
+        pilarLabel="Criar Autoridade"
         titulo="Identidade de marca"
         subtitulo="Descubra seu arquétipo, o do seu cliente e calibre a ponte entre os dois."
       />
