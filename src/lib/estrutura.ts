@@ -82,8 +82,6 @@ export const ESTRUTURA: Nodo[] = [
         tipo: "pilar",
         to: "/metodo/pilar-2",
         filhos: [
-          { id: "pilar-2.pesquisa", label: "Pesquisa de Mercado", tipo: "pagina", to: "/metodo/pilar-2/pesquisa-mercado" },
-          { id: "pilar-2.metodo", label: "Crie o seu método", tipo: "pagina", to: "/metodo/pilar-2/metodo" },
           {
             id: "pilar-2.identidade",
             label: "Identidade de Marca",

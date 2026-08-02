@@ -46,8 +46,6 @@ const SECCOES: Seccao[] = [
     titulo: "Pilar 2 — Criar Autoridade",
     paginas: [
       { nome: "Pilar 2 (início)", path: "/metodo/pilar-2" },
-      { nome: "Pesquisa de Mercado", path: "/metodo/pilar-2/pesquisa-mercado" },
-      { nome: "Crie o seu método", path: "/metodo/pilar-2/metodo" },
       { nome: "Identidade de Marca", path: "/metodo/pilar-2/identidade" },
       { nome: "Tom de Voz", path: "/metodo/pilar-2/tom-de-voz" },
       { nome: "Identidade Visual", path: "/metodo/pilar-2/identidade-visual" },
