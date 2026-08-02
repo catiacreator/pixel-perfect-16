@@ -159,8 +159,8 @@ export default function FluxoJornada() {
           ))}
         </div>
 
-        {/* Criação Livre — sozinha numa linha por baixo, mais larga e afastada 20px */}
-        <div className="mt-5 flex w-[420px] flex-col">
+        {/* Criação Livre — sozinha numa linha por baixo, mais larga e afastada 50px */}
+        <div className="mt-[50px] flex w-[420px] flex-col">
           <Cartao card={RAMO_LIVRE} prog={prog[RAMO_LIVRE.key]} largura="w-[420px]" />
         </div>
       </div>
