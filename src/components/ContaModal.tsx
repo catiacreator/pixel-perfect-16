@@ -40,12 +40,34 @@ export default function ContaModal({ open, onClose }: { open: boolean; onClose: 
   const escolherFoto = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
     if (!f) return;
-    if (f.size > 3 * 1024 * 1024) {
-      setErro("A foto é muito grande (máx. 3 MB).");
+    if (f.size > 10 * 1024 * 1024) {
+      setErro("A foto é muito grande (máx. 10 MB).");
       return;
     }
+    // Redimensiona para um avatar pequeno (máx. 400px) antes de guardar — mantém
+    // o blob leve para a sincronização em cloud.
     const reader = new FileReader();
-    reader.onload = () => setFoto(String(reader.result || ""));
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const MAX = 400;
+        const escala = Math.min(1, MAX / Math.max(img.width, img.height));
+        const w = Math.round(img.width * escala);
+        const h = Math.round(img.height * escala);
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) {
+          setFoto(String(reader.result || ""));
+          return;
+        }
+        ctx.drawImage(img, 0, 0, w, h);
+        setFoto(canvas.toDataURL("image/jpeg", 0.85));
+      };
+      img.onerror = () => setFoto(String(reader.result || ""));
+      img.src = String(reader.result || "");
+    };
     reader.readAsDataURL(f);
   };
 
@@ -161,7 +183,7 @@ export default function ContaModal({ open, onClose }: { open: boolean; onClose: 
                 <label className="text-xs tracking-[0.1em] uppercase text-muted mb-1.5 block">
                   <Instagram size={12} className="inline mr-1 -mt-0.5 text-terracotta" />
                   Handle do Instagram
-                  {perfis.count > 1 && <span className="text-ink/45 normal-case"> — {perfis.nomes[i]}</span>}
+                  <span className="text-ink/45 normal-case"> — {perfis.nomes[i] || `Perfil ${i + 1}`}</span>
                   <span className="text-red-500"> *</span>
                 </label>
                 <input

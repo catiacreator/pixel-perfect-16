@@ -7,6 +7,7 @@
 // tratada diretamente pelo Supabase (auth.updateUser).
 
 import { useEffect, useState } from "react";
+import { HYDRATED_EVENT } from "./master-doc-sync";
 
 export const CONTA_KEY = "leveza.conta.v1";
 export const CONTA_EVENT = "leveza:conta";
@@ -55,9 +56,11 @@ export function useConta(): ContaState {
   useEffect(() => {
     const on = () => setC(getConta());
     window.addEventListener(CONTA_EVENT, on);
+    window.addEventListener(HYDRATED_EVENT, on);
     window.addEventListener("storage", on);
     return () => {
       window.removeEventListener(CONTA_EVENT, on);
+      window.removeEventListener(HYDRATED_EVENT, on);
       window.removeEventListener("storage", on);
     };
   }, []);

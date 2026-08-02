@@ -29,6 +29,7 @@ const SYNC_KEYS = [
   "leveza.ideias-rapidas.v1",
   "leveza.plano-conteudo.v1",
   "leveza.reels-series.v1",
+  "leveza.conta.v1",
 ];
 
 // Disparado depois de o localStorage ser hidratado a partir do Supabase.
