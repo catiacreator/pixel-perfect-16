@@ -566,17 +566,91 @@ Regras:
     id: "reels-serie",
     numero: "★",
     titulo: "Reels em Série",
-    subtitulo: "Uma ideia → uma série inteira de Reels, com prompt para o teu ChatGPT ou Claude.",
+    subtitulo: "Uma ideia → uma série inteira de Reels, com prompts para o teu ChatGPT ou Claude.",
+    objetivo: "Transformar UMA ideia numa série de Reels com nome repetível e vários roteiros prontos a gravar — e conseguir continuar a série sem repetir episódios.",
     secoes: [
       {
+        label: "A ideia",
         blocos: [
-          { t: "nota", v: "info", texto: "**Em breve.** Esta ferramenta está quase pronta." },
-          { t: "p", texto: "Vais preencher a **ideia**, o **público**, a **oferta** e o **tom**, e no fim recebes um **prompt pronto** para colar no teu **ChatGPT** ou **Claude** — que gera os nomes da série e todos os roteiros. Assim corres tudo na tua conta de IA, sem gastar créditos da plataforma." },
+          { t: "p", texto: "Uma **série** é a forma mais fácil de nunca ficares sem ideias: escolhes UM tema, dás-lhe um **nome-molde** que se repete (\"[Nome] — parte 1, parte 2, parte 3…\") e a partir daí é só encher com episódios. O algoritmo adora, e o teu público fica a **querer o próximo**." },
+          { t: "p", texto: "Aqui fazes tudo no **teu ChatGPT ou Claude**, com os prompts abaixo. Só tens de os copiar e **preencher os campos entre [parênteses]** com os teus dados. Corre na tua conta de IA — não gastas nada." },
+          { t: "nota", v: "info", texto: "**Antes de começar:** tem à mão o teu **público** (para quem falas), a tua **oferta** (o que vendes) e o **tom** que queres — próximo, descontraído, inspirador, direto ou formal." },
+        ],
+      },
+      {
+        label: "Passo 1 · Descobre o nome da série",
+        titulo: "Passo 1 — O nome da série",
+        blocos: [
+          { t: "p", texto: "O nome não é a manchete de um vídeo só: é uma **frase-molde** que abre TODOS os episódios e aguenta 30+ partes só trocando o exemplo. Corre este prompt e escolhe o teu favorito." },
+          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Prompt 1 — Nomes de série", texto:
+`És a minha copywriter de Reels. Vou dar-te uma ideia e quero 6 NOMES DE SÉRIE.
+
+Um nome de série é uma FRASE-MOLDE repetível que abre TODOS os episódios (nome + "— parte N"). NÃO é a manchete de um vídeo só. Tem de aguentar 30+ partes trocando só o exemplo, e dar para dizer em voz alta a olhar para a câmara.
+
+OS MEUS DADOS:
+- Ideia/tema: [ESCREVE A TUA IDEIA]
+- Para quem é (público): [O TEU PÚBLICO]
+- O que vendo (para os CTA de venda): [O QUE VENDES]
+- Tom: [próximo / descontraído / inspirador / direto / formal]
+
+Dá-me 6 nomes DIFERENTES, cada um com um ângulo diferente (promessa forte, curiosidade, dor comum, o inimigo comum, pessoalidade). Antes de escreveres cada nome, confirma: "isto aguenta 30 partes trocando só o exemplo?". Se não aguentar, troca.
+
+Para cada nome mostra: o NOME, e 1 frase curta a explicar porque trava o dedo de rolar. No fim, pergunta-me qual escolho.` },
+        ],
+      },
+      {
+        label: "Passo 2 · Gera os roteiros",
+        titulo: "Passo 2 — Os roteiros",
+        blocos: [
+          { t: "p", texto: "Escolhido o nome, pede os episódios. Cada roteiro segue um template testado: **gancho → dor + culpa → corpo → 3 passos**. Diz quantos queres (7 é um bom começo)." },
+          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Prompt 2 — Roteiros da série", texto:
+`Agora vamos escrever os roteiros da série "[NOME DA SÉRIE QUE ESCOLHI]".
+
+Escreve [QUANTOS? ex: 7] episódios.
+
+Primeiro dá-me a LISTA DE ENTREGAS: uma frase específica por episódio, cada uma com uma DOR real + uma CULPA para reverter (nada de "fala sobre X").
+
+Depois o ROTEIRO COMPLETO de cada episódio, neste template:
+- GANCHO: começa SEMPRE com "[NOME] — parte N." + uma frase que corta o scroll
+- DOR + CULPA: "Se tu…, o problema não é…. É que…" (tira a culpa de cima da pessoa)
+- CORPO: crença errada -> a verdade -> uma metáfora do dia a dia
+- TRANSIÇÃO: frase curta que abre os passos
+- 3 PASSOS: (1) ação principal + ganho imediato; (2) o detalhe que destrava + o erro de quem o ignora; (3) a recompensa emocional — o que muda na vida da pessoa. Fecha na emoção.
+
+CONTEXTO:
+- Público: [O TEU PÚBLICO]
+- O que vendo: [O QUE VENDES]
+- Tom: [o mesmo que escolheste no Passo 1]
+
+A lista de entregas e a lista de roteiros têm de ter o mesmo número de episódios.` },
+        ],
+      },
+      {
+        label: "Passo 3 · Continua a série",
+        titulo: "Passo 3 — Continuar sem repetir",
+        blocos: [
+          { t: "p", texto: "Quando quiseres mais episódios da MESMA série, usa este prompt. O truque é **colar os que já tens** para a IA continuar o arco sem repetir." },
+          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Prompt 3 — Continuar a série", texto:
+`Continua a série "[NOME DA SÉRIE]". Já fiz estes episódios — NÃO os repitas, avança o arco a partir do episódio seguinte:
+
+[COLA AQUI OS TÍTULOS / GANCHOS DOS EPISÓDIOS QUE JÁ TENS]
+
+Gera mais [QUANTOS? ex: 5] episódios NOVOS, numerados a começar no número a seguir ao último. Mesmo template de sempre: gancho "[NOME] — parte N", dor + culpa, corpo, transição e 3 passos. Primeiro a lista de entregas, depois os roteiros.
+
+Mantém o tom [o teu tom], o público [o teu público] e a oferta [o que vendes].` },
+        ],
+      },
+      {
+        label: "A tua biblioteca",
+        titulo: "Guarda cada série (a tua biblioteca)",
+        blocos: [
+          { t: "p", texto: "Para conseguires **continuar** as tuas séries mais tarde, guarda cada uma num sítio só teu — no Notion, num Google Doc ou nas Notas do telemóvel. Cria uma página por série com:" },
           { t: "ul", itens: [
-            "Recebes um prompt por série, pronto a correr.",
-            "Guardas cada série (nomes + prompts) numa biblioteca.",
-            "A partir da biblioteca, pedes a continuação (sem repetir episódios) ou começas uma nova.",
+            "**Nome da série** (a frase-molde que escolheste).",
+            "**Os prompts** que usaste (para repetires sem pensar).",
+            "**Os episódios já feitos** (só os ganchos chegam) — é isto que colas no Prompt 3 para continuar sem repetir.",
           ] },
+          { t: "nota", v: "info", texto: "Dica: mantém uma lista \"séries a decorrer\" e vais buscando o próximo lote quando precisares de conteúdo. Uma ideia bem escolhida dá-te semanas de Reels." },
         ],
       },
     ],
