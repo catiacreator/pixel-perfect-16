@@ -11,7 +11,6 @@ import {
   ArrowUpRight,
   LayoutGrid,
   Sparkles,
-  UserRound,
   Film,
   MessageSquare,
   Bot,
@@ -25,12 +24,6 @@ type Item = { label: string; to: string; icon: ComponentType<{ size?: number }> 
 type Grupo = { titulo: string; itens: Item[] };
 
 const GRUPOS: Grupo[] = [
-  {
-    titulo: "Aulas e formatos",
-    itens: [
-      { label: "Posicionamento e Bio", to: "/metodo/pilar-2/redes-sociais?aba=bio", icon: UserRound },
-    ],
-  },
   {
     titulo: "Cria o teu conteúdo",
     itens: [
