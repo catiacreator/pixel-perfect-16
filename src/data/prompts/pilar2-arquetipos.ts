@@ -123,9 +123,11 @@ GRUPO 4 — ESTABILIDADE E CONTROLE
 
 🎯 SUA MISSÃO
 
-Antes de responder, me faça 4 a 6 perguntas (uma de cada vez) para refinar o entendimento do meu cliente: como ele se vê, o que ele admira, o que ele esconde, o que ele compraria sem pensar, o que ele rejeita.
+Você JÁ TEM tudo o que precisa nos dados acima (quem é o cliente, desejos e dores). NÃO me faça perguntas — não me entreviste. Deduza o arquétipo do meu cliente diretamente a partir desses dados e me entregue a análise pronta agora.
 
-Ao final, me entregue duas partes claramente separadas:
+Se algum dado estiver vago, faça a melhor inferência possível com base no que existe e siga em frente (pode indicar entre parênteses "(inferido)" quando for um palpite), mas nunca pare para perguntar.
+
+Me entregue duas partes claramente separadas:
 
 # PARTE 1 — ANÁLISE COMPLETA (material de leitura)
 
