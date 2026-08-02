@@ -32,7 +32,20 @@ export default function WizardAutoridade() {
   if (atual < 0) return null;
 
   return (
-    <div className="border-b border-black/5 bg-white/60 backdrop-blur">
+    <>
+    {/* Hero pequeno "Autoridade" */}
+    <div className="mx-auto max-w-[1280px] px-4 md:px-10 pt-4">
+      <div
+        className="rounded-2xl px-6 py-3.5 text-white"
+        style={{ background: "linear-gradient(115deg, #833AB4 0%, #C13584 60%, #F56040 100%)" }}
+      >
+        <p className="text-[10px] tracking-[0.28em] uppercase text-white/80">Criar autoridade</p>
+        <p className="font-editorial uppercase text-2xl md:text-3xl leading-none tracking-tight">Autoridade</p>
+      </div>
+    </div>
+
+    {/* Segunda wizard */}
+    <div className="border-b border-black/5 bg-white/60 backdrop-blur mt-3">
       <div className="mx-auto flex max-w-[1280px] items-center justify-center gap-1 overflow-x-auto px-4 md:px-10 py-2.5">
         {PASSOS.map((p, i) => {
           const done = i < atual;
@@ -64,5 +77,6 @@ export default function WizardAutoridade() {
         })}
       </div>
     </div>
+    </>
   );
 }
