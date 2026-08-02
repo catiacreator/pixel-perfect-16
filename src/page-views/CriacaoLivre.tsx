@@ -25,6 +25,12 @@ type Grupo = { titulo: string; itens: Item[] };
 
 const GRUPOS: Grupo[] = [
   {
+    titulo: "Bónus",
+    itens: [
+      { label: "Agentes Creator", to: "/agentes-creator", icon: Sparkles },
+    ],
+  },
+  {
     titulo: "Cria o teu conteúdo",
     itens: [
       { label: "Cria a tua série", to: "/metodo/pilar-2/reels-em-serie", icon: Film },
