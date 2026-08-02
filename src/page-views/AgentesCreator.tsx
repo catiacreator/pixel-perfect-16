@@ -157,7 +157,7 @@ export default function AgentesCreator({
         <Layout>
           <PilarBreadcrumb
             pilar="redes"
-            pilarLabel="Conteúdo Todo Dia"
+            pilarLabel="A tua jornada"
             backTo="/criacao-livre"
             backLabel="Voltar atrás"
           />

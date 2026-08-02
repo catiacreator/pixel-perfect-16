@@ -1,4 +1,4 @@
-// Criação Livre — hub com cards para todas as páginas do "Conteúdo Todo Dia"
+// Criação Livre — hub com cards para todas as páginas do "A tua jornada"
 // que antes estavam no menu lateral (posts avulsos, formatos/aulas, ferramentas…).
 // Entra-se aqui a partir do fluxo da jornada (Passo 5 · B).
 
@@ -55,7 +55,7 @@ export default function CriacaoLivre() {
     <Layout>
       <PilarBreadcrumb
         pilar="redes"
-        pilarLabel="Conteúdo Todo Dia"
+        pilarLabel="A tua jornada"
         backTo="/metodo"
         backLabel="Voltar atrás"
         historyBack
@@ -63,7 +63,7 @@ export default function CriacaoLivre() {
       <PillarHeader
         numeral="✦"
         icon={<Sparkles size={18} />}
-        pilarLabel="Conteúdo Todo Dia"
+        pilarLabel="A tua jornada"
         titulo="Criação Livre"
         tituloHighlight="ao teu ritmo"
         subtitulo="Todas as ferramentas e aulas num só sítio — entra onde precisares."

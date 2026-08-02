@@ -70,7 +70,7 @@ export default function BoasVindasInstagram() {
       {/* Boas-vindas + esquema interativo */}
       <div className="rounded-2xl border border-terracotta/25 bg-terracotta/5 p-6">
         <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">Bem-vinda ao módulo</p>
-        <h2 className="font-serif text-2xl md:text-3xl text-ink mb-2">Conteúdo Todo Dia</h2>
+        <h2 className="font-serif text-2xl md:text-3xl text-ink mb-2">A tua jornada</h2>
         <p className="text-sm text-ink/65 leading-relaxed max-w-2xl mb-5">
           Aqui transformas o teu método em conteúdo. Este é o caminho — <b>toca em cada passo</b> para perceberes o que fazes em cada um.
         </p>

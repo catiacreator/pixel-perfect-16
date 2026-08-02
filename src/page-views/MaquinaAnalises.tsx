@@ -123,7 +123,7 @@ export default function MaquinaAnalises() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar="redes" pilarLabel="Conteúdo Todo Dia" backTo="/metodo" backLabel="Voltar para a jornada" />
+      <PilarBreadcrumb pilar="redes" pilarLabel="A tua jornada" backTo="/metodo" backLabel="Voltar para a jornada" />
       <div style={{ ["--cor" as string]: COR }} className="px-5 md:px-10 py-8 max-w-3xl mx-auto">
         {/* Cabeçalho */}
         <div className="flex items-center gap-3 mb-1">

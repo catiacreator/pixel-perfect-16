@@ -12,7 +12,7 @@ export type ItemBusca = {
   id: string;
   label: string;
   to: string;
-  /** Módulo/pilar acima deste nó, ex.: "Conteúdo Todo Dia › Formatos de Conteúdo" */
+  /** Módulo/pilar acima deste nó, ex.: "A tua jornada › Formatos de Conteúdo" */
   caminho: string;
   /** Palavras extra para encontrar a página (sinónimos do dia-a-dia). */
   termos: string;

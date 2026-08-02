@@ -50,21 +50,15 @@ const SECCOES: Seccao[] = [
       { nome: "Tom de Voz", path: "/metodo/pilar-2/tom-de-voz" },
       { nome: "Identidade Visual", path: "/metodo/pilar-2/identidade-visual" },
       { nome: "Consultoria de Imagem", path: "/metodo/pilar-2/consultoria-imagem" },
-      { nome: "Conclusão Pilar 2", path: "/metodo/pilar-2/conclusao" },
-    ],
-  },
-  {
-    titulo: "Conteúdo Todo Dia",
-    paginas: [
-      { nome: "Boas-vindas", path: "/metodo/pilar-2/redes-sociais?aba=boas-vindas" },
+      { nome: "Boas-vindas (Instagram)", path: "/metodo/pilar-2/redes-sociais?aba=boas-vindas" },
       { nome: "Os teus pilares de conteúdo", path: "/metodo/pilar-2/redes-sociais?aba=pilares" },
       { nome: "Máquina de Análises", path: "/maquina-analises" },
       { nome: "Posicionamento e Bio", path: "/metodo/pilar-2/redes-sociais?aba=bio" },
-      { nome: "Formatos de Conteúdo", path: "/metodo/pilar-2/redes-sociais?aba=formatos" },
       { nome: "Criar Conteúdo", path: "/metodo/pilar-2/redes-sociais?aba=criar" },
       { nome: "Plano de Posts", path: "/metodo/pilar-2/redes-sociais?aba=plano" },
       { nome: "Publicar", path: "/metodo/pilar-2/redes-sociais?aba=agendar" },
       { nome: "Assistente Cat.IA", path: "/metodo/pilar-2/redes-sociais?aba=assistente" },
+      { nome: "Conclusão Pilar 2", path: "/metodo/pilar-2/conclusao" },
     ],
   },
   {

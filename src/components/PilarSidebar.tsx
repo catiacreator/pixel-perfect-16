@@ -164,7 +164,7 @@ const PILARES: Record<string | number, PilarDef> = {
   },
   redes: {
     pilar: "redes",
-    title: "Conteúdo Todo Dia",
+    title: "A tua jornada",
     enabled: true,
     items: [
       // ── Módulo: o caminho a fazer (Doc Mestre → Plano → Publicar) ──

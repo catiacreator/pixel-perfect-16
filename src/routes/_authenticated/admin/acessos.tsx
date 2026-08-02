@@ -26,22 +26,6 @@ const CURSOS: Curso[] = [
     ],
   },
   {
-    id: "instagram", nome: "Conteúdo Todo Dia", cor: "#F0A766",
-    modulos: [
-      { id: "redes.boas-vindas", nome: "Boas-vindas" },
-      { id: "redes.pilares", nome: "Os teus pilares de conteúdo" },
-      { id: "maquina-analises", nome: "Máquina de Análises" },
-      { id: "redes.bio", nome: "Posicionamento e Bio" },
-      { id: "redes.formatos", nome: "Formatos de Conteúdo" },
-      { id: "redes.criar", nome: "Criar Conteúdo" },
-      { id: "redes.plano", nome: "Plano de Posts" },
-      { id: "redes.assistente", nome: "Assistente Cat.IA" },
-      { id: "redes.agendar", nome: "Publicar" },
-      { id: "criacao-livre", nome: "Criação Livre" },
-      { id: "agentes-creator", nome: "Agentes Creator" },
-    ],
-  },
-  {
     id: "academia", nome: "Academia de IA", cor: "#2E7CB8",
     modulos: [
       { id: "principais-ias", nome: "Principais IAs" },

@@ -28,7 +28,7 @@ export type ModuleKey = "jornada" | "academia" | "redes";
 export const MODULE_LABELS: Record<ModuleKey, string> = {
   jornada: "A tua jornada",
   academia: "Academia de IA",
-  redes: "Conteúdo Todo Dia",
+  redes: "A tua jornada",
 };
 
 /** Produto único: só o produto de acesso total concede acesso (a todos os módulos). */
