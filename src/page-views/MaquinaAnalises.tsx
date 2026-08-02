@@ -49,6 +49,7 @@ export default function MaquinaAnalises() {
   const [form, setForm] = useState<FormAnalise>(FORM_VAZIO);
   const [preencheu, setPreencheu] = useState(false);
   const [promptFinal, setPromptFinal] = useState("");
+  const [ferramenta, setFerramenta] = useState<"claude" | "chatgpt">("claude");
 
   const PASSOS = fonte === "doc" ? PASSOS_DOC : PASSOS_ZERO;
 
@@ -370,20 +371,55 @@ export default function MaquinaAnalises() {
                 <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 text-emerald-700 text-[13px] font-bold px-4 py-2 mb-3">
                   <Check size={14} /> O teu prompt está pronto
                 </span>
-                <h2 className="font-serif text-2xl text-ink">Agora é o Claude que trabalha</h2>
+
+                {/* Tabs — usar o prompt no Claude ou no ChatGPT */}
+                <div className="flex justify-center mb-3">
+                  <div className="inline-flex gap-1 p-1 rounded-full bg-ink/5 border border-border">
+                    {(["claude", "chatgpt"] as const).map((f) => {
+                      const on = ferramenta === f;
+                      return (
+                        <button
+                          key={f}
+                          onClick={() => setFerramenta(f)}
+                          className="px-4 py-1.5 rounded-full text-[13px] font-bold transition-colors"
+                          style={on ? { background: COR, color: "#fff" } : { color: "#8a8a90" }}
+                        >
+                          {f === "claude" ? "Claude" : "ChatGPT"}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <h2 className="font-serif text-2xl text-ink">
+                  Agora é o {ferramenta === "chatgpt" ? "ChatGPT" : "Claude"} que trabalha
+                </h2>
                 <p className="text-sm text-ink/60 mt-1 max-w-lg mx-auto">
-                  Este prompt leva o método completo da Cátia e os dados desta conta. Cola-o no Claude, anexa os
-                  screenshots, e ele devolve-te os dois documentos.
+                  {ferramenta === "chatgpt"
+                    ? "Este prompt leva o método completo da Cátia e os dados desta conta. Cola-o no ChatGPT, anexa os screenshots, e ele escreve-te o relatório ali mesmo, no chat."
+                    : "Este prompt leva o método completo da Cátia e os dados desta conta. Cola-o no Claude, anexa os screenshots, e ele devolve-te o relatório de análise."}
                 </p>
               </div>
 
               <ol className="space-y-2.5 text-[13.5px] text-ink/75 max-w-lg mx-auto">
                 {[
                   <>Carrega em <strong>Copiar prompt</strong> aqui em baixo.</>,
-                  <>Abre o <a href="https://claude.ai/new" target="_blank" rel="noopener noreferrer" className="font-semibold underline" style={{ color: COR }}>claude.ai</a> (a conta gratuita chega).</>,
+                  ferramenta === "chatgpt" ? (
+                    <>Abre o <a href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer" className="font-semibold underline" style={{ color: COR }}>chatgpt.com</a> (a conta gratuita chega).</>
+                  ) : (
+                    <>Abre o <a href="https://claude.ai/new" target="_blank" rel="noopener noreferrer" className="font-semibold underline" style={{ color: COR }}>claude.ai</a> (a conta gratuita chega).</>
+                  ),
                   <><strong>Anexa os screenshots do perfil</strong> — a bio, a grelha do feed e os Reels com as views (o clip 📎).</>,
-                  <>Cola o prompt e envia. O Claude devolve <strong>um relatório de análise</strong>, em texto simples.</>,
-                  <><strong>Guarda esse texto como .txt</strong> para o levares ao Plano Estratégico.</>,
+                  ferramenta === "chatgpt" ? (
+                    <>Cola o prompt e envia. O ChatGPT <strong>escreve o relatório ali mesmo, no chat</strong> (não gera ficheiro).</>
+                  ) : (
+                    <>Cola o prompt e envia. O Claude devolve <strong>um relatório de análise</strong>, em texto simples.</>
+                  ),
+                  ferramenta === "chatgpt" ? (
+                    <><strong>Copia o relatório</strong> do chat para o levares ao Plano Estratégico.</>
+                  ) : (
+                    <><strong>Guarda esse texto como .txt</strong> para o levares ao Plano Estratégico.</>
+                  ),
                 ].map((t, i) => (
                   <li key={i} className="flex gap-2.5">
                     <span className="w-5 h-5 rounded-full text-[10.5px] font-bold text-white flex items-center justify-center shrink-0 mt-0.5" style={{ background: COR }}>
@@ -400,7 +436,7 @@ export default function MaquinaAnalises() {
               descricao="Já leva os teus objetivos, o que vendes e o público. Não precisas de mudar nada."
               prompt={promptFinal}
               rotuloBotao="Copiar prompt"
-              agente="Claude"
+              agente={ferramenta === "chatgpt" ? "ChatGPT" : "Claude"}
             />
 
             <div className="rounded-2xl border border-border bg-white p-5 mb-5">
