@@ -2,11 +2,13 @@
 // que antes estavam no menu lateral (posts avulsos, formatos/aulas, ferramentas…).
 // Entra-se aqui a partir do fluxo da jornada (Passo 5 · B).
 
-import type { ComponentType } from "react";
+import { useState, type ComponentType } from "react";
 import Layout from "../components/Layout";
 import PillarHeader from "../components/PillarHeader";
 import PilarBreadcrumb from "../components/PilarBreadcrumb";
+import PromptCard from "../components/PromptCard";
 import { Link } from "@/lib/router-compat";
+import { CRIAR_CONTEUDO, type Objetivo } from "@/data/criar-conteudo";
 import {
   ArrowUpRight,
   LayoutGrid,
@@ -19,6 +21,8 @@ import {
   Video,
   Images,
   Layers,
+  AlignLeft,
+  Zap,
 } from "lucide-react";
 
 type Item = { label: string; to: string; icon: ComponentType<{ size?: number }> };
@@ -39,7 +43,6 @@ const GRUPOS: Grupo[] = [
       { label: "Reels virais", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=reels", icon: Video },
       { label: "Carrosséis virais", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=carrossel", icon: Images },
       { label: "Stories que vendem", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=stories", icon: Layers },
-      { label: "Posts Express", to: "/metodo/pilar-2/redes-sociais?aba=avulsos", icon: Sparkles },
     ],
   },
   {
@@ -52,7 +55,23 @@ const GRUPOS: Grupo[] = [
   },
 ];
 
+// Prompts prontos que vivem diretamente na Criação Livre (não têm página própria).
+const OBJETIVOS: { id: Objetivo; label: string }[] = [
+  { id: "autoridade", label: "Autoridade" },
+  { id: "seguidores", label: "Seguidores" },
+  { id: "vendas", label: "Vendas" },
+];
+
+const META_PROMPT: Record<string, { Icon: ComponentType<{ size?: number }>; cor: string }> = {
+  legendas: { Icon: AlignLeft, cor: "#2FA98A" },
+  ganchos: { Icon: Zap, cor: "#E0567A" },
+};
+
+const PROMPTS_LIVRE = CRIAR_CONTEUDO.filter((c) => c.id === "legendas" || c.id === "ganchos");
+
 export default function CriacaoLivre() {
+  const [objetivo, setObjetivo] = useState<Objetivo>("autoridade");
+
   return (
     <Layout>
       <PilarBreadcrumb
@@ -93,6 +112,41 @@ export default function CriacaoLivre() {
                 );
               })}
             </div>
+
+            {/* Prompts prontos, dentro de "Cria o teu conteúdo" */}
+            {g.titulo === "Cria o teu conteúdo" && (
+              <div className="mt-5">
+                <div className="mb-4 flex flex-wrap items-center gap-2">
+                  <span className="text-[10px] tracking-[0.14em] uppercase text-ink/45 mr-1">Objetivo do prompt</span>
+                  {OBJETIVOS.map((o) => (
+                    <button
+                      key={o.id}
+                      onClick={() => setObjetivo(o.id)}
+                      className={`text-sm px-4 py-1.5 rounded-full border transition-colors ${objetivo === o.id ? "bg-gradient-to-br from-terracotta to-terracotta-dark text-cream border-transparent" : "bg-white border-border text-ink hover:border-terracotta/50"}`}
+                    >
+                      {o.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="grid gap-3 lg:grid-cols-2">
+                  {PROMPTS_LIVRE.map((c) => {
+                    const meta = META_PROMPT[c.id];
+                    return (
+                      <PromptCard
+                        key={c.id}
+                        titulo={c.titulo}
+                        descricao={c.descricao}
+                        prompt={c.prompts[objetivo]}
+                        rotuloBotao="Copiar prompt"
+                        icon={meta ? <meta.Icon size={20} /> : undefined}
+                        cor={meta?.cor}
+                        botaoCor="#C8487E"
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
