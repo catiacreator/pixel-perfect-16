@@ -39,7 +39,7 @@ const CAMINHO: CardDef[] = [
 
 // Ramo à parte — sozinho numa linha por baixo do fluxo principal.
 const RAMO_LIVRE: CardDef = {
-  key: "livre", passo: "", icon: Sparkles, titulo: "Criação Livre", sub: "Todas as ferramentas e aulas num só sítio.", to: "/criacao-livre", cor: "#405DE6", cor2: "#5851DB",
+  key: "livre", passo: "", icon: Sparkles, titulo: "Criação Livre", sub: "Tu é que decides o que crias — todas as ferramentas que precisas.", to: "/criacao-livre", cor: "#405DE6", cor2: "#5851DB",
 };
 
 // Selo no canto: check (100%), anel de progresso, ou seta (ferramenta aberta).
@@ -105,7 +105,7 @@ function Cartao({ card, prog, largura = "w-[210px]" }: { card: CardDef; prog: Ca
         </p>
       )}
       <p className="mt-0.5 text-[15px] font-semibold leading-tight text-ink">{card.titulo}</p>
-      <p className="mt-1 line-clamp-1 text-xs text-ink/50">{card.sub}</p>
+      <p className="mt-1 line-clamp-2 text-xs text-ink/50">{card.sub}</p>
 
       <div className="mt-auto pt-3">
         {prog.rastreado ? (
