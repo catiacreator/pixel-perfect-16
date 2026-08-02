@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "@/lib/router-compat";
-import { TrendingUp, Users, DollarSign, ArrowRight, Plus, X, Check } from "lucide-react";
+import { TrendingUp, Users, DollarSign, Plus, X, Check } from "lucide-react";
 import PromptCard from "./PromptCard";
 
 // Os Pilares de Conteúdo — os 3 a 5 grandes temas que organizam tudo o que a
@@ -166,12 +165,6 @@ export default function PilaresConteudo() {
             );
           })}
         </div>
-        <Link
-          to="/maquina-analises"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-semibold hover:bg-terracotta transition-colors"
-        >
-          Próximo passo · Máquina de Análises <ArrowRight size={15} />
-        </Link>
       </div>
     </div>
   );
