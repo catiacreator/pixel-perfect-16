@@ -34,12 +34,13 @@ const CAMINHO: CardDef[] = [
   { key: "autoridade", passo: "Passo 2", icon: Crown, titulo: "Criar autoridade", sub: "Mostra o que sabes às pessoas certas.", to: "/metodo/pilar-2/identidade", cor: "#C13584", cor2: "#833AB4" },
   { key: "pilares", passo: "Passo 3", icon: LayoutGrid, titulo: "Os teus pilares de conteúdo", sub: "Os temas que vais dominar.", to: "/metodo/pilar-2/redes-sociais?aba=pilares", cor: "#E1306C", cor2: "#C13584" },
   { key: "analise", passo: "Passo 4", icon: LineChart, titulo: "Analisar o teu perfil", sub: "Vê o que resulta e o que falta.", to: "/maquina-analises", cor: "#F56040", cor2: "#E1306C" },
+  { key: "plano", passo: "Passo 5", icon: CalendarDays, titulo: "Plano de Posts · Conteúdo Viral", sub: "Planeia e agenda o que vais publicar.", to: "/metodo/pilar-2/redes-sociais?aba=plano", cor: "#FCAF45", cor2: "#F56040" },
 ];
 
-const RAMOS: CardDef[] = [
-  { key: "plano", passo: "Passo 5 · A", icon: CalendarDays, titulo: "Plano de Posts · Conteúdo Viral", sub: "Planeia e agenda o que vais publicar.", to: "/metodo/pilar-2/redes-sociais?aba=plano", cor: "#FCAF45", cor2: "#F56040" },
-  { key: "livre", passo: "Passo 5 · B", icon: Sparkles, titulo: "Criação Livre", sub: "Todas as ferramentas e aulas num só sítio.", to: "/criacao-livre", cor: "#405DE6", cor2: "#5851DB" },
-];
+// Ramo à parte — sozinho numa linha por baixo do fluxo principal.
+const RAMO_LIVRE: CardDef = {
+  key: "livre", passo: "Passo 5 · B", icon: Sparkles, titulo: "Criação Livre", sub: "Todas as ferramentas e aulas num só sítio.", to: "/criacao-livre", cor: "#405DE6", cor2: "#5851DB",
+};
 
 // Selo no canto: check (100%), anel de progresso, ou seta (ferramenta aberta).
 function Selo({ prog, cor }: { prog: CardProgresso; cor: string }) {
@@ -143,29 +144,25 @@ function Conector() {
 
 export default function FluxoJornada() {
   const prog = useFluxoProgresso();
-  const card4 = CAMINHO[3];
   return (
     <div className="-mx-5 overflow-x-auto px-5 pb-3 md:mx-0 md:px-0">
-      <div className="flex min-w-max items-start gap-0">
-        {CAMINHO.slice(0, 3).map((card) => (
-          <div key={card.key} className="flex items-center">
-            <Cartao card={card} prog={prog[card.key]} />
-            <Conector />
-          </div>
-        ))}
+      <div className="flex min-w-max flex-col gap-3">
+        {/* Fila principal: Passo 1 → 5 */}
+        <div className="flex items-start gap-0">
+          {CAMINHO.map((card, i) => (
+            <div key={card.key} className="flex items-center">
+              <Cartao card={card} prog={prog[card.key]} />
+              {i < CAMINHO.length - 1 && <Conector />}
+            </div>
+          ))}
+        </div>
 
-        {/* Card 4 alinhado na fila (mesma distância); ramos centrados por baixo.
-            -ml-[111px] = metade da diferença entre a largura do par (432) e do card (210). */}
-        <div className="flex w-[210px] shrink-0 flex-col gap-3">
-          <Cartao card={card4} prog={prog[card4.key]} />
-          <div className="flex justify-center py-[5px] text-ink/25">
+        {/* Passo 5 · B — sozinho numa linha por baixo */}
+        <div className="flex w-[210px] flex-col items-center">
+          <div className="py-[5px] text-ink/25">
             <Seta className="rotate-90" />
           </div>
-          <div className="-ml-[111px] flex w-max gap-3">
-            {RAMOS.map((card) => (
-              <Cartao key={card.key} card={card} prog={prog[card.key]} />
-            ))}
-          </div>
+          <Cartao card={RAMO_LIVRE} prog={prog[RAMO_LIVRE.key]} />
         </div>
       </div>
     </div>
