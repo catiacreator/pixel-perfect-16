@@ -188,6 +188,7 @@ export const ESTRUTURA: Nodo[] = [
       },
       { id: "conteudo-ia.m5", label: "Módulo 5 · Fluxo + projeto final", tipo: "pagina", to: "/conteudo-ia?aula=m5" },
       { id: "conteudo-ia.m6", label: "Automações que geram ideias (Bónus)", tipo: "pagina", to: "/conteudo-ia?aula=m6" },
+      { id: "conteudo-ia.reels-serie", label: "Reels em Série", tipo: "pagina", to: "/conteudo-ia?aula=reels-serie" },
       { id: "conteudo-ia.bonus", label: "Banco de prompts", tipo: "pagina", to: "/conteudo-ia?aula=bonus" },
       { id: "conteudo-ia.final", label: "O teu próximo passo", tipo: "pagina", to: "/conteudo-ia?aula=final" },
     ],
@@ -242,6 +243,8 @@ export const BLOQUEIOS_PADRAO: string[] = [
   "criar-produto",
   "vendas-apps",
   "maquina-analises",
+  // Ferramenta em construção — aparece "Em breve" aos alunos.
+  "conteudo-ia.reels-serie",
 ];
 
 // Modo de bloqueio por defeito de cada nó (quando a admin ainda não mexeu no

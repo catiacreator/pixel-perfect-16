@@ -562,6 +562,25 @@ Regras:
       },
     ],
   },
+  {
+    id: "reels-serie",
+    numero: "★",
+    titulo: "Reels em Série",
+    subtitulo: "Uma ideia → uma série inteira de Reels, com prompt para o teu ChatGPT ou Claude.",
+    secoes: [
+      {
+        blocos: [
+          { t: "nota", v: "info", texto: "**Em breve.** Esta ferramenta está quase pronta." },
+          { t: "p", texto: "Vais preencher a **ideia**, o **público**, a **oferta** e o **tom**, e no fim recebes um **prompt pronto** para colar no teu **ChatGPT** ou **Claude** — que gera os nomes da série e todos os roteiros. Assim corres tudo na tua conta de IA, sem gastar créditos da plataforma." },
+          { t: "ul", itens: [
+            "Recebes um prompt por série, pronto a correr.",
+            "Guardas cada série (nomes + prompts) numa biblioteca.",
+            "A partir da biblioteca, pedes a continuação (sem repetir episódios) ou começas uma nova.",
+          ] },
+        ],
+      },
+    ],
+  },
 ];
 
 // Sub-aulas (páginas Bónus penduradas num módulo, via ?aula=id) — não entram
