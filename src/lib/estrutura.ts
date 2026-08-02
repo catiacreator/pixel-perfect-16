@@ -243,8 +243,6 @@ export const BLOQUEIOS_PADRAO: string[] = [
   "criar-produto",
   "vendas-apps",
   "maquina-analises",
-  // Ferramenta em construção — aparece "Em breve" aos alunos.
-  "conteudo-ia.reels-serie",
 ];
 
 // Modo de bloqueio por defeito de cada nó (quando a admin ainda não mexeu no
