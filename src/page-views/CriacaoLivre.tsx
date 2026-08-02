@@ -15,6 +15,10 @@ import {
   Film,
   MessageSquare,
   Bot,
+  BookOpen,
+  Video,
+  Images,
+  Layers,
 } from "lucide-react";
 
 type Item = { label: string; to: string; icon: ComponentType<{ size?: number }> };
@@ -25,7 +29,17 @@ const GRUPOS: Grupo[] = [
     titulo: "Aulas e formatos",
     itens: [
       { label: "Posicionamento e Bio", to: "/metodo/pilar-2/redes-sociais?aba=bio", icon: UserRound },
-      { label: "Formatos de Conteúdo", to: "/formatos", icon: Film },
+    ],
+  },
+  {
+    titulo: "Cria o teu conteúdo",
+    itens: [
+      { label: "Cria a tua série", to: "/metodo/pilar-2/reels-em-serie", icon: Film },
+      { label: "Yap Content", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=roteiros", icon: BookOpen },
+      { label: "Reels virais", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=reels", icon: Video },
+      { label: "Carrosséis virais", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=carrossel", icon: Images },
+      { label: "Stories que vendem", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=stories", icon: Layers },
+      { label: "Posts Express", to: "/metodo/pilar-2/redes-sociais?aba=avulsos", icon: Sparkles },
     ],
   },
   {
