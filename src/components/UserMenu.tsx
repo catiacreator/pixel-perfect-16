@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Camera, LogOut, User, Eye, Shield } from "lucide-react";
+import { Camera, LogOut, User, Eye, Shield, Settings } from "lucide-react";
+import ContaModal from "@/components/ContaModal";
 import { supabase } from "@/integrations/supabase/client";
 import { resetMasterDocSync } from "@/lib/master-doc-sync";
 import { readStoredSession } from "@/lib/session";
@@ -37,6 +38,7 @@ export default function UserMenu() {
   // boolean separado para não estreitar o tipo de `adminView` dentro do bloco
   const emVistaAdmin = adminView === "admin";
   const [open, setOpen] = useState(false);
+  const [contaOpen, setContaOpen] = useState(false);
   const [avatar, setAvatar] = useState<string | null>(null);
   const [nome, setNome] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -186,6 +188,13 @@ export default function UserMenu() {
           )}
 
           <button
+            onClick={() => { setOpen(false); setContaOpen(true); }}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-ink/80 hover:bg-ink/5 transition-colors"
+          >
+            <Settings size={16} strokeWidth={1.75} />
+            A minha conta
+          </button>
+          <button
             onClick={() => fileRef.current?.click()}
             disabled={uploading}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-ink/80 hover:bg-ink/5 transition-colors disabled:opacity-50"
@@ -202,6 +211,8 @@ export default function UserMenu() {
           </button>
         </div>
       )}
+
+      <ContaModal open={contaOpen} onClose={() => setContaOpen(false)} />
     </div>
   );
 }

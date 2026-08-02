@@ -26,8 +26,8 @@ export default function ContaModal({ open, onClose }: { open: boolean; onClose: 
     if (!open) return;
     setFoto(conta.foto || "");
     const base = [...(conta.handles || [])];
-    while (base.length < perfis.count) base.push("");
-    setHandles(base.slice(0, Math.max(1, perfis.count)));
+    while (base.length < 2) base.push(""); // mostra sempre Perfil 1 e Perfil 2
+    setHandles(base.slice(0, 2));
     setPass("");
     setPass2("");
     setErro("");
@@ -75,15 +75,12 @@ export default function ContaModal({ open, onClose }: { open: boolean; onClose: 
     setErro("");
     setOk("");
 
-    // Handle obrigatório em todos os perfis existentes.
+    // Perfil 1 é sempre obrigatório; Perfil 2 só se a pessoa tiver mesmo 2 perfis.
     const normalizados = handles.map(normalizarHandle);
-    for (let i = 0; i < perfis.count; i++) {
-      if (!normalizados[i]) {
-        setErro(
-          perfis.count > 1
-            ? `Falta o handle do Instagram do perfil "${perfis.nomes[i]}".`
-            : "O handle do Instagram é obrigatório.",
-        );
+    for (let i = 0; i < 2; i++) {
+      const obrigatorio = i === 0 || perfis.count > 1;
+      if (obrigatorio && !normalizados[i]) {
+        setErro(`Falta o handle do Instagram do ${perfis.nomes[i] || `Perfil ${i + 1}`}.`);
         return;
       }
     }
@@ -178,26 +175,33 @@ export default function ContaModal({ open, onClose }: { open: boolean; onClose: 
 
           {/* Handle(s) do Instagram */}
           <div className="space-y-3">
-            {handles.slice(0, Math.max(1, perfis.count)).map((h, i) => (
-              <div key={i}>
-                <label className="text-xs tracking-[0.1em] uppercase text-muted mb-1.5 block">
-                  <Instagram size={12} className="inline mr-1 -mt-0.5 text-terracotta" />
-                  Handle do Instagram
-                  <span className="text-ink/45 normal-case"> — {perfis.nomes[i] || `Perfil ${i + 1}`}</span>
-                  <span className="text-red-500"> *</span>
-                </label>
-                <input
-                  value={h}
-                  onChange={(e) => {
-                    const copia = [...handles];
-                    copia[i] = e.target.value;
-                    setHandles(copia);
-                  }}
-                  placeholder="@oteuhandle"
-                  className="w-full rounded-xl border border-[var(--color-border)] p-2.5 text-sm outline-none focus:border-terracotta"
-                />
-              </div>
-            ))}
+            {handles.slice(0, 2).map((h, i) => {
+              const obrigatorio = i === 0 || perfis.count > 1;
+              return (
+                <div key={i}>
+                  <label className="text-xs tracking-[0.1em] uppercase text-muted mb-1.5 block">
+                    <Instagram size={12} className="inline mr-1 -mt-0.5 text-terracotta" />
+                    Handle do Instagram
+                    <span className="text-ink/45 normal-case"> — {perfis.nomes[i] || `Perfil ${i + 1}`}</span>
+                    {obrigatorio ? (
+                      <span className="text-red-500"> *</span>
+                    ) : (
+                      <span className="text-ink/35 normal-case"> (se tiveres um 2.º perfil)</span>
+                    )}
+                  </label>
+                  <input
+                    value={h}
+                    onChange={(e) => {
+                      const copia = [...handles];
+                      copia[i] = e.target.value;
+                      setHandles(copia);
+                    }}
+                    placeholder="@oteuhandle"
+                    className="w-full rounded-xl border border-[var(--color-border)] p-2.5 text-sm outline-none focus:border-terracotta"
+                  />
+                </div>
+              );
+            })}
             <p className="text-[11px] text-ink/45">
               O handle é obrigatório — é por ele que analisamos o teu perfil.
             </p>
