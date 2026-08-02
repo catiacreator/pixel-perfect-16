@@ -14,7 +14,8 @@ export type Bloco =
   | { t: "aulas"; itens: { titulo: string; desc: string; aula: string }[] } // cartões-link para sub-aulas (?aula=id)
   | { t: "video"; url: string; titulo?: string } // vídeo inline (.mp4 direto ou embed)
   | { t: "slides"; base: string; count: number; alt?: string } // galeria de slides (base/slide-01.webp…)
-  | { t: "wizard"; passos: { titulo: string; blocos: Bloco[] }[] }; // passos navegáveis (prev/próximo)
+  | { t: "wizard"; passos: { titulo: string; blocos: Bloco[] }[] } // passos navegáveis (prev/próximo)
+  | { t: "acordeao"; titulo: string; aberto?: boolean; blocos: Bloco[] }; // secção fechável
 
 export type Secao = { label?: string; titulo?: string; blocos: Bloco[] };
 export type Aula = {
@@ -568,14 +569,15 @@ Regras:
     numero: "★",
     titulo: "Reels em Série",
     subtitulo: "Uma ideia → uma série inteira de Reels, com prompts para o teu ChatGPT ou Claude.",
-    objetivo: "Transformar UMA ideia numa série de Reels com nome repetível e vários roteiros prontos a gravar — e conseguir continuar a série sem repetir episódios.",
     secoes: [
       {
-        label: "A ideia",
         blocos: [
-          { t: "p", texto: "Uma **série** é a forma mais fácil de nunca ficares sem ideias: escolhes UM tema, dás-lhe um **nome-molde** que se repete (\"[Nome] — parte 1, parte 2, parte 3…\") e a partir daí é só encher com episódios. O algoritmo adora, e o teu público fica a **querer o próximo**." },
-          { t: "p", texto: "Aqui fazes tudo no **teu ChatGPT ou Claude**, com os prompts abaixo. Só tens de os copiar e **preencher os campos entre [parênteses]** com os teus dados. Corre na tua conta de IA — não gastas nada." },
-          { t: "nota", v: "info", texto: "**Antes de começar:** tem à mão o teu **público** (para quem falas), a tua **oferta** (o que vendes) e o **tom** que queres — próximo, descontraído, inspirador, direto ou formal." },
+          { t: "acordeao", titulo: "Como funciona (podes fechar)", aberto: true, blocos: [
+            { t: "nota", v: "info", texto: "**Objetivo:** Transformar UMA ideia numa série de Reels com nome repetível e vários roteiros prontos a gravar — e conseguir continuar a série sem repetir episódios." },
+            { t: "p", texto: "Uma **série** é a forma mais fácil de nunca ficares sem ideias: escolhes UM tema, dás-lhe um **nome-molde** que se repete (\"[Nome] — parte 1, parte 2, parte 3…\") e a partir daí é só encher com episódios. O algoritmo adora, e o teu público fica a **querer o próximo**." },
+            { t: "p", texto: "Aqui fazes tudo no **teu ChatGPT ou Claude**, com os prompts abaixo. Só tens de os copiar e **preencher os campos entre [parênteses]** com os teus dados. Corre na tua conta de IA — não gastas nada." },
+            { t: "nota", v: "info", texto: "**Antes de começar:** tem à mão o teu **público** (para quem falas), a tua **oferta** (o que vendes) e o **tom** que queres — próximo, descontraído, inspirador, direto ou formal." },
+          ] },
         ],
       },
       {

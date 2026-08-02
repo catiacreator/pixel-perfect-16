@@ -4,7 +4,7 @@ import PromptBox from "../components/curso/PromptBox";
 import VideoArea from "../components/curso/VideoArea";
 import { Link, useSearchParams } from "@/lib/router-compat";
 import { useState, useEffect } from "react";
-import { Sparkles, ArrowRight, ArrowLeft, Check, ExternalLink, Download, Instagram, GraduationCap, MessageCircle, ChevronLeft, ChevronRight, Expand, X } from "lucide-react";
+import { Sparkles, ArrowRight, ArrowLeft, Check, ExternalLink, Download, Instagram, GraduationCap, MessageCircle, ChevronLeft, ChevronRight, ChevronDown, Expand, X } from "lucide-react";
 import { WHATSAPP_CATIA } from "@/lib/turmas";
 import TarefaCompleta from "../components/TarefaCompleta";
 import EmManutencao from "../components/EmManutencao";
@@ -115,6 +115,8 @@ function BlocoView({ b }: { b: Bloco }) {
       return <PromptBox agente={b.agente} nome={b.nome} texto={b.texto} textoBr={b.textoBr} />;
     case "wizard":
       return <WizardBlocos passos={b.passos} />;
+    case "acordeao":
+      return <AcordeaoBloco titulo={b.titulo} aberto={b.aberto} blocos={b.blocos} />;
     case "video":
       return <div className="my-4"><VideoArea videoUrl={b.url} titulo={b.titulo ?? "Vídeo"} /></div>;
     case "slides":
@@ -200,6 +202,28 @@ function BlocoView({ b }: { b: Bloco }) {
       );
     }
   }
+}
+
+// Secção fechável (acordeão). Começa aberta por defeito; a pessoa pode fechar.
+function AcordeaoBloco({ titulo, aberto = true, blocos }: { titulo: string; aberto?: boolean; blocos: Bloco[] }) {
+  const [open, setOpen] = useState(aberto);
+  return (
+    <div className="my-4 rounded-2xl border border-border bg-white overflow-hidden">
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-black/[0.02] transition-colors"
+        aria-expanded={open}
+      >
+        <span className="text-[15px] font-semibold text-ink">{titulo}</span>
+        <ChevronDown size={18} className={`text-ink/40 shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <div className="px-4 pb-4 pt-1 border-t border-border">
+          {blocos.map((b, i) => <BlocoView key={i} b={b} />)}
+        </div>
+      )}
+    </div>
+  );
 }
 
 // Passos navegáveis (ex.: prompts passo a passo). Mostra um passo de cada vez,
