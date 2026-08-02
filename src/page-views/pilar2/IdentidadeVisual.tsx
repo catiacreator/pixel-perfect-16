@@ -156,13 +156,6 @@ export default function IdentidadeVisual() {
         backTo="/metodo/pilar-2/identidade"
         backLabel="Voltar para Identidade de Marca"
       />
-      <PillarHeader
-        numeral="✦"
-        icon={null}
-        pilarLabel="Etapa 3.3 · Identidade Visual"
-        titulo="Identidade Visual"
-        subtitulo="Anexa até 3 imagens do Pinterest no ChatGPT e ele te devolve paleta, tipografia, elementos visuais e mood — direto da sua referência."
-      />
       <div className="px-5 md:px-10 pt-8 pb-10 max-w-4xl mx-auto">
 
         <div className="rounded-2xl border border-border bg-white p-5 mb-6">

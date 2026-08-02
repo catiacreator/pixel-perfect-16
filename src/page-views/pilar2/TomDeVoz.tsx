@@ -58,13 +58,6 @@ export default function TomDeVoz() {
         backTo="/metodo/pilar-2/identidade"
         backLabel="Voltar para Identidade de Marca"
       />
-      <PillarHeader
-        numeral="✦"
-        icon={null}
-        pilarLabel="Etapa 3.2 · Tom de Voz"
-        titulo="Tom de Voz da Marca"
-        subtitulo="Use seus arquétipos, palavras a usar/evitar e ajustes da ponte para entregar 4 campos prontos."
-      />
       <div className="px-5 md:px-10 pt-8 pb-10 max-w-4xl mx-auto">
 
         <PromptCard

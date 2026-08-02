@@ -18,13 +18,6 @@ export default function ConsultoriaImagem() {
         backTo="/metodo/pilar-2/identidade"
         backLabel="Voltar para Identidade de Marca"
       />
-      <PillarHeader
-        numeral="✦"
-        icon={null}
-        pilarLabel="Etapa 3.4 · Consultoria de Imagem"
-        titulo="Consultoria de Imagem"
-        subtitulo="Estudo Visual completo: seu estilo pessoal e o cabelo que valoriza sua presença nos vídeos."
-      />
       <div className="px-5 md:px-10 pt-8 pb-10 max-w-4xl mx-auto">
         <p className="text-sm text-muted mb-8">
           O que você veste e como está seu cabelo comunicam antes de você falar. Aqui você tem dois

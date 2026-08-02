@@ -79,13 +79,6 @@ export default function Identidade() {
         backTo="/metodo/pilar-2"
         backLabel="Voltar para o Pilar 2"
       />
-      <PillarHeader
-        numeral="✦"
-        icon={null}
-        pilarLabel="Criar Autoridade"
-        titulo="Identidade de marca"
-        subtitulo="Descubra seu arquétipo, o do seu cliente e calibre a ponte entre os dois."
-      />
       <div className="px-5 md:px-10 pt-8 pb-10 max-w-4xl mx-auto">
 
         {/* 1. SEU ARQUÉTIPO */}
