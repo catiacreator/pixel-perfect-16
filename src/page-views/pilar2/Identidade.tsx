@@ -4,6 +4,7 @@ import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import PillarHeader from "../../components/PillarHeader";
 import PromptCard from "../../components/PromptCard";
 import SaveBar from "../../components/SaveBar";
+import TarefaCompleta from "../../components/TarefaCompleta";
 import { ArrowRight } from "lucide-react";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import { ARQUETIPOS, type Arquetipo } from "@/lib/pilar2-storage";
@@ -197,6 +198,9 @@ export default function Identidade() {
           <SaveBar onSave={() => {}} />
         </div>
 
+        <div className="flex justify-center mb-6">
+          <TarefaCompleta id="pilar-2.identidade" tipo="etapa" />
+        </div>
         <div className="rounded-2xl border border-terracotta bg-white p-5 text-center mt-8">
           <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">Próximo passo</p>
           <p className="font-serif text-lg text-ink mb-3">Tom de Voz da Marca</p>

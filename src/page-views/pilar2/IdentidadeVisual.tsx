@@ -5,6 +5,7 @@ import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import PillarHeader from "../../components/PillarHeader";
 import PromptCard from "../../components/PromptCard";
 import SaveBar from "../../components/SaveBar";
+import TarefaCompleta from "../../components/TarefaCompleta";
 import { ArrowRight, ExternalLink, Wand2, Printer, Copy, Check } from "lucide-react";
 import { usePilar2 } from "@/lib/pilar2-hooks";
 import { PROMPT_IDENTIDADE_VISUAL, PROMPT_IDENTIDADE_VISUAL_EXISTENTE } from "@/data/prompts/pilar2-tom-visual";
@@ -301,6 +302,9 @@ export default function IdentidadeVisual() {
           />
         </div>
 
+        <div className="flex justify-center mb-6">
+          <TarefaCompleta id="pilar-2.visual" tipo="etapa" />
+        </div>
         <div className="rounded-2xl border border-terracotta bg-white p-5 text-center mt-8">
           <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">Próximo passo</p>
           <p className="font-serif text-lg text-ink mb-3">Consultoria de Imagem</p>

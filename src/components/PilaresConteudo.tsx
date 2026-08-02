@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { TrendingUp, Users, DollarSign, Plus, X, Check } from "lucide-react";
 import PromptCard from "./PromptCard";
+import TarefaCompleta from "./TarefaCompleta";
 
 // Os Pilares de Conteúdo — os 3 a 5 grandes temas que organizam tudo o que a
 // pessoa publica. Vivem numa página própria dentro de "Cria o teu plano".
@@ -165,6 +166,10 @@ export default function PilaresConteudo() {
             );
           })}
         </div>
+      </div>
+
+      <div className="flex justify-center mt-8">
+        <TarefaCompleta id="redes.pilares" tipo="etapa" />
       </div>
     </div>
   );

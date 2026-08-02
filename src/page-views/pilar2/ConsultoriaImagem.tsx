@@ -3,6 +3,7 @@ import Layout from "../../components/Layout";
 import PilarBreadcrumb from "../../components/PilarBreadcrumb";
 import PillarHeader from "../../components/PillarHeader";
 import PromptCard from "../../components/PromptCard";
+import TarefaCompleta from "../../components/TarefaCompleta";
 import { ArrowRight, Shirt, Scissors, AlertCircle } from "lucide-react";
 import {
   PROMPT_CONSULTORIA_ROUPAS,
@@ -78,6 +79,9 @@ export default function ConsultoriaImagem() {
           />
         </div>
 
+        <div className="flex justify-center mb-6">
+          <TarefaCompleta id="pilar-2.consultoria-imagem" tipo="etapa" />
+        </div>
         <div className="rounded-2xl border border-terracotta bg-white p-5 text-center">
           <p className="text-xs tracking-[0.15em] uppercase text-terracotta mb-2">Próximo passo</p>
           <p className="font-serif text-lg text-ink mb-3">Os teus pilares de conteúdo</p>

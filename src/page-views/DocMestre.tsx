@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Layout from "../components/Layout";
 import PilarBreadcrumb from "../components/PilarBreadcrumb";
+import TarefaCompleta from "../components/TarefaCompleta";
 import {
   FileUp,
   ClipboardPaste,
@@ -772,6 +773,11 @@ export default function DocMestre() {
               </div>
             </div>
           )}
+        </div>
+
+        {/* Marcar tarefa como completa */}
+        <div className="print:hidden mt-8 flex justify-center">
+          <TarefaCompleta id="doc-mestre" tipo="etapa" />
         </div>
 
       </div>
