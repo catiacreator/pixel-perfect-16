@@ -204,21 +204,36 @@ function BlocoView({ b }: { b: Bloco }) {
   }
 }
 
-// Secção fechável (acordeão). Começa aberta por defeito; a pessoa pode fechar.
+// Secção fechável (acordeão). Começa aberta por defeito; se a pessoa fechar,
+// a decisão fica guardada (localStorage) e mantém-se entre sessões.
 function AcordeaoBloco({ titulo, aberto = true, blocos }: { titulo: string; aberto?: boolean; blocos: Bloco[] }) {
+  const chave = `leveza.acordeao:${titulo}`;
   const [open, setOpen] = useState(aberto);
+  useEffect(() => {
+    try {
+      const v = localStorage.getItem(chave);
+      if (v === "1") setOpen(true);
+      else if (v === "0") setOpen(false);
+    } catch { /* ignora */ }
+  }, [chave]);
+  const alternar = () =>
+    setOpen((o) => {
+      const n = !o;
+      try { localStorage.setItem(chave, n ? "1" : "0"); } catch { /* ignora */ }
+      return n;
+    });
   return (
-    <div className="my-4 rounded-2xl border border-border bg-white overflow-hidden">
+    <div className="my-4 rounded-2xl border border-[#E7DEF4] bg-white overflow-hidden">
       <button
-        onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left hover:bg-black/[0.02] transition-colors"
+        onClick={alternar}
+        className="w-full flex items-center justify-between gap-3 px-4 py-3 text-left bg-[#F4EDFB] hover:bg-[#ECE1FA] transition-colors"
         aria-expanded={open}
       >
-        <span className="text-[15px] font-semibold text-ink">{titulo}</span>
-        <ChevronDown size={18} className={`text-ink/40 shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
+        <span className="text-[15px] font-semibold text-[#6B3FA0]">{titulo}</span>
+        <ChevronDown size={18} className={`text-[#833AB4] shrink-0 transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
-        <div className="px-4 pb-4 pt-1 border-t border-border">
+        <div className="px-4 pb-4 pt-3">
           {blocos.map((b, i) => <BlocoView key={i} b={b} />)}
         </div>
       )}

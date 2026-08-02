@@ -572,7 +572,7 @@ Regras:
     secoes: [
       {
         blocos: [
-          { t: "acordeao", titulo: "Como funciona (podes fechar)", aberto: true, blocos: [
+          { t: "acordeao", titulo: "Como funciona", aberto: true, blocos: [
             { t: "nota", v: "info", texto: "**Objetivo:** Transformar UMA ideia numa série de Reels com nome repetível e vários roteiros prontos a gravar — e conseguir continuar a série sem repetir episódios." },
             { t: "p", texto: "Uma **série** é a forma mais fácil de nunca ficares sem ideias: escolhes UM tema, dás-lhe um **nome-molde** que se repete (\"[Nome] — parte 1, parte 2, parte 3…\") e a partir daí é só encher com episódios. O algoritmo adora, e o teu público fica a **querer o próximo**." },
             { t: "p", texto: "Aqui fazes tudo no **teu ChatGPT ou Claude**, com os prompts abaixo. Só tens de os copiar e **preencher os campos entre [parênteses]** com os teus dados. Corre na tua conta de IA — não gastas nada." },
@@ -1188,38 +1188,128 @@ Diga o elemento interativo de cada tela (enquete, caixinha, link).` },
     links: [{ nome: "Abrir Claude", url: "https://claude.ai" }],
     secoes: [
       {
-        titulo: "1. Desenhar em vez de gerar",
         blocos: [
-          { t: "p", texto: "O ChatGPT **gera** imagens (e às vezes erra letras). O Claude **desenha** os slides como um designer: constrói cada um num artefacto visual, com as tuas cores e fontes exatas." },
-          { t: "ul", itens: [
-            "**Texto sempre correto** — é texto real, não letras “desenhadas” por IA.",
-            "**A tua marca exata** — cor HEX, fonte e logótipo iguais em todos os slides.",
-            "**Ajustes cirúrgicos** — “muda só o título do slide 3” e ele muda só isso.",
-            "**Pronto para o Instagram** — slides 4:5, exportáveis em 1080 x 1350.",
+          { t: "acordeao", titulo: "Nunca fizeste isto? Começa por aqui", aberto: true, blocos: [
+            { t: "p", texto: "Um **carrossel** é aquele post do Instagram com vários **slides** que se deslizam para o lado. O Claude consegue **desenhá-los por ti** — com o teu texto, as tuas cores e a tua marca — prontos a publicar. Não precisas de saber design." },
+            { t: "p", texto: "Porquê o Claude e não o ChatGPT? O ChatGPT **gera** a imagem toda (e às vezes escreve as letras torto). O Claude **desenha** cada slide como um designer, por isso:" },
+            { t: "ul", itens: [
+              "**O texto fica sempre certo** — é texto a sério, não letras \"pintadas\".",
+              "**A tua marca fica igual** em todos os slides (mesma cor e estilo).",
+              "**Podes pedir ajustes** — \"muda só o slide 3\" e ele muda só esse.",
+              "**Já sai no tamanho do Instagram** (1080 x 1350).",
+            ] },
+            { t: "p", texto: "Vais fazer só duas coisas, uma vez cada: **1)** instalar uma **skill** (um ajudante que ensinas ao Claude), e **2)** pedir os teus carrosséis. Está tudo explicado passo a passo, é só clicar em cada passo." },
           ] },
         ],
       },
       {
-        titulo: "2. Caminho 1 · Com a skill (recomendado)",
+        titulo: "Parte 1 · Instalar a skill (uma vez só)",
         blocos: [
-          { t: "p", texto: "A skill **Criador de Carrosséis** já sabe o processo todo: pergunta os dados da marca, escreve o copy, desenha os slides com barra de progresso e seta de swipe, mostra a pré-visualização e exporta os PNG." },
-          { t: "downloads", itens: [
-            { nome: "Criador de Carrosséis (skill)", desc: "Carrosséis visuais completos, prontos a exportar", url: "/skills/criador-de-carrosseis.skill" },
+          { t: "p", texto: "Uma **skill** é como um mini-ajudante que ensinas ao Claude **uma vez**. Depois é só pedir e ele já sabe fazer o carrossel sozinho. Segue os passos — clica em cada um." },
+          { t: "wizard", passos: [
+            {
+              titulo: "1 · Descarregar",
+              blocos: [
+                { t: "p", texto: "A skill é um **ficheiro**. Carrega no botão abaixo para o guardar no teu computador (vai para a pasta **Transferências** / Downloads)." },
+                { t: "downloads", itens: [
+                  { nome: "Criador de Carrosséis (skill)", desc: "Guarda este ficheiro no computador", url: "/skills/criador-de-carrosseis.skill" },
+                ] },
+                { t: "nota", v: "info", texto: "**Não precisas de abrir o ficheiro.** Só tens de saber onde ele ficou (quase sempre na pasta **Transferências**). Faz isto no computador, não no telemóvel." },
+              ],
+            },
+            {
+              titulo: "2 · Abrir as Definições",
+              blocos: [
+                { t: "ol", itens: [
+                  "Vai a **claude.ai** e inicia sessão (ou abre a aplicação do Claude no computador).",
+                  "No **canto inferior esquerdo**, clica no teu **nome** (ou na tua foto).",
+                  "No menu que abre, clica em **Definições** (em inglês, Settings).",
+                ] },
+              ],
+            },
+            {
+              titulo: "3 · Adicionar a skill",
+              blocos: [
+                { t: "ol", itens: [
+                  "Dentro das Definições, procura a secção **Capacidades** (ou **Skills**).",
+                  "Clica em **Adicionar** / **Carregar** (em inglês, Upload).",
+                  "Escolhe o ficheiro que descarregaste no Passo 1 (na pasta **Transferências**).",
+                  "Espera uns segundos até ele aparecer na lista.",
+                ] },
+                { t: "nota", v: "info", texto: "**Na aplicação de computador (Claude Desktop) funciona melhor:** ela consegue **guardar os slides** por ti no fim. Na versão do site (browser) também funciona — só que os ficheiros podes ter de os pedir." },
+              ],
+            },
+            {
+              titulo: "4 · Confirmar",
+              blocos: [
+                { t: "p", texto: "Se vês a skill **Criador de Carrosséis** na lista e **ligada**, está feito! O Claude já a sabe usar. Podes fechar as Definições. Isto é só uma vez — para sempre." },
+              ],
+            },
           ] },
-          { t: "ol", itens: [
-            "Descarrega e instala a skill (Definições → Capacidades/Skills → Adicionar).",
-            "Pede: “cria um carrossel sobre [TEMA]”.",
-            "Responde às perguntas da marca (nome, @, cor, fonte, tom).",
-            "Vê a pré-visualização e diz que slides queres ajustar.",
-            "Aprova (“pode exportar”) e recebe os PNG 1080 x 1350.",
-          ] },
-          { t: "nota", v: "info", texto: "**Onde funciona melhor:** no Claude Desktop (Cowork), a skill exporta os PNG sozinha. Na web vês a pré-visualização na mesma e podes pedir os ficheiros dos slides." },
         ],
       },
       {
-        titulo: "3. Caminho 2 · Sem skill, com um prompt",
+        titulo: "Parte 2 · Criar o teu carrossel",
         blocos: [
-          { t: "prompt", agente: "Claude", nome: "Carrossel visual como artefacto", texto: `Cria um carrossel visual de Instagram como artefacto
+          { t: "p", texto: "Agora a parte divertida. Segue os passos — o Claude faz o trabalho pesado." },
+          { t: "wizard", passos: [
+            {
+              titulo: "1 · Abrir conversa",
+              blocos: [
+                { t: "p", texto: "Abre o Claude e começa uma **conversa nova** (o botão costuma estar no **topo, à esquerda**, e diz \"Nova conversa\")." },
+              ],
+            },
+            {
+              titulo: "2 · Pedir",
+              blocos: [
+                { t: "p", texto: "Escreve, com as tuas palavras, o que queres. Por exemplo copia isto e troca o tema:" },
+                { t: "prompt", agente: "Claude", nome: "Como pedir", texto:
+`Cria um carrossel sobre [O TEU TEMA].
+Usa a skill Criador de Carrosséis.` },
+              ],
+            },
+            {
+              titulo: "3 · Responder às perguntas",
+              blocos: [
+                { t: "p", texto: "O Claude vai fazer-te umas perguntas sobre a tua marca. Tem estas respostas à mão (é rápido):" },
+                { t: "tabela", cab: ["Ele pergunta", "Exemplo de resposta"], linhas: [
+                  ["Nome e @ do Instagram", "Cátia Creator · @catiacreator"],
+                  ["Cor principal (código HEX)", "#7C56C9"],
+                  ["Estilo", "moderno e limpo"],
+                  ["Tom", "próximo e direto"],
+                  ["Formato", "padrão (7 slides)"],
+                ] },
+                { t: "nota", v: "info", texto: "**O que é o código HEX?** É o \"código\" de uma cor e começa por **#** (ex.: #7C56C9). Se não souberes o teu, escreve só o **nome da cor** (ex.: \"roxo\") — o Claude escolhe um tom bonito." },
+              ],
+            },
+            {
+              titulo: "4 · Ver e ajustar",
+              blocos: [
+                { t: "p", texto: "O Claude mostra uma **pré-visualização** que dá para deslizar, como no Instagram. Se quiseres mudar algo, diz em linguagem normal. Exemplos:" },
+                { t: "ul", itens: [
+                  "\"Muda só o título do slide 3.\"",
+                  "\"No último slide escreve: segue-me para mais.\"",
+                  "\"Deixa os fundos mais claros.\"",
+                ] },
+                { t: "nota", v: "info", texto: "Podes pedir os ajustes que quiseres, quantas vezes precisares — ele muda só o que pedires." },
+              ],
+            },
+            {
+              titulo: "5 · Guardar/Exportar",
+              blocos: [
+                { t: "p", texto: "Quando gostares, escreve **\"pode exportar\"**. Recebes os slides em imagem, já no tamanho certo do Instagram (**1080 x 1350**), prontos a publicar." },
+                { t: "nota", v: "warn", texto: "**Exercício:** faz um carrossel sobre a **maior dor do teu público**, pede **um** ajuste num slide, e exporta. Foi o teu primeiro carrossel desenhado por IA." },
+              ],
+            },
+          ] },
+        ],
+      },
+      {
+        blocos: [
+          { t: "acordeao", titulo: "Não queres instalar a skill? Usa este prompt", aberto: false, blocos: [
+            { t: "p", texto: "Dá para fazer sem a skill: abre uma conversa nova no Claude, cola este prompt e troca os campos entre **[parênteses]** pelos teus dados." },
+            { t: "prompt", agente: "Claude", nome: "Carrossel visual como artefacto", texto:
+`Cria um carrossel visual de Instagram como artefacto
 (pré-visualização deslizável), com 7 slides 4:5 prontos
 a exportar em 1080 x 1350.
 Tema: [TEMA]
@@ -1229,7 +1319,8 @@ Regras:
 - Slide 1: capa com gancho forte (nunca o nome da marca)
 - Fundos claros e escuros alternados, mesma identidade
 - Barra de progresso em todos; último slide = CTA, sem seta
-No fim, pergunta-me que slides quero ajustar.`, textoBr: `Crie um carrossel visual de Instagram como artefato
+No fim, pergunta-me que slides quero ajustar.`, textoBr:
+`Crie um carrossel visual de Instagram como artefato
 (pré-visualização deslizável), com 7 slides 4:5 prontos
 para exportar em 1080 x 1350.
 Tema: [TEMA]
@@ -1240,31 +1331,20 @@ Regras:
 - Fundos claros e escuros alternados, mesma identidade
 - Barra de progresso em todos; último slide = CTA, sem seta
 No final, me pergunte quais slides quero ajustar.` },
-        ],
-      },
-      {
-        titulo: "4. Os dados que ele vai pedir",
-        blocos: [
-          { t: "tabela", cab: ["Dado", "Exemplo"], linhas: [
-            ["Nome da marca e @", "Cátia Creator · @catiacreator"],
-            ["Cor principal (HEX)", "#7C56C9"],
-            ["Estilo/fonte", "moderno e limpo · editorial · arredondado"],
-            ["Tom", "próximo e direto"],
-            ["Formato", "padrão (7 slides) · lista · tutorial · comparação"],
           ] },
         ],
       },
       {
-        titulo: "5. Formatos de sequência",
         blocos: [
-          { t: "tabela", cab: ["Formato", "Quando usar", "Sequência"], linhas: [
-            ["Padrão (7 slides)", "Tema completo", "gancho → problema → solução → o que ganhas → detalhes → passos → CTA"],
-            ["Lista (5–10)", "“X erros”, “X ferramentas”", "gancho → um item por slide → CTA"],
-            ["Tutorial (7)", "Ensinar um processo", "gancho → porquê → passos 1-3 → resultado → CTA"],
-            ["Comparação (5)", "A vs. B", "gancho → opção A → opção B → veredicto → CTA"],
+          { t: "acordeao", titulo: "Tipos de carrossel (referência)", aberto: false, blocos: [
+            { t: "tabela", cab: ["Formato", "Quando usar", "Sequência dos slides"], linhas: [
+              ["Padrão (7 slides)", "Tema completo", "gancho → problema → solução → o que ganhas → detalhes → passos → CTA"],
+              ["Lista (5-10)", "\"X erros\", \"X ferramentas\"", "gancho → um item por slide → CTA"],
+              ["Tutorial (7)", "Ensinar um processo", "gancho → porquê → passos 1 a 3 → resultado → CTA"],
+              ["Comparação (5)", "A vs. B", "gancho → opção A → opção B → veredicto → CTA"],
+            ] },
+            { t: "nota", v: "info", texto: "**Regras de ouro dos slides:** a capa tem de travar o scroll (nunca ponhas o nome da marca como título), alterna fundos claros e escuros, e o último slide termina com um **CTA** (ex.: \"segue-me\") sem seta." },
           ] },
-          { t: "nota", v: "info", texto: "**Regras dos slides:** capa que para o scroll (nunca o nome da marca como título), fundos claros/escuros alternados, e o último slide sem seta, com barra completa e CTA." },
-          { t: "nota", v: "warn", texto: "**Exercício:** cria um carrossel visual sobre a maior dor do teu público (usa o texto do carrossel da Aula 1, se já o tens), pede um ajuste num slide e exporta." },
         ],
       },
     ],
