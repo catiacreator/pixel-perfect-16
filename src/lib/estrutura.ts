@@ -27,6 +27,7 @@ export const ESTRUTURA: Nodo[] = [
     to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas",
     filhos: [
       { id: "redes.boas-vindas", label: "Boas-vindas", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=boas-vindas" },
+      { id: "redes.pilares", label: "Os teus pilares de conteúdo", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=pilares" },
       { id: "maquina-analises", label: "Máquina de Análises", tipo: "pagina", to: "/maquina-analises" },
       { id: "redes.bio", label: "Posicionamento e Bio", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=bio" },
       {
@@ -44,11 +45,19 @@ export const ESTRUTURA: Nodo[] = [
       },
       { id: "redes.criar", label: "Criar Conteúdo", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=criar" },
       { id: "redes.plano", label: "Plano de Posts", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=plano" },
-      { id: "redes.desafio", label: "30 posts em 30 dias", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=desafio" },
       { id: "redes.assistente", label: "Assistente Cat.IA", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=assistente" },
       { id: "redes.agendar", label: "Publicar", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=agendar" },
       { id: "redes.automacao", label: "Automação para mensagens automáticas", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=automacao" },
       { id: "redes.carousel-snap", label: "Carousel Snap", tipo: "pagina", to: "/metodo/pilar-2/redes-sociais?aba=carousel-snap" },
+      {
+        id: "criacao-livre",
+        label: "Criação Livre",
+        tipo: "pagina",
+        to: "/criacao-livre",
+        filhos: [
+          { id: "agentes-creator", label: "Agentes Creator", tipo: "subpagina", to: "/agentes-creator" },
+        ],
+      },
     ],
   },
   {
@@ -234,7 +243,6 @@ export const BLOQUEIOS_PADRAO: string[] = [
   "redes.formatos.stories",
   "redes.criar",
   "redes.plano",
-  "redes.desafio",
   "pilar-3",
   "pilar-4",
   "academia",
