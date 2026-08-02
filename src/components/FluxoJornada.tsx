@@ -159,8 +159,11 @@ export default function FluxoJornada() {
           ))}
         </div>
 
+        {/* Linha a separar a fila de cima do card Criação Livre */}
+        <div className="mt-[50px] w-full border-t border-black/10" />
+
         {/* Criação Livre — mesmo design dos outros cards, mas maior (420px) */}
-        <div className="mt-[50px] flex w-[420px] flex-col">
+        <div className="mt-8 flex w-[420px] flex-col">
           <Cartao card={RAMO_LIVRE} prog={prog[RAMO_LIVRE.key]} largura="w-[420px]" />
         </div>
       </div>
