@@ -31,6 +31,7 @@ import { Route as ConquistasRouteImport } from './routes/conquistas'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AssistenteRouteImport } from './routes/assistente'
 import { Route as AgentesCreatorRouteImport } from './routes/agentes-creator'
+import { Route as AgentesRouteImport } from './routes/agentes'
 import { Route as AgendaRouteImport } from './routes/agenda'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -219,6 +220,11 @@ const AssistenteRoute = AssistenteRouteImport.update({
 const AgentesCreatorRoute = AgentesCreatorRouteImport.update({
   id: '/agentes-creator',
   path: '/agentes-creator',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AgentesRoute = AgentesRouteImport.update({
+  id: '/agentes',
+  path: '/agentes',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AgendaRoute = AgendaRouteImport.update({
@@ -660,6 +666,7 @@ const MetodoPilar1AprendaIaToolLessonSlugRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/agenda': typeof AgendaRoute
+  '/agentes': typeof AgentesRoute
   '/agentes-creator': typeof AgentesCreatorRoute
   '/assistente': typeof AssistenteRoute
   '/auth': typeof AuthRoute
@@ -762,6 +769,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/agenda': typeof AgendaRoute
+  '/agentes': typeof AgentesRoute
   '/agentes-creator': typeof AgentesCreatorRoute
   '/assistente': typeof AssistenteRoute
   '/auth': typeof AuthRoute
@@ -855,6 +863,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/agenda': typeof AgendaRoute
+  '/agentes': typeof AgentesRoute
   '/agentes-creator': typeof AgentesCreatorRoute
   '/assistente': typeof AssistenteRoute
   '/auth': typeof AuthRoute
@@ -959,6 +968,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/agenda'
+    | '/agentes'
     | '/agentes-creator'
     | '/assistente'
     | '/auth'
@@ -1061,6 +1071,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/agenda'
+    | '/agentes'
     | '/agentes-creator'
     | '/assistente'
     | '/auth'
@@ -1153,6 +1164,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/agenda'
+    | '/agentes'
     | '/agentes-creator'
     | '/assistente'
     | '/auth'
@@ -1257,6 +1269,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AgendaRoute: typeof AgendaRoute
+  AgentesRoute: typeof AgentesRoute
   AgentesCreatorRoute: typeof AgentesCreatorRoute
   AssistenteRoute: typeof AssistenteRoute
   AuthRoute: typeof AuthRoute
@@ -1438,6 +1451,13 @@ declare module '@tanstack/react-router' {
       path: '/agentes-creator'
       fullPath: '/agentes-creator'
       preLoaderRoute: typeof AgentesCreatorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/agentes': {
+      id: '/agentes'
+      path: '/agentes'
+      fullPath: '/agentes'
+      preLoaderRoute: typeof AgentesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/agenda': {
@@ -2292,6 +2312,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AgendaRoute: AgendaRoute,
+  AgentesRoute: AgentesRoute,
   AgentesCreatorRoute: AgentesCreatorRoute,
   AssistenteRoute: AssistenteRoute,
   AuthRoute: AuthRoute,

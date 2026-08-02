@@ -1,16 +1,20 @@
 import { useState } from "react";
 import Layout from "../components/Layout";
 import PilarSidebar from "../components/PilarSidebar";
+import PilarBreadcrumb from "../components/PilarBreadcrumb";
 import ContentRenderer from "../components/agentes/ContentRenderer";
 import VideoArea from "../components/curso/VideoArea";
 import { Link, useSearchParams } from "@/lib/router-compat";
 import { Sparkles, ArrowRight, ArrowLeft, ExternalLink } from "lucide-react";
 import { agents, type Agent } from "@/data/agentes-creator";
 
-// "Agentes Creator" — clone da página "Agentes Criadores" (grelha + detalhes),
-// com o estilo visual do curso Conteúdo com IA (tema roxo).
+// "Agentes Creator" — grelha + detalhes dos agentes.
+// Vive em dois sítios (mesmo conteúdo, contextos diferentes):
+//  - contexto "curso": dentro do mini-curso Conteúdo com IA (barra lateral).
+//  - contexto "livre": página autónoma, ligada a partir da Criação Livre.
+// O `basePath` mantém os links internos (grelha ↔ detalhe) dentro do contexto certo.
 
-function Intro() {
+function Intro({ basePath }: { basePath: string }) {
   return (
     <section className="px-5 md:px-10 pt-10 md:pt-14 pb-14 max-w-4xl mx-auto">
       <span className="inline-flex items-center gap-2 mb-3">
@@ -34,7 +38,7 @@ function Intro() {
         {agents.map((a) => (
           <Link
             key={a.id}
-            to={`/agentes-creator?agente=${a.id}`}
+            to={`${basePath}?agente=${a.id}`}
             className="group rounded-2xl border border-border bg-white p-5 hover:border-terracotta transition-colors flex flex-col"
           >
             <div className="text-4xl mb-3">{a.icon}</div>
@@ -51,13 +55,13 @@ function Intro() {
   );
 }
 
-function Detalhe({ agent, prev, next }: { agent: Agent; prev: Agent | null; next: Agent | null }) {
+function Detalhe({ agent, prev, next, basePath }: { agent: Agent; prev: Agent | null; next: Agent | null; basePath: string }) {
   const [tab, setTab] = useState(agent.tabs[0]?.label ?? "");
   const ativo = agent.tabs.find((t) => t.label === tab) ?? agent.tabs[0];
 
   return (
     <section className="px-5 md:px-10 pt-8 md:pt-10 pb-14 max-w-4xl mx-auto">
-      <Link to="/agentes-creator" className="inline-flex items-center gap-1.5 text-sm text-ink/55 hover:text-terracotta transition-colors mb-5">
+      <Link to={basePath} className="inline-flex items-center gap-1.5 text-sm text-ink/55 hover:text-terracotta transition-colors mb-5">
         <ArrowLeft size={15} /> Todos os agentes
       </Link>
 
@@ -109,12 +113,12 @@ function Detalhe({ agent, prev, next }: { agent: Agent; prev: Agent | null; next
       {/* Nav entre agentes */}
       <div className="mt-8 pt-6 border-t border-border flex items-center justify-between gap-3">
         {prev ? (
-          <Link to={`/agentes-creator?agente=${prev.id}`} className="inline-flex items-center gap-2 text-sm font-semibold text-ink/70 hover:text-terracotta transition-colors">
+          <Link to={`${basePath}?agente=${prev.id}`} className="inline-flex items-center gap-2 text-sm font-semibold text-ink/70 hover:text-terracotta transition-colors">
             <ArrowLeft size={15} /> {prev.name}
           </Link>
         ) : <span />}
         {next ? (
-          <Link to={`/agentes-creator?agente=${next.id}`} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-semibold hover:bg-terracotta transition-colors">
+          <Link to={`${basePath}?agente=${next.id}`} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-ink text-cream text-sm font-semibold hover:bg-terracotta transition-colors">
             {next.name} <ArrowRight size={15} />
           </Link>
         ) : <span />}
@@ -123,7 +127,13 @@ function Detalhe({ agent, prev, next }: { agent: Agent; prev: Agent | null; next
   );
 }
 
-export default function AgentesCreator() {
+export default function AgentesCreator({
+  basePath = "/agentes-creator",
+  contexto = "curso",
+}: {
+  basePath?: string;
+  contexto?: "curso" | "livre";
+} = {}) {
   const [params] = useSearchParams();
   const id = params.get("agente");
   const idx = agents.findIndex((a) => a.id === id);
@@ -134,11 +144,30 @@ export default function AgentesCreator() {
       agent={sel}
       prev={idx > 0 ? agents[idx - 1] : null}
       next={idx < agents.length - 1 ? agents[idx + 1] : null}
+      basePath={basePath}
     />
   ) : (
-    <Intro />
+    <Intro basePath={basePath} />
   );
 
+  // Contexto "livre": página autónoma ligada à Criação Livre (sem barra do curso).
+  if (contexto === "livre") {
+    return (
+      <div className="theme-jornada">
+        <Layout>
+          <PilarBreadcrumb
+            pilar="redes"
+            pilarLabel="Conteúdo Todo Dia"
+            backTo="/criacao-livre"
+            backLabel="Voltar atrás"
+          />
+          {conteudo}
+        </Layout>
+      </div>
+    );
+  }
+
+  // Contexto "curso": dentro do mini-curso Conteúdo com IA (com barra lateral).
   return (
     <div className="theme-cafe">
       <PilarSidebar pilar="conteudo-ia" />

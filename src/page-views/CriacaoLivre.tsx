@@ -27,7 +27,7 @@ const GRUPOS: Grupo[] = [
   {
     titulo: "Bónus",
     itens: [
-      { label: "Agentes Creator", to: "/agentes-creator", icon: Sparkles },
+      { label: "Agentes Creator", to: "/agentes", icon: Sparkles },
     ],
   },
   {
