@@ -434,8 +434,8 @@ export default function ReelsEmSerie() {
       <PilarBreadcrumb
         pilar="redes"
         pilarLabel="Conteúdo Todo Dia"
-        backTo="/metodo/pilar-2/redes-sociais?aba=formatos&fmt=reels"
-        backLabel="Voltar aos formatos"
+        backTo="/criacao-livre"
+        backLabel="Voltar atrás"
       />
       <PillarHeader
         numeral="II"

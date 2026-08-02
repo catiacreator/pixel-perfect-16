@@ -651,6 +651,8 @@ export default function RedesSociais() {
     <Layout>
       {aba === "pilares" || aba === "plano" ? (
         <PilarBreadcrumb pilar="redes" pilarLabel="Conteúdo Todo Dia" backTo="/metodo" backLabel="Voltar para a jornada" />
+      ) : ["formatos", "avulsos", "bio", "automacao", "carousel-snap", "assistente"].includes(aba) ? (
+        <PilarBreadcrumb pilar="redes" pilarLabel="Conteúdo Todo Dia" backTo="/criacao-livre" backLabel="Voltar atrás" />
       ) : (
         <PilarBreadcrumb pilar="redes" pilarLabel="Conteúdo Todo Dia" backTo="/protocolo" backLabel="Voltar atrás" historyBack />
       )}
