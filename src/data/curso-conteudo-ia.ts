@@ -13,7 +13,8 @@ export type Bloco =
   | { t: "downloads"; itens: { nome: string; desc?: string; url: string }[] } // botões de descarregar ficheiros
   | { t: "aulas"; itens: { titulo: string; desc: string; aula: string }[] } // cartões-link para sub-aulas (?aula=id)
   | { t: "video"; url: string; titulo?: string } // vídeo inline (.mp4 direto ou embed)
-  | { t: "slides"; base: string; count: number; alt?: string }; // galeria de slides (base/slide-01.webp…)
+  | { t: "slides"; base: string; count: number; alt?: string } // galeria de slides (base/slide-01.webp…)
+  | { t: "wizard"; passos: { titulo: string; blocos: Bloco[] }[] }; // passos navegáveis (prev/próximo)
 
 export type Secao = { label?: string; titulo?: string; blocos: Bloco[] };
 export type Aula = {
@@ -578,11 +579,16 @@ Regras:
         ],
       },
       {
-        label: "Passo 1 · Descobre o nome da série",
-        titulo: "Passo 1 — O nome da série",
+        label: "Os prompts, passo a passo",
+        titulo: "Cria a tua série em 3 passos",
         blocos: [
-          { t: "p", texto: "O nome não é a manchete de um vídeo só: é uma **frase-molde** que abre TODOS os episódios e aguenta 30+ partes só trocando o exemplo. Corre este prompt e escolhe o teu favorito." },
-          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Prompt 1 — Nomes de série", texto:
+          { t: "p", texto: "Segue os passos pela ordem: em cada um, **copia o prompt**, corre-o no teu **ChatGPT** ou **Claude**, e avança para o seguinte." },
+          { t: "wizard", passos: [
+            {
+              titulo: "1 · O nome",
+              blocos: [
+                { t: "p", texto: "O nome não é a manchete de um vídeo só: é uma **frase-molde** que abre TODOS os episódios e aguenta 30+ partes só trocando o exemplo. Corre este prompt e escolhe o teu favorito." },
+                { t: "prompt", agente: "ChatGPT ou Claude", nome: "Prompt 1 — Nomes de série", texto:
 `És a minha copywriter de Reels. Vou dar-te uma ideia e quero 6 NOMES DE SÉRIE.
 
 Um nome de série é uma FRASE-MOLDE repetível que abre TODOS os episódios (nome + "— parte N"). NÃO é a manchete de um vídeo só. Tem de aguentar 30+ partes trocando só o exemplo, e dar para dizer em voz alta a olhar para a câmara.
@@ -596,14 +602,13 @@ OS MEUS DADOS:
 Dá-me 6 nomes DIFERENTES, cada um com um ângulo diferente (promessa forte, curiosidade, dor comum, o inimigo comum, pessoalidade). Antes de escreveres cada nome, confirma: "isto aguenta 30 partes trocando só o exemplo?". Se não aguentar, troca.
 
 Para cada nome mostra: o NOME, e 1 frase curta a explicar porque trava o dedo de rolar. No fim, pergunta-me qual escolho.` },
-        ],
-      },
-      {
-        label: "Passo 2 · Gera os roteiros",
-        titulo: "Passo 2 — Os roteiros",
-        blocos: [
-          { t: "p", texto: "Escolhido o nome, pede os episódios. Cada roteiro segue um template testado: **gancho → dor + culpa → corpo → 3 passos**. Diz quantos queres (7 é um bom começo)." },
-          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Prompt 2 — Roteiros da série", texto:
+              ],
+            },
+            {
+              titulo: "2 · Os roteiros",
+              blocos: [
+                { t: "p", texto: "Escolhido o nome, pede os episódios. Cada roteiro segue um template testado: **gancho → dor + culpa → corpo → 3 passos**. Diz quantos queres (7 é um bom começo)." },
+                { t: "prompt", agente: "ChatGPT ou Claude", nome: "Prompt 2 — Roteiros da série", texto:
 `Agora vamos escrever os roteiros da série "[NOME DA SÉRIE QUE ESCOLHI]".
 
 Escreve [QUANTOS? ex: 7] episódios.
@@ -623,14 +628,13 @@ CONTEXTO:
 - Tom: [o mesmo que escolheste no Passo 1]
 
 A lista de entregas e a lista de roteiros têm de ter o mesmo número de episódios.` },
-        ],
-      },
-      {
-        label: "Passo 3 · Continua a série",
-        titulo: "Passo 3 — Continuar sem repetir",
-        blocos: [
-          { t: "p", texto: "Quando quiseres mais episódios da MESMA série, usa este prompt. O truque é **colar os que já tens** para a IA continuar o arco sem repetir." },
-          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Prompt 3 — Continuar a série", texto:
+              ],
+            },
+            {
+              titulo: "3 · Continuar",
+              blocos: [
+                { t: "p", texto: "Quando quiseres mais episódios da MESMA série, usa este prompt. O truque é **colar os que já tens** para a IA continuar o arco sem repetir." },
+                { t: "prompt", agente: "ChatGPT ou Claude", nome: "Prompt 3 — Continuar a série", texto:
 `Continua a série "[NOME DA SÉRIE]". Já fiz estes episódios — NÃO os repitas, avança o arco a partir do episódio seguinte:
 
 [COLA AQUI OS TÍTULOS / GANCHOS DOS EPISÓDIOS QUE JÁ TENS]
@@ -638,6 +642,9 @@ A lista de entregas e a lista de roteiros têm de ter o mesmo número de episód
 Gera mais [QUANTOS? ex: 5] episódios NOVOS, numerados a começar no número a seguir ao último. Mesmo template de sempre: gancho "[NOME] — parte N", dor + culpa, corpo, transição e 3 passos. Primeiro a lista de entregas, depois os roteiros.
 
 Mantém o tom [o teu tom], o público [o teu público] e a oferta [o que vendes].` },
+              ],
+            },
+          ] },
         ],
       },
       {

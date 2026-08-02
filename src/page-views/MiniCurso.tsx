@@ -113,6 +113,8 @@ function BlocoView({ b }: { b: Bloco }) {
       );
     case "prompt":
       return <PromptBox agente={b.agente} nome={b.nome} texto={b.texto} textoBr={b.textoBr} />;
+    case "wizard":
+      return <WizardBlocos passos={b.passos} />;
     case "video":
       return <div className="my-4"><VideoArea videoUrl={b.url} titulo={b.titulo ?? "Vídeo"} /></div>;
     case "slides":
@@ -198,6 +200,63 @@ function BlocoView({ b }: { b: Bloco }) {
       );
     }
   }
+}
+
+// Passos navegáveis (ex.: prompts passo a passo). Mostra um passo de cada vez,
+// com barra de passos clicável e botões Anterior/Próximo.
+function WizardBlocos({ passos }: { passos: { titulo: string; blocos: Bloco[] }[] }) {
+  const total = passos.length;
+  const [i, setI] = useState(0);
+  const atual = Math.min(i, Math.max(0, total - 1));
+  const passo = passos[atual];
+  if (!passo) return null;
+
+  return (
+    <div className="my-4 rounded-2xl border border-border bg-white overflow-hidden">
+      {/* Barra de passos */}
+      <div className="flex items-center gap-1 border-b border-border bg-cream-warm/30 px-4 py-3 overflow-x-auto">
+        {passos.map((p, idx) => {
+          const ativo = idx === atual;
+          const feito = idx < atual;
+          return (
+            <div key={idx} className="flex items-center shrink-0">
+              <button onClick={() => setI(idx)} className="flex items-center gap-2 rounded-full px-1.5 py-1 hover:bg-black/[0.03] transition-colors">
+                <span className={`w-6 h-6 rounded-full text-[11px] font-bold flex items-center justify-center ${ativo ? "bg-terracotta text-cream" : feito ? "bg-terracotta/20 text-terracotta" : "bg-ink/10 text-ink/40"}`}>
+                  {feito ? <Check size={13} strokeWidth={3} /> : idx + 1}
+                </span>
+                <span className={`text-[13px] font-semibold whitespace-nowrap ${ativo ? "text-ink" : "text-ink/45"}`}>{p.titulo}</span>
+              </button>
+              {idx < total - 1 && <span className="mx-1 h-px w-5 bg-border shrink-0" />}
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Conteúdo do passo atual */}
+      <div className="p-4 md:p-5">
+        {passo.blocos.map((b, j) => <BlocoView key={j} b={b} />)}
+      </div>
+
+      {/* Navegação */}
+      <div className="flex items-center justify-between border-t border-border px-4 py-3">
+        <button
+          onClick={() => setI((v) => Math.max(0, v - 1))}
+          disabled={atual === 0}
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-ink/70 hover:text-ink disabled:opacity-30 disabled:cursor-not-allowed"
+        >
+          <ArrowLeft size={15} /> Anterior
+        </button>
+        <span className="text-[12px] text-ink/45 tabular-nums">{atual + 1} / {total}</span>
+        <button
+          onClick={() => setI((v) => Math.min(total - 1, v + 1))}
+          disabled={atual === total - 1}
+          className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full bg-ink text-cream hover:bg-terracotta transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+        >
+          Próximo <ArrowRight size={15} />
+        </button>
+      </div>
+    </div>
+  );
 }
 
 function SecaoView({ s }: { s: Secao }) {
