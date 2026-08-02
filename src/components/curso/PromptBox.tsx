@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Copy, Check } from "lucide-react";
 
 // Caixa de prompt do curso: cabeçalho com o agente + botão copiar, e o texto
-// com os [marcadores] realçados a amarelo. Cores fixas (estilo do curso).
+// com os [marcadores] realçados. Paleta escura roxo/magenta (Instagram).
 // Quando existe textoBr, mostra um seletor PT-PT / PT-BR; a escolha fica
 // guardada (localStorage) e sincroniza todas as caixas da página.
 
@@ -52,21 +52,21 @@ export default function PromptBox({ agente, nome, texto, textoBr }: { agente: st
   const partes = ativo.split(/(\[[^\]]+\])/g);
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-[#3A2C1E] bg-[#241B12] my-4">
-      <div className="flex items-center justify-between gap-3 px-4 py-2.5 bg-[#33271A] border-b border-[#40301F]">
+    <div className="rounded-2xl overflow-hidden border border-[#2E2748] bg-[#1C1830] my-4">
+      <div className="flex items-center justify-between gap-3 px-4 py-2.5 bg-[#272042] border-b border-[#38305C]">
         <span className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-white min-w-0">
-          <span className="bg-[#A56A38] text-white text-[10px] px-2 py-0.5 rounded shrink-0">{agente}</span>
+          <span className="bg-[#833AB4] text-white text-[10px] px-2 py-0.5 rounded shrink-0">{agente}</span>
           <span className="truncate">{nome}</span>
         </span>
         <span className="inline-flex items-center gap-2 shrink-0">
           {textoBr && (
-            <span className="inline-flex rounded-lg overflow-hidden border border-[#5A4632]">
+            <span className="inline-flex rounded-lg overflow-hidden border border-[#38305C]">
               {(["pt", "br"] as const).map((l) => (
                 <button
                   key={l}
                   onClick={() => guardarLingua(l)}
                   className={`text-[10px] font-bold px-2 py-1.5 uppercase tracking-wide transition-colors ${
-                    lingua === l ? "bg-[#A56A38] text-white" : "bg-transparent text-white/55 hover:text-white"
+                    lingua === l ? "bg-[#833AB4] text-white" : "bg-transparent text-white/55 hover:text-white"
                   }`}
                   title={l === "pt" ? "Português de Portugal" : "Português do Brasil"}
                 >
@@ -77,15 +77,15 @@ export default function PromptBox({ agente, nome, texto, textoBr }: { agente: st
           )}
           <button
             onClick={copiar}
-            className={`inline-flex items-center gap-1.5 text-[12px] font-bold px-3 py-1.5 rounded-lg transition-colors shrink-0 ${copiado ? "bg-emerald-600 text-white" : "bg-[#F2C14E] text-[#3a2a05] hover:brightness-105"}`}
+            className={`inline-flex items-center gap-1.5 text-[12px] font-bold px-3 py-1.5 rounded-lg transition-colors shrink-0 ${copiado ? "bg-emerald-600 text-white" : "bg-[#C13584] text-white hover:brightness-110"}`}
           >
             {copiado ? <Check size={13} /> : <Copy size={13} />} {copiado ? "Copiado!" : "Copiar"}
           </button>
         </span>
       </div>
-      <pre className="m-0 px-4 py-4 text-[13px] leading-relaxed text-[#EDE4D6] font-mono whitespace-pre-wrap break-words overflow-x-auto">
+      <pre className="m-0 px-4 py-4 text-[13px] leading-relaxed text-[#E9E5F5] font-mono whitespace-pre-wrap break-words overflow-x-auto">
         {partes.map((p, i) =>
-          /^\[[^\]]+\]$/.test(p) ? <span key={i} className="text-[#F2C14E]">{p}</span> : <span key={i}>{p}</span>,
+          /^\[[^\]]+\]$/.test(p) ? <span key={i} className="text-[#F5A9D0]">{p}</span> : <span key={i}>{p}</span>,
         )}
       </pre>
     </div>
