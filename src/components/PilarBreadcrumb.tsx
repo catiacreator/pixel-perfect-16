@@ -2,6 +2,7 @@ import { Link } from "@/lib/router-compat";
 import { useRouter } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import WizardJornada from "@/components/WizardJornada";
+import WizardAutoridade from "@/components/WizardAutoridade";
 
 export default function PilarBreadcrumb({
   pilar,
@@ -82,6 +83,7 @@ export default function PilarBreadcrumb({
       </div>
     </div>
     <WizardJornada />
+    <WizardAutoridade />
     </>
   );
 }
