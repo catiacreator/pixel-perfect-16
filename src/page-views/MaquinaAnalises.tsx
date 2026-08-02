@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import PromptCard from "../components/PromptCard";
 import PilarBreadcrumb from "../components/PilarBreadcrumb";
@@ -14,23 +14,15 @@ import { loadInitial as loadDocMestre } from "@/lib/doc-mestre";
 import { HYDRATED_EVENT } from "@/lib/master-doc-sync";
 
 const COR = "#C13584";
-const CARTOES = [
-  { key: "bio", emoji: "👤", titulo: "Bio + destaques", ajuda: "nome, seguidores, link" },
-  { key: "feed", emoji: "🔲", titulo: "Grelha do feed", ajuda: "posts e carrosséis" },
-  { key: "reels", emoji: "🎬", titulo: "Reels + views", ajuda: "o mais importante" },
-] as const;
-type CartaoKey = (typeof CARTOES)[number]["key"];
 
 // Os passos dependem da fonte. Quem usa o Documento Mestre salta a extração:
 // o público, as dores e os produtos já estão preenchidos.
 const PASSOS_ZERO = [
-  { n: 1, nome: "Screenshots" },
   { n: 2, nome: "Dados do perfil" },
   { n: 3, nome: "Objetivos" },
   { n: 4, nome: "Resultado" },
 ];
 const PASSOS_DOC = [
-  { n: 1, nome: "Screenshots" },
   { n: 3, nome: "Objetivos" },
   { n: 4, nome: "Resultado" },
 ];
@@ -53,19 +45,14 @@ export default function MaquinaAnalises() {
   const [passo, setPasso] = useState(1);
   const [fonte, setFonte] = useState<FonteAnalise | null>(null);
   const [docTemConteudo, setDocTemConteudo] = useState(false);
-  const [imagens, setImagens] = useState<Record<CartaoKey, string[]>>({ bio: [], feed: [], reels: [] });
   const [saida, setSaida] = useState("");
   const [form, setForm] = useState<FormAnalise>(FORM_VAZIO);
   const [preencheu, setPreencheu] = useState(false);
   const [promptFinal, setPromptFinal] = useState("");
-  const alvo = useRef<CartaoKey | null>(null);
-  const fileInput = useRef<HTMLInputElement>(null);
 
   const PASSOS = fonte === "doc" ? PASSOS_DOC : PASSOS_ZERO;
-  // Para onde ir a partir dos screenshots e para onde voltar dos objetivos.
-  const depoisDosScreenshots = fonte === "doc" ? 3 : 2;
 
-  // Recupera o que estava a meio (as imagens não dá — são só desta sessão).
+  // Recupera o que estava a meio (o texto extraído e os campos do formulário).
   useEffect(() => {
     const e = loadAnalise();
     setSaida(e.saida);
@@ -79,19 +66,6 @@ export default function MaquinaAnalises() {
     return () => window.removeEventListener(HYDRATED_EVENT, ver);
   }, []);
   useEffect(() => { saveAnalise({ saida, form }); }, [saida, form]);
-
-  const escolher = (k: CartaoKey) => { alvo.current = k; fileInput.current?.click(); };
-  const aoEscolher = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const k = alvo.current;
-    if (!k || !e.target.files) return;
-    const novas = [...e.target.files].map((f) => URL.createObjectURL(f));
-    setImagens((s) => ({ ...s, [k]: [...s[k], ...novas] }));
-    e.target.value = "";
-  };
-  const remover = (k: CartaoKey, i: number) =>
-    setImagens((s) => ({ ...s, [k]: s[k].filter((_, j) => j !== i) }));
-
-  const totalImagens = Object.values(imagens).reduce((a, b) => a + b.length, 0);
 
   const preencherDoTexto = () => {
     const r = lerDadosPerfil(saida);
@@ -130,17 +104,15 @@ export default function MaquinaAnalises() {
     setSaida(dados);
     setPreencheu(true);
     setFonte("doc");
-    setPasso(1);
+    setPasso(3);
   };
 
   const comecarDoZero = () => {
     setFonte("zero");
-    setPasso(1);
+    setPasso(2);
   };
 
   const recomecar = () => {
-    Object.values(imagens).flat().forEach((u) => URL.revokeObjectURL(u));
-    setImagens({ bio: [], feed: [], reels: [] });
     setSaida("");
     setForm(FORM_VAZIO);
     setPreencheu(false);
@@ -207,71 +179,9 @@ export default function MaquinaAnalises() {
                 <p className="text-[14px] font-bold text-ink mb-1">Buscar do Documento Mestre</p>
                 <p className="text-[12.5px] text-ink/60">
                   {docTemConteudo
-                    ? "Traz o teu público, as dores e os produtos. Só tens de juntar os screenshots e dizer os objetivos."
+                    ? "Traz o teu público, as dores e os produtos. Só tens de dizer os objetivos."
                     : "O teu Documento Mestre ainda está vazio. Preenche-o primeiro para usares esta opção."}
                 </p>
-              </button>
-            </div>
-          </div>
-        )}
-
-        <input ref={fileInput} type="file" accept="image/*" multiple className="hidden" onChange={aoEscolher} />
-
-        {/* ── Passo 1 · Screenshots ── */}
-        {fonte && passo === 1 && (
-          <div className="rounded-2xl border border-border bg-white p-6">
-            <h2 className="font-serif text-xl text-ink mb-1">Coloca os screenshots do perfil</h2>
-            <p className="text-sm text-ink/60 mb-5">
-              Podes juntar <strong>vários</strong> em cada cartão. Quanto mais completo, melhor: a bio, a grelha do feed
-              e o separador de Reels <strong>com os números de views</strong>.
-            </p>
-            <div className="grid md:grid-cols-3 gap-3.5">
-              {CARTOES.map((c) => (
-                <div key={c.key}
-                  className="rounded-xl p-4 text-center flex flex-col border-2 transition-colors"
-                  style={imagens[c.key].length
-                    ? { borderStyle: "solid", borderColor: "#833AB4", background: "#faf5ff" }
-                    : { borderStyle: "dashed", borderColor: "#e3c7d6", background: "#fffafc" }}>
-                  <div className="text-2xl mb-1">{c.emoji}</div>
-                  <p className="text-[13.5px] font-bold text-ink">{c.titulo}</p>
-                  <p className="text-[11.5px] text-ink/45 mb-2.5">{c.ajuda}</p>
-                  {!!imagens[c.key].length && (
-                    <>
-                      <div className="flex flex-wrap gap-1.5 justify-center mb-2">
-                        {imagens[c.key].map((u, i) => (
-                          <span key={u} className="relative w-[52px] h-[52px]">
-                            <img src={u} alt="" className="w-full h-full object-cover rounded-lg border border-[#e6cede]" />
-                            <button onClick={() => remover(c.key, i)} aria-label="Remover"
-                              className="absolute -top-1.5 -right-1.5 w-[18px] h-[18px] rounded-full bg-ink text-white text-[11px] leading-none flex items-center justify-center">
-                              ×
-                            </button>
-                          </span>
-                        ))}
-                      </div>
-                      <p className="text-[11px] font-bold mb-2" style={{ color: "#833AB4" }}>
-                        {imagens[c.key].length} imagem(ns)
-                      </p>
-                    </>
-                  )}
-                  <button onClick={() => escolher(c.key)}
-                    className="mt-auto rounded-lg border border-[#e3c7d6] bg-white py-2 text-[12.5px] font-bold hover:bg-[#FDF2F6] transition-colors"
-                    style={{ color: COR }}>
-                    + Adicionar imagens
-                  </button>
-                </div>
-              ))}
-            </div>
-            {fonte === "doc" && (
-              <p className="text-[12.5px] text-ink/55 mt-5 rounded-xl bg-[#faf5ff] border border-[#e9d5ff] px-3.5 py-2.5">
-                📗 Os teus dados do Documento Mestre já estão carregados. A seguir é só dizer os objetivos.
-              </p>
-            )}
-            <div className="flex items-center justify-between mt-6">
-              <button onClick={() => setFonte(null)} className="text-[13px] font-semibold text-ink/50 hover:text-ink inline-flex items-center gap-1.5">
-                <ArrowLeft size={14} /> Mudar a origem dos dados
-              </button>
-              <button onClick={() => setPasso(depoisDosScreenshots)} className="px-6 py-3 rounded-xl text-white text-sm font-bold inline-flex items-center gap-1.5" style={{ background: COR }}>
-                Continuar <ArrowRight size={15} />
               </button>
             </div>
           </div>
@@ -331,7 +241,7 @@ export default function MaquinaAnalises() {
             </div>
 
             <div className="flex justify-between">
-              <button onClick={() => setPasso(1)} className="px-5 py-3 rounded-xl bg-ink/5 text-ink/70 text-sm font-bold inline-flex items-center gap-1.5">
+              <button onClick={() => setFonte(null)} className="px-5 py-3 rounded-xl bg-ink/5 text-ink/70 text-sm font-bold inline-flex items-center gap-1.5">
                 <ArrowLeft size={15} /> Voltar
               </button>
               <button onClick={() => setPasso(3)} className="px-6 py-3 rounded-xl text-white text-sm font-bold inline-flex items-center gap-1.5" style={{ background: COR }}>
@@ -442,7 +352,7 @@ export default function MaquinaAnalises() {
             </div>
 
             <div className="flex justify-between mt-5">
-              <button onClick={() => setPasso(depoisDosScreenshots === 3 ? 1 : 2)} className="px-5 py-3 rounded-xl bg-ink/5 text-ink/70 text-sm font-bold inline-flex items-center gap-1.5">
+              <button onClick={() => (fonte === "doc" ? setFonte(null) : setPasso(2))} className="px-5 py-3 rounded-xl bg-ink/5 text-ink/70 text-sm font-bold inline-flex items-center gap-1.5">
                 <ArrowLeft size={15} /> Voltar
               </button>
               <button onClick={gerar} className="px-6 py-3 rounded-xl text-white text-sm font-bold" style={{ background: COR }}>
@@ -471,7 +381,7 @@ export default function MaquinaAnalises() {
                 {[
                   <>Carrega em <strong>Copiar prompt</strong> aqui em baixo.</>,
                   <>Abre o <a href="https://claude.ai/new" target="_blank" rel="noopener noreferrer" className="font-semibold underline" style={{ color: COR }}>claude.ai</a> (a conta gratuita chega).</>,
-                  <><strong>Anexa os mesmos screenshots</strong> que puseste no passo 1 (o clip 📎).</>,
+                  <><strong>Anexa os screenshots do perfil</strong> — a bio, a grelha do feed e os Reels com as views (o clip 📎).</>,
                   <>Cola o prompt e envia. O Claude devolve <strong>um relatório de análise</strong>, em texto simples.</>,
                   <><strong>Guarda esse texto como .txt</strong> para o levares ao Plano Estratégico.</>,
                 ].map((t, i) => (
@@ -554,11 +464,6 @@ export default function MaquinaAnalises() {
           </div>
         )}
 
-        {passo === 1 && totalImagens === 0 && (
-          <p className="text-center text-[12.5px] text-ink/40 mt-4">
-            Podes avançar sem imagens para experimentares o resto do fluxo.
-          </p>
-        )}
       </div>
     </Layout>
   );
