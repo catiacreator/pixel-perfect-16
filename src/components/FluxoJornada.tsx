@@ -159,10 +159,37 @@ export default function FluxoJornada() {
           ))}
         </div>
 
-        {/* Criação Livre — sozinha numa linha por baixo, mais larga e afastada 50px */}
-        <div className="mt-[50px] flex w-[420px] flex-col">
-          <Cartao card={RAMO_LIVRE} prog={prog[RAMO_LIVRE.key]} largura="w-[420px]" />
-        </div>
+        {/* Criação Livre — banner gradiente (estilo hero), sozinho por baixo */}
+        <Link
+          to={RAMO_LIVRE.to}
+          className="group relative mt-[50px] block w-full overflow-hidden rounded-3xl text-white shadow-[0_10px_30px_-14px_rgba(0,0,0,0.4)] transition-transform duration-300 hover:-translate-y-0.5"
+          style={{ background: "linear-gradient(115deg, #405DE6 0%, #833AB4 40%, #C13584 65%, #F56040 88%, #FCAF45 100%)" }}
+        >
+          {/* padrão de pontos */}
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-[0.09]"
+            style={{ backgroundImage: "radial-gradient(circle at 1px 1px, #fff 1px, transparent 0)", backgroundSize: "24px 24px" }}
+          />
+          <div className="relative px-6 md:px-10 py-6 md:py-8">
+            <p className="text-[10px] tracking-[0.28em] uppercase text-white/80 font-medium mb-1.5">A tua jornada</p>
+            <p className="font-editorial uppercase text-[1.6rem] md:text-[2.4rem] leading-[0.95] tracking-[-0.02em] text-white">
+              Criação Livre{" "}
+              <span className="italic font-normal normal-case text-white/95" style={{ fontFamily: "var(--font-editorial)" }}>
+                ao teu ritmo
+              </span>
+              <span className="text-white/70">.</span>
+            </p>
+            <div className="mt-3 md:mt-4 flex items-center gap-3">
+              <span className="w-11 h-11 md:w-12 md:h-12 rounded-xl bg-white/15 border border-white/25 backdrop-blur-sm flex items-center justify-center text-white shrink-0">
+                <Sparkles size={20} />
+              </span>
+              <p className="text-white/85 text-sm md:text-base italic leading-relaxed" style={{ fontFamily: "var(--font-editorial)" }}>
+                Todas as ferramentas e aulas num só sítio — entra onde precisares.
+              </p>
+            </div>
+          </div>
+        </Link>
       </div>
     </div>
   );
