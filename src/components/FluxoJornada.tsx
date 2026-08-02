@@ -39,7 +39,7 @@ const CAMINHO: CardDef[] = [
 
 // Ramo à parte — sozinho numa linha por baixo do fluxo principal.
 const RAMO_LIVRE: CardDef = {
-  key: "livre", passo: "Passo 5 · B", icon: Sparkles, titulo: "Criação Livre", sub: "Todas as ferramentas e aulas num só sítio.", to: "/criacao-livre", cor: "#405DE6", cor2: "#5851DB",
+  key: "livre", passo: "", icon: Sparkles, titulo: "Criação Livre", sub: "Todas as ferramentas e aulas num só sítio.", to: "/criacao-livre", cor: "#405DE6", cor2: "#5851DB",
 };
 
 // Selo no canto: check (100%), anel de progresso, ou seta (ferramenta aberta).
@@ -99,9 +99,11 @@ function Cartao({ card, prog }: { card: CardDef; prog: CardProgresso }) {
         <Selo prog={prog} cor={card.cor} />
       </div>
 
-      <p className="text-[10px] font-bold uppercase tracking-[0.12em]" style={{ color: card.cor }}>
-        {card.passo}
-      </p>
+      {card.passo && (
+        <p className="text-[10px] font-bold uppercase tracking-[0.12em]" style={{ color: card.cor }}>
+          {card.passo}
+        </p>
+      )}
       <p className="mt-0.5 text-[15px] font-semibold leading-tight text-ink">{card.titulo}</p>
       <p className="mt-1 line-clamp-1 text-xs text-ink/50">{card.sub}</p>
 
@@ -157,11 +159,8 @@ export default function FluxoJornada() {
           ))}
         </div>
 
-        {/* Passo 5 · B — sozinho numa linha por baixo */}
-        <div className="flex w-[210px] flex-col items-center">
-          <div className="py-[5px] text-ink/25">
-            <Seta className="rotate-90" />
-          </div>
+        {/* Criação Livre — sozinha numa linha por baixo */}
+        <div className="flex w-[210px] flex-col">
           <Cartao card={RAMO_LIVRE} prog={prog[RAMO_LIVRE.key]} />
         </div>
       </div>
