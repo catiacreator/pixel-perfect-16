@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Layout from "../components/Layout";
+import WizardJornada from "../components/WizardJornada";
 import {
   FileUp,
   ClipboardPaste,
@@ -364,6 +365,9 @@ export default function DocMestre() {
 
   return (
     <Layout>
+      <div className="print:hidden">
+        <WizardJornada />
+      </div>
       <div className="px-5 md:px-10 py-10 max-w-5xl mx-auto print:max-w-none print:py-0">
         {/* Cabeçalho */}
         <div className="print:hidden mb-6">
