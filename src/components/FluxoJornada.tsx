@@ -81,13 +81,13 @@ function Selo({ prog, cor }: { prog: CardProgresso; cor: string }) {
   );
 }
 
-function Cartao({ card, prog }: { card: CardDef; prog: CardProgresso }) {
+function Cartao({ card, prog, largura = "w-[210px]" }: { card: CardDef; prog: CardProgresso; largura?: string }) {
   const Icon = card.icon;
   const grad = `linear-gradient(135deg, ${card.cor}, ${card.cor2})`;
   return (
     <Link
       to={card.to}
-      className="group relative flex min-h-[200px] w-[210px] shrink-0 flex-col overflow-hidden rounded-2xl border border-black/5 bg-white p-4 shadow-[0_6px_20px_-12px_rgba(0,0,0,0.25)] transition-transform duration-300 hover:-translate-y-1"
+      className={`group relative flex min-h-[200px] ${largura} shrink-0 flex-col overflow-hidden rounded-2xl border border-black/5 bg-white p-4 shadow-[0_6px_20px_-12px_rgba(0,0,0,0.25)] transition-transform duration-300 hover:-translate-y-1`}
     >
       {/* barra de cor no topo */}
       <span className="absolute inset-x-0 top-0 h-1" style={{ background: `linear-gradient(90deg, ${card.cor}, ${card.cor2})` }} />
@@ -159,9 +159,9 @@ export default function FluxoJornada() {
           ))}
         </div>
 
-        {/* Criação Livre — sozinha numa linha por baixo */}
-        <div className="flex w-[210px] flex-col">
-          <Cartao card={RAMO_LIVRE} prog={prog[RAMO_LIVRE.key]} />
+        {/* Criação Livre — sozinha numa linha por baixo, mais larga e afastada 20px */}
+        <div className="mt-5 flex w-[420px] flex-col">
+          <Cartao card={RAMO_LIVRE} prog={prog[RAMO_LIVRE.key]} largura="w-[420px]" />
         </div>
       </div>
     </div>
