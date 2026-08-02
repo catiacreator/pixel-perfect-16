@@ -34,6 +34,9 @@ import {
 import { useServerFn } from "@tanstack/react-start";
 import { getMeusDocumentos } from "@/lib/admin.functions";
 import TrilhoGuiado from "../components/TrilhoGuiado";
+import ContaModal from "../components/ContaModal";
+import { useConta } from "@/lib/conta";
+import { Settings } from "lucide-react";
 
 const CALENDAR_STORAGE_KEY = "leveza.calendario.v1";
 
@@ -374,6 +377,8 @@ export default function MinhaBase() {
   const [selectedDay, setSelectedDay] = useState<Date | null>(null);
   const [calVersion, setCalVersion] = useState(0);
   const [ideiasFor, setIdeiasFor] = useState<string | null>(null);
+  const [contaOpen, setContaOpen] = useState(false);
+  const conta = useConta();
 
   // Documentos que a Cátia enviou a esta aluna (Análise de Perfil + Calendário).
   const fetchMeusDocs = useServerFn(getMeusDocumentos);
@@ -450,9 +455,25 @@ export default function MinhaBase() {
           <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] items-start gap-6">
             <div>
               <p className="text-[11px] tracking-[0.3em] uppercase text-terracotta mb-2">Sua jornada</p>
-              <h1 className="font-display text-3xl md:text-4xl text-ink tracking-tight">
-                Olá, {nome || "você"}! <span className="inline-block">👋</span>
-              </h1>
+              <div className="flex items-center gap-3">
+                {conta.foto && (
+                  <img
+                    src={conta.foto}
+                    alt="A minha foto"
+                    className="w-11 h-11 rounded-full object-cover border border-[var(--color-border)] shrink-0"
+                  />
+                )}
+                <h1 className="font-display text-3xl md:text-4xl text-ink tracking-tight">
+                  Olá, {nome || "você"}! <span className="inline-block">👋</span>
+                </h1>
+                <button
+                  onClick={() => setContaOpen(true)}
+                  className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full border border-[var(--color-border)] bg-white text-ink/70 hover:border-terracotta hover:text-ink transition-colors shrink-0"
+                  title="A minha conta — foto, handle do Instagram e password"
+                >
+                  <Settings size={13} /> A minha conta
+                </button>
+              </div>
               <p className="text-sm text-ink/55 mt-1 capitalize">{dataExtenso}</p>
             </div>
             <div className="flex items-center gap-3 shrink-0">
@@ -737,6 +758,7 @@ export default function MinhaBase() {
       )}
 
       {ideiasFor && <IdeiasModal tipo={ideiasFor} onClose={() => setIdeiasFor(null)} />}
+      <ContaModal open={contaOpen} onClose={() => setContaOpen(false)} />
     </Layout>
   );
 }
