@@ -400,7 +400,7 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                       <span className={`ml-1 text-[8.5px] tracking-[0.14em] uppercase px-2 py-0.5 rounded-full font-semibold shrink-0 ${
                         active
                           ? "bg-terracotta/10 text-terracotta"
-                          : item.badge === "Bónus"
+                          : item.badge.includes("Bónus")
                             ? "bg-amber-400/25 text-amber-200"
                             : "bg-white/20 text-white"
                       }`}>
