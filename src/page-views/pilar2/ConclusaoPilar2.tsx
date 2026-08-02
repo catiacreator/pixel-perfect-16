@@ -24,7 +24,7 @@ export default function ConclusaoPilar2() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar={2} pilarLabel="Criar Autoridade" backTo="/metodo/pilar-2" backLabel="Voltar para o Pilar 2" />
+      <PilarBreadcrumb pilar={2} pilarLabel="Criar Autoridade" backTo="/metodo" backLabel="Voltar para a jornada" />
       <PillarHeader
         numeral="II"
         icon={<Crown size={18} />}

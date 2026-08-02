@@ -134,8 +134,8 @@ export default function EsbocoMetodo() {
       <PilarBreadcrumb
         pilar={2}
         pilarLabel="Criar Autoridade"
-        backTo="/metodo/pilar-2"
-        backLabel="Voltar para o Pilar 2"
+        backTo="/metodo"
+        backLabel="Voltar para a jornada"
       />
 
       {/* Hero */}

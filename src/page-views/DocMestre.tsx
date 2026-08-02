@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Layout from "../components/Layout";
-import WizardJornada from "../components/WizardJornada";
+import PilarBreadcrumb from "../components/PilarBreadcrumb";
 import {
   FileUp,
   ClipboardPaste,
@@ -366,41 +366,26 @@ export default function DocMestre() {
   return (
     <Layout>
       <div className="print:hidden">
-        <WizardJornada />
+        <PilarBreadcrumb
+          pilar="redes"
+          pilarLabel="Documento Mestre"
+          backTo="/metodo"
+          backLabel="Voltar para a jornada"
+        />
       </div>
-      <div className="px-5 md:px-10 py-10 max-w-5xl mx-auto print:max-w-none print:py-0">
+      <div className="px-5 md:px-10 pt-6 pb-10 max-w-5xl mx-auto print:max-w-none print:py-0">
         {/* Cabeçalho */}
         <div className="print:hidden mb-6">
-          <button
-            onClick={handleBack}
-            className="inline-flex items-center gap-1.5 text-sm text-ink/60 hover:text-ink transition-colors mb-5"
-          >
-            <ArrowLeft size={16} /> Voltar
-          </button>
-
-          <div className="rounded-3xl border border-border bg-gradient-to-br from-cream-warm to-cream p-6 md:p-8">
-            <div className="flex flex-col lg:flex-row lg:items-start gap-6">
-              {/* Ícone */}
-              <div className="shrink-0 w-14 h-14 rounded-2xl border border-terracotta/30 bg-cream flex items-center justify-center text-terracotta">
-                <FileText size={24} strokeWidth={1.75} />
-              </div>
-
-              {/* Texto */}
-              <div className="flex-1 min-w-0">
-                <p className="text-xs tracking-[0.25em] uppercase text-terracotta mb-2">
-                  Seu mapa pessoal
-                </p>
-                <h1 className="font-serif text-3xl md:text-5xl text-ink leading-tight mb-3">
-                  Documento Mestre
-                </h1>
-                <p className="text-muted max-w-xl">
-                  Preencha o documento para aos poucos ter mais clareza do seu projecto. A cada
-                  passo vai compreendendo melhor como ter mais liberdade, tempo e lucro.
-                </p>
-              </div>
-
-            </div>
-          </div>
+          <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">
+            Seu mapa pessoal
+          </p>
+          <h1 className="font-serif text-2xl md:text-3xl text-ink tracking-tight mb-2">
+            Documento Mestre
+          </h1>
+          <p className="text-sm text-muted max-w-xl">
+            Preencha o documento para aos poucos ter mais clareza do seu projecto. A cada passo vai
+            compreendendo melhor como ter mais liberdade, tempo e lucro.
+          </p>
         </div>
 
         {/* Como funciona — explicação para quem chega à página */}

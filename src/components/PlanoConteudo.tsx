@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import {
   ClipboardPaste, Plus, Trash2, ChevronDown, ChevronLeft, ChevronRight, Check, Link2,
-  Trophy, CalendarDays, Clock, Sparkles, ArrowRight,
+  Trophy, CalendarDays, Clock, Sparkles,
 } from "lucide-react";
 import { useProgresso } from "@/lib/use-progresso";
 import { chaveMes, chaveSemana } from "@/lib/gamificacao";
@@ -436,10 +436,6 @@ export default function PlanoConteudo() {
       </div>
 
       <RankingMes />
-
-      <Link to="/metodo/pilar-2/redes-sociais?aba=criar" className="inline-flex items-center gap-2 text-sm font-semibold text-terracotta hover:text-terracotta-dark transition-colors">
-        <Sparkles size={15} /> Criar mais conteúdo com os agentes <ArrowRight size={14} />
-      </Link>
     </div>
   );
 }

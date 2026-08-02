@@ -21,7 +21,7 @@ export default function PesquisaMercado() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar={2} pilarLabel="Criar Autoridade" backTo="/metodo/pilar-2" backLabel="Voltar para o Pilar 2" />
+      <PilarBreadcrumb pilar={2} pilarLabel="Criar Autoridade" backTo="/metodo" backLabel="Voltar para a jornada" />
       <PillarHeader
         numeral="✦"
         icon={null}

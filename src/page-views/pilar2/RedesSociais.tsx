@@ -649,7 +649,11 @@ export default function RedesSociais() {
 
   return (
     <Layout>
-      <PilarBreadcrumb pilar="redes" pilarLabel="Conteúdo Todo Dia" backTo="/protocolo" backLabel="Voltar atrás" historyBack />
+      {aba === "pilares" || aba === "plano" ? (
+        <PilarBreadcrumb pilar="redes" pilarLabel="Conteúdo Todo Dia" backTo="/metodo" backLabel="Voltar para a jornada" />
+      ) : (
+        <PilarBreadcrumb pilar="redes" pilarLabel="Conteúdo Todo Dia" backTo="/protocolo" backLabel="Voltar atrás" historyBack />
+      )}
       {aba === "boas-vindas" ? (
         <PillarHeader
           numeral="✦"

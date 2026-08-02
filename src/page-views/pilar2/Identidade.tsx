@@ -76,8 +76,8 @@ export default function Identidade() {
       <PilarBreadcrumb
         pilar={2}
         pilarLabel="Criar Autoridade"
-        backTo="/metodo/pilar-2"
-        backLabel="Voltar para o Pilar 2"
+        backTo="/metodo"
+        backLabel="Voltar para a jornada"
       />
       <div className="px-5 md:px-10 pt-8 pb-10 max-w-4xl mx-auto">
 
