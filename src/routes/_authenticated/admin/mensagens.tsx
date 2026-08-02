@@ -2,10 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useSuspenseQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { useState } from "react";
-import { Mail, Send, Trash2, Users } from "lucide-react";
+import { Mail, Send, Trash2, Users, UserRound } from "lucide-react";
 import { notify } from "@/lib/toast";
-import { getMensagens, setMensagens, getTurmas } from "@/lib/admin.functions";
+import { getMensagens, setMensagens, getTurmas, listMentoradas } from "@/lib/admin.functions";
 import type { Turma } from "@/lib/turmas";
+
+type Aluno = { id: string; nome?: string; email?: string };
 
 export const Route = createFileRoute("/_authenticated/admin/mensagens")({
   component: MensagensAdminPage,
@@ -38,17 +40,29 @@ function MensagensAdminPage() {
   const fetchFn = useServerFn(getMensagens);
   const saveFn = useServerFn(setMensagens);
   const fetchTurmas = useServerFn(getTurmas);
+  const fetchAlunos = useServerFn(listMentoradas);
   const qc = useQueryClient();
   const { data } = useSuspenseQuery({ queryKey: ["admin-mensagens"], queryFn: () => fetchFn() });
   const { data: turmasData } = useSuspenseQuery({ queryKey: ["admin-turmas"], queryFn: () => fetchTurmas() });
+  const { data: alunosData } = useSuspenseQuery({ queryKey: ["admin-mentoradas"], queryFn: () => fetchAlunos() });
   const mensagens = (data as Mensagem[]) || [];
   const turmas = (turmasData as Turma[]) || [];
-  const nomeTurma = (id: string) =>
-    id === "todas" ? "Todas as turmas" : (turmas.find((t) => t.id === id)?.nome ?? "Iniciante (padrão)");
+  const alunos = (alunosData as Aluno[]) || [];
+  const nomeAluno = (uid: string) => {
+    const a = alunos.find((x) => x.id === uid);
+    return a?.nome || a?.email || "Aluno";
+  };
+  const nomeTurma = (id: string) => {
+    if (id === "todas") return "Todas as turmas";
+    if (id.startsWith("aluno:")) return nomeAluno(id.slice(6));
+    return turmas.find((t) => t.id === id)?.nome ?? "Iniciante (padrão)";
+  };
 
   const [titulo, setTitulo] = useState("");
   const [corpo, setCorpo] = useState("");
+  // "todas" | id da turma | "__aluno__" (mostra o seletor de aluno)
   const [turmaId, setTurmaId] = useState("todas");
+  const [alunoId, setAlunoId] = useState("");
 
   const mut = useMutation({
     mutationFn: (next: Mensagem[]) => saveFn({ data: { mensagens: next } }),
@@ -63,11 +77,17 @@ function MensagensAdminPage() {
       notify("Escreva a mensagem antes de enviar.", "error");
       return;
     }
+    const paraAluno = turmaId === "__aluno__";
+    if (paraAluno && !alunoId) {
+      notify("Escolha o aluno a quem quer enviar.", "error");
+      return;
+    }
+    const destino = paraAluno ? `aluno:${alunoId}` : turmaId;
     const msg: Mensagem = {
       id: novoId(),
       titulo: t,
       corpo: c,
-      turmaId,
+      turmaId: destino,
       data: new Date().toISOString(),
       autor: AUTOR,
     };
@@ -75,6 +95,7 @@ function MensagensAdminPage() {
     setTitulo("");
     setCorpo("");
     setTurmaId("todas");
+    setAlunoId("");
     notify("Mensagem enviada.", "success");
   }
 
@@ -89,7 +110,7 @@ function MensagensAdminPage() {
       <h1 className="text-2xl font-semibold tracking-tight text-ink">Mensagens aos alunos</h1>
       <p className="text-sm text-ink/60 mt-1 max-w-xl">
         Escreva uma mensagem que aparece aos alunos em <b>Mensagens da sua mentora</b>. Pode enviar para
-        <b> todas</b> as turmas ou dirigir a uma turma específica.
+        <b> todos</b>, para uma <b>turma</b> específica ou para um <b>aluno</b> individual.
       </p>
 
       {/* Escrever nova mensagem */}
@@ -121,12 +142,34 @@ function MensagensAdminPage() {
               onChange={(e) => setTurmaId(e.target.value)}
               className="w-full h-10 px-3 rounded-lg border border-[var(--color-border)] text-sm bg-white"
             >
-              <option value="todas">Todas as turmas</option>
-              {turmas.map((t) => (
-                <option key={t.id} value={t.id}>{t.nome}</option>
-              ))}
+              <option value="todas">Todos os alunos</option>
+              {turmas.length > 0 && (
+                <optgroup label="Turma">
+                  {turmas.map((t) => (
+                    <option key={t.id} value={t.id}>{t.nome}</option>
+                  ))}
+                </optgroup>
+              )}
+              <option value="__aluno__">Um aluno específico…</option>
             </select>
           </div>
+
+          {turmaId === "__aluno__" && (
+            <div className="flex-1 min-w-[180px]">
+              <label className="block text-[10px] tracking-[0.14em] uppercase text-ink/45 mb-1.5">Aluno</label>
+              <select
+                value={alunoId}
+                onChange={(e) => setAlunoId(e.target.value)}
+                className="w-full h-10 px-3 rounded-lg border border-[var(--color-border)] text-sm bg-white"
+              >
+                <option value="">Escolher aluno…</option>
+                {alunos.map((a) => (
+                  <option key={a.id} value={a.id}>{a.nome || a.email || a.id}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <button
             onClick={enviar}
             disabled={mut.isPending}
@@ -154,7 +197,7 @@ function MensagensAdminPage() {
                   <p className="text-sm text-ink/70 mt-0.5 whitespace-pre-wrap leading-relaxed">{m.corpo}</p>
                   <div className="flex flex-wrap items-center gap-2 mt-2.5">
                     <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold px-2 py-0.5 rounded-full bg-terracotta/10 text-terracotta">
-                      <Users size={11} /> {nomeTurma(m.turmaId)}
+                      {m.turmaId.startsWith("aluno:") ? <UserRound size={11} /> : <Users size={11} />} {nomeTurma(m.turmaId)}
                     </span>
                     <span className="text-[11px] text-ink/40">{formatarData(m.data)}</span>
                   </div>

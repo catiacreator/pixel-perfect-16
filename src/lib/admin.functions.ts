@@ -1318,8 +1318,9 @@ export const getMensagens = createServerFn({ method: "POST" })
       return ordenarMensagens(todas);
     }
     const minhasTurmas = turmasDoUtilizador(blob, context.userId);
+    const paraMim = `aluno:${context.userId}`;
     const visiveis = todas.filter(
-      (m) => m.turmaId === "todas" || minhasTurmas.includes(m.turmaId),
+      (m) => m.turmaId === "todas" || m.turmaId === paraMim || minhasTurmas.includes(m.turmaId),
     );
     return ordenarMensagens(visiveis);
   });
