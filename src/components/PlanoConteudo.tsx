@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import {
   ClipboardPaste, Plus, Trash2, ChevronDown, ChevronLeft, ChevronRight, Check, Link2,
-  Trophy, CalendarDays, Clock, Sparkles,
+  Trophy, CalendarDays, Clock, Sparkles, Download, Printer,
 } from "lucide-react";
 import { useProgresso } from "@/lib/use-progresso";
 import { chaveMes, chaveSemana } from "@/lib/gamificacao";
@@ -18,14 +18,18 @@ const KEY = "leveza.plano-conteudo.v1";
 const PONTOS_KEY = "leveza.posts-publicados.v1";
 const PONTOS_POR_POST = 15;
 
-type Post = { id: string; tipo: string; titulo: string; conteudo: string; link: string; data: string; hora: string; pubId?: string; agendado?: boolean };
+type Resultado = "bom" | "medio" | "mau";
+type Post = { id: string; tipo: string; titulo: string; conteudo: string; link: string; data: string; hora: string; pubId?: string; agendado?: boolean; resultado?: Resultado; nota?: string };
 
 const FONTES = [
   { id: "roteiros-simples", label: "Yap Content", cor: "#2E7CB8", multi: true },
   { id: "reels-virais", label: "Reels virais", cor: "#C8487E", multi: true },
   { id: "stories", label: "Stories", cor: "#F0A766", multi: false },
   { id: "carrosseis", label: "Carrosséis", cor: "#9E7FEC", multi: false },
+  { id: "post-estatico", label: "Post estático", cor: "#3A9E88", multi: false },
 ];
+
+const RESULTADO_LABEL: Record<Resultado, string> = { bom: "Resultou", medio: "Assim-assim", mau: "Não resultou" };
 
 const MESES = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 const MES_CURTO = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
@@ -166,6 +170,82 @@ export default function PlanoConteudo() {
   // ordem cronológica (sem data vai para o fim)
   const ordenados = [...posts].sort((a, b) => (a.data || "9999").localeCompare(b.data || "9999") || (a.hora || "99").localeCompare(b.hora || "99"));
 
+  const estadoDe = (p: Post) => (publicado(p) ? "Publicado" : agendado(p) ? "Agendado" : "Por publicar");
+
+  // Exporta o plano em CSV — abre no Trello (importar CSV), Google Sheets e Excel.
+  const exportarCSV = () => {
+    if (!posts.length) { flash("Ainda não há posts para exportar."); return; }
+    const esc = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const cols = ["Data", "Hora", "Tipo", "Título", "Estado", "Resultado", "Nota", "Link", "Conteúdo"];
+    const linhas = ordenados.map((p) => [
+      p.data || "",
+      p.hora || "",
+      p.tipo,
+      p.titulo,
+      estadoDe(p),
+      p.resultado ? RESULTADO_LABEL[p.resultado] : "",
+      p.nota || "",
+      p.link || "",
+      (p.conteudo || "").replace(/\r?\n/g, " "),
+    ].map(esc).join(","));
+    // BOM (﻿) para o Excel abrir os acentos corretamente.
+    const csv = "﻿" + [cols.map(esc).join(","), ...linhas].join("\r\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `plano-conteudo-${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    flash(`${posts.length} posts exportados em CSV ✓`);
+  };
+
+  // Exporta o plano numa vista limpa para imprimir / "Guardar como PDF".
+  const exportarPDF = () => {
+    if (!posts.length) { flash("Ainda não há posts para exportar."); return; }
+    const w = window.open("", "_blank");
+    if (!w) { flash("Permite pop-ups para gerar o PDF."); return; }
+    const escH = (v: unknown) => String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const estilo = (p: Post) => {
+      const e = estadoDe(p);
+      if (e === "Publicado") return "color:#0f766e;background:#d1fae5";
+      if (e === "Agendado") return "color:#0369a1;background:#e0f2fe";
+      return "color:#b45309;background:#fef3c7";
+    };
+    const linhas = ordenados.map((p) => `
+      <tr>
+        <td>${p.data ? escH(p.data) : "—"}${p.hora ? `<br><span class="muted">${escH(p.hora)}</span>` : ""}</td>
+        <td>${escH(p.tipo)}</td>
+        <td><strong>${escH(p.titulo)}</strong></td>
+        <td><span class="tag" style="${estilo(p)}">${escH(estadoDe(p))}</span></td>
+        <td>${p.resultado ? escH(RESULTADO_LABEL[p.resultado]) : "—"}${p.nota ? `<br><span class="muted">${escH(p.nota)}</span>` : ""}</td>
+      </tr>`).join("");
+    const doc = `<!doctype html><html lang="pt"><head><meta charset="utf-8"><title>Plano de Posts</title>
+<style>
+  *{box-sizing:border-box} body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#2b2521;margin:32px}
+  h1{font-size:24px;margin:0 0 2px;color:#be6a43} .sub{color:#8a8078;font-size:13px;margin:0 0 22px}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th{text-align:left;text-transform:uppercase;font-size:10px;letter-spacing:.08em;color:#8a8078;border-bottom:2px solid #eee;padding:8px 10px}
+  td{padding:10px;border-bottom:1px solid #f0ece4;vertical-align:top}
+  .muted{color:#8a8078;font-size:11px} .tag{font-size:11px;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap}
+  @media print{body{margin:12mm}}
+</style></head><body>
+  <h1>Plano de Posts</h1>
+  <p class="sub">Leveza no Digital &middot; ${escH(new Date().toLocaleDateString("pt-PT"))} &middot; ${posts.length} posts &middot; ${publicados} publicados</p>
+  <table>
+    <thead><tr><th>Data</th><th>Tipo</th><th>Título</th><th>Estado</th><th>Resultado / notas</th></tr></thead>
+    <tbody>${linhas}</tbody>
+  </table>
+</body></html>`;
+    w.document.write(doc);
+    w.document.close();
+    w.focus();
+    window.setTimeout(() => { try { w.print(); } catch { /* ignora */ } }, 350);
+    flash('Abri a vista de impressão — escolhe "Guardar como PDF" ✓');
+  };
+
   // grelha do mês visível
   const first = new Date(mes.y, mes.m, 1);
   const startDay = (first.getDay() + 6) % 7; // segunda = 0
@@ -296,7 +376,25 @@ export default function PlanoConteudo() {
 
       {/* Lista de posts (agendar) */}
       <div>
-        <p className="text-sm font-semibold text-ink mb-3">2 · Agende cada post</p>
+        <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
+          <p className="text-sm font-semibold text-ink">2 · Agende cada post</p>
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              onClick={exportarCSV}
+              className="inline-flex items-center gap-1.5 text-[13px] font-semibold px-3.5 py-1.5 rounded-full border border-border bg-white text-ink/70 hover:border-terracotta hover:text-terracotta transition-colors"
+              title="Descarrega o teu plano em CSV — abre no Trello, Google Sheets e Excel"
+            >
+              <Download size={14} /> Exportar CSV (Trello)
+            </button>
+            <button
+              onClick={exportarPDF}
+              className="inline-flex items-center gap-1.5 text-[13px] font-semibold px-3.5 py-1.5 rounded-full border border-border bg-white text-ink/70 hover:border-terracotta hover:text-terracotta transition-colors"
+              title="Abre uma vista limpa para imprimir ou guardar como PDF"
+            >
+              <Printer size={14} /> PDF / imprimir
+            </button>
+          </div>
+        </div>
         {posts.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border bg-cream-warm/30 p-8 text-center">
             <ClipboardPaste size={22} className="mx-auto text-ink/30 mb-3" />
@@ -409,6 +507,36 @@ export default function PlanoConteudo() {
                       {!publicado(p) && !p.link.trim() && (
                         <p className="text-[11px] text-ink/45 mt-2">Só conta como publicado depois de colares o <b className="text-ink/70">link da publicação</b>.</p>
                       )}
+
+                      <div className="mt-4 pt-3 border-t border-border">
+                        <label className="text-[11px] tracking-[0.1em] uppercase text-ink/45 mb-1.5 block">Resultado <span className="normal-case text-ink/35">— o que funcionou?</span></label>
+                        <div className="flex items-center gap-2 flex-wrap mb-2">
+                          {([
+                            { id: "bom", label: "👍 Resultou" },
+                            { id: "medio", label: "😐 Assim-assim" },
+                            { id: "mau", label: "👎 Não resultou" },
+                          ] as const).map((r) => (
+                            <button
+                              key={r.id}
+                              onClick={() => setPost(p.id, { resultado: p.resultado === r.id ? undefined : r.id })}
+                              className={`text-sm font-semibold px-3.5 py-1.5 rounded-full border transition-colors ${
+                                p.resultado === r.id
+                                  ? "bg-ink text-cream border-transparent"
+                                  : "bg-white border-border text-ink/70 hover:border-terracotta hover:text-terracotta"
+                              }`}
+                            >
+                              {r.label}
+                            </button>
+                          ))}
+                        </div>
+                        <textarea
+                          value={p.nota || ""}
+                          onChange={(e) => setPost(p.id, { nota: e.target.value })}
+                          rows={2}
+                          placeholder="Notas: o que resultou, o que mudarias para a próxima…"
+                          className="w-full rounded-lg border border-border p-2 text-sm outline-none focus:border-terracotta transition-colors resize-none"
+                        />
+                      </div>
                     </div>
                   )}
                 </div>

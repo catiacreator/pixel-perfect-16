@@ -62,6 +62,13 @@ const FORMATOS: Formato[] = [
     como: "Faz 3 perguntas antes de criar (nicho/avatar, dor/oferta, prova/palavra-chave). Depois monta 5 stories (identificação → agitação técnica → prova → quebra de objeção → convite) e um roteiro de Direct que abre com diagnóstico, nunca com preço.",
     ideal: "Quando quer transformar audiência em conversas de venda.",
   },
+  {
+    id: "estatico", icon: ImageIcon, nome: "Post estático", etapa: "Presença · autoridade", cor: "#2FA98A",
+    agente: "ChatGPT",
+    resumo: "Uma imagem, uma mensagem. O formato mais simples — para marcar presença sem gravar.",
+    como: "Um post de imagem única (uma foto tua, uma frase de impacto ou um card com uma ideia) e legenda curta. Sem produção e sem gravar vídeo: a imagem prende o olhar e a legenda faz o resto — contexto, uma micro-história e um convite leve. É o formato certo para os dias em que não vais para a câmara mas queres manter constância.",
+    ideal: "Quando queres publicar sem gravar vídeo — frases de autoridade, avisos, bastidores e provas sociais.",
+  },
 ];
 
 // Modelos de Reel — só aparecem no formato "Reels virais".

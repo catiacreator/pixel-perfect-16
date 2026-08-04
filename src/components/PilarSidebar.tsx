@@ -184,6 +184,7 @@ const PILARES: Record<string | number, PilarDef> = {
           { label: "↳ Reels virais", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=reels", id: "redes.formatos.reels" },
           { label: "↳ Carrosséis que vendem", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=carrossel", id: "redes.formatos.carrossel" },
           { label: "↳ Stories que vendem", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=stories", id: "redes.formatos.stories" },
+          { label: "↳ Post estático", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=estatico", id: "redes.formatos.estatico" },
         ],
       },
       { num: 3, id: "redes.avulsos", label: "Posts avulsos", to: "/metodo/pilar-2/redes-sociais?aba=avulsos", icon: Sparkle },
