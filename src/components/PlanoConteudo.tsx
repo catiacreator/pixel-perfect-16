@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import {
   ClipboardPaste, Plus, Trash2, ChevronDown, ChevronLeft, ChevronRight, Check, Link2,
-  Trophy, CalendarDays, Clock, Sparkles, Download, Printer,
+  Trophy, CalendarDays, Clock, Sparkles, Download, Printer, Sheet,
 } from "lucide-react";
 import { useProgresso } from "@/lib/use-progresso";
 import { chaveMes, chaveSemana } from "@/lib/gamificacao";
@@ -16,6 +16,7 @@ import { parsePlanoLeveza, type PecaLeveza } from "@/data/prompts/plano-leveza";
 
 const KEY = "leveza.plano-conteudo.v1";
 const PONTOS_KEY = "leveza.posts-publicados.v1";
+const SHEETS_KEY = "leveza.plano-sheets-url.v1";
 const PONTOS_POR_POST = 15;
 
 type Resultado = "bom" | "medio" | "mau";
@@ -62,6 +63,9 @@ export default function PlanoConteudo() {
   const [planoLevezaDraft, setPlanoLevezaDraft] = useState("");
   const [abaImport, setAbaImport] = useState<"plano-leveza" | "pecas">("plano-leveza");
   const [mes, setMes] = useState(() => { const d = new Date(); return { y: d.getFullYear(), m: d.getMonth() }; });
+  const [sheetsUrl, setSheetsUrl] = useState<string>(() => { try { return localStorage.getItem(SHEETS_KEY) || ""; } catch { return ""; } });
+  const [sheetsOpen, setSheetsOpen] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
   // Gamificação: publicar um post grava-o no servidor (conta para pontos e para
   // a competição mensal). postsServidor = posts publicados (fonte de verdade).
@@ -246,6 +250,46 @@ export default function PlanoConteudo() {
     flash('Abri a vista de impressão — escolhe "Guardar como PDF" ✓');
   };
 
+  const guardarSheetsUrl = (v: string) => {
+    setSheetsUrl(v);
+    try { localStorage.setItem(SHEETS_KEY, v.trim()); } catch { /* ignora */ }
+  };
+
+  // Envia o plano para a Google Sheet da aluna (via Apps Script Web App que ela cria).
+  const sincronizarSheets = async () => {
+    const url = sheetsUrl.trim();
+    if (!url) { flash("Cola primeiro o link do teu Google Sheets."); return; }
+    setSyncing(true);
+    try {
+      const payload = {
+        exported_at: new Date().toISOString(),
+        posts: ordenados.map((p) => ({
+          data: p.data || "",
+          hora: p.hora || "",
+          tipo: p.tipo,
+          titulo: p.titulo,
+          estado: estadoDe(p),
+          resultado: p.resultado ? RESULTADO_LABEL[p.resultado] : "",
+          nota: p.nota || "",
+          link: p.link || "",
+          conteudo: (p.conteudo || "").replace(/\r?\n/g, " "),
+        })),
+      };
+      // no-cors: o Apps Script recebe o corpo; a resposta é opaca (não a lemos).
+      await fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload),
+      });
+      flash(`${posts.length} posts enviados para o Google Sheets ✓ — confere a tua folha.`);
+    } catch {
+      flash("Não consegui enviar. Confirma o link do Sheets e tenta de novo.");
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   // grelha do mês visível
   const first = new Date(mes.y, mes.m, 1);
   const startDay = (first.getDay() + 6) % 7; // segunda = 0
@@ -393,8 +437,44 @@ export default function PlanoConteudo() {
             >
               <Printer size={14} /> PDF / imprimir
             </button>
+            <button
+              onClick={() => setSheetsOpen((v) => !v)}
+              className={`inline-flex items-center gap-1.5 text-[13px] font-semibold px-3.5 py-1.5 rounded-full border transition-colors ${
+                sheetsOpen || sheetsUrl
+                  ? "border-emerald-300 bg-emerald-50 text-emerald-700"
+                  : "border-border bg-white text-ink/70 hover:border-emerald-300 hover:text-emerald-700"
+              }`}
+              title="Enviar o plano para a tua Google Sheet (link fixo que se atualiza)"
+            >
+              <Sheet size={14} /> Google Sheets
+            </button>
           </div>
         </div>
+
+        {sheetsOpen && (
+          <div className="rounded-2xl border border-emerald-200 bg-emerald-50/50 p-4 mb-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Sheet size={16} className="text-emerald-600" />
+              <p className="text-sm font-semibold text-ink">Sincronizar com a tua Google Sheet</p>
+            </div>
+            <p className="text-[13px] text-ink/60 mb-3 leading-relaxed">
+              Cria uma vez o "recetor" na tua folha (Extensões → Apps Script → Implementar como App Web) e cola aqui o link que termina em <b>/exec</b>. Depois é só <b>Sincronizar</b> — o plano é escrito na tua folha e o link fica sempre igual.
+            </p>
+            <input
+              value={sheetsUrl}
+              onChange={(e) => guardarSheetsUrl(e.target.value)}
+              placeholder="https://script.google.com/macros/s/…/exec"
+              className="w-full rounded-xl border border-border p-2.5 text-sm outline-none focus:border-emerald-500 transition-colors mb-2 bg-white"
+            />
+            <button
+              onClick={sincronizarSheets}
+              disabled={syncing || !sheetsUrl.trim()}
+              className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full text-white bg-emerald-600 hover:bg-emerald-700 disabled:opacity-45 disabled:cursor-not-allowed transition-colors"
+            >
+              <Sheet size={14} /> {syncing ? "A enviar…" : "Sincronizar agora"}
+            </button>
+          </div>
+        )}
         {posts.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-border bg-cream-warm/30 p-8 text-center">
             <ClipboardPaste size={22} className="mx-auto text-ink/30 mb-3" />
