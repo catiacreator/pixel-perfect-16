@@ -7,7 +7,7 @@ import { recomputarPontos, BONUS_KEY } from "@/lib/gamificacao.functions";
 import { z } from "zod";
 
 // A administradora principal (dona) — só ela pode adicionar/eliminar alunos e atribuir papéis.
-const OWNER_EMAILS = ["catiasmgon@gmail.com"];
+const OWNER_EMAILS = ["catiasmgon@gmail.com", "catiacreator@gmail.com"];
 
 function emailFromContext(context: any): string {
   return String(context?.claims?.email ?? "").trim().toLowerCase();

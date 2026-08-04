@@ -9,6 +9,7 @@
 // funcionar — deixa de haver emails "presos" como admin no código.
 export const ADMIN_EMAILS = [
   "catiasmgon@gmail.com",
+  "catiacreator@gmail.com",
 ];
 
 export function isAdminEmail(email?: string | null): boolean {
