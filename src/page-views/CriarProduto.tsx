@@ -24,6 +24,13 @@ const ABAS = [
   { id: "esteira", n: 2, label: "A tua esteira", desc: "Ideias e produtos (3–5)", icon: Layers },
 ] as const;
 
+// Passos do wizard da página "A tua esteira".
+const PASSOS_ESTEIRA = [
+  { n: 1, label: "Produtos que já tens" },
+  { n: 2, label: "Desenha a tua esteira" },
+  { n: 3, label: "Constrói cada produto" },
+] as const;
+
 // ──────────────────────────── campos ────────────────────────────
 function Campo({ label, value, onChange, textarea, placeholder }: { label: string; value: string; onChange: (v: string) => void; textarea?: boolean; placeholder?: string }) {
   return (
@@ -99,6 +106,8 @@ export default function CriarProduto() {
   const [esteira, setEsteira] = useState<Esteira>(ESTEIRA_EMPTY);
   const [carregado, setCarregado] = useState(false);
   const [nivelAberto, setNivelAberto] = useState<Record<NivelKey, boolean>>({ low: true, medio: false, alto: false });
+  const [passoEsteira, setPassoEsteira] = useState(1);
+  const [nivelTab, setNivelTab] = useState<NivelKey>("low");
   const [colaPublico, setColaPublico] = useState("");
   const [preenchidoAviso, setPreenchidoAviso] = useState("");
   const [fonteDoc, setFonteDoc] = useState<"" | "principal" | "zero">("");
@@ -409,11 +418,30 @@ export default function CriarProduto() {
                 </div>
               )}
 
-              <ComoUsar />
+              {/* Passos do wizard */}
+              <div className="mb-6 flex flex-wrap gap-2">
+                {PASSOS_ESTEIRA.map((p) => {
+                  const on = passoEsteira === p.n;
+                  const feito = passoEsteira > p.n;
+                  return (
+                    <button
+                      key={p.n}
+                      onClick={() => { setPassoEsteira(p.n); window.scrollTo({ top: 0 }); }}
+                      className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-semibold transition-colors ${on ? "border-terracotta bg-terracotta text-cream" : "border-border bg-white text-ink/70 hover:border-terracotta/50"}`}
+                    >
+                      <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-bold ${on ? "bg-cream/25 text-cream" : feito ? "bg-terracotta/15 text-terracotta" : "bg-ink/10 text-ink/50"}`}>{p.n}</span>
+                      {p.label}
+                    </button>
+                  );
+                })}
+              </div>
 
-              {/* 3. Produtos atuais */}
+              {passoEsteira >= 2 && <ComoUsar />}
+
+              {/* Passo 1 — Produtos que já tens */}
+              {passoEsteira === 1 && (
               <div className="rounded-2xl border border-border bg-cream-warm/30 p-5 space-y-4 mb-6">
-                <h2 className="font-serif text-xl text-ink">3. Produtos/serviços que já tens</h2>
+                <h2 className="font-serif text-xl text-ink">Produtos/serviços que já tens</h2>
                 <div className="space-y-2">
                   {doc.produtos.map((p, i) => (
                     <div key={i} className="flex flex-wrap items-center gap-2">
@@ -431,10 +459,12 @@ export default function CriarProduto() {
                   <Plus size={14} /> Adicionar produto atual
                 </button>
               </div>
+              )}
 
-              {/* 4. Ideias da esteira */}
+              {/* Passo 2 — Desenha a tua esteira */}
+              {passoEsteira === 2 && (
               <div className="mb-8">
-                <h2 className="mb-1 font-serif text-xl text-ink">4. Desenha a tua esteira</h2>
+                <h2 className="mb-1 font-serif text-xl text-ink">Desenha a tua esteira</h2>
                 <p className="mb-4 text-[15px] text-ink/60">Gera as ideias dos 3 níveis (low, médio e alto ticket) e cola o resultado. Depois preenche cada nível já a seguir.</p>
                 <PromptCard
                   numero={1}
@@ -460,31 +490,38 @@ export default function CriarProduto() {
                   {avisoNiveis && <span className="text-[12.5px] text-ink/70">{avisoNiveis}</span>}
                 </div>
               </div>
+              )}
 
-              {/* 5. Construir cada produto */}
-              <h2 className="mb-1 font-serif text-xl text-ink">5. Constrói cada produto</h2>
-              <p className="mb-4 text-[15px] text-ink/60">Para cada nível: define o produto e gera a página de vendas, os stories e os posts de feed.</p>
-              <div className="space-y-4">
-                {NIVEIS.map(({ key, rotulo, etiqueta, dica, cor }) => {
-                  const n = esteira.niveis[key];
-                  const isOpen = nivelAberto[key];
-                  return (
-                    <div key={key} className="overflow-hidden rounded-2xl border border-border bg-white">
-                      <button onClick={() => setNivelAberto((a) => ({ ...a, [key]: !a[key] }))}
-                        className="flex w-full items-center gap-3 px-5 py-4 text-left">
-                        <span className="h-9 w-9 shrink-0 rounded-lg" style={{ backgroundColor: cor }} />
-                        <span className="min-w-0 flex-1">
-                          <span className="flex items-center gap-2">
-                            <span className="font-serif text-lg text-ink">{rotulo}</span>
-                            <span className="rounded-full bg-ink/[0.06] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-ink/50">{etiqueta}</span>
-                          </span>
-                          <span className="block truncate text-[13px] text-ink/55">{n.nome || dica}</span>
-                        </span>
-                        <ChevronDown size={18} className={`shrink-0 text-ink/40 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+              {/* Passo 3 — Constrói cada produto (tabs por nível) */}
+              {passoEsteira === 3 && (
+              <div>
+                <h2 className="mb-1 font-serif text-xl text-ink">Constrói cada produto</h2>
+                <p className="mb-4 text-[15px] text-ink/60">Escolhe o nível e, para cada um, define o produto e gera a página de vendas, os stories e os posts de feed.</p>
+
+                {/* Tabs dos níveis */}
+                <div className="mb-4 flex flex-wrap gap-2">
+                  {NIVEIS.map(({ key, rotulo, etiqueta, cor }) => {
+                    const on = nivelTab === key;
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => setNivelTab(key)}
+                        className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-semibold transition-colors ${on ? "border-transparent text-cream" : "border-border bg-white text-ink/70 hover:border-terracotta/50"}`}
+                        style={on ? { backgroundColor: cor } : undefined}
+                      >
+                        <span className="h-3 w-3 rounded-full" style={{ backgroundColor: on ? "rgba(255,255,255,0.65)" : cor }} />
+                        {rotulo} <span className="text-[10px] font-semibold uppercase tracking-wide opacity-70">{etiqueta}</span>
                       </button>
+                    );
+                  })}
+                </div>
 
-                      {isOpen && (
-                        <div className="border-t border-border px-5 py-5">
+                {(() => {
+                  const nivel = NIVEIS.find((x) => x.key === nivelTab) || NIVEIS[0];
+                  const { key, rotulo, cor } = nivel;
+                  const n = esteira.niveis[key];
+                  return (
+                        <div className="rounded-2xl border border-border bg-white px-5 py-5">
                           <div className="grid gap-3 sm:grid-cols-2 mb-5">
                             <Campo label="Nome do produto" value={n.nome} onChange={(v) => setNivel(key, { nome: v })} />
                             <Campo label="Formato" value={n.formato} onChange={(v) => setNivel(key, { formato: v })} placeholder="ebook, curso, mentoria…" />
@@ -545,13 +582,10 @@ export default function CriarProduto() {
                           <ColarResultado label="Meio de funil (nutrir)" value={n.postsMeio} onChange={(v) => setNivel(key, { postsMeio: v })} />
                           <ColarResultado label="Fundo de funil (vender)" value={n.postsFundo} onChange={(v) => setNivel(key, { postsFundo: v })} />
                         </div>
-                      )}
-                    </div>
                   );
-                })}
-              </div>
+                })()}
 
-              <div className="mt-8 rounded-2xl bg-gradient-to-br from-terracotta-dark to-terracotta p-8 text-center text-cream">
+                <div className="mt-8 rounded-2xl bg-gradient-to-br from-terracotta-dark to-terracotta p-8 text-center text-cream">
                 <Sparkles size={22} className="mx-auto mb-2" />
                 <h3 className="mb-1 font-serif text-2xl">A tua esteira completa</h3>
                 <p className="mx-auto mb-4 max-w-lg text-cream/85">{progresso}/9 entregáveis prontos. Descarrega tudo num ficheiro.</p>
@@ -559,6 +593,28 @@ export default function CriarProduto() {
                   className="inline-flex items-center gap-2 rounded-full bg-cream px-6 py-3 text-sm font-semibold text-terracotta-dark hover:bg-white transition-colors disabled:opacity-50">
                   <Download size={16} /> Descarregar esteira
                 </button>
+                </div>
+              </div>
+              )}
+
+              {/* Navegação do wizard */}
+              <div className="mt-6 flex items-center justify-between">
+                {passoEsteira > 1 ? (
+                  <button
+                    onClick={() => { setPassoEsteira(passoEsteira - 1); window.scrollTo({ top: 0 }); }}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-white px-5 py-2.5 text-sm font-semibold text-ink/70 hover:text-ink transition-colors"
+                  >
+                    ← Anterior
+                  </button>
+                ) : <span />}
+                {passoEsteira < 3 ? (
+                  <button
+                    onClick={() => { setPassoEsteira(passoEsteira + 1); window.scrollTo({ top: 0 }); }}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-terracotta px-6 py-2.5 text-sm font-semibold text-cream hover:bg-terracotta-dark transition-colors"
+                  >
+                    Continuar →
+                  </button>
+                ) : <span />}
               </div>
 
               <NavRodape anterior={{ id: "documento", label: "Documento Mestre" }} onIr={irPara} />
