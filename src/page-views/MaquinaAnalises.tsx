@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Layout from "../components/Layout";
 import PromptCard from "../components/PromptCard";
 import PilarBreadcrumb from "../components/PilarBreadcrumb";
 import { Link } from "@/lib/router-compat";
-import { LineChart, Check, RotateCcw, Wand2, Plus, X, ArrowRight, ArrowLeft } from "lucide-react";
+import { LineChart, Check, RotateCcw, Wand2, Plus, X, ArrowRight, ArrowLeft, Upload } from "lucide-react";
 import { PROMPT_EXTRAIR_PERFIL } from "@/data/prompts/maquina-analises";
 import {
   FORM_VAZIO, OBJETIVOS, lerDadosPerfil, loadAnalise, saveAnalise, montarPromptAnalise,
-  docMestreParaAnalise,
+  docMestreParaAnalise, resumirAnalise,
   type FormAnalise, type Oferta, type FonteAnalise,
 } from "@/lib/maquina-analises";
 import { loadInitial as loadDocMestre } from "@/lib/doc-mestre";
@@ -50,6 +50,11 @@ export default function MaquinaAnalises() {
   const [preencheu, setPreencheu] = useState(false);
   const [promptFinal, setPromptFinal] = useState("");
   const [ferramenta, setFerramenta] = useState<"claude" | "chatgpt">("claude");
+  const [relatorio, setRelatorio] = useState("");
+  const [verRelatorio, setVerRelatorio] = useState(false);
+  const relFileRef = useRef<HTMLInputElement>(null);
+  const resumo = resumirAnalise(relatorio);
+  const temRelatorio = relatorio.trim().length > 0;
 
   const PASSOS = fonte === "doc" ? PASSOS_DOC : PASSOS_ZERO;
 
@@ -58,6 +63,7 @@ export default function MaquinaAnalises() {
     const e = loadAnalise();
     setSaida(e.saida);
     setForm(e.form);
+    setRelatorio(e.relatorio ?? "");
     // O Documento Mestre vem do servidor de forma assíncrona; reavaliamos quando
     // a hidratação chega, senão o botão "Buscar do Documento Mestre" ficaria
     // desativado para quem acabou de abrir a app.
@@ -66,7 +72,15 @@ export default function MaquinaAnalises() {
     window.addEventListener(HYDRATED_EVENT, ver);
     return () => window.removeEventListener(HYDRATED_EVENT, ver);
   }, []);
-  useEffect(() => { saveAnalise({ saida, form }); }, [saida, form]);
+  useEffect(() => { saveAnalise({ saida, form, relatorio }); }, [saida, form, relatorio]);
+
+  // Carrega o relatório de análise a partir de um ficheiro .txt guardado.
+  const carregarRelatorioFicheiro = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    try { setRelatorio(await file.text()); } catch { /* ignora ficheiro ilegível */ }
+  };
 
   const preencherDoTexto = () => {
     const r = lerDadosPerfil(saida);
@@ -117,6 +131,7 @@ export default function MaquinaAnalises() {
     setSaida("");
     setForm(FORM_VAZIO);
     setPreencheu(false);
+    setRelatorio("");
     setFonte(null);
     setPasso(1);
   };
@@ -161,9 +176,49 @@ export default function MaquinaAnalises() {
         )}
 
         {/* ── Passo 0 · De onde vêm os dados ── */}
+        {!fonte && temRelatorio && (
+          <div className="rounded-2xl border-2 p-6 mt-6" style={{ borderColor: `${COR}40`, background: "#fff" }}>
+            <div className="flex items-center gap-2 mb-1">
+              <Check size={16} className="text-emerald-600" />
+              <h2 className="font-serif text-xl text-ink">A tua análise guardada</h2>
+            </div>
+            <p className="text-sm text-ink/55 mb-4">Já importaste uma análise. Aqui está o resumo:</p>
+            {resumo.length > 0 ? (
+              <ul className="space-y-1.5 mb-4">
+                {resumo.map((r, i) => (
+                  <li key={i} className="text-[13px] text-ink/75 flex gap-2">
+                    <span style={{ color: COR }}>•</span><span>{r}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-[13px] text-ink/60 mb-4 whitespace-pre-wrap">{relatorio.slice(0, 300)}…</p>
+            )}
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => setVerRelatorio((v) => !v)}
+                className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-xl border border-border bg-white text-ink/70 hover:text-ink transition-colors"
+              >
+                {verRelatorio ? "Ocultar relatório" : "Ver relatório completo"}
+              </button>
+              <button
+                onClick={() => { setRelatorio(""); setVerRelatorio(false); if (docTemConteudo) usarDocMestre(); else recomecar(); }}
+                className="inline-flex items-center gap-1.5 text-sm font-bold px-4 py-2 rounded-xl text-white transition-colors"
+                style={{ background: COR }}
+              >
+                <RotateCcw size={14} /> Fazer nova análise
+              </button>
+            </div>
+
+            {verRelatorio && (
+              <pre className="mt-3 text-xs bg-cream rounded-xl p-3 whitespace-pre-wrap text-ink/70 max-h-[360px] overflow-y-auto">{relatorio}</pre>
+            )}
+          </div>
+        )}
+
         {!fonte && (
           <div className="rounded-2xl border border-border bg-white p-6 mt-6">
-            <h2 className="font-serif text-xl text-ink mb-1">Por onde queres começar?</h2>
+            <h2 className="font-serif text-xl text-ink mb-1">{temRelatorio ? "Fazer uma nova análise" : "Por onde queres começar?"}</h2>
             <p className="text-sm text-ink/60 mb-5">
               Se já preencheste o Documento Mestre, aproveitamos o que lá está e poupas um passo inteiro.
             </p>
@@ -184,6 +239,32 @@ export default function MaquinaAnalises() {
                     : "O teu Documento Mestre ainda está vazio. Preenche-o primeiro para usares esta opção."}
                 </p>
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* Próximo passo — só depois de já ter uma análise guardada, a seguir aos cards */}
+        {!fonte && temRelatorio && (
+          <div className="rounded-2xl border-2 p-5 mt-4" style={{ borderColor: `${COR}40`, background: `${COR}0d` }}>
+            <p className="text-[11px] font-bold uppercase tracking-wider mb-1" style={{ color: COR }}>Próximo passo</p>
+            <p className="text-[13px] text-ink/60 mb-3">Já tens a análise. Leva-a ao conteúdo:</p>
+            <div className="flex flex-col sm:flex-row gap-2.5">
+              <Link
+                to="/metodo/pilar-2/redes-sociais?aba=plano"
+                className="group inline-flex flex-1 items-center justify-between gap-2 px-5 py-3 rounded-full text-cream text-sm font-semibold"
+                style={{ background: COR }}
+              >
+                Plano de Posts · Conteúdo Viral
+                <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+              </Link>
+              <Link
+                to="/criacao-livre"
+                className="group inline-flex flex-1 items-center justify-between gap-2 px-5 py-3 rounded-full border text-sm font-semibold transition-colors"
+                style={{ borderColor: `${COR}55`, color: COR }}
+              >
+                Criação Livre
+                <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+              </Link>
             </div>
           </div>
         )}
@@ -461,6 +542,55 @@ export default function MaquinaAnalises() {
                   </div>
                 ))}
               </div>
+            </div>
+
+            {/* Importar de volta a análise que o Claude/ChatGPT gerou */}
+            <div className="rounded-2xl border-2 p-5 mb-5" style={{ borderColor: `${COR}40`, background: "#fff" }}>
+              <p className="text-[11px] font-bold uppercase tracking-wider mb-1" style={{ color: COR }}>Importar a análise gerada</p>
+              <p className="text-[12.5px] text-ink/55 mb-3">
+                Quando o {ferramenta === "chatgpt" ? "ChatGPT" : "Claude"} te devolver o relatório, traz-o para aqui:
+                cola o texto ou carrega o <b>.txt</b>. A plataforma guarda-o e mostra-te um resumo.
+              </p>
+              <textarea
+                value={relatorio}
+                onChange={(e) => setRelatorio(e.target.value)}
+                rows={5}
+                placeholder="Cola aqui o relatório de análise que recebeste…"
+                className="w-full rounded-xl border border-border p-3 text-sm outline-none focus:border-[--cor] resize-y mb-2"
+              />
+              <div className="flex flex-wrap items-center gap-2">
+                <button
+                  onClick={() => relFileRef.current?.click()}
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-xl border border-border bg-white text-ink/70 hover:text-ink transition-colors"
+                >
+                  <Upload size={14} /> Carregar ficheiro (.txt)
+                </button>
+                <input
+                  ref={relFileRef}
+                  type="file"
+                  accept=".txt,.md,.text,text/plain,text/markdown"
+                  onChange={carregarRelatorioFicheiro}
+                  className="hidden"
+                />
+                {relatorio.trim() && (
+                  <span className="text-xs font-semibold text-emerald-700 inline-flex items-center gap-1">
+                    <Check size={13} /> guardado
+                  </span>
+                )}
+              </div>
+
+              {resumo.length > 0 && (
+                <div className="mt-4 rounded-xl border border-border bg-cream-warm/30 p-4">
+                  <p className="text-[11px] font-bold uppercase tracking-wider mb-2" style={{ color: COR }}>Resumo da análise</p>
+                  <ul className="space-y-1.5">
+                    {resumo.map((r, i) => (
+                      <li key={i} className="text-[13px] text-ink/75 flex gap-2">
+                        <span style={{ color: COR }}>•</span><span>{r}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
 
             {/* Passo seguinte — a bifurcação do fluxo, só aqui no fim da análise. */}

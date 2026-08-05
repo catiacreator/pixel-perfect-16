@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { TrendingUp, Users, DollarSign, Plus, X, Check } from "lucide-react";
+import { TrendingUp, Users, DollarSign, Plus, X, Check, Wand2 } from "lucide-react";
 import PromptCard from "./PromptCard";
 import TarefaCompleta from "./TarefaCompleta";
 
@@ -43,9 +43,81 @@ No fim, explique em 2 linhas como eu rodo estes pilares ao longo da semana (Reel
 type Pilar = { nome: string; ensina: string; objetivo: string };
 const pilarVazio = (): Pilar => ({ nome: "", ensina: "", objetivo: "Autoridade" });
 
+// Deteta o objetivo (Autoridade / Seguidores / Vendas) numa linha de texto.
+function objetivoDe(s: string): string {
+  const l = s.toLowerCase();
+  if (/vend/.test(l)) return "Vendas";
+  if (/segui/.test(l)) return "Seguidores";
+  if (/autorid/.test(l)) return "Autoridade";
+  return "";
+}
+// Limpa markdown/bullets/numeração do início de uma linha.
+function limparLinha(s: string): string {
+  return s.replace(/\*\*/g, "").replace(/^[\s\-*#>•·–—]+/, "").replace(/^\d+[.)]\s*/, "").replace(/[:：]\s*$/, "").trim();
+}
+const aposDoisPontos = (s: string): string => { const i = s.search(/[:：]/); return i >= 0 ? s.slice(i + 1) : s; };
+
+// Lê o resultado colado do ChatGPT e extrai os pilares (nome, o que ensina, objetivo).
+// Tolerante a formatos: "Pilar N:", listas numeradas, negrito, com/sem rótulos.
+export function parsePilaresResultado(texto: string): Pilar[] {
+  const t = (texto || "").replace(/\r/g, "").trim();
+  if (!t) return [];
+  // 1) tenta partir por cabeçalho "Pilar N"
+  let blocos = t.split(/\n(?=\s*(?:[-*#>]*\s*)?\**\s*pilar\s*\d+\b)/i).map((b) => b.trim()).filter(Boolean);
+  // 2) senão, por linhas numeradas "1." / "2)"
+  if (blocos.length < 2) blocos = t.split(/\n(?=\s*\d+[.)]\s+\S)/).map((b) => b.trim()).filter(Boolean);
+  // 3) senão, por linhas em branco
+  if (blocos.length < 2) blocos = t.split(/\n\s*\n/).map((b) => b.trim()).filter(Boolean);
+
+  const out: Pilar[] = [];
+  for (const bloco of blocos) {
+    const linhas = bloco.split("\n").map((l) => l.trim()).filter(Boolean);
+    if (!linhas.length) continue;
+
+    // Caso "tudo numa linha": "Nome — ensina X. Objetivo: Y"
+    if (linhas.length === 1) {
+      const obj1 = objetivoDe(linhas[0]) || "Autoridade";
+      let l = limparLinha(linhas[0])
+        .replace(/[.\-–—(]*\s*objetivo\b[^:：]*[:：]?\s*(autoridade|seguidores|vendas)\s*\)?\s*\.?\s*$/i, "")
+        .replace(/\((autoridade|seguidores|vendas)\)\s*\.?\s*$/i, "")
+        .trim();
+      const partes = l.split(/\s*[—–:]\s*|\s+-\s+/);
+      const nome1 = (partes[0] || "").trim();
+      const ensina1 = (partes.slice(1).join(" - ") || "").replace(/^ensina(?:\s+(?:a|o|que))?\s*[:：]?\s*/i, "").trim();
+      if (nome1 || ensina1) out.push({ nome: nome1, ensina: ensina1, objetivo: obj1 });
+      continue;
+    }
+
+    let nome = "", ensina = "", objetivo = "";
+    for (const l of linhas) {
+      const low = l.toLowerCase();
+      if (!nome && /nome do pilar|^nome\b/.test(low)) { nome = limparLinha(aposDoisPontos(l)); continue; }
+      if (!ensina && /(o que ensina|ensina|ensino|1 frase|descri)/.test(low)) { ensina = limparLinha(aposDoisPontos(l)); continue; }
+      if (!objetivo && /objetivo/.test(low)) { objetivo = objetivoDe(l); continue; }
+    }
+    if (!nome) {
+      const m = linhas[0].match(/pilar\s*\d+\s*[:\-–—]\s*(.+)/i);
+      if (m) nome = limparLinha(m[1]);
+      else { const neg = bloco.match(/\*\*([^*]+)\*\*/); nome = limparLinha(neg ? neg[1] : linhas[0]); }
+    }
+    if (!ensina) {
+      const cand = linhas.find((l) => {
+        const c = limparLinha(l);
+        return c && c !== nome && !/^pilar\s*\d+/i.test(l) && !/objetivo/i.test(l);
+      });
+      if (cand) ensina = limparLinha(aposDoisPontos(cand));
+    }
+    if (!objetivo) objetivo = objetivoDe(bloco) || "Autoridade";
+    if (nome || ensina) out.push({ nome, ensina, objetivo });
+  }
+  return out.slice(0, 5);
+}
+
 export default function PilaresConteudo() {
   const [pilares, setPilares] = useState<Pilar[]>([pilarVazio(), pilarVazio(), pilarVazio()]);
   const [saved, setSaved] = useState(false);
+  const [colar, setColar] = useState("");
+  const [aviso, setAviso] = useState<{ t: string; erro?: boolean }>({ t: "" });
 
   // Carrega uma vez (só leitura).
   useEffect(() => {
@@ -75,6 +147,23 @@ export default function PilaresConteudo() {
 
   const preenchidos = pilares.filter((p) => p.nome.trim()).length;
 
+  // Lê o resultado colado do ChatGPT e preenche os pilares de uma vez.
+  const aplicarColado = () => {
+    const novos = parsePilaresResultado(colar).map((p) => ({
+      ...p,
+      objetivo: OBJ_IDS.includes(p.objetivo) ? p.objetivo : "Autoridade",
+    }));
+    if (!novos.length) {
+      setAviso({ t: "Não consegui ler os pilares. Cola o resultado completo do ChatGPT (com o nome, o que ensina e o objetivo de cada pilar).", erro: true });
+      window.setTimeout(() => setAviso({ t: "" }), 4500);
+      return;
+    }
+    update(() => novos);
+    setColar("");
+    setAviso({ t: `${novos.length} ${novos.length === 1 ? "pilar preenchido" : "pilares preenchidos"} ✓ — confere e ajusta se precisares.` });
+    window.setTimeout(() => setAviso({ t: "" }), 4000);
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -92,6 +181,33 @@ export default function PilaresConteudo() {
           prompt={PROMPT_PILARES}
           rotuloBotao="Copiar prompt de sugestão"
         />
+
+        {/* Colar o resultado do ChatGPT e aplicar direto nos pilares */}
+        <div className="rounded-2xl border border-terracotta/25 bg-terracotta/5 p-4 mt-3">
+          <p className="text-sm font-semibold text-ink mb-1">Já tens a resposta do ChatGPT?</p>
+          <p className="text-[13px] text-ink/60 mb-2.5 leading-relaxed">
+            Cola aqui o que o ChatGPT respondeu e eu preencho os pilares abaixo automaticamente. Depois é só rever.
+          </p>
+          <textarea
+            value={colar}
+            onChange={(e) => setColar(e.target.value)}
+            rows={4}
+            placeholder="Cola aqui a resposta do ChatGPT (com o nome de cada pilar, o que ensina e o objetivo)…"
+            className="w-full rounded-xl border border-border p-2.5 text-sm text-ink placeholder:text-ink/30 outline-none focus:border-terracotta transition-colors resize-y mb-2 bg-white"
+          />
+          <div className="flex items-center gap-3 flex-wrap">
+            <button
+              onClick={aplicarColado}
+              disabled={!colar.trim()}
+              className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full bg-ink text-cream hover:bg-terracotta transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            >
+              <Wand2 size={14} /> Aplicar aos pilares
+            </button>
+            {aviso.t && (
+              <span className={`text-xs font-medium ${aviso.erro ? "text-amber-700" : "text-sage"}`}>{aviso.t}</span>
+            )}
+          </div>
+        </div>
 
         {/* Editor dos pilares */}
         <div className="space-y-3 mt-2">

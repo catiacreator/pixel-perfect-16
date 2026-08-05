@@ -43,18 +43,47 @@ export const FORM_VAZIO: FormAnalise = {
 
 export const ANALISE_KEY = "leveza.maquina-analises.v1";
 
-export type EstadoAnalise = { saida: string; form: FormAnalise };
+export type EstadoAnalise = { saida: string; form: FormAnalise; relatorio?: string };
 
 export function loadAnalise(): EstadoAnalise {
-  if (typeof window === "undefined") return { saida: "", form: FORM_VAZIO };
+  if (typeof window === "undefined") return { saida: "", form: FORM_VAZIO, relatorio: "" };
   try {
     const cru = localStorage.getItem(ANALISE_KEY);
-    if (!cru) return { saida: "", form: FORM_VAZIO };
+    if (!cru) return { saida: "", form: FORM_VAZIO, relatorio: "" };
     const d = JSON.parse(cru) as Partial<EstadoAnalise>;
-    return { saida: d.saida ?? "", form: { ...FORM_VAZIO, ...(d.form ?? {}) } };
+    return { saida: d.saida ?? "", form: { ...FORM_VAZIO, ...(d.form ?? {}) }, relatorio: d.relatorio ?? "" };
   } catch {
-    return { saida: "", form: FORM_VAZIO };
+    return { saida: "", form: FORM_VAZIO, relatorio: "" };
   }
+}
+
+// Resumo do relatório importado, extraído no cliente (sem gastar créditos de IA).
+// Puxa as secções-chave do método (diagnóstico, bio, o que funciona, ajustes,
+// métricas). Se não as encontrar, devolve as primeiras frases com substância.
+export function resumirAnalise(texto: string): string[] {
+  const t = (texto || "").replace(/\r/g, "").trim();
+  if (!t) return [];
+  const linhas = t.split("\n").map((l) => l.trim()).filter(Boolean);
+  const limpa = (s: string) => s.replace(/\*\*/g, "").replace(/^#+\s*/, "").replace(/^[-*•>\d.)\s]+/, "").trim();
+  const chaves: { k: RegExp; r: string }[] = [
+    { k: /diagn[óo]stico|panorama|vis[aã]o geral/i, r: "Diagnóstico" },
+    { k: /\bbio\b|biografia/i, r: "Bio proposta" },
+    { k: /padr(ão|ões)|o que (já )?funciona|o que resulta/i, r: "O que já funciona" },
+    { k: /ajuste|corre(ção|c[çc][aã]o)|imediat|a[çc][õo]es/i, r: "Ajustes imediatos" },
+    { k: /m[ée]tric|acompanhar|indicador|kpi/i, r: "Métricas a acompanhar" },
+  ];
+  const conteudoAposDp = (l: string) => (/[:：]/.test(l) ? l.split(/[:：]/).slice(1).join(":").trim() : "");
+  const out: string[] = [];
+  for (const { k, r } of chaves) {
+    // Aceita a linha se: tem "rótulo: conteúdo" (mesmo longa) OU é um cabeçalho curto (conteúdo na linha seguinte).
+    const idx = linhas.findIndex((l) => k.test(l) && (conteudoAposDp(l).length > 0 || limpa(l).length < 90));
+    if (idx < 0) continue;
+    const aposDp = conteudoAposDp(linhas[idx]);
+    const val = aposDp ? limpa(aposDp) : (linhas[idx + 1] ? limpa(linhas[idx + 1]) : "");
+    if (val) out.push(`${r}: ${val.slice(0, 170)}`);
+  }
+  if (out.length) return out.slice(0, 5);
+  return linhas.filter((l) => limpa(l).length > 25).slice(0, 4).map((l) => limpa(l).slice(0, 170));
 }
 
 export function saveAnalise(e: EstadoAnalise) {

@@ -1,13 +1,120 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import {
   ClipboardPaste, Plus, Trash2, ChevronDown, ChevronLeft, ChevronRight, Check, Link2,
-  Trophy, CalendarDays, Clock, Sparkles, Download, Printer, Sheet,
+  Trophy, CalendarDays, Clock, Sparkles, Download, Printer, Sheet, Upload, RotateCcw, LayoutGrid,
 } from "lucide-react";
 import { useProgresso } from "@/lib/use-progresso";
 import { chaveMes, chaveSemana } from "@/lib/gamificacao";
 import { getRankingMes } from "@/lib/gamificacao.functions";
 import { parsePlanoLeveza, type PecaLeveza } from "@/data/prompts/plano-leveza";
+import PromptCard from "./PromptCard";
+
+// Prompt que GERA o Plano Estratégico (caderno de conteúdo pronto a gravar).
+// Os [placeholders] são preenchidos com os dados desta conta (Documento Mestre +
+// Pilar 2) pelo PromptCard/fillPilar2Prompt — a aluna não preenche nada disso.
+// Termina com o bloco @@LEVEZA/@@DIA/@@FIM para o resultado importar e agendar
+// sozinho aqui na plataforma.
+// Formatos de conteúdo da Leveza (mesmos de "Formatos de Conteúdo"), mapeados
+// para o tipo que o importador @@LEVEZA entende (Reel / Carrossel / Stories).
+const FORMATOS_PLANO = ["Reels em série", "Yap Content", "Reels virais", "Carrosséis", "Stories", "Post estático"];
+const FORMATO_TIPO: Record<string, string> = {
+  "Reels em série": "Reel",
+  "Yap Content": "Reel",
+  "Reels virais": "Reel",
+  "Carrosséis": "Carrossel",
+  "Stories": "Stories",
+  "Post estático": "Reel",
+};
+
+// Monta o prompt do Plano Estratégico com as escolhas da aluna (frequência +
+// formatos) por cima do método. Os [placeholders] são preenchidos com os dados
+// da conta pelo PromptCard/fillPilar2Prompt.
+function montarPromptPlano(freqN: number, unidade: "dia" | "semana", formatos: string[], aleatorio: boolean): string {
+  const totalPecas = unidade === "dia" ? freqN * 30 : Math.round((freqN * 30) / 7);
+  const fmtTxt = aleatorio
+    ? `Varia livremente entre os formatos da Leveza (${FORMATOS_PLANO.join(", ")}) — tu escolhes a melhor mistura para os objetivos.`
+    : (formatos.length ? formatos.join(", ") : FORMATOS_PLANO.join(", "));
+  const baseTipos = aleatorio
+    ? ["Reel", "Carrossel", "Stories"]
+    : [...new Set((formatos.length ? formatos : FORMATOS_PLANO).map((f) => FORMATO_TIPO[f] || "Reel"))];
+  const tiposValidos = baseTipos.map((t) => `"${t}"`).join(", ");
+  return `És um estrategista de conteúdo e copywriter no método Cat.IA da Cátia Creator. A tua tarefa é gerar um CADERNO DE CONTEÚDO · PRONTO A GRAVAR para a pessoa abaixo, num calendário de 30 dias, com o texto escrito NA VOZ dela, pronto a publicar tal e qual.
+
+═══════════ DADOS DESTA CONTA (já preenchidos) ═══════════
+- NOME: [nome]
+- POSICIONAMENTO / TEMA: [promessa]
+- NICHO: [profissao] · [o_que_faz]
+- COMO RESOLVE: [como_resolve]
+- PÚBLICO: [publico]
+- DORES DO PÚBLICO:
+[dores_lista]
+- DESEJOS DO PÚBLICO:
+[desejos_lista]
+- VOZ / TOM: [tom_de_voz]
+- PALAVRAS A USAR: [palavras_usar]
+- PALAVRAS A EVITAR: [palavras_evitar]
+- PROVA SOCIAL / AUTORIDADE: [prova_social]
+
+═══════════ PLANO DE PUBLICAÇÃO ═══════════
+- FREQUÊNCIA: ${freqN} ${freqN === 1 ? "publicação" : "publicações"} por ${unidade} (cerca de ${totalPecas} peças em 30 dias).
+- FORMATOS: ${fmtTxt}
+
+═══════════ COMPLETA TU (rápido) ═══════════
+- @HANDLE: (escreve o teu @ do Instagram)
+- PALAVRA-CHAVE 1 (DM): [PALAVRA] → entrega: [o que a pessoa recebe]
+- PALAVRA-CHAVE 2 (DM): [PALAVRA] → entrega: [o que a pessoa recebe]
+═════════════════════════════════════════
+
+REGRAS DE ESCRITA
+- Escreve SEMPRE na 1ª pessoa, na VOZ/TOM acima. Nada de linguagem de marketing genérica.
+- Cada peça parte de uma tensão real do PÚBLICO (uma dor, um erro comum, uma confissão) e vira num insight ligado à tua autoridade/prova social.
+- Ganchos nos primeiros 3s têm de travar o scroll: frase curta, concreta, pessoal ou polémica. Nada de "Hoje vou falar sobre...".
+- Distribui as peças por um calendário de 30 dias (Dia 1 → Dia 30). Reel na Pub 1 do dia; carrosséis na Pub 2/3. Alterna temas para não repetir.
+- Termina sempre a levar para uma das duas PALAVRAS-CHAVE de DM.
+- Português europeu, sem emojis no corpo dos roteiros.
+
+═══════════ FORMATO DE SAÍDA ═══════════
+
+# CAPA
+CADERNO DE CONTEÚDO · PRONTO A GRAVAR
+[nome] | [promessa]
+Subtítulo: "Roteiros e carrosséis tirados do calendário de 30 dias. Texto na tua voz, para publicar tal e qual."
+
+# ROTEIROS DE REELS
+Para CADA Reel do plano:
+REEL [n] · Dia [x], Pub 1
+**[Título do Reel]**
+Gancho (0-3s): [frase de abertura]
+Tabela com 4 linhas | colunas: Momento | O que dizer | O que mostrar
+  - Momentos: 0-3s / 3-12s / 12-25s / 25-40s — texto falado em cada bloco + indicação visual (tu em câmara, cortes, placas, close, etc.)
+Fecho / CTA: [convite final + manda [PALAVRA] na DM]
+Legenda: [legenda pronta a colar, na tua voz, termina em pergunta ou CTA]
+Hashtags: [6 hashtags do nicho]
+
+# CARROSSÉIS
+Para CADA carrossel do plano:
+CARROSSEL [n] · Dia [x], Pub [2 ou 3]
+**[Título do carrossel]**
+Tabela com 7-8 linhas | colunas: Slide | Texto exato do slide | Visual
+  - Slide 1 = capa (título forte). Slides do meio = uma ideia por slide. Último slide = fecho com a PALAVRA-CHAVE de DM.
+  - Coluna Visual = direção de arte por slide (fundo, cor, ícone, moldura).
+Legenda: [legenda pronta a colar]
+CTA: Manda [PALAVRA] na DM e recebe [entrega].
+
+═══════════ BLOCO PARA A PLATAFORMA AGENDAR (obrigatório, no FIM) ═══════════
+Depois do caderno, acrescenta um bloco machine-readable para a plataforma agendar tudo sozinha.
+- Começa numa linha só com: @@LEVEZA
+- Para CADA peça, uma linha de cabeçalho: @@DIA <número do dia> | <tipo> | <título curto>
+  onde <tipo> é exatamente um de: ${tiposValidos}.
+  (Usa "Reel" para Reels em série, Yap Content, Reels virais e Post estático; "Carrossel" para carrosséis; "Stories" para stories.)
+- No título de cada peça, indica o formato da Leveza entre parênteses no fim (ex.: "... (Yap Content)").
+- Respeita a FREQUÊNCIA e os FORMATOS do PLANO DE PUBLICAÇÃO acima.
+- A seguir ao cabeçalho, escreve o texto/roteiro completo dessa peça (não comeces linhas de conteúdo com "@@").
+- Ordena por dia. Termina com uma linha só com: @@FIM
+
+Gera o caderno completo agora, peça a peça, sem resumir.`;
+}
 
 // Plano de Conteúdo — a aluna cola até 4 resultados do ChatGPT; a plataforma
 // parte-os em posts, ela agenda dia/mês/hora, e tudo aparece no calendário
@@ -61,6 +168,16 @@ export default function PlanoConteudo() {
   const [aberto, setAberto] = useState<string | null>(null);
   const [aviso, setAviso] = useState("");
   const [planoLevezaDraft, setPlanoLevezaDraft] = useState("");
+  const planoFileRef = useRef<HTMLInputElement>(null);
+  // Configurador do prompt do Plano Estratégico (frequência + formatos → gerar).
+  const [freqN, setFreqN] = useState(5);
+  const [unidade, setUnidade] = useState<"dia" | "semana">("semana");
+  const [fmts, setFmts] = useState<string[]>(["Reels virais", "Carrosséis", "Stories"]);
+  const [aleatorio, setAleatorio] = useState(true);
+  const [promptGerado, setPromptGerado] = useState("");
+  const toggleFmt = (f: string) => setFmts((p) => (p.includes(f) ? p.filter((x) => x !== f) : [...p, f]));
+  const mudarUnidade = (u: "dia" | "semana") => { setUnidade(u); setFreqN(u === "dia" ? 2 : 5); };
+  const gerarPromptPlano = () => setPromptGerado(montarPromptPlano(Math.max(1, freqN), unidade, fmts, aleatorio));
   const [abaImport, setAbaImport] = useState<"plano-leveza" | "pecas">("plano-leveza");
   const [mes, setMes] = useState(() => { const d = new Date(); return { y: d.getFullYear(), m: d.getMonth() }; });
   const [sheetsUrl, setSheetsUrl] = useState<string>(() => { try { return localStorage.getItem(SHEETS_KEY) || ""; } catch { return ""; } });
@@ -136,10 +253,11 @@ export default function PlanoConteudo() {
     Carrossel: "Carrosséis",
     Noite: "Stories",
   };
-  const importarPlanoLeveza = () => {
-    const pecas = parsePlanoLeveza(planoLevezaDraft);
+  const importarPlanoLeveza = (texto?: string) => {
+    const fonte = typeof texto === "string" ? texto : planoLevezaDraft;
+    const pecas = parsePlanoLeveza(fonte);
     if (!pecas.length) {
-      flash('Não encontrei o bloco do Plano Estratégico. Cola o resultado inteiro do Claude (com as linhas @@DIA).');
+      flash('Não encontrei o bloco do Plano Estratégico. Cola (ou carrega o ficheiro) do resultado inteiro do Claude (com as linhas @@DIA).');
       return;
     }
     const hoje = new Date();
@@ -160,6 +278,20 @@ export default function PlanoConteudo() {
     update((prev) => [...prev, ...novos]);
     setPlanoLevezaDraft("");
     flash(`${novos.length} posts do Plano Estratégico importados e agendados a partir de hoje ✓`);
+  };
+
+  // Carregar o Plano Estratégico a partir de um ficheiro (.txt guardado do Claude).
+  const carregarPlanoFicheiro = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // permite recarregar o mesmo ficheiro
+    if (!file) return;
+    try {
+      const texto = await file.text();
+      setPlanoLevezaDraft(texto);
+      importarPlanoLeveza(texto);
+    } catch {
+      flash("Não consegui ler o ficheiro. Tenta um ficheiro de texto (.txt).");
+    }
   };
 
   const setPost = (id: string, patch: Partial<Post>) => update((prev) => prev.map((p) => (p.id === id ? { ...p, ...patch } : p)));
@@ -367,27 +499,138 @@ export default function PlanoConteudo() {
           <div className="rounded-2xl border p-5" style={{ borderColor: "#C8487E40", background: "#C8487E0d" }}>
             <div className="flex items-center gap-2 mb-1">
               <Sparkles size={16} style={{ color: "#C8487E" }} />
-              <p className="text-sm font-semibold text-ink">Importar o teu Plano Estratégico</p>
+              <p className="text-sm font-semibold text-ink">O teu Plano Estratégico</p>
             </div>
             <p className="text-[13px] text-ink/60 mb-3 leading-relaxed">
-              Fizeste o <Link to="/metodo/pilar-2/redes-sociais?aba=criar" className="font-semibold" style={{ color: "#C8487E" }}>Plano Estratégico</Link> e
-              correste-o no Claude? Cola aqui o resultado <b>inteiro</b>. Cada peça entra já com o tipo certo e
-              <b> agendada dia a dia a partir de hoje</b> — não tens de colar uma a uma.
+              <b>Gera</b> o teu plano com o prompt abaixo (já leva o teu Documento Mestre — nome, público, dores e voz),
+              corre-o no Claude, e <b>traz o resultado de volta</b>. Cada peça entra já com o tipo certo e
+              <b> agendada dia a dia a partir de hoje</b>.
             </p>
+
+            {/* 1 · Configurar e gerar o prompt (já preenchido com os dados da conta) */}
+            {!promptGerado ? (
+              <div className="rounded-2xl border border-border bg-white p-4 mb-4">
+                <p className="text-sm font-semibold text-ink mb-0.5">1 · Gera o teu Plano Estratégico</p>
+                <p className="text-[12.5px] text-ink/55 mb-3">Escolhe o ritmo e os formatos. O prompt já leva os teus dados (Documento Mestre + Pilares).</p>
+
+                {/* Frequência — por dia ou por semana */}
+                <p className="text-[12px] font-semibold text-ink/70 mb-1.5">Com que frequência queres publicar?</p>
+                <div className="inline-flex gap-1 p-1 rounded-full bg-ink/5 mb-2">
+                  {(["dia", "semana"] as const).map((u) => (
+                    <button
+                      key={u}
+                      onClick={() => mudarUnidade(u)}
+                      className={`px-3.5 py-1.5 rounded-full text-[12.5px] font-semibold transition-colors ${unidade === u ? "bg-white text-ink shadow-sm" : "text-ink/55 hover:text-ink"}`}
+                    >
+                      por {u}
+                    </button>
+                  ))}
+                </div>
+                <div className="flex items-center gap-2 mb-4">
+                  <input
+                    type="number"
+                    min={1}
+                    inputMode="numeric"
+                    value={freqN || ""}
+                    onChange={(e) => { const n = parseInt(e.target.value, 10); setFreqN(Number.isNaN(n) ? 0 : Math.max(0, n)); }}
+                    placeholder="Nº"
+                    className="w-20 rounded-xl border border-border px-3 py-2 text-sm text-ink outline-none focus:border-[#C8487E] transition-colors"
+                  />
+                  <span className="text-[12px] text-ink/45">{freqN === 1 ? "vez" : "vezes"} por {unidade}</span>
+                </div>
+
+                {/* Formatos */}
+                <p className="text-[12px] font-semibold text-ink/70 mb-1.5">Que formatos?</p>
+                <div className="flex flex-wrap gap-1.5 mb-2">
+                  {FORMATOS_PLANO.map((f) => {
+                    const on = !aleatorio && fmts.includes(f);
+                    return (
+                      <button
+                        key={f}
+                        disabled={aleatorio}
+                        onClick={() => toggleFmt(f)}
+                        className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full border text-[13px] font-semibold transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${on ? "text-cream border-transparent" : "bg-white border-border text-ink/70 hover:border-[#C8487E]/50"}`}
+                        style={on ? { background: "#C8487E" } : undefined}
+                      >
+                        {on && <Check size={13} />} {f}
+                      </button>
+                    );
+                  })}
+                </div>
+                <label className="inline-flex items-center gap-2 text-[13px] text-ink/70 mb-4 cursor-pointer select-none">
+                  <input type="checkbox" checked={aleatorio} onChange={(e) => setAleatorio(e.target.checked)} className="w-4 h-4 accent-[#C8487E]" />
+                  Deixar aleatório (a IA escolhe a melhor mistura)
+                </label>
+
+                <div>
+                  <button
+                    onClick={gerarPromptPlano}
+                    disabled={freqN < 1 || (!aleatorio && fmts.length === 0)}
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold px-5 py-2.5 rounded-full text-cream transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    style={{ background: "#C8487E" }}
+                  >
+                    <Sparkles size={14} /> Gerar prompt
+                  </button>
+                  {!aleatorio && fmts.length === 0 && (
+                    <p className="text-[11px] text-amber-700 mt-1.5">Escolhe pelo menos um formato, ou marca "aleatório".</p>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <>
+                <PromptCard
+                  titulo="O teu prompt está pronto"
+                  descricao={`${aleatorio ? "Formatos à escolha da IA" : fmts.join(" · ")} · ${freqN}x por ${unidade}. Já leva os teus dados. Copia, corre no Claude, e volta aqui com o resultado.`}
+                  prompt={promptGerado}
+                  rotuloBotao="Copiar prompt do plano"
+                  agente="Claude"
+                  cor="#C8487E"
+                  botaoCor="#C8487E"
+                />
+                <div className="flex justify-end mb-4">
+                  <button
+                    onClick={() => setPromptGerado("")}
+                    className="text-[13px] font-semibold text-ink/60 hover:text-ink inline-flex items-center gap-1.5"
+                  >
+                    <RotateCcw size={13} /> Refazer prompt
+                  </button>
+                </div>
+              </>
+            )}
+
+            {/* 2 · Trazer de volta — colar ou carregar ficheiro */}
+            <p className="text-[13px] font-semibold text-ink mb-1.5">2 · Cola aqui o resultado (ou carrega o .txt)</p>
             <textarea
               rows={3}
               value={planoLevezaDraft}
               onChange={(e) => setPlanoLevezaDraft(e.target.value)}
-              placeholder="Cola aqui tudo o que o Claude devolveu (com as linhas @@DIA)…"
+              placeholder="Cola aqui tudo o que o Claude devolveu (com o bloco @@LEVEZA no fim)…"
               className="w-full rounded-xl border border-border p-2.5 text-sm outline-none focus:border-[#C8487E] transition-colors resize-none mb-2 bg-white"
             />
-            <button
-              onClick={importarPlanoLeveza}
-              className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full text-cream transition-colors"
-              style={{ background: "#C8487E" }}
-            >
-              <Sparkles size={14} /> Importar e agendar
-            </button>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => importarPlanoLeveza()}
+                className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full text-cream transition-colors"
+                style={{ background: "#C8487E" }}
+              >
+                <Sparkles size={14} /> Importar e agendar
+              </button>
+              <button
+                onClick={() => planoFileRef.current?.click()}
+                className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full border transition-colors bg-white text-ink/70 hover:text-ink"
+                style={{ borderColor: "#C8487E55" }}
+                title="Carrega o teu Plano Estratégico guardado (.txt) — importa direto"
+              >
+                <Upload size={14} /> Carregar ficheiro (.txt)
+              </button>
+              <input
+                ref={planoFileRef}
+                type="file"
+                accept=".txt,.md,.text,text/plain,text/markdown"
+                onChange={carregarPlanoFicheiro}
+                className="hidden"
+              />
+            </div>
           </div>
         )}
 
@@ -448,6 +691,13 @@ export default function PlanoConteudo() {
             >
               <Sheet size={14} /> Google Sheets
             </button>
+            <Link
+              to="/criar-carrosseis"
+              className="inline-flex items-center gap-1.5 text-[13px] font-semibold px-3.5 py-1.5 rounded-full border border-terracotta/40 bg-terracotta/[0.06] text-terracotta hover:bg-terracotta/12 transition-colors"
+              title="Junta todos os carrosséis do plano para criares no Carousel Snap"
+            >
+              <LayoutGrid size={14} /> Criar no Carousel Snap
+            </Link>
           </div>
         </div>
 
