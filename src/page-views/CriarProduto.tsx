@@ -250,8 +250,20 @@ export default function CriarProduto() {
   };
 
   // Exporta a esteira numa vista limpa para imprimir / "Guardar como PDF".
-  // Gera um PDF por PRODUTO. Passa a `key` do nível para exportar só esse produto.
-  const exportarProdutoPDF = (soKey: NivelKey) => {
+  // Gera um PDF por ENTREGÁVEL de um produto: página de vendas, stories ou posts.
+  type EntregavelTipo = "landing" | "stories" | "posts";
+  const ENTREGAVEL_LABEL: Record<EntregavelTipo, string> = {
+    landing: "Página de vendas",
+    stories: "Sequência de stories",
+    posts: "Posts de feed",
+  };
+  const entregavelTemAlgo = (k: NivelKey, tipo: EntregavelTipo): boolean => {
+    const n = esteira.niveis[k];
+    if (tipo === "landing") return !!(n.landing || "").trim();
+    if (tipo === "stories") return !!(n.stories || "").trim();
+    return [n.postsTopo, n.postsMeio, n.postsFundo].some((x) => (x || "").trim());
+  };
+  const exportarEntregavelPDF = (soKey: NivelKey, tipo: EntregavelTipo) => {
     const w = window.open("", "_blank");
     if (!w) { setAvisoNiveis("Permite pop-ups para gerar o PDF."); window.setTimeout(() => setAvisoNiveis(""), 4000); return; }
     const escH = (v: unknown) => String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -261,28 +273,67 @@ export default function CriarProduto() {
     const nivel = NIVEIS.find((x) => x.key === soKey) || NIVEIS[0];
     const { rotulo, cor } = nivel;
     const n = esteira.niveis[soKey];
-    const titulo = (n.nome || "").trim() || rotulo;
-    const meta = [n.formato && `Formato: ${escH(n.formato)}`, n.preco && `Preço: ${escH(n.preco)}`, n.transformacao && `Transformação: ${escH(n.transformacao)}`].filter(Boolean).join(" &middot; ");
-    const posts = (n.postsTopo || n.postsMeio || n.postsFundo)
-      ? `<h3>Posts de feed</h3>${bloco("Topo de funil", n.postsTopo)}${bloco("Meio de funil", n.postsMeio)}${bloco("Fundo de funil", n.postsFundo)}`
-      : "";
-    const corpo = `${bloco("Página de vendas", n.landing)}${bloco("Sequência de stories", n.stories)}${posts}`;
+    const produto = (n.nome || "").trim() || rotulo;
+    const label = ENTREGAVEL_LABEL[tipo];
+    void bloco; // (mantido para futuros blocos)
 
-    const html = `<!doctype html><html lang="pt"><head><meta charset="utf-8"><title>${escH(titulo)}</title>
+    const paras = (s: string) => escH(s).trim().split(/\n\s*\n/).filter(Boolean).map((p) => `<p>${p.replace(/\r?\n/g, "<br>")}</p>`).join("");
+
+    let corpoHtml = "";
+    if (tipo === "landing") {
+      corpoHtml = `<article class="copy">${paras(n.landing) || '<p class="vazio">Ainda sem página de vendas.</p>'}</article>`
+        + ((n.preco || n.formato || n.transformacao)
+          ? `<div class="oferta">${n.preco ? `<div class="preco-grande">${escH(n.preco)}</div>` : ""}${n.formato ? `<p class="of-meta">${escH(n.formato)}</p>` : ""}${n.transformacao ? `<p class="of-prom">${escH(n.transformacao)}</p>` : ""}</div>`
+          : "");
+    } else if (tipo === "stories") {
+      const st = paras(n.stories).replace(/(Dia\s*\d+[^:<]*:)/g, "<strong>$1</strong>");
+      corpoHtml = `<article class="copy">${st || '<p class="vazio">Ainda sem stories.</p>'}</article>`;
+    } else {
+      const pc = (lab: string, txt: string, c: string) => (txt && txt.trim())
+        ? `<div class="pcard"><span class="plabel" style="background:${c}">${lab}</span><div class="ptxt">${paras(txt)}</div></div>` : "";
+      corpoHtml = (pc("Topo &middot; atrair", n.postsTopo, "#2E7CB8") + pc("Meio &middot; nutrir", n.postsMeio, "#C8487E") + pc("Fundo &middot; vender", n.postsFundo, "#1c6b4a")) || '<p class="vazio">Ainda sem posts.</p>';
+    }
+
+    const subHero = n.transformacao ? escH(n.transformacao) : (n.formato ? escH(n.formato) : "");
+
+    const html = `<!doctype html><html lang="pt"><head><meta charset="utf-8"><title>${escH(produto)} — ${escH(label)}</title>
 <style>
-  *{box-sizing:border-box} body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#2b2521;margin:32px;line-height:1.5}
-  .tag{display:inline-block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:#fff;background:${cor};border-radius:999px;padding:3px 10px;margin:0 0 8px}
-  h1{font-size:24px;margin:0 0 2px;color:#2b2521} .sub{color:#8a8078;font-size:13px;margin:0 0 18px}
-  h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#8a8078;margin:16px 0 4px}
-  .meta{color:#6b6157;font-size:13px;margin:0 0 6px}
-  .corpo{white-space:normal;font-size:13.5px;color:#2b2521;background:#faf7f2;border:1px solid #f0ece4;border-radius:8px;padding:10px 12px}
-  @media print{body{margin:12mm}}
+  :root{--p:#1c6b4a;--esc:#0f3d2e;--clara:#eafaf0;--cinza:#6b7a72;--txt:#24302a}
+  *{box-sizing:border-box;margin:0;padding:0}
+  @page{margin:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--txt);line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .hero{background:linear-gradient(160deg,var(--esc),var(--p));color:#fff;padding:46px 44px 36px}
+  .eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.82);font-weight:700;margin-bottom:14px}
+  .tag{display:inline-block;border:1px solid rgba(255,255,255,.45);border-radius:40px;padding:5px 14px;font-size:12px;letter-spacing:.04em;margin-bottom:16px}
+  .hero h1{font-size:30px;line-height:1.15;font-weight:800;margin-bottom:8px}
+  .hero .sub{font-size:15px;opacity:.95;max-width:600px}
+  .hero .preco{display:inline-block;margin-top:18px;background:#fff;color:var(--esc);font-weight:800;font-size:15px;border-radius:40px;padding:9px 20px}
+  .main{padding:32px 44px 40px}
+  h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--cinza);margin:0 0 12px}
+  .copy p{font-size:14px;margin:0 0 12px;color:var(--txt)}
+  .copy strong{color:var(--esc)}
+  .vazio{color:var(--cinza);font-style:italic}
+  .oferta{margin-top:26px;background:#fff;border:2px solid var(--p);border-radius:18px;padding:26px;text-align:center;box-shadow:0 14px 34px rgba(15,61,46,.08)}
+  .oferta .preco-grande{font-size:40px;font-weight:800;color:var(--esc)}
+  .oferta .of-meta{color:var(--cinza);font-size:14px;margin-top:4px}
+  .oferta .of-prom{color:var(--txt);font-size:14px;margin-top:10px}
+  .pcard{border:1px solid #e3ece7;border-radius:12px;padding:16px 18px;margin:0 0 14px;background:#fff;page-break-inside:avoid}
+  .plabel{display:inline-block;color:#fff;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:40px;padding:3px 12px;margin-bottom:10px}
+  .ptxt p{font-size:14px;margin:0 0 8px}
+  .footer{padding:16px 44px;color:var(--cinza);font-size:12px;border-top:1px solid #e3ece7}
 </style></head><body>
-  <span class="tag">${escH(rotulo)}</span>
-  <h1>${escH(titulo)}</h1>
-  <p class="sub">${escH(doc.nome || "Cátia Creator")} &middot; ${escH(new Date().toLocaleDateString("pt-PT"))}</p>
-  ${meta ? `<p class="meta">${meta}</p>` : ""}
-  ${corpo || '<p class="meta">Este produto ainda está vazio.</p>'}
+  <div class="hero">
+    <div class="eyebrow">Cátia Creator &middot; Conteúdo com IA</div>
+    <span class="tag">${escH(rotulo)} &middot; ${escH(label)}</span>
+    <h1>${escH(produto)}</h1>
+    ${subHero ? `<p class="sub">${subHero}</p>` : ""}
+    ${n.preco ? `<div class="preco">${escH(n.preco)}</div>` : ""}
+  </div>
+  <div class="main">
+    <h3>${escH(label)}</h3>
+    ${corpoHtml}
+  </div>
+  <div class="footer">${escH(doc.nome || "Cátia Creator")} &middot; ${escH(label)} &middot; ${escH(new Date().toLocaleDateString("pt-PT"))}</div>
 </body></html>`;
     w.document.write(html);
     w.document.close();
@@ -290,11 +341,17 @@ export default function CriarProduto() {
     window.setTimeout(() => { try { w.print(); } catch { /* ignora */ } }, 350);
   };
 
-  // Um produto está "pronto" para PDF se tiver algum conteúdo preenchido.
-  const nivelTemAlgo = (k: NivelKey) => {
-    const n = esteira.niveis[k];
-    return [n.nome, n.formato, n.preco, n.transformacao, n.landing, n.stories, n.postsTopo, n.postsMeio, n.postsFundo].some((x) => (x || "").trim());
-  };
+  // Botão pequeno de PDF por entregável (usado dentro de cada produto).
+  const BotaoPDFEntregavel = ({ k, tipo }: { k: NivelKey; tipo: EntregavelTipo }) => (
+    <button
+      onClick={() => exportarEntregavelPDF(k, tipo)}
+      disabled={!entregavelTemAlgo(k, tipo)}
+      className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-terracotta/40 bg-terracotta/[0.06] px-3 py-1.5 text-[12.5px] font-semibold text-terracotta hover:bg-terracotta/12 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+      title="Descarregar este entregável em PDF (Guardar como PDF)"
+    >
+      <FileText size={13} /> Descarregar PDF
+    </button>
+  );
 
   if (!carregado) return <Layout><div className="py-20 text-center text-ink/40">A carregar…</div></Layout>;
 
@@ -580,16 +637,9 @@ export default function CriarProduto() {
                   const n = esteira.niveis[key];
                   return (
                         <div className="rounded-2xl border border-border bg-white px-5 py-5">
-                          <div className="mb-4 flex items-center justify-between gap-3 flex-wrap">
+                          <div className="mb-4">
                             <p className="text-[13px] font-semibold text-ink/70">Produto: <span style={{ color: cor }}>{rotulo}</span></p>
-                            <button
-                              onClick={() => exportarProdutoPDF(key)}
-                              disabled={!nivelTemAlgo(key)}
-                              className="inline-flex items-center gap-1.5 rounded-full border border-terracotta/40 bg-terracotta/[0.06] px-3.5 py-1.5 text-[13px] font-semibold text-terracotta hover:bg-terracotta/12 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-                              title="Descarrega só este produto em PDF (Guardar como PDF)"
-                            >
-                              <FileText size={14} /> Descarregar PDF deste produto
-                            </button>
+                            <p className="text-[12px] text-ink/50">Cada entregável tem o seu PDF (botão por baixo de cada um).</p>
                           </div>
                           <div className="grid gap-3 sm:grid-cols-2 mb-5">
                             <Campo label="Nome do produto" value={n.nome} onChange={(v) => setNivel(key, { nome: v })} />
@@ -607,6 +657,7 @@ export default function CriarProduto() {
                             cor={COR} botaoCor={COR} agente="Cat.IA" agenteUrl={catIa.url} agentePass={catIa.password}
                           />
                           <ColarResultado label="Página de vendas" value={n.landing} onChange={(v) => setNivel(key, { landing: v })} />
+                          <BotaoPDFEntregavel k={key} tipo="landing" />
 
                           <PromptCard
                             numero={3}
@@ -617,6 +668,7 @@ export default function CriarProduto() {
                             cor={COR} botaoCor={COR} agente="Cat.IA" agenteUrl={catIa.url} agentePass={catIa.password}
                           />
                           <ColarResultado label="Sequência de stories" value={n.stories} onChange={(v) => setNivel(key, { stories: v })} />
+                          <BotaoPDFEntregavel k={key} tipo="stories" />
 
                           <PromptCard
                             numero={4}
@@ -650,6 +702,7 @@ export default function CriarProduto() {
                           <ColarResultado label="Topo de funil (atrair)" value={n.postsTopo} onChange={(v) => setNivel(key, { postsTopo: v })} />
                           <ColarResultado label="Meio de funil (nutrir)" value={n.postsMeio} onChange={(v) => setNivel(key, { postsMeio: v })} />
                           <ColarResultado label="Fundo de funil (vender)" value={n.postsFundo} onChange={(v) => setNivel(key, { postsFundo: v })} />
+                          <BotaoPDFEntregavel k={key} tipo="posts" />
                         </div>
                   );
                 })()}
