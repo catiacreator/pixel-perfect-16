@@ -29,6 +29,54 @@ function textOf(m: UIMessage): string {
   return m.parts.map((p) => (p.type === "text" ? p.text : "")).join("").trim();
 }
 
+// Contexto extra do aluno para além do Documento Mestre + Método: os pilares
+// definidos, o plano de posts atual (estado + resultados) e a análise de perfil
+// guardada. Lido do localStorage (espelhado do servidor) em cada envio.
+function contextoExtra(): string {
+  if (typeof window === "undefined") return "";
+  const ler = (k: string): any => {
+    try { const r = localStorage.getItem(k); return r ? JSON.parse(r) : null; } catch { return null; }
+  };
+  const partes: string[] = [];
+
+  const pilares = ler("leveza.pilares-conteudo.v1");
+  if (Array.isArray(pilares)) {
+    const linhas = pilares
+      .filter((p) => String(p?.nome ?? "").trim())
+      .map((p, i) => `${i + 1}. ${p.nome}${p.ensina ? ` — ${p.ensina}` : ""}${p.objetivo ? ` (${p.objetivo})` : ""}`);
+    if (linhas.length) partes.push(`PILARES DE CONTEÚDO:\n${linhas.join("\n")}`);
+  }
+
+  const plano = ler("leveza.plano-conteudo.v1");
+  const posts: any[] = Array.isArray(plano?.posts) ? plano.posts : [];
+  if (posts.length) {
+    const publicados = posts.filter((p) => p?.pubId).length;
+    const agendados = posts.filter((p) => p?.data).length;
+    const RES: Record<string, string> = { bom: "resultou", medio: "assim-assim", mau: "não resultou" };
+    const proximos = posts
+      .filter((p) => p?.data)
+      .sort((a, b) => String(a.data).localeCompare(String(b.data)))
+      .slice(0, 8)
+      .map((p) => `- ${p.data}${p.hora ? ` ${p.hora}` : ""} · ${p.tipo || "Post"}: ${p.titulo || ""}${p.pubId ? " [publicado]" : ""}`);
+    const resultados = posts
+      .filter((p) => p?.resultado)
+      .slice(0, 8)
+      .map((p) => `- ${p.titulo || "Post"}: ${RES[p.resultado] || p.resultado}${p.nota ? ` — ${p.nota}` : ""}`);
+    let txt = `PLANO DE POSTS (atual): ${posts.length} no plano, ${publicados} publicados, ${agendados} agendados.`;
+    if (proximos.length) txt += `\nPróximos:\n${proximos.join("\n")}`;
+    if (resultados.length) txt += `\nResultados registados pela aluna:\n${resultados.join("\n")}`;
+    partes.push(txt);
+  }
+
+  const analise = ler("leveza.maquina-analises.v1");
+  const relatorio = String(analise?.relatorio ?? "").trim();
+  if (relatorio) {
+    partes.push(`ANÁLISE DE PERFIL (relatório guardado pela aluna):\n${relatorio.slice(0, 2000)}${relatorio.length > 2000 ? "…" : ""}`);
+  }
+
+  return partes.join("\n\n");
+}
+
 const SUGESTOES = [
   "Qual é o meu próximo passo?",
   "Por onde começo?",
@@ -147,7 +195,7 @@ function ChatInner({
     return () => window.removeEventListener("leveza:hydrated", onChange);
   }, []);
   const userContextRef = useRef("");
-  userContextRef.current = perfilContexto(doc, metodo);
+  userContextRef.current = [perfilContexto(doc, metodo), contextoExtra()].filter((s) => s && s.trim()).join("\n\n");
 
   const transport = useMemo(
     () =>

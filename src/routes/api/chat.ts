@@ -140,7 +140,7 @@ export const Route = createFileRoute("/api/chat")({
 
         const base = (body.mode && PROMPTS[body.mode]) || SYSTEM_PROMPT;
         const system = body.userContext?.trim()
-          ? `${base}\n\n## Sobre o utilizador (Documento Mestre + Método desta conta)\n${body.userContext.trim()}`
+          ? `${base}\n\n## Sobre o utilizador (dados desta conta: Documento Mestre, método, pilares, plano de posts e análise de perfil)\n${body.userContext.trim()}`
           : base;
 
         let model;
