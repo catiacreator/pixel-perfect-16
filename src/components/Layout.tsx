@@ -8,6 +8,7 @@ import { readStoredSession } from "@/lib/session";
 import ThemeToggle from "@/components/ThemeToggle";
 import UserMenu from "@/components/UserMenu";
 import QuickIdeas from "@/components/QuickIdeas";
+import AgenteChat from "@/components/AgenteChat";
 import ModulePaywall from "@/components/ModulePaywall";
 import PreviewTurmaModal from "@/components/PreviewTurmaModal";
 import EmManutencao from "@/components/EmManutencao";
@@ -538,6 +539,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
       {/* Com o painel dos cursos aberto, o botão flutuante ficaria por cima dele. */}
       {signedIn && !open && <QuickIdeas />}
+      {signedIn && !open && <AgenteChat />}
       {isAdmin && <PreviewTurmaModal />}
     </div>
   );
