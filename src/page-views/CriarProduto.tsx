@@ -8,7 +8,7 @@ import {
 import PromptCard from "../components/PromptCard";
 import ColarResultado from "../components/ColarResultado";
 import { useCatIaConfig } from "@/lib/cat-ia";
-import { type DocState, type Produto, EMPTY, padArray } from "@/lib/doc-mestre";
+import { type DocState, type Produto, EMPTY, padArray, loadInitial as loadDocPrincipal } from "@/lib/doc-mestre";
 import {
   type Esteira, type NivelKey, type ProdutoNivel,
   ESTEIRA_EMPTY, ESTEIRA_KEY, NIVEIS,
@@ -101,6 +101,7 @@ export default function CriarProduto() {
   const [nivelAberto, setNivelAberto] = useState<Record<NivelKey, boolean>>({ low: true, medio: false, alto: false });
   const [colaPublico, setColaPublico] = useState("");
   const [preenchidoAviso, setPreenchidoAviso] = useState("");
+  const [fonteDoc, setFonteDoc] = useState<"" | "principal" | "zero">("");
   const [avisoNiveis, setAvisoNiveis] = useState("");
   const [colaPosts, setColaPosts] = useState<Record<NivelKey, string>>({ low: "", medio: "", alto: "" });
   const [avisoPosts, setAvisoPosts] = useState<Record<NivelKey, string>>({ low: "", medio: "", alto: "" });
@@ -119,6 +120,23 @@ export default function CriarProduto() {
       return next;
     });
   };
+  // Traz os dados do Documento Mestre PRINCIPAL (e da jornada) para este produto.
+  // Só sobrepõe os campos que estão preenchidos no principal — não apaga nada.
+  const buscarDoDocPrincipal = () => {
+    const p = loadDocPrincipal();
+    const merged: DocState = { ...doc };
+    (Object.keys(p) as (keyof DocState)[]).forEach((k) => {
+      const val = p[k] as unknown;
+      const temValor = Array.isArray(val) ? val.some((x) => String(x ?? "").trim()) : String(val ?? "").trim();
+      if (temValor) (merged as Record<string, unknown>)[k] = val;
+    });
+    setDoc(merged);
+    try { window.localStorage.setItem(PRODUTO_DOC_KEY, JSON.stringify(merged)); } catch { /* quota */ }
+    setFonteDoc("principal");
+    setPreenchidoAviso("Trouxe os teus dados do Documento Mestre principal. Ajusta o que for específico deste produto.");
+    window.setTimeout(() => setPreenchidoAviso(""), 4000);
+  };
+
   const guardarEsteira = (next: Esteira) => {
     try { window.localStorage.setItem(ESTEIRA_KEY, JSON.stringify(next)); } catch { /* quota */ }
     return next;
@@ -266,6 +284,35 @@ export default function CriarProduto() {
               <p className="mb-6 max-w-2xl text-lg text-ink/70">
                 Esta é a base deste produto — <strong>separada</strong> do teu Documento Mestre principal. É esta base que <strong>alimenta todos os prompts</strong> da página seguinte, por isso quanto melhor a preencheres, melhor o resultado.
               </p>
+
+              {!fonteDoc && !doc.nome.trim() && (() => {
+                const principal = loadDocPrincipal();
+                const temPrincipal = !!(String(principal.nome ?? "").trim() || String(principal.oQueFaz ?? "").trim() || String(principal.publico ?? "").trim());
+                return (
+                  <div className="mb-6 rounded-2xl border-2 border-terracotta/25 bg-terracotta/[0.05] p-5">
+                    <p className="text-sm font-semibold text-ink mb-1">Como queres começar esta base?</p>
+                    <p className="text-[13px] text-ink/60 mb-3">Aproveita o teu <strong>Documento Mestre principal</strong> (e a tua jornada) — trago o nome, o que fazes, como resolves, o público, as dores e o tom de voz — ou começa do zero.</p>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={buscarDoDocPrincipal}
+                        disabled={!temPrincipal}
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full bg-terracotta text-cream hover:bg-terracotta-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                      >
+                        <FileText size={14} /> Buscar do Documento Mestre
+                      </button>
+                      <button
+                        onClick={() => setFonteDoc("zero")}
+                        className="inline-flex items-center gap-1.5 text-sm font-semibold px-4 py-2 rounded-full border border-border bg-white text-ink/70 hover:text-ink transition-colors"
+                      >
+                        Começar do zero
+                      </button>
+                    </div>
+                    {!temPrincipal && (
+                      <p className="text-[11px] text-ink/45 mt-2">O teu Documento Mestre principal ainda está vazio — preenche-o primeiro para o aproveitares aqui.</p>
+                    )}
+                  </div>
+                );
+              })()}
 
               <div className="space-y-6">
                 <div className="rounded-2xl border border-border bg-cream-warm/30 p-5 space-y-4">
