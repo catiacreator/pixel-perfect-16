@@ -214,6 +214,17 @@ export default function CriarProduto() {
 
   const docPreenchido = !!(doc.nome.trim() && doc.publico.trim());
 
+  // Regra do download: basta haver ALGUM conteúdo na esteira (mesmo 1 produto ou
+  // 1 campo preenchido) — não exige os 9 entregáveis completos.
+  const temEsteiraAlgo = useMemo(() => {
+    const niveis = (Object.keys(esteira.niveis) as NivelKey[]).some((k) => {
+      const n = esteira.niveis[k];
+      return [n.nome, n.formato, n.preco, n.transformacao, n.landing, n.stories, n.postsTopo, n.postsMeio, n.postsFundo].some((x) => (x || "").trim());
+    });
+    const produtos = doc.produtos.some((p) => (p.nome || p.descricao || p.ticketMedio).trim());
+    return niveis || produtos;
+  }, [esteira, doc.produtos]);
+
   const exportarEsteira = () => {
     const linhas: string[] = [`# A minha esteira de produtos — ${doc.nome || "Cátia Creator"}`, ""];
     NIVEIS.forEach(({ key, rotulo }) => {
@@ -644,11 +655,11 @@ export default function CriarProduto() {
                 <h3 className="mb-1 font-serif text-2xl">A tua esteira completa</h3>
                 <p className="mx-auto mb-4 max-w-lg text-cream/85">{progresso}/9 entregáveis prontos. Descarrega tudo num ficheiro.</p>
                 <div className="flex flex-wrap items-center justify-center gap-2.5">
-                  <button onClick={exportarEsteiraPDF} disabled={progresso === 0}
+                  <button onClick={exportarEsteiraPDF} disabled={!temEsteiraAlgo}
                     className="inline-flex items-center gap-2 rounded-full bg-cream px-6 py-3 text-sm font-semibold text-terracotta-dark hover:bg-white transition-colors disabled:opacity-50">
                     <FileText size={16} /> Descarregar PDF
                   </button>
-                  <button onClick={exportarEsteira} disabled={progresso === 0}
+                  <button onClick={exportarEsteira} disabled={!temEsteiraAlgo}
                     className="inline-flex items-center gap-2 rounded-full border border-cream/60 px-5 py-3 text-sm font-semibold text-cream hover:bg-cream/10 transition-colors disabled:opacity-50">
                     <Download size={16} /> Ficheiro .txt
                   </button>
