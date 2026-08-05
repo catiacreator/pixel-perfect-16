@@ -250,57 +250,50 @@ export default function CriarProduto() {
   };
 
   // Exporta a esteira numa vista limpa para imprimir / "Guardar como PDF".
-  const exportarEsteiraPDF = () => {
+  // Gera um PDF por PRODUTO. Passa a `key` do nível para exportar só esse produto.
+  const exportarProdutoPDF = (soKey: NivelKey) => {
     const w = window.open("", "_blank");
     if (!w) { setAvisoNiveis("Permite pop-ups para gerar o PDF."); window.setTimeout(() => setAvisoNiveis(""), 4000); return; }
     const escH = (v: unknown) => String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const nl2br = (s: string) => escH(s).replace(/\r?\n/g, "<br>");
     const bloco = (titulo: string, txt?: string) => (txt && txt.trim()) ? `<h3>${escH(titulo)}</h3><div class="corpo">${nl2br(txt)}</div>` : "";
 
-    const produtosAtuais = doc.produtos.filter((p) => (p.nome || p.descricao || p.ticketMedio).trim());
-    const secProdutos = produtosAtuais.length
-      ? `<section><h2>Produtos/serviços que já tens</h2><ul>${produtosAtuais.map((p) => `<li><b>${escH(p.nome)}</b>${p.ticketMedio ? ` — ${escH(p.ticketMedio)}` : ""}${p.descricao ? `<br><span class="meta">${escH(p.descricao)}</span>` : ""}</li>`).join("")}</ul></section>`
+    const nivel = NIVEIS.find((x) => x.key === soKey) || NIVEIS[0];
+    const { rotulo, cor } = nivel;
+    const n = esteira.niveis[soKey];
+    const titulo = (n.nome || "").trim() || rotulo;
+    const meta = [n.formato && `Formato: ${escH(n.formato)}`, n.preco && `Preço: ${escH(n.preco)}`, n.transformacao && `Transformação: ${escH(n.transformacao)}`].filter(Boolean).join(" &middot; ");
+    const posts = (n.postsTopo || n.postsMeio || n.postsFundo)
+      ? `<h3>Posts de feed</h3>${bloco("Topo de funil", n.postsTopo)}${bloco("Meio de funil", n.postsMeio)}${bloco("Fundo de funil", n.postsFundo)}`
       : "";
+    const corpo = `${bloco("Página de vendas", n.landing)}${bloco("Sequência de stories", n.stories)}${posts}`;
 
-    const secNiveis = NIVEIS.map(({ key, rotulo, cor }) => {
-      const n = esteira.niveis[key];
-      const temAlgo = [n.nome, n.formato, n.transformacao, n.preco, n.landing, n.stories, n.postsTopo, n.postsMeio, n.postsFundo].some((x) => (x || "").trim());
-      if (!temAlgo) return "";
-      const meta = [n.formato && `Formato: ${escH(n.formato)}`, n.preco && `Preço: ${escH(n.preco)}`, n.transformacao && `Transformação: ${escH(n.transformacao)}`].filter(Boolean).join(" &middot; ");
-      const posts = (n.postsTopo || n.postsMeio || n.postsFundo)
-        ? `<h3>Posts de feed</h3>${bloco("Topo de funil", n.postsTopo)}${bloco("Meio de funil", n.postsMeio)}${bloco("Fundo de funil", n.postsFundo)}`
-        : "";
-      return `<section>
-        <h2 style="border-color:${cor}"><span class="dot" style="background:${cor}"></span>${escH(rotulo)}${n.nome ? ` — ${escH(n.nome)}` : ""}</h2>
-        ${meta ? `<p class="meta">${meta}</p>` : ""}
-        ${bloco("Página de vendas", n.landing)}
-        ${bloco("Sequência de stories", n.stories)}
-        ${posts}
-      </section>`;
-    }).join("");
-
-    const html = `<!doctype html><html lang="pt"><head><meta charset="utf-8"><title>Esteira de produtos</title>
+    const html = `<!doctype html><html lang="pt"><head><meta charset="utf-8"><title>${escH(titulo)}</title>
 <style>
   *{box-sizing:border-box} body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#2b2521;margin:32px;line-height:1.5}
-  h1{font-size:24px;margin:0 0 2px;color:#2f9e6e} .sub{color:#8a8078;font-size:13px;margin:0 0 22px}
-  section{margin:0 0 26px;page-break-inside:avoid}
-  h2{font-size:17px;margin:0 0 6px;padding-bottom:6px;border-bottom:2px solid #eee;display:flex;align-items:center;gap:8px}
-  .dot{width:12px;height:12px;border-radius:3px;display:inline-block}
-  h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#8a8078;margin:14px 0 4px}
+  .tag{display:inline-block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:#fff;background:${cor};border-radius:999px;padding:3px 10px;margin:0 0 8px}
+  h1{font-size:24px;margin:0 0 2px;color:#2b2521} .sub{color:#8a8078;font-size:13px;margin:0 0 18px}
+  h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#8a8078;margin:16px 0 4px}
   .meta{color:#6b6157;font-size:13px;margin:0 0 6px}
   .corpo{white-space:normal;font-size:13.5px;color:#2b2521;background:#faf7f2;border:1px solid #f0ece4;border-radius:8px;padding:10px 12px}
-  ul{margin:0;padding-left:18px} li{margin:0 0 6px;font-size:13.5px}
   @media print{body{margin:12mm}}
 </style></head><body>
-  <h1>A minha esteira de produtos</h1>
+  <span class="tag">${escH(rotulo)}</span>
+  <h1>${escH(titulo)}</h1>
   <p class="sub">${escH(doc.nome || "Cátia Creator")} &middot; ${escH(new Date().toLocaleDateString("pt-PT"))}</p>
-  ${secProdutos}
-  ${secNiveis || '<p class="meta">Ainda não há produtos preenchidos na esteira.</p>'}
+  ${meta ? `<p class="meta">${meta}</p>` : ""}
+  ${corpo || '<p class="meta">Este produto ainda está vazio.</p>'}
 </body></html>`;
     w.document.write(html);
     w.document.close();
     w.focus();
     window.setTimeout(() => { try { w.print(); } catch { /* ignora */ } }, 350);
+  };
+
+  // Um produto está "pronto" para PDF se tiver algum conteúdo preenchido.
+  const nivelTemAlgo = (k: NivelKey) => {
+    const n = esteira.niveis[k];
+    return [n.nome, n.formato, n.preco, n.transformacao, n.landing, n.stories, n.postsTopo, n.postsMeio, n.postsFundo].some((x) => (x || "").trim());
   };
 
   if (!carregado) return <Layout><div className="py-20 text-center text-ink/40">A carregar…</div></Layout>;
@@ -587,6 +580,17 @@ export default function CriarProduto() {
                   const n = esteira.niveis[key];
                   return (
                         <div className="rounded-2xl border border-border bg-white px-5 py-5">
+                          <div className="mb-4 flex items-center justify-between gap-3 flex-wrap">
+                            <p className="text-[13px] font-semibold text-ink/70">Produto: <span style={{ color: cor }}>{rotulo}</span></p>
+                            <button
+                              onClick={() => exportarProdutoPDF(key)}
+                              disabled={!nivelTemAlgo(key)}
+                              className="inline-flex items-center gap-1.5 rounded-full border border-terracotta/40 bg-terracotta/[0.06] px-3.5 py-1.5 text-[13px] font-semibold text-terracotta hover:bg-terracotta/12 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                              title="Descarrega só este produto em PDF (Guardar como PDF)"
+                            >
+                              <FileText size={14} /> Descarregar PDF deste produto
+                            </button>
+                          </div>
                           <div className="grid gap-3 sm:grid-cols-2 mb-5">
                             <Campo label="Nome do produto" value={n.nome} onChange={(v) => setNivel(key, { nome: v })} />
                             <Campo label="Formato" value={n.formato} onChange={(v) => setNivel(key, { formato: v })} placeholder="ebook, curso, mentoria…" />
@@ -653,15 +657,11 @@ export default function CriarProduto() {
                 <div className="mt-8 rounded-2xl bg-gradient-to-br from-terracotta-dark to-terracotta p-8 text-center text-cream">
                 <Sparkles size={22} className="mx-auto mb-2" />
                 <h3 className="mb-1 font-serif text-2xl">A tua esteira completa</h3>
-                <p className="mx-auto mb-4 max-w-lg text-cream/85">{progresso}/9 entregáveis prontos. Descarrega tudo num ficheiro.</p>
+                <p className="mx-auto mb-4 max-w-lg text-cream/85">{progresso}/9 entregáveis prontos. <b>Cada produto tem o seu PDF</b> — usa o botão dentro de cada nível acima. Aqui podes descarregar a esteira toda em texto.</p>
                 <div className="flex flex-wrap items-center justify-center gap-2.5">
-                  <button onClick={exportarEsteiraPDF} disabled={!temEsteiraAlgo}
-                    className="inline-flex items-center gap-2 rounded-full bg-cream px-6 py-3 text-sm font-semibold text-terracotta-dark hover:bg-white transition-colors disabled:opacity-50">
-                    <FileText size={16} /> Descarregar PDF
-                  </button>
                   <button onClick={exportarEsteira} disabled={!temEsteiraAlgo}
-                    className="inline-flex items-center gap-2 rounded-full border border-cream/60 px-5 py-3 text-sm font-semibold text-cream hover:bg-cream/10 transition-colors disabled:opacity-50">
-                    <Download size={16} /> Ficheiro .txt
+                    className="inline-flex items-center gap-2 rounded-full bg-cream px-6 py-3 text-sm font-semibold text-terracotta-dark hover:bg-white transition-colors disabled:opacity-50">
+                    <Download size={16} /> Descarregar tudo (.txt)
                   </button>
                 </div>
                 </div>
