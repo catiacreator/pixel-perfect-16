@@ -206,15 +206,13 @@ export default function CriarProduto() {
   const updProduto = (i: number, patch: Partial<Produto>) => setDocCampo("produtos", doc.produtos.map((p, j) => (j === i ? { ...p, ...patch } : p)));
   const delProduto = (i: number) => setDocCampo("produtos", doc.produtos.filter((_, j) => j !== i));
 
+  // 1 documento por produto (low/médio/alto) — conta os produtos com conteúdo.
+  const TOTAL_DOCS = 3;
   const progresso = useMemo(() => {
-    let feito = 0;
-    (Object.keys(esteira.niveis) as NivelKey[]).forEach((k) => {
+    return (Object.keys(esteira.niveis) as NivelKey[]).filter((k) => {
       const n = esteira.niveis[k];
-      if (n.landing.trim()) feito++;
-      if (n.stories.trim()) feito++;
-      if ([n.postsTopo, n.postsMeio, n.postsFundo].some((x) => x.trim())) feito++;
-    });
-    return feito;
+      return [n.landing, n.stories, n.postsTopo, n.postsMeio, n.postsFundo].some((x) => (x || "").trim());
+    }).length;
   }, [esteira]);
 
   const docPreenchido = !!(doc.nome.trim() && doc.publico.trim());
@@ -526,7 +524,7 @@ export default function CriarProduto() {
             </nav>
             <div className="mt-5 rounded-xl border border-border bg-cream-warm/30 px-4 py-3">
               <p className="text-[11px] uppercase tracking-[0.1em] text-ink/45">Progresso</p>
-              <p className="mt-0.5 text-sm text-ink/70"><strong className="text-terracotta">{progresso}/9</strong> entregáveis</p>
+              <p className="mt-0.5 text-sm text-ink/70"><strong className="text-terracotta">{progresso}/{TOTAL_DOCS}</strong> documentos</p>
             </div>
           </div>
         </aside>
@@ -865,7 +863,7 @@ export default function CriarProduto() {
                 <div className="mt-8 rounded-2xl bg-gradient-to-br from-terracotta-dark to-terracotta p-8 text-center text-cream">
                 <Sparkles size={22} className="mx-auto mb-2" />
                 <h3 className="mb-1 font-serif text-2xl">A tua esteira completa</h3>
-                <p className="mx-auto mb-4 max-w-lg text-cream/85">{progresso}/9 entregáveis prontos. <b>Cada produto tem o seu documento</b> — usa o botão “Descarregar documento” em cada nível acima. Aqui descarregas a esteira toda num único ficheiro de texto.</p>
+                <p className="mx-auto mb-4 max-w-lg text-cream/85">{progresso}/{TOTAL_DOCS} documentos prontos. <b>Cada produto tem o seu documento</b> — usa o botão “Descarregar documento” em cada nível acima. Aqui descarregas a esteira toda num único ficheiro de texto.</p>
                 <div className="flex flex-wrap items-center justify-center gap-2.5">
                   <button onClick={exportarEsteira} disabled={!temEsteiraAlgo}
                     className="inline-flex items-center gap-2 rounded-full bg-cream px-6 py-3 text-sm font-semibold text-terracotta-dark hover:bg-white transition-colors disabled:opacity-50">
