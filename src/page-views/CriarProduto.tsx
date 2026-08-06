@@ -865,7 +865,7 @@ export default function CriarProduto() {
                 <div className="mt-8 rounded-2xl bg-gradient-to-br from-terracotta-dark to-terracotta p-8 text-center text-cream">
                 <Sparkles size={22} className="mx-auto mb-2" />
                 <h3 className="mb-1 font-serif text-2xl">A tua esteira completa</h3>
-                <p className="mx-auto mb-4 max-w-lg text-cream/85">{progresso}/9 entregáveis prontos. <b>Cada produto tem o seu PDF</b> — usa o botão dentro de cada nível acima. Aqui podes descarregar a esteira toda em texto.</p>
+                <p className="mx-auto mb-4 max-w-lg text-cream/85">{progresso}/9 entregáveis prontos. <b>Cada produto tem o seu documento</b> — usa o botão “Descarregar documento” em cada nível acima. Aqui descarregas a esteira toda num único ficheiro de texto.</p>
                 <div className="flex flex-wrap items-center justify-center gap-2.5">
                   <button onClick={exportarEsteira} disabled={!temEsteiraAlgo}
                     className="inline-flex items-center gap-2 rounded-full bg-cream px-6 py-3 text-sm font-semibold text-terracotta-dark hover:bg-white transition-colors disabled:opacity-50">
