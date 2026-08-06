@@ -182,9 +182,14 @@ export default function CriarProduto() {
       if (v.preco) patch.preco = v.preco;
       if (Object.keys(patch).length) { setNivel(k, patch); n++; }
     });
-    setAvisoNiveis(n
-      ? `Preenchi os campos de ${n} nível(is). Revê abaixo.`
-      : "Não consegui ler os níveis. Confirma o formato (=== LOW/MÉDIO/ALTO TICKET ===).");
+    if (n) {
+      // Os campos preenchidos vivem no passo "Constrói cada produto" — leva já a aluna para lá.
+      setPassoEsteira(3);
+      window.scrollTo({ top: 0 });
+      setAvisoNiveis(`Preenchi ${n} nível(is). Vê e ajusta aqui em "Constrói cada produto".`);
+    } else {
+      setAvisoNiveis("Não consegui ler os níveis. Confirma o formato (=== LOW/MÉDIO/ALTO TICKET ===).");
+    }
     setTimeout(() => setAvisoNiveis(""), 6000);
   };
 
@@ -263,9 +268,28 @@ export default function CriarProduto() {
     if (tipo === "stories") return !!(n.stories || "").trim();
     return [n.postsTopo, n.postsMeio, n.postsFundo].some((x) => (x || "").trim());
   };
+  // Abre a caixa de impressão SEM pop-up (iframe escondido) → "Guardar como PDF".
+  // Evita o bloqueio de pop-ups que fazia o "Descarregar PDF" parecer não funcionar.
+  const imprimirHTML = (html: string) => {
+    const iframe = document.createElement("iframe");
+    iframe.setAttribute("aria-hidden", "true");
+    Object.assign(iframe.style, { position: "fixed", right: "0", bottom: "0", width: "0", height: "0", border: "0" });
+    document.body.appendChild(iframe);
+    const cw = iframe.contentWindow;
+    const d = cw?.document;
+    if (!cw || !d) { try { document.body.removeChild(iframe); } catch { /* ignora */ } return; }
+    d.open(); d.write(html); d.close();
+    let feito = false;
+    const imprimir = () => {
+      if (feito) return; feito = true;
+      try { cw.focus(); cw.print(); } catch { /* ignora */ }
+      window.setTimeout(() => { try { document.body.removeChild(iframe); } catch { /* ignora */ } }, 1500);
+    };
+    iframe.onload = () => window.setTimeout(imprimir, 150);
+    window.setTimeout(imprimir, 700); // fallback se o onload não disparar
+  };
+
   const exportarEntregavelPDF = (soKey: NivelKey, tipo: EntregavelTipo) => {
-    const w = window.open("", "_blank");
-    if (!w) { setAvisoNiveis("Permite pop-ups para gerar o PDF."); window.setTimeout(() => setAvisoNiveis(""), 4000); return; }
     const escH = (v: unknown) => String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const nl2br = (s: string) => escH(s).replace(/\r?\n/g, "<br>");
     const bloco = (titulo: string, txt?: string) => (txt && txt.trim()) ? `<h3>${escH(titulo)}</h3><div class="corpo">${nl2br(txt)}</div>` : "";
@@ -335,10 +359,7 @@ export default function CriarProduto() {
   </div>
   <div class="footer">${escH(doc.nome || "Cátia Creator")} &middot; ${escH(label)} &middot; ${escH(new Date().toLocaleDateString("pt-PT"))}</div>
 </body></html>`;
-    w.document.write(html);
-    w.document.close();
-    w.focus();
-    window.setTimeout(() => { try { w.print(); } catch { /* ignora */ } }, 350);
+    imprimirHTML(html);
   };
 
   // Botão pequeno de PDF por entregável (usado dentro de cada produto).
@@ -612,6 +633,10 @@ export default function CriarProduto() {
               <div>
                 <h2 className="mb-1 font-serif text-xl text-ink">Constrói cada produto</h2>
                 <p className="mb-4 text-[15px] text-ink/60">Escolhe o nível e, para cada um, define o produto e gera a página de vendas, os stories e os posts de feed.</p>
+
+                {avisoNiveis && (
+                  <div className="mb-4 rounded-xl border border-emerald-300/60 bg-emerald-50 px-4 py-2.5 text-[13px] text-emerald-800">{avisoNiveis}</div>
+                )}
 
                 {/* Tabs dos níveis */}
                 <div className="mb-4 flex flex-wrap gap-2">
