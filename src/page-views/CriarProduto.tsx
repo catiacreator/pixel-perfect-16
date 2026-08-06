@@ -362,17 +362,103 @@ export default function CriarProduto() {
     imprimirHTML(html);
   };
 
-  // Botão pequeno de PDF por entregável (usado dentro de cada produto).
-  const BotaoPDFEntregavel = ({ k, tipo }: { k: NivelKey; tipo: EntregavelTipo }) => (
-    <button
-      onClick={() => exportarEntregavelPDF(k, tipo)}
-      disabled={!entregavelTemAlgo(k, tipo)}
-      className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-terracotta/40 bg-terracotta/[0.06] px-3 py-1.5 text-[12.5px] font-semibold text-terracotta hover:bg-terracotta/12 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-      title="Descarregar este entregável em PDF (Guardar como PDF)"
-    >
-      <FileText size={13} /> Descarregar PDF
-    </button>
-  );
+  void exportarEntregavelPDF; // (por-entregável mantido em código; a UI usa o PDF completo)
+
+  // PDF ORGANIZADO do produto: 1) Página de vendas, 2) Sequência de stories,
+  // 3) Posts de feed — cada secção com uma instrução de como usar.
+  const exportarProdutoCompletoPDF = (soKey: NivelKey) => {
+    const escH = (v: unknown) => String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const paras = (s: string) => escH(s).trim().split(/\n\s*\n/).filter(Boolean).map((p) => `<p>${p.replace(/\r?\n/g, "<br>")}</p>`).join("");
+    const nivel = NIVEIS.find((x) => x.key === soKey) || NIVEIS[0];
+    const { rotulo } = nivel;
+    const n = esteira.niveis[soKey];
+    const produto = (n.nome || "").trim() || rotulo;
+    const sub = n.transformacao ? escH(n.transformacao) : (n.formato ? escH(n.formato) : "");
+    const vazio = '<p class="vazio">Ainda por preencher — gera esta parte no passo “Constrói cada produto”.</p>';
+
+    const landingCorpo = (n.landing || "").trim()
+      ? `<article class="copy">${paras(n.landing)}</article>${(n.preco || n.formato) ? `<div class="oferta">${n.preco ? `<div class="preco-grande">${escH(n.preco)}</div>` : ""}${n.formato ? `<p class="of-meta">${escH(n.formato)}</p>` : ""}${n.transformacao ? `<p class="of-prom">${escH(n.transformacao)}</p>` : ""}</div>` : ""}`
+      : vazio;
+    const storiesCorpo = (n.stories || "").trim()
+      ? `<article class="copy">${paras(n.stories).replace(/(Dia\s*\d+[^:<]*:)/g, "<strong>$1</strong>")}</article>`
+      : vazio;
+    const pc = (lab: string, txt: string, c: string) => (txt && txt.trim())
+      ? `<div class="pcard"><span class="plabel" style="background:${c}">${lab}</span><div class="ptxt">${paras(txt)}</div></div>` : "";
+    const postsCorpo = (n.postsTopo || n.postsMeio || n.postsFundo)
+      ? `${pc("Topo &middot; atrair", n.postsTopo, "#2E7CB8")}${pc("Meio &middot; nutrir", n.postsMeio, "#C8487E")}${pc("Fundo &middot; vender", n.postsFundo, "#1c6b4a")}`
+      : vazio;
+
+    const sec = (num: number, titulo: string, instr: string, corpo: string) =>
+      `<section class="sec"><div class="sec-h">${num}</div><h2>${escH(titulo)}</h2><div class="instr"><b>Como usar:</b> ${escH(instr)}</div>${corpo}</section>`;
+
+    const html = `<!doctype html><html lang="pt"><head><meta charset="utf-8"><title>${escH(produto)} — produto completo</title>
+<style>
+  :root{--p:#1c6b4a;--esc:#0f3d2e;--clara:#eafaf0;--cinza:#6b7a72;--txt:#24302a;--linha:#e3ece7}
+  *{box-sizing:border-box;margin:0;padding:0}
+  @page{margin:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--txt);line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .hero{background:linear-gradient(160deg,var(--esc),var(--p));color:#fff;padding:48px 46px 38px}
+  .eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.82);font-weight:700;margin-bottom:14px}
+  .tag{display:inline-block;border:1px solid rgba(255,255,255,.45);border-radius:40px;padding:5px 14px;font-size:12px;letter-spacing:.04em;margin-bottom:16px}
+  .hero h1{font-size:30px;line-height:1.14;font-weight:800;margin-bottom:8px}
+  .hero .sub{font-size:15px;opacity:.95;max-width:600px}
+  .hero .preco{display:inline-block;margin-top:16px;background:#fff;color:var(--esc);font-weight:800;font-size:15px;border-radius:40px;padding:8px 18px}
+  .main{padding:30px 46px 40px}
+  .como{background:var(--clara);border-radius:12px;padding:14px 16px;font-size:13.5px;margin:0 0 26px}
+  .como b{color:var(--esc)}
+  .sec{margin:0 0 30px;page-break-inside:avoid}
+  .sec-h{font-size:11px;font-weight:700;color:var(--p);margin-bottom:2px}
+  h2{font-size:20px;font-weight:800;color:var(--esc);margin-bottom:8px}
+  .instr{font-size:12.5px;color:var(--cinza);background:#faf7f2;border:1px solid var(--linha);border-radius:8px;padding:8px 12px;margin-bottom:12px}
+  .instr b{color:var(--esc)}
+  .copy p{font-size:14px;margin:0 0 11px}
+  .copy strong{color:var(--esc)}
+  .vazio{color:var(--cinza);font-style:italic;font-size:13.5px}
+  .oferta{margin-top:18px;background:#fff;border:2px solid var(--p);border-radius:18px;padding:24px;text-align:center;box-shadow:0 14px 34px rgba(15,61,46,.08)}
+  .oferta .preco-grande{font-size:38px;font-weight:800;color:var(--esc)}
+  .oferta .of-meta{color:var(--cinza);font-size:13.5px;margin-top:4px}
+  .oferta .of-prom{color:var(--txt);font-size:13.5px;margin-top:8px}
+  .pcard{border:1px solid var(--linha);border-radius:12px;padding:14px 18px;margin:0 0 12px;background:#fff;page-break-inside:avoid}
+  .plabel{display:inline-block;color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:40px;padding:3px 11px;margin-bottom:8px}
+  .ptxt p{font-size:13.5px;margin:0 0 8px}
+  .callout{background:var(--clara);border-left:4px solid var(--p);border-radius:10px;padding:14px 16px;font-size:13.5px}
+  .callout b{color:var(--esc)}
+  .footer{padding:16px 46px;color:var(--cinza);font-size:12px;border-top:1px solid var(--linha)}
+</style></head><body>
+  <div class="hero">
+    <div class="eyebrow">Cátia Creator &middot; Conteúdo com IA</div>
+    <span class="tag">${escH(rotulo)} &middot; Produto completo</span>
+    <h1>${escH(produto)}</h1>
+    ${sub ? `<p class="sub">${sub}</p>` : ""}
+    ${n.preco ? `<div class="preco">${escH(n.preco)}</div>` : ""}
+  </div>
+  <div class="main">
+    <div class="como"><b>Como usar este produto:</b> 1) monta a página de vendas; 2) grava e publica os stories em 3 dias; 3) publica os posts na ordem do funil. Ajusta tudo à tua voz antes de publicar.</div>
+    ${sec(1, "Página de vendas", "Copia esta copy e monta a página no Lovable (arte no Carousel Snap). É a tua landing completa — ajusta os detalhes à tua oferta.", landingCorpo)}
+    ${sec(2, "Sequência de stories", "Publica em 3 dias: Dia 1 aquece, Dia 2 doutrina, Dia 3 vende. Uma story de cada vez; termina sempre a levar para a palavra-chave da DM.", storiesCorpo)}
+    ${sec(3, "Posts de feed", "Publica na ordem do funil ao longo da semana: topo atrai (Reel), meio nutre (carrossel), fundo vende (post).", postsCorpo)}
+    <div class="callout"><b>Regra de ouro:</b> a IA escreve o rascunho, tu dás a voz. Troca 2 ou 3 frases pelas tuas palavras antes de publicar — é isso que separa quem soa a robô de quem soa a autoridade.</div>
+  </div>
+  <div class="footer">${escH(doc.nome || "Cátia Creator")} &middot; ${escH(produto)} &middot; ${escH(new Date().toLocaleDateString("pt-PT"))}</div>
+</body></html>`;
+    imprimirHTML(html);
+  };
+
+  // Botão de PDF completo do produto (dentro de cada nível).
+  const BotaoPDFProduto = ({ k }: { k: NivelKey }) => {
+    const n = esteira.niveis[k];
+    const temAlgo = [n.landing, n.stories, n.postsTopo, n.postsMeio, n.postsFundo].some((x) => (x || "").trim());
+    return (
+      <button
+        onClick={() => exportarProdutoCompletoPDF(k)}
+        disabled={!temAlgo}
+        className="inline-flex items-center gap-1.5 rounded-full bg-terracotta text-cream px-4 py-2 text-[13px] font-semibold hover:bg-terracotta-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+        title="PDF organizado: página de vendas + stories + posts, com instruções"
+      >
+        <FileText size={14} /> Descarregar PDF do produto
+      </button>
+    );
+  };
 
   if (!carregado) return <Layout><div className="py-20 text-center text-ink/40">A carregar…</div></Layout>;
 
@@ -662,9 +748,12 @@ export default function CriarProduto() {
                   const n = esteira.niveis[key];
                   return (
                         <div className="rounded-2xl border border-border bg-white px-5 py-5">
-                          <div className="mb-4">
-                            <p className="text-[13px] font-semibold text-ink/70">Produto: <span style={{ color: cor }}>{rotulo}</span></p>
-                            <p className="text-[12px] text-ink/50">Cada entregável tem o seu PDF (botão por baixo de cada um).</p>
+                          <div className="mb-4 flex items-center justify-between gap-3 flex-wrap">
+                            <div>
+                              <p className="text-[13px] font-semibold text-ink/70">Produto: <span style={{ color: cor }}>{rotulo}</span></p>
+                              <p className="text-[12px] text-ink/50">Um PDF organizado com instruções: página de vendas, stories e posts.</p>
+                            </div>
+                            <BotaoPDFProduto k={key} />
                           </div>
                           <div className="grid gap-3 sm:grid-cols-2 mb-5">
                             <Campo label="Nome do produto" value={n.nome} onChange={(v) => setNivel(key, { nome: v })} />
@@ -682,7 +771,6 @@ export default function CriarProduto() {
                             cor={COR} botaoCor={COR} agente="Cat.IA" agenteUrl={catIa.url} agentePass={catIa.password}
                           />
                           <ColarResultado label="Página de vendas" value={n.landing} onChange={(v) => setNivel(key, { landing: v })} />
-                          <BotaoPDFEntregavel k={key} tipo="landing" />
 
                           <PromptCard
                             numero={3}
@@ -693,7 +781,6 @@ export default function CriarProduto() {
                             cor={COR} botaoCor={COR} agente="Cat.IA" agenteUrl={catIa.url} agentePass={catIa.password}
                           />
                           <ColarResultado label="Sequência de stories" value={n.stories} onChange={(v) => setNivel(key, { stories: v })} />
-                          <BotaoPDFEntregavel k={key} tipo="stories" />
 
                           <PromptCard
                             numero={4}
@@ -727,7 +814,6 @@ export default function CriarProduto() {
                           <ColarResultado label="Topo de funil (atrair)" value={n.postsTopo} onChange={(v) => setNivel(key, { postsTopo: v })} />
                           <ColarResultado label="Meio de funil (nutrir)" value={n.postsMeio} onChange={(v) => setNivel(key, { postsMeio: v })} />
                           <ColarResultado label="Fundo de funil (vender)" value={n.postsFundo} onChange={(v) => setNivel(key, { postsFundo: v })} />
-                          <BotaoPDFEntregavel k={key} tipo="posts" />
                         </div>
                   );
                 })()}
