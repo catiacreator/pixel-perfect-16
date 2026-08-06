@@ -275,27 +275,118 @@ export function parsePostsFunil(texto: string): { topo: string; meio: string; fu
   return res;
 }
 
+// Modelo exato da página de vendas (aspeto pretendido). O prompt manda a IA
+// reproduzir esta estrutura/CSS, trocando só os textos pelos dados do produto.
+const TEMPLATE_LANDING = `<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>[NOME DO PRODUTO]</title>
+  <style>
+    :root{
+      --cor-principal:#1c6b4a; --cor-escura:#0f3d2e; --cor-clara:#eafaf0;
+      --texto:#24302a; --cinza:#6b7a72; --branco:#ffffff; --raio:14px;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',-apple-system,'Segoe UI',Arial,sans-serif;color:var(--texto);line-height:1.6;background:var(--branco)}
+    .wrap{max-width:820px;margin:0 auto;padding:0 22px}
+    .btn{display:inline-block;background:var(--cor-escura);color:#fff;text-decoration:none;font-weight:700;padding:16px 34px;border-radius:50px;font-size:17px;border:none;cursor:pointer}
+    .center{text-align:center}
+    header{background:linear-gradient(160deg,var(--cor-escura),var(--cor-principal));color:#fff;padding:70px 0 80px}
+    header .tag{display:inline-block;border:1px solid rgba(255,255,255,.4);border-radius:40px;padding:6px 16px;font-size:13px;letter-spacing:.05em;margin-bottom:22px}
+    header h1{font-size:40px;line-height:1.1;font-weight:800;margin-bottom:18px}
+    header p{font-size:19px;max-width:620px;margin:0 auto 30px;opacity:.95}
+    header .btn{background:#fff;color:var(--cor-escura)}
+    header .nota{font-size:14px;opacity:.85;margin-top:14px}
+    section{padding:60px 0}
+    section h2{font-size:29px;font-weight:800;margin-bottom:18px;color:var(--cor-escura)}
+    section p.lead{font-size:18px;color:var(--cinza);max-width:640px}
+    .alt{background:var(--cor-clara)}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:30px}
+    .item{background:#fff;border:1px solid #e3ece7;border-radius:var(--raio);padding:24px}
+    .item .n{width:38px;height:38px;border-radius:50%;background:var(--cor-clara);color:var(--cor-principal);display:flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:12px}
+    .item h3{font-size:18px;margin-bottom:6px}
+    .item p{font-size:15px;color:var(--cinza)}
+    .oferta{background:#fff;border:2px solid var(--cor-principal);border-radius:20px;max-width:520px;margin:34px auto 0;padding:40px 34px;text-align:center;box-shadow:0 18px 40px rgba(15,61,46,.08)}
+    .oferta .preco{font-size:52px;font-weight:800;color:var(--cor-escura)}
+    .oferta .preco small{font-size:20px;color:var(--cinza);font-weight:600}
+    .oferta ul{list-style:none;text-align:left;max-width:340px;margin:22px auto}
+    .oferta li{padding:8px 0 8px 30px;position:relative;font-size:16px}
+    .oferta li:before{content:"✓";position:absolute;left:0;color:var(--cor-principal);font-weight:800}
+    .garantia{font-size:14px;color:var(--cinza);margin-top:16px}
+    .faq details{border-bottom:1px solid #e3ece7;padding:18px 0}
+    .faq summary{font-weight:700;font-size:17px;cursor:pointer;list-style:none}
+    .faq summary::-webkit-details-marker{display:none}
+    .faq p{margin-top:10px;color:var(--cinza)}
+    footer{background:var(--cor-escura);color:#cfe6db;text-align:center;padding:40px 0;font-size:14px}
+    @media(max-width:640px){header h1{font-size:30px}.grid{grid-template-columns:1fr}section h2{font-size:24px}}
+  </style>
+</head>
+<body>
+  <header><div class="wrap center">
+    <span class="tag">[ETIQUETA: ex. Kit digital · entrega imediata]</span>
+    <h1>[TÍTULO: a promessa forte / a dor em pergunta]</h1>
+    <p>[SUBTÍTULO: o que é + o que resolve, 1-2 frases]</p>
+    <a class="btn" href="#comprar">[CTA com preço, ex. Quero por [PREÇO]]</a>
+    <div class="nota">[nota / bónus de hoje]</div>
+  </div></header>
+
+  <section><div class="wrap">
+    <h2>[TÍTULO DO PROBLEMA]</h2>
+    <p class="lead">[parágrafo que espelha a dor do público]</p>
+  </div></section>
+
+  <section class="alt"><div class="wrap">
+    <h2>[TÍTULO DA SOLUÇÃO]</h2>
+    <p class="lead">[subtítulo curto]</p>
+    <div class="grid">
+      <div class="item"><div class="n">1</div><h3>[vantagem 1]</h3><p>[descrição]</p></div>
+      <div class="item"><div class="n">2</div><h3>[vantagem 2]</h3><p>[descrição]</p></div>
+      <div class="item"><div class="n">3</div><h3>[vantagem 3]</h3><p>[descrição]</p></div>
+      <div class="item"><div class="n">4</div><h3>[vantagem 4]</h3><p>[descrição]</p></div>
+    </div>
+  </div></section>
+
+  <section id="comprar"><div class="wrap center">
+    <h2>Começa hoje</h2>
+    <div class="oferta">
+      <div class="preco">[PREÇO] <small>pagamento único</small></div>
+      <ul>
+        <li>[item incluído 1]</li>
+        <li>[item incluído 2]</li>
+        <li>[item incluído 3]</li>
+        <li>[bónus]</li>
+      </ul>
+      <a class="btn" href="#">[CTA final]</a>
+      <p class="garantia">[garantia]</p>
+    </div>
+  </div></section>
+
+  <section class="alt"><div class="wrap faq">
+    <h2>Perguntas frequentes</h2>
+    <details><summary>[pergunta 1]</summary><p>[resposta]</p></details>
+    <details><summary>[pergunta 2]</summary><p>[resposta]</p></details>
+    <details><summary>[pergunta 3]</summary><p>[resposta]</p></details>
+    <details><summary>[pergunta 4]</summary><p>[resposta]</p></details>
+  </div></section>
+
+  <footer>© [NOME] · [NICHO] · Todos os direitos reservados</footer>
+</body>
+</html>`;
+
 export function promptLandingPage(d: DocState, rotulo: string, p: ProdutoNivel): string {
-  return `Age como copywriter de resposta direta E web designer. Cria uma PÁGINA DE VENDAS COMPLETA EM HTML (um único ficheiro, pronto a abrir no browser ou a colar no Lovable) para este produto da minha esteira.
+  return `Age como copywriter de resposta direta e web designer. Devolve uma PÁGINA DE VENDAS em HTML, num único ficheiro pronto a colar no Lovable, seguindo EXATAMENTE o modelo abaixo: mantém toda a estrutura, o CSS e as cores; substitui apenas os textos entre [ ] pelos desta conta e produto (e adapta as 4 vantagens, os itens da oferta e o FAQ ao produto).
 
 ${contextoDoc(d)}
 
 ${contextoProduto(rotulo, p)}
 
-REQUISITOS DO HTML
-- Um único ficheiro HTML válido e autónomo, com TODO o CSS embutido em <style> (sem ficheiros externos e sem JavaScript).
-- Português de Portugal, escrito na minha voz e tom de marca.
-- Cores da marca: principal #1c6b4a, escura #0f3d2e, clara #eafaf0, texto #24302a, cinza #6b7a72. Tipografia Inter/system, cantos arredondados, botões em pílula.
-- Estrutura por esta ordem, cada secção já com o texto escrito:
-  1. HERO (fundo em gradiente escuro→principal, texto branco): etiqueta pequena, título com a promessa forte, subtítulo, botão CTA com o preço e uma nota de bónus.
-  2. PROBLEMA: título + parágrafo que espelha a dor do público.
-  3. O QUE RECEBES (fundo claro): título + subtítulo + grelha de 4 cartões numerados (o que inclui).
-  4. OFERTA (cartão com borda na cor principal): preço grande + "pagamento único", lista de bullets com ✓, botão CTA e uma linha de garantia.
-  5. FAQ (fundo claro): 4 a 5 perguntas em <details>/<summary> com resposta.
-  6. RODAPÉ: © com o meu nome e nicho.
-- Preenche tudo com os dados acima (nome do produto, preço, formato, transformação, público, dores). Onde precisares de prova real, deixa [DEPOIMENTO] para eu preencher.
+════════ MODELO A REPRODUZIR (troca só os textos entre [ ]) ════════
+${TEMPLATE_LANDING}
+════════ FIM DO MODELO ════════
 
-Devolve APENAS o código HTML, a começar em <!DOCTYPE html> e a terminar em </html>. Sem explicações antes nem depois. ${REGRAS}`;
+Regras: português de Portugal, na minha voz e tom; NÃO alteres o CSS nem a ordem das secções; onde precisares de prova real, deixa [DEPOIMENTO] para eu preencher. Devolve APENAS o HTML final, de <!DOCTYPE html> a </html>, sem comentários antes ou depois. ${REGRAS}`;
 }
 
 export function promptStories(d: DocState, rotulo: string, p: ProdutoNivel): string {
