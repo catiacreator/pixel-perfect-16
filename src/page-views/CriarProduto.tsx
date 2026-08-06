@@ -367,7 +367,6 @@ export default function CriarProduto() {
   const exportarProdutoDocumento = (soKey: NivelKey) => {
     const escH = (v: unknown) => String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     const escAttr = (v: unknown) => escH(v).replace(/"/g, "&quot;");
-    const paras = (s: string) => escH(s).trim().split(/\n\s*\n/).filter(Boolean).map((p) => `<p>${p.replace(/\r?\n/g, "<br>")}</p>`).join("");
     const nivel = NIVEIS.find((x) => x.key === soKey) || NIVEIS[0];
     const { rotulo } = nivel;
     const n = esteira.niveis[soKey];
@@ -375,23 +374,42 @@ export default function CriarProduto() {
     const sub = n.transformacao ? escH(n.transformacao) : (n.formato ? escH(n.formato) : "");
     const vazio = '<p class="vazio">Ainda por preencher — gera esta parte no passo “Constrói cada produto”.</p>';
 
+    // Formatador markdown-lite → HTML (para stories/posts saírem como documento, não texto cru).
+    const negrito = (s: string) => s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    const mdFmt = (s: string) => {
+      const linhas = escH(s).replace(/\r/g, "").split("\n");
+      let out = "", lista = false;
+      const fecha = () => { if (lista) { out += "</ul>"; lista = false; } };
+      for (const raw of linhas) {
+        const l = raw.trim();
+        if (!l) { fecha(); continue; }
+        let m: RegExpMatchArray | null;
+        if ((m = l.match(/^#{1,6}\s+(.*)$/))) { fecha(); out += `<h4>${negrito(m[1])}</h4>`; continue; }
+        if ((m = l.match(/^[-*•]\s+(.*)$/))) { if (!lista) { out += "<ul>"; lista = true; } out += `<li>${negrito(m[1])}</li>`; continue; }
+        fecha(); out += `<p>${negrito(l)}</p>`;
+      }
+      fecha();
+      return out;
+    };
+
     const landingTxt = (n.landing || "").trim();
-    const landingCorpo = landingTxt
-      ? (pareceHTML(landingTxt)
-        ? `<iframe class="landing-frame" srcdoc="${escAttr(landingTxt)}"></iframe>`
-        : `<article class="copy">${paras(n.landing)}</article>${(n.preco || n.formato) ? `<div class="oferta">${n.preco ? `<div class="preco-grande">${escH(n.preco)}</div>` : ""}${n.formato ? `<p class="of-meta">${escH(n.formato)}</p>` : ""}${n.transformacao ? `<p class="of-prom">${escH(n.transformacao)}</p>` : ""}</div>` : ""}`)
-      : vazio;
-    const storiesCorpo = (n.stories || "").trim()
-      ? `<article class="copy">${paras(n.stories).replace(/(Dia\s*\d+[^:<]*:)/g, "<strong>$1</strong>")}</article>`
-      : vazio;
+    const landingCorpo = !landingTxt ? vazio
+      : pareceHTML(landingTxt)
+        ? `<iframe class="landing-frame" srcdoc="${escAttr(landingTxt)}"></iframe>
+           <p class="code-h">Código HTML da página (copia e cola no Lovable):</p>
+           <pre class="code">${escH(landingTxt)}</pre>`
+        : `<article class="copy">${mdFmt(landingTxt)}</article><p class="nota">Dica: no prompt da página de vendas, pede o resultado em HTML — assim tens também o código pronto para o Lovable.</p>`;
+
+    const storiesCorpo = (n.stories || "").trim() ? `<article class="copy">${mdFmt(n.stories)}</article>` : vazio;
+
     const pc = (lab: string, txt: string, c: string) => (txt && txt.trim())
-      ? `<div class="pcard"><span class="plabel" style="background:${c}">${lab}</span><div class="ptxt">${paras(txt)}</div></div>` : "";
+      ? `<div class="pcard"><span class="plabel" style="background:${c}">${lab}</span><div class="ptxt">${mdFmt(txt)}</div></div>` : "";
     const postsCorpo = (n.postsTopo || n.postsMeio || n.postsFundo)
       ? `${pc("Topo &middot; atrair", n.postsTopo, "#2E7CB8")}${pc("Meio &middot; nutrir", n.postsMeio, "#C8487E")}${pc("Fundo &middot; vender", n.postsFundo, "#1c6b4a")}`
       : vazio;
 
-    const sec = (num: number, titulo: string, instr: string, corpo: string) =>
-      `<section class="sec"><div class="sec-h">${num}</div><h2>${escH(titulo)}</h2><div class="instr"><b>Como usar:</b> ${escH(instr)}</div>${corpo}</section>`;
+    const sec = (num: number, titulo: string, passos: string[], corpo: string) =>
+      `<section class="sec"><div class="sec-h">${num}</div><h2>${escH(titulo)}</h2><div class="passos"><b>Passo a passo</b><ol>${passos.map((p) => `<li>${escH(p)}</li>`).join("")}</ol></div>${corpo}</section>`;
 
     const html = `<!doctype html><html lang="pt"><head><meta charset="utf-8"><title>${escH(produto)} — produto completo</title>
 <style>
@@ -411,10 +429,16 @@ export default function CriarProduto() {
   .sec{margin:0 0 30px;page-break-inside:avoid}
   .sec-h{font-size:11px;font-weight:700;color:var(--p);margin-bottom:2px}
   h2{font-size:20px;font-weight:800;color:var(--esc);margin-bottom:8px}
-  .instr{font-size:12.5px;color:var(--cinza);background:#faf7f2;border:1px solid var(--linha);border-radius:8px;padding:8px 12px;margin-bottom:12px}
-  .instr b{color:var(--esc)}
+  .passos{font-size:12.5px;color:var(--txt);background:#faf7f2;border:1px solid var(--linha);border-radius:8px;padding:10px 14px;margin-bottom:14px}
+  .passos b{color:var(--esc)}
+  .passos ol{margin:6px 0 0 18px} .passos li{margin:3px 0}
   .copy p{font-size:14px;margin:0 0 11px}
   .copy strong{color:var(--esc)}
+  .copy h4{font-size:14px;color:var(--esc);margin:14px 0 4px}
+  .copy ul,.ptxt ul{margin:4px 0 8px 18px} .copy li,.ptxt li{margin:2px 0;font-size:13.5px}
+  .code-h{font-size:12px;font-weight:700;color:var(--esc);margin:14px 0 6px}
+  .code{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;line-height:1.45;color:#24302a;background:#f4f7f5;border:1px solid var(--linha);border-radius:10px;padding:12px 14px}
+  .nota{font-size:12px;color:var(--cinza);margin-top:8px}
   .vazio{color:var(--cinza);font-style:italic;font-size:13.5px}
   .oferta{margin-top:18px;background:#fff;border:2px solid var(--p);border-radius:18px;padding:24px;text-align:center;box-shadow:0 14px 34px rgba(15,61,46,.08)}
   .oferta .preco-grande{font-size:38px;font-weight:800;color:var(--esc)}
@@ -436,10 +460,24 @@ export default function CriarProduto() {
     ${n.preco ? `<div class="preco">${escH(n.preco)}</div>` : ""}
   </div>
   <div class="main">
-    <div class="como"><b>Como usar este produto:</b> 1) monta a página de vendas; 2) grava e publica os stories em 3 dias; 3) publica os posts na ordem do funil. Ajusta tudo à tua voz antes de publicar.</div>
-    ${sec(1, "Página de vendas", "Copia esta copy e monta a página no Lovable (arte no Carousel Snap). É a tua landing completa — ajusta os detalhes à tua oferta.", landingCorpo)}
-    ${sec(2, "Sequência de stories", "Publica em 3 dias: Dia 1 aquece, Dia 2 doutrina, Dia 3 vende. Uma story de cada vez; termina sempre a levar para a palavra-chave da DM.", storiesCorpo)}
-    ${sec(3, "Posts de feed", "Publica na ordem do funil ao longo da semana: topo atrai (Reel), meio nutre (carrossel), fundo vende (post).", postsCorpo)}
+    <div class="como"><b>Como usar este documento:</b> tens as 3 peças do teu produto prontas — a página de vendas (com o código), a sequência de stories e os posts de feed. Segue os passos de cada secção e ajusta tudo à tua voz antes de publicar.</div>
+    ${sec(1, "Página de vendas", [
+      "Copia o código HTML abaixo (seleciona tudo dentro da caixa e copia).",
+      "Abre o Lovable, cola o código e deixa-o montar a página.",
+      "Ajusta imagens, links e o botão de compra ao teu produto.",
+      "Publica e usa o link na bio e nos teus CTAs.",
+    ], landingCorpo)}
+    ${sec(2, "Sequência de stories", [
+      "Grava pela ordem: Dia 1 aquece, Dia 2 doutrina, Dia 3 vende.",
+      "Publica 5 a 7 stories por dia; usa enquetes e caixas de pergunta.",
+      "No Dia 3, abre a oferta e mostra o produto com urgência real.",
+      "Termina sempre a levar para a palavra-chave da DM.",
+    ], storiesCorpo)}
+    ${sec(3, "Posts de feed", [
+      "Publica na ordem do funil ao longo da semana.",
+      "Topo (Reel) atrai · Meio (carrossel) nutre · Fundo (post) vende.",
+      "Adapta o gancho e o CTA à tua voz antes de publicar.",
+    ], postsCorpo)}
     <div class="callout"><b>Regra de ouro:</b> a IA escreve o rascunho, tu dás a voz. Troca 2 ou 3 frases pelas tuas palavras antes de publicar — é isso que separa quem soa a robô de quem soa a autoridade.</div>
   </div>
   <div class="footer">${escH(doc.nome || "Cátia Creator")} &middot; ${escH(produto)} &middot; ${escH(new Date().toLocaleDateString("pt-PT"))}</div>
