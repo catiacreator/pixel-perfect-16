@@ -366,8 +366,9 @@ export default function CriarProduto() {
 
   // PDF ORGANIZADO do produto: 1) Página de vendas, 2) Sequência de stories,
   // 3) Posts de feed — cada secção com uma instrução de como usar.
-  const exportarProdutoCompletoPDF = (soKey: NivelKey) => {
+  const exportarProdutoDocumento = (soKey: NivelKey) => {
     const escH = (v: unknown) => String(v ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const escAttr = (v: unknown) => escH(v).replace(/"/g, "&quot;");
     const paras = (s: string) => escH(s).trim().split(/\n\s*\n/).filter(Boolean).map((p) => `<p>${p.replace(/\r?\n/g, "<br>")}</p>`).join("");
     const nivel = NIVEIS.find((x) => x.key === soKey) || NIVEIS[0];
     const { rotulo } = nivel;
@@ -376,8 +377,11 @@ export default function CriarProduto() {
     const sub = n.transformacao ? escH(n.transformacao) : (n.formato ? escH(n.formato) : "");
     const vazio = '<p class="vazio">Ainda por preencher — gera esta parte no passo “Constrói cada produto”.</p>';
 
-    const landingCorpo = (n.landing || "").trim()
-      ? `<article class="copy">${paras(n.landing)}</article>${(n.preco || n.formato) ? `<div class="oferta">${n.preco ? `<div class="preco-grande">${escH(n.preco)}</div>` : ""}${n.formato ? `<p class="of-meta">${escH(n.formato)}</p>` : ""}${n.transformacao ? `<p class="of-prom">${escH(n.transformacao)}</p>` : ""}</div>` : ""}`
+    const landingTxt = (n.landing || "").trim();
+    const landingCorpo = landingTxt
+      ? (pareceHTML(landingTxt)
+        ? `<iframe class="landing-frame" srcdoc="${escAttr(landingTxt)}"></iframe>`
+        : `<article class="copy">${paras(n.landing)}</article>${(n.preco || n.formato) ? `<div class="oferta">${n.preco ? `<div class="preco-grande">${escH(n.preco)}</div>` : ""}${n.formato ? `<p class="of-meta">${escH(n.formato)}</p>` : ""}${n.transformacao ? `<p class="of-prom">${escH(n.transformacao)}</p>` : ""}</div>` : ""}`)
       : vazio;
     const storiesCorpo = (n.stories || "").trim()
       ? `<article class="copy">${paras(n.stories).replace(/(Dia\s*\d+[^:<]*:)/g, "<strong>$1</strong>")}</article>`
@@ -423,6 +427,7 @@ export default function CriarProduto() {
   .ptxt p{font-size:13.5px;margin:0 0 8px}
   .callout{background:var(--clara);border-left:4px solid var(--p);border-radius:10px;padding:14px 16px;font-size:13.5px}
   .callout b{color:var(--esc)}
+  .landing-frame{width:100%;height:1200px;border:1px solid var(--linha);border-radius:12px;background:#fff}
   .footer{padding:16px 46px;color:var(--cinza);font-size:12px;border-top:1px solid var(--linha)}
 </style></head><body>
   <div class="hero">
@@ -441,21 +446,25 @@ export default function CriarProduto() {
   </div>
   <div class="footer">${escH(doc.nome || "Cátia Creator")} &middot; ${escH(produto)} &middot; ${escH(new Date().toLocaleDateString("pt-PT"))}</div>
 </body></html>`;
-    imprimirHTML(html);
+    const slug = (produto || "produto").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    const url = URL.createObjectURL(new Blob([html], { type: "text/html;charset=utf-8" }));
+    const a = document.createElement("a");
+    a.href = url; a.download = `documento-${slug || "produto"}.html`; a.click();
+    URL.revokeObjectURL(url);
   };
 
-  // Botão de PDF completo do produto (dentro de cada nível).
-  const BotaoPDFProduto = ({ k }: { k: NivelKey }) => {
+  // Botão do documento completo do produto (dentro de cada nível).
+  const BotaoDocProduto = ({ k }: { k: NivelKey }) => {
     const n = esteira.niveis[k];
     const temAlgo = [n.landing, n.stories, n.postsTopo, n.postsMeio, n.postsFundo].some((x) => (x || "").trim());
     return (
       <button
-        onClick={() => exportarProdutoCompletoPDF(k)}
+        onClick={() => exportarProdutoDocumento(k)}
         disabled={!temAlgo}
         className="inline-flex items-center gap-1.5 rounded-full bg-terracotta text-cream px-4 py-2 text-[13px] font-semibold hover:bg-terracotta-dark transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
-        title="PDF organizado: página de vendas + stories + posts, com instruções"
+        title="Documento HTML do produto: página de vendas + stories + posts, com instruções"
       >
-        <FileText size={14} /> Descarregar PDF do produto
+        <FileText size={14} /> Descarregar documento
       </button>
     );
   };
@@ -770,9 +779,9 @@ export default function CriarProduto() {
                           <div className="mb-4 flex items-center justify-between gap-3 flex-wrap">
                             <div>
                               <p className="text-[13px] font-semibold text-ink/70">Produto: <span style={{ color: cor }}>{rotulo}</span></p>
-                              <p className="text-[12px] text-ink/50">Um PDF organizado com instruções: página de vendas, stories e posts.</p>
+                              <p className="text-[12px] text-ink/50">Um documento HTML com tudo: página de vendas, stories e posts (com instruções).</p>
                             </div>
-                            <BotaoPDFProduto k={key} />
+                            <BotaoDocProduto k={key} />
                           </div>
                           <div className="grid gap-3 sm:grid-cols-2 mb-5">
                             <Campo label="Nome do produto" value={n.nome} onChange={(v) => setNivel(key, { nome: v })} />
