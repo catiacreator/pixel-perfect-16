@@ -14,7 +14,7 @@ import {
   ESTEIRA_EMPTY, ESTEIRA_KEY, NIVEIS,
   PRODUTO_DOC_KEY, loadProdutoDocMestre, loadEsteira,
   promptDescobrirPublico, parsePublicoResult, promptIdeiasEsteira, parseEsteiraIdeias,
-  promptLandingPage, promptStories, promptPostsFunil, parsePostsFunil,
+  promptLandingPage, promptStories, promptPostsFunil, parsePostsFunil, montarDocumentoCompleto,
 } from "@/lib/criar-produto";
 
 const COR = "#2F9E6E"; // verde "Criar Produto"
@@ -251,6 +251,7 @@ export default function CriarProduto() {
     a.href = url; a.download = "esteira-de-produtos.txt"; a.click();
     URL.revokeObjectURL(url);
   };
+  void exportarEsteira; void temEsteiraAlgo; // (exportação .txt mantida em código; a UI usa o documento completo)
 
   // Exporta a esteira numa vista limpa para imprimir / "Guardar como PDF".
   // Gera um PDF por ENTREGÁVEL de um produto: página de vendas, stories ou posts.
@@ -521,6 +522,30 @@ export default function CriarProduto() {
     const url = URL.createObjectURL(new Blob([html], { type: "text/html;charset=utf-8" }));
     const w = window.open(url, "_blank");
     if (!w) baixarLandingHTML(k); // pop-up bloqueado → descarrega em vez de pré-visualizar
+    window.setTimeout(() => URL.revokeObjectURL(url), 30000);
+  };
+
+  const slugNivel = (k: NivelKey) => {
+    const rot = NIVEIS.find((x) => x.key === k)?.rotulo || "produto";
+    return ((esteira.niveis[k].nome || rot) || "produto").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "produto";
+  };
+
+  // GERA o documento COMPLETO do produto a partir dos dados escritos — sem IA.
+  // Traz tudo: como criar, página de vendas (preview + código), calendário de
+  // stories e posts, e como vender. Abre a caixa de impressão para gravar em PDF.
+  const gerarDocumentoCompleto = (k: NivelKey) => {
+    const rot = NIVEIS.find((x) => x.key === k)?.rotulo || "Produto";
+    const html = montarDocumentoCompleto(doc, rot, esteira.niveis[k]);
+    imprimirHTML(html); // → "Guardar como PDF" na caixa de impressão
+  };
+
+  // Descarrega o mesmo documento completo como ficheiro .html (para editar/alojar).
+  const baixarDocumentoCompleto = (k: NivelKey) => {
+    const rot = NIVEIS.find((x) => x.key === k)?.rotulo || "Produto";
+    const html = montarDocumentoCompleto(doc, rot, esteira.niveis[k]);
+    const url = URL.createObjectURL(new Blob([html], { type: "text/html;charset=utf-8" }));
+    const a = document.createElement("a");
+    a.href = url; a.download = `documento-${slugNivel(k)}.html`; a.click();
     window.setTimeout(() => URL.revokeObjectURL(url), 30000);
   };
 
@@ -901,22 +926,22 @@ export default function CriarProduto() {
                 {(() => {
                   const nivel = NIVEIS.find((x) => x.key === nivelTab) || NIVEIS[0];
                   const nn = esteira.niveis[nivel.key];
-                  const pronto = [nn.landing, nn.stories, nn.postsTopo, nn.postsMeio, nn.postsFundo].some((x) => (x || "").trim());
+                  const podeGerar = [nn.nome, nn.formato, nn.preco, nn.transformacao, nn.landing].some((x) => (x || "").trim());
                   return (
                     <div className="mt-8 rounded-2xl bg-gradient-to-br from-terracotta-dark to-terracotta p-8 text-center text-cream">
                       <Sparkles size={22} className="mx-auto mb-2" />
                       <h3 className="mb-1 font-serif text-2xl">O teu produto {nivel.rotulo}</h3>
                       <p className="mx-auto mb-4 max-w-lg text-cream/85">
-                        {pronto ? "O teu documento está pronto." : "Preenche os campos acima e o teu documento fica pronto."}
+                        {podeGerar ? "Gera o documento completo deste produto: como criar, a página de vendas com o código, o calendário de stories e posts, e como vender — tudo pronto a aplicar." : "Preenche o nome, o preço e a transformação acima para gerares o documento."}
                       </p>
                       <div className="flex flex-wrap items-center justify-center gap-2.5">
-                        <button onClick={() => exportarProdutoDocumento(nivel.key)} disabled={!pronto}
+                        <button onClick={() => gerarDocumentoCompleto(nivel.key)} disabled={!podeGerar}
                           className="inline-flex items-center gap-2 rounded-full bg-cream px-6 py-3 text-sm font-semibold text-terracotta-dark hover:bg-white transition-colors disabled:opacity-50">
-                          <FileText size={16} /> Descarregar documento
+                          <FileText size={16} /> Gerar documento (PDF)
                         </button>
-                        <button onClick={exportarEsteira} disabled={!temEsteiraAlgo}
+                        <button onClick={() => baixarDocumentoCompleto(nivel.key)} disabled={!podeGerar}
                           className="inline-flex items-center gap-2 rounded-full border border-cream/60 px-5 py-3 text-sm font-semibold text-cream hover:bg-cream/10 transition-colors disabled:opacity-50">
-                          <Download size={16} /> Tudo em .txt
+                          <Download size={16} /> Descarregar .html
                         </button>
                       </div>
                     </div>

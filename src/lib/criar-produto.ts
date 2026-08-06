@@ -375,6 +375,310 @@ const TEMPLATE_LANDING = `<!DOCTYPE html>
 </body>
 </html>`;
 
+// Gera a PÁGINA DE VENDAS em HTML (este template) preenchida com os dados já
+// escritos pela aluna — sem IA. Um clique = o documento pronto.
+export function montarLandingHTML(d: DocState, rotulo: string, p: ProdutoNivel): string {
+  const esc = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const produto = (p.nome || "").trim() || rotulo;
+  const preco = (p.preco || "").trim();
+  const formato = (p.formato || "").trim() || "Produto digital";
+  const transf = (p.transformacao || "").trim();
+  const dores = (d.dores || []).map((x) => (x || "").trim()).filter(Boolean);
+  const desejos = (d.desejos || []).map((x) => (x || "").trim()).filter(Boolean);
+  const publico = (d.publico || "").trim();
+  const oQueFaz = (d.oQueFaz || "").trim();
+  const comoResolve = (d.comoResolve || "").trim();
+  const nome = (d.nome || "").trim() || "Cátia Creator";
+  const nicho = (d.profissao || "").trim() || "Conteúdo com IA";
+
+  const heroTitulo = transf || produto;
+  const heroSub = oQueFaz || comoResolve || `Tudo o que precisas para ${transf || "avançar"}.`;
+  const ctaPreco = preco ? `Quero por ${preco}` : "Quero começar";
+  const problemaLead = [publico, dores.slice(0, 2).join(" ")].filter(Boolean).join(" ") || "Sabes que precisas de avançar, mas não sabes por onde começar.";
+  const solucaoLead = comoResolve || "A IA faz o rascunho; tu dás a tua voz.";
+  const vantBase = desejos.length ? desejos : ["Acesso imediato ao material", "Um passo a passo simples", "Templates e prompts prontos", "Apoio para não travares"];
+  const vantagens = [0, 1, 2, 3].map((i) => vantBase[i] || "");
+  const bullets = (desejos.length ? desejos.slice(0, 4) : [formato, "Acesso imediato por email", "Passo a passo simples", "Bónus para começares hoje"]);
+
+  const itensHtml = vantagens.map((v, i) => v
+    ? `<div class="item"><div class="n">${i + 1}</div><h3>${esc(v)}</h3><p></p></div>` : "").join("\n        ");
+  const bulletsHtml = bullets.filter(Boolean).map((b) => `<li>${esc(b)}</li>`).join("\n          ");
+
+  return `<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${esc(produto)}</title>
+  <style>
+    :root{--cor-principal:#1c6b4a;--cor-escura:#0f3d2e;--cor-clara:#eafaf0;--texto:#24302a;--cinza:#6b7a72;--branco:#ffffff;--raio:14px}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',-apple-system,'Segoe UI',Arial,sans-serif;color:var(--texto);line-height:1.6;background:var(--branco)}
+    .wrap{max-width:820px;margin:0 auto;padding:0 22px}
+    .btn{display:inline-block;background:var(--cor-escura);color:#fff;text-decoration:none;font-weight:700;padding:16px 34px;border-radius:50px;font-size:17px;border:none;cursor:pointer}
+    .center{text-align:center}
+    header{background:linear-gradient(160deg,var(--cor-escura),var(--cor-principal));color:#fff;padding:70px 0 80px}
+    header .tag{display:inline-block;border:1px solid rgba(255,255,255,.4);border-radius:40px;padding:6px 16px;font-size:13px;letter-spacing:.05em;margin-bottom:22px}
+    header h1{font-size:40px;line-height:1.1;font-weight:800;margin-bottom:18px}
+    header p{font-size:19px;max-width:620px;margin:0 auto 30px;opacity:.95}
+    header .btn{background:#fff;color:var(--cor-escura)}
+    section{padding:60px 0}
+    section h2{font-size:29px;font-weight:800;margin-bottom:18px;color:var(--cor-escura)}
+    section p.lead{font-size:18px;color:var(--cinza);max-width:640px}
+    .alt{background:var(--cor-clara)}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:30px}
+    .item{background:#fff;border:1px solid #e3ece7;border-radius:var(--raio);padding:24px}
+    .item .n{width:38px;height:38px;border-radius:50%;background:var(--cor-clara);color:var(--cor-principal);display:flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:12px}
+    .item h3{font-size:18px;margin-bottom:6px}
+    .item p{font-size:15px;color:var(--cinza)}
+    .oferta{background:#fff;border:2px solid var(--cor-principal);border-radius:20px;max-width:520px;margin:34px auto 0;padding:40px 34px;text-align:center;box-shadow:0 18px 40px rgba(15,61,46,.08)}
+    .oferta .preco{font-size:52px;font-weight:800;color:var(--cor-escura)}
+    .oferta .preco small{font-size:20px;color:var(--cinza);font-weight:600}
+    .oferta ul{list-style:none;text-align:left;max-width:340px;margin:22px auto}
+    .oferta li{padding:8px 0 8px 30px;position:relative;font-size:16px}
+    .oferta li:before{content:"✓";position:absolute;left:0;color:var(--cor-principal);font-weight:800}
+    .garantia{font-size:14px;color:var(--cinza);margin-top:16px}
+    .faq details{border-bottom:1px solid #e3ece7;padding:18px 0}
+    .faq summary{font-weight:700;font-size:17px;cursor:pointer;list-style:none}
+    .faq summary::-webkit-details-marker{display:none}
+    .faq p{margin-top:10px;color:var(--cinza)}
+    footer{background:var(--cor-escura);color:#cfe6db;text-align:center;padding:40px 0;font-size:14px}
+    @media(max-width:640px){header h1{font-size:30px}.grid{grid-template-columns:1fr}section h2{font-size:24px}}
+  </style>
+</head>
+<body>
+  <header><div class="wrap center">
+    <span class="tag">${esc(formato)} · entrega imediata</span>
+    <h1>${esc(heroTitulo)}</h1>
+    <p>${esc(heroSub)}</p>
+    <a class="btn" href="#comprar">${esc(ctaPreco)}</a>
+  </div></header>
+
+  <section><div class="wrap">
+    <h2>O problema não é falta de vontade</h2>
+    <p class="lead">${esc(problemaLead)}</p>
+  </div></section>
+
+  <section class="alt"><div class="wrap">
+    <h2>${esc(transf || "A nova forma")}</h2>
+    <p class="lead">${esc(solucaoLead)}</p>
+    <div class="grid">
+        ${itensHtml}
+    </div>
+  </div></section>
+
+  <section id="comprar"><div class="wrap center">
+    <h2>Começa hoje</h2>
+    <div class="oferta">
+      <div class="preco">${esc(preco || "—")} <small>pagamento único</small></div>
+      <ul>
+          ${bulletsHtml}
+      </ul>
+      <a class="btn" href="#">${esc(ctaPreco)}</a>
+      <p class="garantia">Garantia: experimenta sem risco. Se não for para ti, devolvo o teu dinheiro.</p>
+    </div>
+  </div></section>
+
+  <section class="alt"><div class="wrap faq">
+    <h2>Perguntas frequentes</h2>
+    <details><summary>Para quem é isto?</summary><p>${esc(publico || "Para quem quer começar e ter um caminho claro.")}</p></details>
+    <details><summary>Preciso de experiência?</summary><p>Não. É um passo a passo simples, do início ao fim.</p></details>
+    <details><summary>Como recebo?</summary><p>Acesso imediato por email logo após a compra.</p></details>
+    <details><summary>E se tiver dúvidas?</summary><p>Tens apoio para não ficares presa em nenhum passo.</p></details>
+  </div></section>
+
+  <footer>© ${esc(nome)} · ${esc(nicho)} · Todos os direitos reservados</footer>
+</body>
+</html>`;
+}
+
+// ─────────────────────── DOCUMENTO COMPLETO (feito-por-ti) ───────────────────────
+// Um único documento em HTML, pronto a imprimir em PDF, com TUDO o que a aluna
+// precisa para lançar o produto: como criar, a página de vendas (preview + código),
+// o calendário de stories e de posts, e o passo a passo de como vender.
+export function montarDocumentoCompleto(d: DocState, rotulo: string, p: ProdutoNivel): string {
+  const esc = (s: unknown) => String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const produto = (p.nome || "").trim() || rotulo;
+  const preco = (p.preco || "").trim();
+  const formato = (p.formato || "").trim() || "produto digital";
+  const transf = (p.transformacao || "").trim();
+  const dores = (d.dores || []).map((x) => (x || "").trim()).filter(Boolean);
+  const desejos = (d.desejos || []).map((x) => (x || "").trim()).filter(Boolean);
+  const publico = (d.publico || "").trim();
+  const comoResolve = (d.comoResolve || "").trim();
+  const nome = (d.nome || "").trim() || "Cátia Creator";
+  const nicho = (d.profissao || "").trim() || "Conteúdo com IA";
+
+  // palavra-chave da DM (1ª palavra do produto em maiúsculas, sem acentos)
+  const chave = (produto.split(/\s+/)[0] || "QUERO").toUpperCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^A-Z0-9]/g, "") || "QUERO";
+  const dor1 = dores[0] || "olhar para o ecrã sem saber por onde começar";
+  const desejo1 = desejos[0] || "ter finalmente um caminho claro";
+
+  // texto livre → parágrafos (usa o que a aluna colou dos prompts, se existir)
+  const nl2p = (t: string) => t.trim().split(/\n{2,}/).map((b) => `<p>${esc(b).replace(/\n/g, "<br>")}</p>`).join("\n      ");
+
+  // Página de vendas: código pronto a colar (reaproveita a landing determinística)
+  const landingCode = (p.landing || "").trim().startsWith("<") ? p.landing.trim() : montarLandingHTML(d, rotulo, p);
+
+  // ── STORIES ──
+  const storiesBloco = (p.stories || "").trim()
+    ? `<div class="copy">${nl2p(p.stories)}</div>`
+    : `<article class="copy">
+        <h4>Dia 1 — Aquecer</h4>
+        <p><strong>Story 1:</strong> Toca na dor: "${esc(dor1)}?" (usa uma enquete Sim/Não).</p>
+        <p><strong>Story 2:</strong> Mostra que o problema não é falta de vontade — é falta de método.</p>
+        <p><strong>Story 3:</strong> "Amanhã mostro-te a forma que uso." (cria expectativa)</p>
+        <h4>Dia 2 — Doutrinar</h4>
+        <p><strong>Story 1:</strong> A nova forma: ${esc(comoResolve || "a IA faz o rascunho, tu dás a tua voz")}.</p>
+        <p><strong>Story 2:</strong> Bastidores / prova de que funciona (um resultado teu ou de uma cliente).</p>
+        <p><strong>Story 3:</strong> Quebra a objeção mais comum de quem hesita.</p>
+        <h4>Dia 3 — Vender</h4>
+        <p><strong>Story 1:</strong> Abre o "${esc(produto)}"${preco ? ` por ${esc(preco)}` : ""}.</p>
+        <p><strong>Story 2:</strong> O que inclui + para quem é (${esc(desejo1)}).</p>
+        <p><strong>Story 3:</strong> Urgência real + CTA: "Manda <strong>${esc(chave)}</strong> na DM que te envio o link."</p>
+      </article>`;
+
+  // ── POSTS DE FEED ──
+  const pc = (label: string, cor: string, corpo: string) =>
+    `<div class="pcard"><span class="plabel" style="background:${cor}">${label}</span><div class="ptxt">${corpo}</div></div>`;
+  const postsBloco =
+    (p.postsTopo || "").trim() || (p.postsMeio || "").trim() || (p.postsFundo || "").trim()
+      ? [
+          (p.postsTopo || "").trim() && pc("Topo &middot; atrair", "#2E7CB8", nl2p(p.postsTopo)),
+          (p.postsMeio || "").trim() && pc("Meio &middot; nutrir", "#C8487E", nl2p(p.postsMeio)),
+          (p.postsFundo || "").trim() && pc("Fundo &middot; vender", "#1c6b4a", nl2p(p.postsFundo)),
+        ].filter(Boolean).join("\n      ")
+      : [
+          pc("Topo &middot; atrair", "#2E7CB8", `<p><strong>Reel:</strong> um erro que o teu público comete sobre "${esc(nicho)}". Gancho nos 3s + entrega rápida + "guarda para usar".</p>`),
+          pc("Meio &middot; nutrir", "#C8487E", `<p><strong>Carrossel:</strong> "Como eu resolveria ${esc(dor1)} se começasse hoje." Uma ideia por slide, passo a passo.</p>`),
+          pc("Fundo &middot; vender", "#1c6b4a", `<p><strong>Post:</strong> apresenta o "${esc(produto)}"${preco ? ` (${esc(preco)})` : ""}. Prova + oferta + CTA: "Manda ${esc(chave)} na DM".</p>`),
+        ].join("\n      ");
+
+  const li = (arr: string[]) => arr.map((x) => `<li>${esc(x)}</li>`).join("");
+
+  return `<!doctype html><html lang="pt"><head><meta charset="utf-8">
+<title>${esc(produto)} — o teu produto completo</title>
+<style>
+  :root{--p:#1c6b4a;--esc:#0f3d2e;--clara:#eafaf0;--cinza:#6b7a72;--txt:#24302a;--linha:#e3ece7}
+  *{box-sizing:border-box;margin:0;padding:0}
+  @page{margin:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;color:var(--txt);line-height:1.6;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .hero{background:linear-gradient(160deg,var(--esc),var(--p));color:#fff;padding:54px 46px 42px}
+  .eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.82);font-weight:700;margin-bottom:14px}
+  .tag{display:inline-block;border:1px solid rgba(255,255,255,.45);border-radius:40px;padding:5px 14px;font-size:12px;letter-spacing:.04em;margin-bottom:16px}
+  .hero h1{font-size:32px;line-height:1.12;font-weight:800;margin-bottom:10px}
+  .hero .sub{font-size:15px;opacity:.95;max-width:620px}
+  .hero .meta{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+  .hero .chip{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);border-radius:40px;padding:7px 15px;font-size:13px;font-weight:600}
+  .main{padding:30px 46px 40px}
+  .como{background:var(--clara);border-radius:12px;padding:16px 18px;font-size:13.5px;margin:0 0 28px}
+  .como b{color:var(--esc)}
+  .indice{list-style:none;margin:10px 0 0;padding:0;columns:2;font-size:13.5px}
+  .indice li{margin:3px 0;color:var(--esc)}
+  .sec{margin:0 0 32px;page-break-inside:avoid}
+  .sec-h{font-size:11px;font-weight:700;color:var(--p);letter-spacing:.1em;margin-bottom:2px}
+  h2{font-size:21px;font-weight:800;color:var(--esc);margin-bottom:6px}
+  .lead{color:var(--cinza);font-size:14px;margin-bottom:14px;max-width:640px}
+  .passos{font-size:13px;color:var(--txt);background:#faf7f2;border:1px solid var(--linha);border-radius:10px;padding:12px 16px;margin-bottom:14px}
+  .passos b{color:var(--esc)}
+  .passos ol{margin:6px 0 0 18px} .passos li{margin:4px 0}
+  .copy h4{font-size:14px;color:var(--esc);margin:14px 0 4px}
+  .copy p{font-size:13.5px;margin:0 0 9px}
+  .copy strong{color:var(--esc)}
+  .code-h{font-size:12px;font-weight:700;color:var(--esc);margin:14px 0 6px}
+  .code{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10px;line-height:1.45;color:#24302a;background:#f4f7f5;border:1px solid var(--linha);border-radius:10px;padding:12px 14px}
+  .pcard{border:1px solid var(--linha);border-radius:12px;padding:14px 18px;margin:0 0 12px;background:#fff;page-break-inside:avoid}
+  .plabel{display:inline-block;color:#fff;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;border-radius:40px;padding:3px 11px;margin-bottom:8px}
+  .ptxt p{font-size:13.5px;margin:0 0 8px}
+  .callout{background:var(--clara);border-left:4px solid var(--p);border-radius:10px;padding:14px 16px;font-size:13.5px}
+  .callout b{color:var(--esc)}
+  .footer{padding:16px 46px;color:var(--cinza);font-size:12px;border-top:1px solid var(--linha)}
+</style></head><body>
+  <div class="hero">
+    <div class="eyebrow">${esc(nome)} &middot; ${esc(nicho)}</div>
+    <span class="tag">${esc(rotulo)} &middot; produto completo</span>
+    <h1>${esc(produto)}</h1>
+    <p class="sub">${esc(transf || comoResolve || "O teu produto, pronto a lançar.")}</p>
+    <div class="meta">
+      ${preco ? `<span class="chip">${esc(preco)}</span>` : ""}
+      <span class="chip">${esc(formato)}</span>
+    </div>
+  </div>
+  <div class="main">
+    <div class="como">
+      <b>Está tudo aqui — só tens de aplicar.</b> Este documento traz o teu produto do início ao fim: como o criar, a página de vendas (com o código pronto a colar), o calendário de stories e de posts, e o passo a passo de como vender. Ajusta os textos à tua voz antes de publicar.
+      <ol class="indice">
+        <li>1. Como criar o produto</li>
+        <li>2. Página de vendas (+ código)</li>
+        <li>3. Calendário de stories (3 dias)</li>
+        <li>4. Posts de feed (funil)</li>
+        <li>5. Como vender / lançar</li>
+      </ol>
+    </div>
+
+    <section class="sec">
+      <div class="sec-h">PARTE 1</div><h2>Como criar o produto</h2>
+      <p class="lead">O teu produto entrega esta transformação: <strong>${esc(transf || "de onde a pessoa está para onde quer chegar")}</strong>.</p>
+      <div class="passos"><b>Passo a passo</b><ol>
+        <li><b>Fixa a promessa.</b> Numa frase: o que a pessoa consegue depois de usar o ${esc(produto)}.</li>
+        <li><b>Esboça o conteúdo.</b> Lista os passos que levam o teu público ${desejo1 ? `a ${esc(desejo1.toLowerCase())}` : "ao resultado"} — cada passo é um módulo/secção.</li>
+        <li><b>Cria o material (${esc(formato)}).</b> Usa a IA para o rascunho e dá-lhe a tua voz; grava vídeos curtos ou monta o PDF/template.</li>
+        <li><b>Escolhe onde entregar e cobrar.</b> Define a plataforma de pagamento e de acesso (email automático após a compra).</li>
+        <li><b>Monta a página de vendas.</b> Usa o código da Parte 2 (cola no Lovable) e liga o botão ao pagamento.</li>
+        <li><b>Testa e lança.</b> Faz uma compra de teste e segue o calendário das Partes 3 e 4.</li>
+      </ol></div>
+    </section>
+
+    <section class="sec">
+      <div class="sec-h">PARTE 2</div><h2>Página de vendas</h2>
+      <div class="passos"><b>Passo a passo</b><ol>
+        <li>Copia o código HTML (seleciona tudo dentro da caixa) e cola no Lovable.</li>
+        <li>O Lovable monta a página; ajusta imagens, o preço e liga o botão ao teu link de pagamento.</li>
+        <li>Publica e usa o link na bio e nos CTAs.</li>
+      </ol></div>
+      <p class="code-h">Código HTML da página (copia e cola no Lovable):</p>
+      <pre class="code">${esc(landingCode)}</pre>
+    </section>
+
+    <section class="sec">
+      <div class="sec-h">PARTE 3</div><h2>Calendário de stories</h2>
+      <div class="passos"><b>Como usar</b><ol>
+        <li>Publica em 3 dias: Dia 1 aquece, Dia 2 doutrina, Dia 3 vende.</li>
+        <li>5 a 7 stories por dia; usa enquetes e caixas de pergunta.</li>
+        <li>Termina sempre a levar para a palavra-chave da DM (<strong>${esc(chave)}</strong>).</li>
+      </ol></div>
+      ${storiesBloco}
+    </section>
+
+    <section class="sec">
+      <div class="sec-h">PARTE 4</div><h2>Posts de feed</h2>
+      <div class="passos"><b>Como usar</b><ol>
+        <li>Publica na ordem do funil ao longo da semana.</li>
+        <li>Topo atrai · Meio nutre · Fundo vende.</li>
+        <li>Adapta o gancho e o CTA à tua voz antes de publicar.</li>
+      </ol></div>
+      ${postsBloco}
+    </section>
+
+    <section class="sec">
+      <div class="sec-h">PARTE 5</div><h2>Como vender / lançar</h2>
+      <p class="lead">${esc(publico ? `O teu público: ${publico}` : "Fala diretamente com quem sente a dor que resolves.")}</p>
+      <div class="passos"><b>Plano de lançamento (1 semana)</b><ol>
+        <li><b>Dias 1–2 — Aquecer:</b> conteúdo de topo (Parte 4) + stories do Dia 1. Toca na dor, ainda sem vender.</li>
+        <li><b>Dias 3–4 — Doutrinar:</b> mostra a nova forma e a prova. Publica o carrossel de meio de funil.</li>
+        <li><b>Dia 5 — Abrir:</b> stories do Dia 3 + post de fundo. Abre o ${esc(produto)}${preco ? ` por ${esc(preco)}` : ""} e explica o que inclui.</li>
+        <li><b>Dias 6–7 — Fechar:</b> urgência real (bónus ou preço só até X). Responde a objeções nas DMs.</li>
+        <li><b>Sempre:</b> leva tudo para a DM — "Manda <strong>${esc(chave)}</strong> que te envio o link." Responde rápido e envia o link de pagamento.</li>
+      </ol></div>
+      ${desejos.length ? `<div class="callout"><b>Argumentos de venda (usa nos CTAs):</b><ul style="margin:6px 0 0 18px">${li(desejos.slice(0, 5))}</ul></div>` : ""}
+    </section>
+
+    <div class="callout"><b>Regra de ouro:</b> a IA escreve o rascunho, tu dás a voz. Troca 2 ou 3 frases pelas tuas palavras antes de publicar — é isso que separa quem soa a robô de quem soa a autoridade.</div>
+  </div>
+  <div class="footer">${esc(nome)} &middot; ${esc(produto)} &middot; ${esc(nicho)}</div>
+</body></html>`;
+}
+
 export function promptLandingPage(d: DocState, rotulo: string, p: ProdutoNivel): string {
   return `Age como copywriter de resposta direta e web designer. Devolve uma PÁGINA DE VENDAS em HTML, num único ficheiro pronto a colar no Lovable, seguindo EXATAMENTE o modelo abaixo: mantém toda a estrutura, o CSS e as cores; substitui apenas os textos entre [ ] pelos desta conta e produto (e adapta as 4 vantagens, os itens da oferta e o FAQ ao produto).
 
