@@ -276,26 +276,26 @@ export function parsePostsFunil(texto: string): { topo: string; meio: string; fu
 }
 
 export function promptLandingPage(d: DocState, rotulo: string, p: ProdutoNivel): string {
-  return `Age como copywriter de resposta direta. Escreve o TEXTO COMPLETO de uma página de vendas (landing page) para este produto da minha esteira, pronta a copiar.
+  return `Age como copywriter de resposta direta E web designer. Cria uma PÁGINA DE VENDAS COMPLETA EM HTML (um único ficheiro, pronto a abrir no browser ou a colar no Lovable) para este produto da minha esteira.
 
 ${contextoDoc(d)}
 
 ${contextoProduto(rotulo, p)}
 
-Entrega cada secção já com o texto pronto:
-1. Título (promessa forte) + subtítulo
-2. O problema (espelha a dor do público)
-3. A viragem / a nova forma de resolver
-4. O que é o produto + o que inclui (bullets)
-5. A transformação (antes → depois)
-6. Para quem é / para quem NÃO é
-7. Prova e autoridade (deixa [DEPOIMENTO] para eu preencher)
-8. A oferta + preço + bónus
-9. Garantia
-10. FAQ (5 perguntas com resposta)
-11. CTA final
+REQUISITOS DO HTML
+- Um único ficheiro HTML válido e autónomo, com TODO o CSS embutido em <style> (sem ficheiros externos e sem JavaScript).
+- Português de Portugal, escrito na minha voz e tom de marca.
+- Cores da marca: principal #1c6b4a, escura #0f3d2e, clara #eafaf0, texto #24302a, cinza #6b7a72. Tipografia Inter/system, cantos arredondados, botões em pílula.
+- Estrutura por esta ordem, cada secção já com o texto escrito:
+  1. HERO (fundo em gradiente escuro→principal, texto branco): etiqueta pequena, título com a promessa forte, subtítulo, botão CTA com o preço e uma nota de bónus.
+  2. PROBLEMA: título + parágrafo que espelha a dor do público.
+  3. O QUE RECEBES (fundo claro): título + subtítulo + grelha de 4 cartões numerados (o que inclui).
+  4. OFERTA (cartão com borda na cor principal): preço grande + "pagamento único", lista de bullets com ✓, botão CTA e uma linha de garantia.
+  5. FAQ (fundo claro): 4 a 5 perguntas em <details>/<summary> com resposta.
+  6. RODAPÉ: © com o meu nome e nicho.
+- Preenche tudo com os dados acima (nome do produto, preço, formato, transformação, público, dores). Onde precisares de prova real, deixa [DEPOIMENTO] para eu preencher.
 
-Entrega só o texto da página, pronto a colar (sem comentários antes nem depois). ${REGRAS}`;
+Devolve APENAS o código HTML, a começar em <!DOCTYPE html> e a terminar em </html>. Sem explicações antes nem depois. ${REGRAS}`;
 }
 
 export function promptStories(d: DocState, rotulo: string, p: ProdutoNivel): string {

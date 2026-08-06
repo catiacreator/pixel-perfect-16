@@ -460,6 +460,25 @@ export default function CriarProduto() {
     );
   };
 
+  // A página de vendas é gerada em HTML — permite pré-visualizar e descarregar .html.
+  const pareceHTML = (s: string) => /<!doctype html|<html|<header|<section/i.test(s || "");
+  const baixarLandingHTML = (k: NivelKey) => {
+    const html = (esteira.niveis[k].landing || "").trim();
+    if (!html) return;
+    const url = URL.createObjectURL(new Blob([html], { type: "text/html;charset=utf-8" }));
+    const a = document.createElement("a");
+    a.href = url; a.download = `pagina-de-vendas-${k}.html`; a.click();
+    URL.revokeObjectURL(url);
+  };
+  const preverLandingHTML = (k: NivelKey) => {
+    const html = (esteira.niveis[k].landing || "").trim();
+    if (!html) return;
+    const url = URL.createObjectURL(new Blob([html], { type: "text/html;charset=utf-8" }));
+    const w = window.open(url, "_blank");
+    if (!w) baixarLandingHTML(k); // pop-up bloqueado → descarrega em vez de pré-visualizar
+    window.setTimeout(() => URL.revokeObjectURL(url), 30000);
+  };
+
   if (!carregado) return <Layout><div className="py-20 text-center text-ink/40">A carregar…</div></Layout>;
 
   return (
@@ -771,6 +790,22 @@ export default function CriarProduto() {
                             cor={COR} botaoCor={COR} agente="Cat.IA" agenteUrl={catIa.url} agentePass={catIa.password}
                           />
                           <ColarResultado label="Página de vendas" value={n.landing} onChange={(v) => setNivel(key, { landing: v })} />
+                          {pareceHTML(n.landing) && (
+                            <div className="mt-2 flex flex-wrap gap-2">
+                              <button
+                                onClick={() => preverLandingHTML(key)}
+                                className="inline-flex items-center gap-1.5 rounded-full bg-terracotta text-cream px-4 py-2 text-[13px] font-semibold hover:bg-terracotta-dark transition-colors"
+                              >
+                                <FileText size={14} /> Pré-visualizar página
+                              </button>
+                              <button
+                                onClick={() => baixarLandingHTML(key)}
+                                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-white px-4 py-2 text-[13px] font-semibold text-ink/70 hover:text-ink transition-colors"
+                              >
+                                <Download size={14} /> Descarregar .html
+                              </button>
+                            </div>
+                          )}
 
                           <PromptCard
                             numero={3}
