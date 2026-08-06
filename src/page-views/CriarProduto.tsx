@@ -860,17 +860,30 @@ export default function CriarProduto() {
                   );
                 })()}
 
-                <div className="mt-8 rounded-2xl bg-gradient-to-br from-terracotta-dark to-terracotta p-8 text-center text-cream">
-                <Sparkles size={22} className="mx-auto mb-2" />
-                <h3 className="mb-1 font-serif text-2xl">A tua esteira completa</h3>
-                <p className="mx-auto mb-4 max-w-lg text-cream/85">{progresso}/{TOTAL_DOCS} documentos prontos. <b>Cada produto tem o seu documento</b> — usa o botão “Descarregar documento” em cada nível acima. Aqui descarregas a esteira toda num único ficheiro de texto.</p>
-                <div className="flex flex-wrap items-center justify-center gap-2.5">
-                  <button onClick={exportarEsteira} disabled={!temEsteiraAlgo}
-                    className="inline-flex items-center gap-2 rounded-full bg-cream px-6 py-3 text-sm font-semibold text-terracotta-dark hover:bg-white transition-colors disabled:opacity-50">
-                    <Download size={16} /> Descarregar tudo (.txt)
-                  </button>
-                </div>
-                </div>
+                {(() => {
+                  const nivel = NIVEIS.find((x) => x.key === nivelTab) || NIVEIS[0];
+                  const nn = esteira.niveis[nivel.key];
+                  const pronto = [nn.landing, nn.stories, nn.postsTopo, nn.postsMeio, nn.postsFundo].some((x) => (x || "").trim());
+                  return (
+                    <div className="mt-8 rounded-2xl bg-gradient-to-br from-terracotta-dark to-terracotta p-8 text-center text-cream">
+                      <Sparkles size={22} className="mx-auto mb-2" />
+                      <h3 className="mb-1 font-serif text-2xl">O teu produto {nivel.rotulo}</h3>
+                      <p className="mx-auto mb-4 max-w-lg text-cream/85">
+                        {pronto ? "O teu documento está pronto." : "Preenche os campos acima e o teu documento fica pronto."}
+                      </p>
+                      <div className="flex flex-wrap items-center justify-center gap-2.5">
+                        <button onClick={() => exportarProdutoDocumento(nivel.key)} disabled={!pronto}
+                          className="inline-flex items-center gap-2 rounded-full bg-cream px-6 py-3 text-sm font-semibold text-terracotta-dark hover:bg-white transition-colors disabled:opacity-50">
+                          <FileText size={16} /> Descarregar documento
+                        </button>
+                        <button onClick={exportarEsteira} disabled={!temEsteiraAlgo}
+                          className="inline-flex items-center gap-2 rounded-full border border-cream/60 px-5 py-3 text-sm font-semibold text-cream hover:bg-cream/10 transition-colors disabled:opacity-50">
+                          <Download size={16} /> Tudo em .txt
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
               )}
 
