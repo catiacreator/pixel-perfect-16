@@ -9,11 +9,8 @@ import PilarBreadcrumb from "../components/PilarBreadcrumb";
 import { Link } from "@/lib/router-compat";
 import {
   ArrowUpRight,
-  LayoutGrid,
   Sparkles,
   Film,
-  MessageSquare,
-  Bot,
   BookOpen,
   Video,
   Images,
@@ -25,27 +22,13 @@ type Grupo = { titulo: string; itens: Item[] };
 
 const GRUPOS: Grupo[] = [
   {
-    titulo: "Bónus",
-    itens: [
-      { label: "Agentes Creator", to: "/agentes", icon: Sparkles },
-    ],
-  },
-  {
-    titulo: "Cria o teu conteúdo",
+    titulo: "Formatos de Conteúdo",
     itens: [
       { label: "Cria a tua série", to: "/metodo/pilar-2/reels-em-serie", icon: Film },
       { label: "Yap Content", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=roteiros", icon: BookOpen },
       { label: "Reels virais", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=reels", icon: Video },
       { label: "Carrosséis virais", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=carrossel", icon: Images },
       { label: "Stories que vendem", to: "/metodo/pilar-2/redes-sociais?aba=formatos&fmt=stories", icon: Layers },
-    ],
-  },
-  {
-    titulo: "Ferramentas essenciais",
-    itens: [
-      { label: "Automação de mensagens", to: "/metodo/pilar-2/redes-sociais?aba=automacao", icon: MessageSquare },
-      { label: "Carousel Snap", to: "/metodo/pilar-2/redes-sociais?aba=carousel-snap", icon: LayoutGrid },
-      { label: "Assistente Cat.IA", to: "/metodo/pilar-2/redes-sociais?aba=assistente", icon: Bot },
     ],
   },
 ];
@@ -64,15 +47,17 @@ export default function CriacaoLivre() {
         numeral="✦"
         icon={<Sparkles size={18} />}
         pilarLabel="A tua jornada"
-        titulo="Criação Livre"
-        tituloHighlight="ao teu ritmo"
-        subtitulo="Todas as ferramentas e aulas num só sítio — entra onde precisares."
+        titulo="Formatos de"
+        tituloHighlight="Conteúdo"
+        subtitulo="Escolhe o formato e cria — séries, Reels, carrosséis e stories, cada um com o seu método."
         bg="linear-gradient(115deg, #405DE6 0%, #833AB4 40%, #C13584 65%, #F56040 88%, #FCAF45 100%)"
       />
       <div className="max-w-[1280px] mx-auto px-5 md:px-10 pt-8 md:pt-10 pb-20">
         {GRUPOS.map((g) => (
           <div key={g.titulo} className="mb-8">
-            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-terracotta">{g.titulo}</p>
+            {GRUPOS.length > 1 && (
+              <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-terracotta">{g.titulo}</p>
+            )}
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {g.itens.map((it) => {
                 const Icon = it.icon;

@@ -14,6 +14,8 @@ import {
   HeartPulse,
   Instagram,
   Lock,
+  LayoutGrid,
+  Wrench,
 } from "lucide-react";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
 import { useBloqueios } from "@/lib/bloqueios";
@@ -61,22 +63,31 @@ export default function Jornada() {
         bg="linear-gradient(115deg, #4C1D95 0%, #6D28D9 40%, #833AB4 72%, #9E7FEC 100%)"
       />
       <div className="max-w-[1400px] mx-auto px-5 md:px-10 pt-8 md:pt-10 pb-20 md:pb-28">
-        <Link
-          to="/agentes-creator"
-          className="group flex items-center gap-4 rounded-2xl border border-[var(--color-border)] bg-white p-5 transition-colors hover:border-[#833AB4] md:max-w-2xl"
-        >
-          <span
-            className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-white"
-            style={{ background: "linear-gradient(135deg,#7C3AED,#C13584)" }}
-          >
-            <Sparkles size={22} />
-          </span>
-          <span className="min-w-0 flex-1">
-            <span className="block font-serif text-lg text-ink">Agentes Creator</span>
-            <span className="block text-sm text-ink/55">Agentes de IA prontos a criar conteúdo por ti.</span>
-          </span>
-          <ArrowUpRight size={18} className="shrink-0 text-ink/30 transition-colors group-hover:text-[#833AB4]" />
-        </Link>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            { label: "Agentes Creator", sub: "Agentes de IA prontos a criar por ti.", to: "/agentes-creator", Icon: Sparkles },
+            { label: "Formatos de Conteúdo", sub: "Séries, Reels, carrosséis e stories.", to: "/criacao-livre", Icon: LayoutGrid },
+            { label: "Ferramentas Essenciais", sub: "Automação, Carousel Snap e Assistente.", to: "/ferramentas", Icon: Wrench },
+          ].map((c) => (
+            <Link
+              key={c.label}
+              to={c.to}
+              className="group flex items-center gap-4 rounded-2xl border border-[var(--color-border)] bg-white p-5 transition-colors hover:border-[#833AB4]"
+            >
+              <span
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-white"
+                style={{ background: "linear-gradient(135deg,#7C3AED,#C13584)" }}
+              >
+                <c.Icon size={22} />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block font-serif text-lg text-ink">{c.label}</span>
+                <span className="block text-sm text-ink/55">{c.sub}</span>
+              </span>
+              <ArrowUpRight size={18} className="shrink-0 text-ink/30 transition-colors group-hover:text-[#833AB4]" />
+            </Link>
+          ))}
+        </div>
       </div>
     </Layout>
   );

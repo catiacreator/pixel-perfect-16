@@ -11,7 +11,6 @@ import {
   LayoutGrid,
   LineChart,
   CalendarDays,
-  Sparkles,
   Check,
   ArrowUpRight,
 } from "lucide-react";
@@ -36,11 +35,6 @@ const CAMINHO: CardDef[] = [
   { key: "analise", passo: "Passo 4", icon: LineChart, titulo: "Analisar o teu perfil", sub: "Vê o que resulta e o que falta.", to: "/maquina-analises", cor: "#F56040", cor2: "#E1306C" },
   { key: "plano", passo: "Passo 5", icon: CalendarDays, titulo: "Plano de Posts · Conteúdo Viral", sub: "Planeia e agenda o que vais publicar.", to: "/metodo/pilar-2/redes-sociais?aba=plano", cor: "#FCAF45", cor2: "#F56040" },
 ];
-
-// Ramo à parte — sozinho numa linha por baixo do fluxo principal.
-const RAMO_LIVRE: CardDef = {
-  key: "livre", passo: "", icon: Sparkles, titulo: "Criação Livre", sub: "Tu é que decides o que crias — todas as ferramentas que precisas.", to: "/criacao-livre", cor: "#405DE6", cor2: "#5851DB",
-};
 
 // Selo no canto: check (100%), anel de progresso, ou seta (ferramenta aberta).
 function Selo({ prog, cor }: { prog: CardProgresso; cor: string }) {
@@ -157,14 +151,6 @@ export default function FluxoJornada() {
               {i < CAMINHO.length - 1 && <Conector />}
             </div>
           ))}
-        </div>
-
-        {/* Linha a separar a fila de cima do card Criação Livre */}
-        <div className="mt-[50px] w-full border-t border-black/10" />
-
-        {/* Criação Livre — mesmo design dos outros cards, mas maior (420px) */}
-        <div className="mt-8 flex w-[420px] flex-col">
-          <Cartao card={RAMO_LIVRE} prog={prog[RAMO_LIVRE.key]} largura="w-[420px]" />
         </div>
       </div>
     </div>
