@@ -27,6 +27,7 @@ import { Route as DocMestreRouteImport } from './routes/doc-mestre'
 import { Route as CriarProdutoRouteImport } from './routes/criar-produto'
 import { Route as CriarCarrosseisRouteImport } from './routes/criar-carrosseis'
 import { Route as CriacaoLivreRouteImport } from './routes/criacao-livre'
+import { Route as CreatorLabRouteImport } from './routes/creator-lab'
 import { Route as ConteudoIaRouteImport } from './routes/conteudo-ia'
 import { Route as ConquistasRouteImport } from './routes/conquistas'
 import { Route as AuthRouteImport } from './routes/auth'
@@ -201,6 +202,11 @@ const CriarCarrosseisRoute = CriarCarrosseisRouteImport.update({
 const CriacaoLivreRoute = CriacaoLivreRouteImport.update({
   id: '/criacao-livre',
   path: '/criacao-livre',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CreatorLabRoute = CreatorLabRouteImport.update({
+  id: '/creator-lab',
+  path: '/creator-lab',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConteudoIaRoute = ConteudoIaRouteImport.update({
@@ -678,6 +684,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/conteudo-ia': typeof ConteudoIaRoute
+  '/creator-lab': typeof CreatorLabRoute
   '/criacao-livre': typeof CriacaoLivreRoute
   '/criar-carrosseis': typeof CriarCarrosseisRoute
   '/criar-produto': typeof CriarProdutoRoute
@@ -782,6 +789,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/conteudo-ia': typeof ConteudoIaRoute
+  '/creator-lab': typeof CreatorLabRoute
   '/criacao-livre': typeof CriacaoLivreRoute
   '/criar-carrosseis': typeof CriarCarrosseisRoute
   '/criar-produto': typeof CriarProdutoRoute
@@ -877,6 +885,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/conquistas': typeof ConquistasRoute
   '/conteudo-ia': typeof ConteudoIaRoute
+  '/creator-lab': typeof CreatorLabRoute
   '/criacao-livre': typeof CriacaoLivreRoute
   '/criar-carrosseis': typeof CriarCarrosseisRoute
   '/criar-produto': typeof CriarProdutoRoute
@@ -983,6 +992,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/conquistas'
     | '/conteudo-ia'
+    | '/creator-lab'
     | '/criacao-livre'
     | '/criar-carrosseis'
     | '/criar-produto'
@@ -1087,6 +1097,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/conquistas'
     | '/conteudo-ia'
+    | '/creator-lab'
     | '/criacao-livre'
     | '/criar-carrosseis'
     | '/criar-produto'
@@ -1181,6 +1192,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/conquistas'
     | '/conteudo-ia'
+    | '/creator-lab'
     | '/criacao-livre'
     | '/criar-carrosseis'
     | '/criar-produto'
@@ -1287,6 +1299,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ConquistasRoute: typeof ConquistasRoute
   ConteudoIaRoute: typeof ConteudoIaRoute
+  CreatorLabRoute: typeof CreatorLabRoute
   CriacaoLivreRoute: typeof CriacaoLivreRoute
   CriarCarrosseisRoute: typeof CriarCarrosseisRoute
   CriarProdutoRoute: typeof CriarProdutoRoute
@@ -1436,6 +1449,13 @@ declare module '@tanstack/react-router' {
       path: '/criacao-livre'
       fullPath: '/criacao-livre'
       preLoaderRoute: typeof CriacaoLivreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/creator-lab': {
+      id: '/creator-lab'
+      path: '/creator-lab'
+      fullPath: '/creator-lab'
+      preLoaderRoute: typeof CreatorLabRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/conteudo-ia': {
@@ -2338,6 +2358,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ConquistasRoute: ConquistasRoute,
   ConteudoIaRoute: ConteudoIaRoute,
+  CreatorLabRoute: CreatorLabRoute,
   CriacaoLivreRoute: CriacaoLivreRoute,
   CriarCarrosseisRoute: CriarCarrosseisRoute,
   CriarProdutoRoute: CriarProdutoRoute,
