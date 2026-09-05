@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<title>Método Cat.IA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#F7F5F8; --surface:#FFFFFF; --surface-2:#F1EDF4;
+  --ink:#241F2E; --ink-soft:#5B5368; --ink-faint:#8B8398;
+  --line:#E5DFEC; --line-strong:#D3CADD;
+  --accent:#C81E63; --accent-ink:#A3164F; --accent-soft:#FBE7F0;
+  --teal:#0E7C7B; --teal-ink:#0B6463;
+  --shadow:0 1px 2px rgba(36,31,46,.04),0 8px 30px rgba(36,31,46,.06);
+  --maxw:720px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#161219; --surface:#1E1926; --surface-2:#271F31;
+    --ink:#EEE8F3; --ink-soft:#ACA2BA; --ink-faint:#786E86;
+    --line:#332B40; --line-strong:#43394F;
+    --accent:#FF5C93; --accent-ink:#FF80AB; --accent-soft:#2C1522;
+    --teal:#3FC9C7; --teal-ink:#5BD6D4;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 34px rgba(0,0,0,.34);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#161219; --surface:#1E1926; --surface-2:#271F31;
+  --ink:#EEE8F3; --ink-soft:#ACA2BA; --ink-faint:#786E86;
+  --line:#332B40; --line-strong:#43394F;
+  --accent:#FF5C93; --accent-ink:#FF80AB; --accent-soft:#2C1522;
+  --teal:#3FC9C7; --teal-ink:#5BD6D4;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 34px rgba(0,0,0,.34);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Hanken Grotesk",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  font-size:17px; line-height:1.62; letter-spacing:-.003em;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 22px}
+p{margin:0 0 1em; max-width:64ch}
+strong{font-weight:700; color:var(--ink)}
+em{font-style:italic}
+a{color:var(--accent-ink); text-underline-offset:2px}
+
+/* ---------- header ---------- */
+header.top{padding:72px 0 30px}
+.eyebrow{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:500;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--accent-ink);
+}
+h1{
+  font-family:"Fraunces",Georgia,serif; font-weight:600;
+  font-size:clamp(2.7rem,7vw,4.1rem); line-height:1.02; letter-spacing:-.02em;
+  margin:.28em 0 .32em; text-wrap:balance;
+}
+.lede{font-size:clamp(1.08rem,2.4vw,1.28rem); color:var(--ink-soft); max-width:56ch; margin:0}
+.byline{
+  margin-top:22px; padding-top:18px; border-top:1px solid var(--line);
+  font-family:"IBM Plex Mono",monospace; font-size:12.5px; color:var(--ink-faint);
+  letter-spacing:.02em;
+}
+.byline b{color:var(--ink-soft); font-weight:500}
+
+/* ---------- section rhythm ---------- */
+section{padding:30px 0}
+.sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:14px}
+.sec-num{
+  font-family:"IBM Plex Mono",monospace; font-size:13px; font-weight:600;
+  color:var(--accent); letter-spacing:.05em; flex:none; padding-top:.5em;
+}
+h2{
+  font-family:"Fraunces",Georgia,serif; font-weight:600;
+  font-size:clamp(1.55rem,3.6vw,2.15rem); line-height:1.1; letter-spacing:-.015em;
+  margin:0; text-wrap:balance;
+}
+h3{
+  font-family:"Hanken Grotesk",sans-serif; font-weight:700;
+  font-size:1.02rem; letter-spacing:-.01em; margin:0 0 .35em;
+}
+.rule{height:1px; background:var(--line); border:0; margin:8px 0}
+
+/* ---------- thesis callout ---------- */
+.thesis{
+  background:var(--accent-soft); border:1px solid var(--line);
+  border-radius:16px; padding:26px 26px 20px; margin:8px 0 4px;
+}
+.thesis .tag{font-family:"IBM Plex Mono",monospace; font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent-ink)}
+.thesis p{font-family:"Fraunces",Georgia,serif; font-size:1.25rem; line-height:1.4; color:var(--ink); margin:.5em 0 0; max-width:52ch}
+
+/* ---------- figures ---------- */
+figure{margin:22px 0; padding:0}
+.fig-card{
+  background:var(--surface); border:1px solid var(--line); border-radius:16px;
+  padding:24px 20px 8px; box-shadow:var(--shadow); overflow-x:auto;
+}
+figure svg{display:block; width:100%; height:auto; color:var(--ink)}
+figcaption{
+  font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-faint);
+  line-height:1.5; margin-top:14px; padding:0 4px; letter-spacing:.01em;
+}
+.svg-accent{color:var(--accent)}
+.svg-teal{color:var(--teal)}
+
+/* ---------- step cards ---------- */
+.steps{display:grid; gap:14px; margin:18px 0 6px}
+.step{
+  display:grid; grid-template-columns:auto 1fr; gap:16px; align-items:start;
+  background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  padding:18px 20px; box-shadow:var(--shadow);
+}
+.step .n{
+  font-family:"Fraunces",Georgia,serif; font-weight:600; font-size:1.6rem;
+  color:var(--accent); line-height:1; width:1.4em; text-align:center;
+}
+.step p{margin:.3em 0 0; font-size:.98rem; color:var(--ink-soft)}
+.step h3{margin:0}
+
+/* ---------- generic cards grid ---------- */
+.grid2{display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:14px; margin:18px 0 6px}
+.card{
+  background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  padding:18px 18px; box-shadow:var(--shadow);
+}
+.card .k{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent-ink); display:block; margin-bottom:7px}
+.card p{margin:0; font-size:.94rem; color:var(--ink-soft)}
+.card p+p{margin-top:.6em}
+
+/* ---------- compare (amador/especialista) ---------- */
+.compare{display:grid; grid-template-columns:1fr 1fr; gap:0; border:1px solid var(--line); border-radius:14px; overflow:hidden; margin:18px 0 6px; background:var(--surface)}
+.compare>div{padding:16px 18px}
+.compare .bad{border-right:1px solid var(--line)}
+.compare .lab{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; margin-bottom:10px}
+.compare .bad .lab{color:var(--ink-faint)}
+.compare .good .lab{color:var(--accent-ink)}
+.compare ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:10px}
+.compare li{font-size:.92rem; line-height:1.4; color:var(--ink-soft)}
+.compare .bad li{text-decoration:line-through; text-decoration-color:var(--line-strong); opacity:.72}
+@media(max-width:520px){.compare{grid-template-columns:1fr}.compare .bad{border-right:0; border-bottom:1px solid var(--line)}}
+
+/* ---------- matrix table ---------- */
+.matrix{width:100%; border-collapse:collapse; margin:18px 0 6px; font-size:.93rem; overflow:hidden; border:1px solid var(--line); border-radius:14px}
+.matrix-wrap{overflow-x:auto; border-radius:14px; box-shadow:var(--shadow)}
+.matrix th,.matrix td{text-align:left; padding:13px 15px; border-bottom:1px solid var(--line); vertical-align:top}
+.matrix thead th{background:var(--surface-2); font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); font-weight:600}
+.matrix tbody th{font-family:"Hanken Grotesk"; font-weight:700; color:var(--ink); white-space:nowrap}
+.matrix tbody tr:last-child td,.matrix tbody tr:last-child th{border-bottom:0}
+.matrix td{color:var(--ink-soft)}
+.matrix .obj{color:var(--accent-ink); font-weight:600}
+
+/* ---------- metrics ---------- */
+.metrics{display:flex; flex-direction:column; gap:10px; margin:18px 0 6px}
+.metric{display:grid; grid-template-columns:120px 1fr; align-items:center; gap:14px}
+.metric .name{font-weight:600; font-size:.9rem}
+.metric .bar{height:26px; border-radius:7px; background:var(--surface-2); border:1px solid var(--line); position:relative; overflow:hidden}
+.metric .fill{position:absolute; inset:0 auto 0 0; border-radius:6px 0 0 6px}
+.metric .tier{font-family:"IBM Plex Mono",monospace; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); margin-left:6px}
+
+/* ---------- checklist ---------- */
+.check{list-style:none; margin:18px 0 6px; padding:0; display:grid; gap:2px}
+.check li{display:grid; grid-template-columns:26px 1fr; gap:10px; align-items:start; padding:11px 0; border-bottom:1px solid var(--line); font-size:.97rem}
+.check li:last-child{border-bottom:0}
+.check .box{margin-top:1px; width:19px; height:19px; border-radius:6px; border:2px solid var(--accent); position:relative; flex:none}
+.check .box::after{content:""; position:absolute; left:5px; top:1px; width:5px; height:10px; border:solid var(--accent); border-width:0 2px 2px 0; transform:rotate(42deg)}
+
+/* ---------- closing ---------- */
+.closer{background:var(--ink); color:var(--bg); border-radius:18px; padding:34px 30px; margin:26px 0 10px}
+.closer .eyebrow{color:var(--accent)}
+.closer h2{color:var(--bg); margin:.3em 0 .3em}
+.closer p{color:color-mix(in srgb,var(--bg) 78%, var(--ink)); max-width:54ch}
+:root[data-theme="dark"] .closer, :root:not([data-theme="light"]) .closer{border:1px solid var(--line)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .closer{background:var(--surface-2); color:var(--ink)} :root:not([data-theme="light"]) .closer h2{color:var(--ink)} :root:not([data-theme="light"]) .closer p{color:var(--ink-soft)}}
+:root[data-theme="dark"] .closer{background:var(--surface-2); color:var(--ink)}
+:root[data-theme="dark"] .closer h2{color:var(--ink)}
+:root[data-theme="dark"] .closer p{color:var(--ink-soft)}
+
+footer{padding:30px 0 70px; border-top:1px solid var(--line); margin-top:20px; color:var(--ink-faint); font-family:"IBM Plex Mono",monospace; font-size:12px; letter-spacing:.02em}
+
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:3px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="eyebrow">Método Cat.IA · Manual de conteúdo</div>
+  <h1>Como se constrói conteúdo que cresce</h1>
+  <p class="lede">A estrutura, do princípio ao post publicado. Não uma coleção de templates para copiar — o mecanismo por trás deles, para criares o que é teu e o algoritmo premeia.</p>
+  <div class="byline">para @catiacreator &nbsp;·&nbsp; nicho: criação de conteúdo &amp; crescimento no Instagram</div>
+</header>
+
+<section>
+  <div class="thesis">
+    <span class="tag">O princípio que muda tudo em 2026</span>
+    <p>Copia o mecanismo, nunca o artefacto. A fôrma que já provou funcionar é tua para usar; o recheio tem de ser inconfundivelmente teu.</p>
+  </div>
+  <p style="margin-top:22px">O Instagram deixou de premiar o conteúdo modelado à pressa — a mesma frase, o mesmo template que mil perfis publicaram na mesma semana. O que ele lê como “novo” não é uma estrutura inédita; é a tua opinião, a tua história e a tua especificidade dentro de uma estrutura sólida. Este manual separa as duas coisas: a <strong>engenharia</strong> (que se repete) e a <strong>substância</strong> (que só tu tens).</p>
+
+  <figure>
+    <div class="fig-card">
+      <svg viewBox="0 0 640 190" role="img" aria-label="Copiar o artefacto leva à penalização; copiar o mecanismo e encher com substância própria leva a conteúdo original premiado.">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <!-- top row: artefacto -->
+        <text x="0" y="30" font-family="IBM Plex Mono,monospace" font-size="12" fill="currentColor" opacity=".7">CAMINHO 1</text>
+        <rect x="0" y="42" width="150" height="46" rx="9" fill="none" stroke="currentColor" stroke-opacity=".55"/>
+        <text x="75" y="65" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="13" fill="currentColor">Post viral</text>
+        <text x="75" y="80" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="13" fill="currentColor">de outro perfil</text>
+        <line x1="150" y1="65" x2="232" y2="65" stroke="currentColor" stroke-opacity=".55" marker-end="url(#ar)"/>
+        <text x="191" y="58" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10.5" fill="currentColor" opacity=".7">copiar igual</text>
+        <rect x="234" y="42" width="168" height="46" rx="9" fill="none" stroke="currentColor" stroke-opacity=".55"/>
+        <text x="318" y="65" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="13" fill="currentColor">Mais um igual</text>
+        <text x="318" y="80" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="13" fill="currentColor">no meio de mil</text>
+        <line x1="402" y1="65" x2="484" y2="65" stroke="currentColor" stroke-opacity=".55" marker-end="url(#ar)"/>
+        <rect x="486" y="42" width="150" height="46" rx="9" fill="none" stroke-width="1.5" class="svg-teal" style="stroke:var(--ink-faint)"/>
+        <text x="561" y="70" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="13" fill="currentColor" opacity=".65">alcance afunda</text>
+        <!-- bottom row: mecanismo -->
+        <text x="0" y="128" font-family="IBM Plex Mono,monospace" font-size="12" class="svg-accent">CAMINHO 2</text>
+        <rect x="0" y="140" width="150" height="46" rx="9" fill="none" stroke="currentColor" stroke-opacity=".55"/>
+        <text x="75" y="163" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="13" fill="currentColor">Post viral</text>
+        <text x="75" y="178" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="13" fill="currentColor">de outro perfil</text>
+        <line x1="150" y1="163" x2="232" y2="163" stroke="currentColor" class="svg-accent" marker-end="url(#ar)"/>
+        <text x="191" y="156" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10.5" class="svg-accent">extrair mecanismo</text>
+        <rect x="234" y="140" width="168" height="46" rx="9" fill="none" stroke="currentColor" stroke-opacity=".55"/>
+        <text x="318" y="163" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="13" fill="currentColor">Estrutura + o TEU</text>
+        <text x="318" y="178" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="13" fill="currentColor">ângulo e exemplos</text>
+        <line x1="402" y1="163" x2="484" y2="163" stroke="currentColor" class="svg-accent" marker-end="url(#ar)"/>
+        <rect x="486" y="140" width="150" height="46" rx="9" fill="none" stroke-width="2" class="svg-accent" style="stroke:var(--accent)"/>
+        <text x="561" y="168" text-anchor="middle" font-family="Hanken Grotesk,sans-serif" font-size="13" font-weight="600" class="svg-accent" style="fill:var(--accent-ink)">original que sobe</text>
+      </svg>
+    </div>
+    <figcaption>Fig. 1 — O mesmo ponto de partida, dois destinos. O que separa a penalização do alcance é o passo do meio: copiar o post vs. extrair a sua engenharia e enchê-la com o que é teu.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">01</span><h2>O ecossistema: cada formato tem uma função</h2></div>
+  <p>Antes de qualquer post, percebe onde ele encaixa. Publicar “à toa” não cresce porque cada formato faz um trabalho diferente no percurso de quem te descobre até quem te compra. Trata o teu conteúdo como um sistema, não como peças soltas.</p>
+
+  <figure>
+    <div class="fig-card">
+      <svg viewBox="0 0 640 210" role="img" aria-label="Reels atrai quem não te conhece, o carrossel educa e dá autoridade, os stories conectam e vendem, e o direct fecha. Guardados e partilhas realimentam o alcance dos Reels.">
+        <defs>
+          <marker id="ar2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+        </defs>
+        <!-- 4 stages -->
+        <g font-family="Hanken Grotesk,sans-serif">
+          <rect x="4" y="54" width="140" height="66" rx="11" fill="var(--surface-2)" stroke="currentColor" stroke-opacity=".35"/>
+          <text x="74" y="42" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" class="svg-accent" style="fill:var(--accent-ink)">TOPO</text>
+          <text x="74" y="86" text-anchor="middle" font-size="16" font-weight="700" fill="currentColor">Reels</text>
+          <text x="74" y="106" text-anchor="middle" font-size="12" fill="currentColor" opacity=".7">atrai</text>
+
+          <rect x="170" y="54" width="140" height="66" rx="11" fill="var(--surface-2)" stroke="currentColor" stroke-opacity=".35"/>
+          <text x="240" y="42" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" class="svg-accent" style="fill:var(--accent-ink)">MEIO</text>
+          <text x="240" y="86" text-anchor="middle" font-size="16" font-weight="700" fill="currentColor">Carrossel</text>
+          <text x="240" y="106" text-anchor="middle" font-size="12" fill="currentColor" opacity=".7">educa · autoridade</text>
+
+          <rect x="336" y="54" width="140" height="66" rx="11" fill="var(--surface-2)" stroke="currentColor" stroke-opacity=".35"/>
+          <text x="406" y="42" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" class="svg-accent" style="fill:var(--accent-ink)">FUNDO</text>
+          <text x="406" y="86" text-anchor="middle" font-size="16" font-weight="700" fill="currentColor">Stories</text>
+          <text x="406" y="106" text-anchor="middle" font-size="12" fill="currentColor" opacity=".7">conecta · vende</text>
+
+          <rect x="502" y="54" width="134" height="66" rx="11" fill="none" stroke-width="2" style="stroke:var(--accent)"/>
+          <text x="569" y="42" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" class="svg-accent" style="fill:var(--accent-ink)">CONVERSA</text>
+          <text x="569" y="86" text-anchor="middle" font-size="16" font-weight="700" style="fill:var(--accent-ink)">Direct</text>
+          <text x="569" y="106" text-anchor="middle" font-size="12" fill="currentColor" opacity=".7">fecha</text>
+        </g>
+        <!-- arrows between -->
+        <line x1="146" y1="87" x2="167" y2="87" stroke="currentColor" stroke-opacity=".6" marker-end="url(#ar2)"/>
+        <line x1="312" y1="87" x2="333" y2="87" stroke="currentColor" stroke-opacity=".6" marker-end="url(#ar2)"/>
+        <line x1="478" y1="87" x2="499" y2="87" stroke="currentColor" stroke-opacity=".6" marker-end="url(#ar2)"/>
+        <!-- feedback loop guardados/partilhas -->
+        <path d="M240,120 C240,170 74,170 74,124" fill="none" stroke-dasharray="5 4" class="svg-accent" style="stroke:var(--accent)" marker-end="url(#ar2)"/>
+        <text x="157" y="188" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="11" class="svg-accent" style="fill:var(--accent-ink)">guardados + partilhas devolvem alcance</text>
+      </svg>
+    </div>
+    <figcaption>Fig. 2 — O percurso: Reels traz quem não te conhece, o carrossel prova o teu valor, os stories aquecem e vendem, o direct fecha. Os guardados e partilhas do carrossel realimentam o alcance do topo — é o ciclo que sustenta o crescimento.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">02</span><h2>A anatomia de um post que segura a atenção</h2></div>
+  <p>Esta é a engenharia — o esqueleto que podes (e deves) reutilizar sempre, porque é estrutura, não plágio. O que muda de post para post é o conteúdo dentro de cada peça.</p>
+
+  <figure>
+    <div class="fig-card">
+      <svg viewBox="0 0 560 300" role="img" aria-label="Anatomia de um carrossel: slide 1 é o gancho, slides do meio uma ideia por slide, um card de retenção a meio, e o último slide o CTA. A legenda acompanha em PAS.">
+        <g font-family="Hanken Grotesk,sans-serif">
+          <!-- slide 1 -->
+          <rect x="14" y="18" width="360" height="44" rx="9" style="fill:var(--accent-soft)" stroke-width="2" ></rect>
+          <rect x="14" y="18" width="360" height="44" rx="9" fill="none" stroke-width="2" style="stroke:var(--accent)"></rect>
+          <text x="30" y="45" font-size="14" font-weight="700" style="fill:var(--accent-ink)">Slide 1 — GANCHO · trava o scroll</text>
+          <!-- middle idea slides -->
+          <rect x="14" y="74" width="360" height="38" rx="9" fill="var(--surface-2)" stroke="currentColor" stroke-opacity=".3"/>
+          <text x="30" y="98" font-size="13" fill="currentColor">Slide 2 — uma ideia</text>
+          <rect x="14" y="120" width="360" height="38" rx="9" fill="var(--surface-2)" stroke="currentColor" stroke-opacity=".3"/>
+          <text x="30" y="144" font-size="13" fill="currentColor">Slide 3 — uma ideia</text>
+          <!-- retention card -->
+          <rect x="14" y="166" width="360" height="38" rx="9" fill="none" stroke-dasharray="5 4" class="svg-accent" style="stroke:var(--accent)"/>
+          <text x="30" y="190" font-size="13" font-weight="600" style="fill:var(--accent-ink)">Card de retenção — “dá 2 toques”</text>
+          <rect x="14" y="212" width="360" height="38" rx="9" fill="var(--surface-2)" stroke="currentColor" stroke-opacity=".3"/>
+          <text x="30" y="236" font-size="13" fill="currentColor">Slide 5 — uma ideia</text>
+          <!-- CTA -->
+          <rect x="14" y="258" width="360" height="40" rx="9" fill="none" stroke-width="2" style="stroke:var(--ink-faint)"/>
+          <text x="30" y="283" font-size="13" font-weight="700" fill="currentColor">Slide final — CTA (seguir / guardar)</text>
+          <!-- side: legenda -->
+          <line x1="392" y1="18" x2="392" y2="298" stroke="currentColor" stroke-opacity=".25"/>
+          <text x="410" y="30" font-family="IBM Plex Mono,monospace" font-size="11" class="svg-accent" style="fill:var(--accent-ink)">A LEGENDA</text>
+          <text x="410" y="60" font-size="13" fill="currentColor">Problema</text>
+          <text x="410" y="86" font-size="13" fill="currentColor">↓</text>
+          <text x="410" y="112" font-size="13" fill="currentColor">Agitação</text>
+          <text x="410" y="138" font-size="13" fill="currentColor">↓</text>
+          <text x="410" y="164" font-size="13" fill="currentColor">Solução</text>
+          <text x="410" y="190" font-size="13" fill="currentColor">↓</text>
+          <text x="410" y="216" font-size="13" font-weight="600" style="fill:var(--accent-ink)">CTA</text>
+          <text x="410" y="250" font-size="11" fill="currentColor" opacity=".65" font-family="IBM Plex Mono,monospace">método</text>
+          <text x="410" y="266" font-size="11" fill="currentColor" opacity=".65" font-family="IBM Plex Mono,monospace">P · A · S</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>Fig. 3 — O esqueleto fixo: gancho → uma ideia por slide → card de retenção a meio → CTA no fim. A legenda corre em paralelo no formato PAS (Problema → Agitação → Solução → CTA).</figcaption>
+  </figure>
+
+  <div class="grid2">
+    <div class="card"><span class="k">Slide 1 · gancho</span><p>A única função é travar o scroll. Sem promessa ou dor nos primeiros 3 segundos, o resto não é lido — por muito bom que seja.</p></div>
+    <div class="card"><span class="k">Meio · uma ideia/slide</span><p>Máximo 3 linhas por card. Uma ideia de cada vez desliza fácil e sobe a retenção — que é o que faz o algoritmo distribuir.</p></div>
+    <div class="card"><span class="k">A meio · retenção</span><p>Um card que pede uma micro-ação (“dá 2 toques”) gera curtidas e prende quem estava a passar ao lado. Usa-o depois de uma frase forte, não no início.</p></div>
+    <div class="card"><span class="k">Fim · CTA</span><p>Um pedido claro: seguir, guardar ou comentar uma palavra. Sem CTA, o post não dá ao algoritmo os sinais de que precisa.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">03</span><h2>O método: da ideia ao post, em 4 passos</h2></div>
+  <p>É este o percurso que transforma a estrutura de outra pessoa em conteúdo original teu. Repete-o para cada peça.</p>
+  <div class="steps">
+    <div class="step"><span class="n">1</span><div><h3>Escuta e estuda</h3><p>As dores que os teus clientes te repetem, as perguntas no direct, os comentários nos maiores do teu nicho, e o que já viralizou. É a tua matéria-prima — não sai da tua cabeça, sai de quem te ouve.</p></div></div>
+    <div class="step"><span class="n">2</span><div><h3>Extrai o mecanismo</h3><p>De um conteúdo que funcionou, tira só o esqueleto: que dor abre o gancho, que emoção segura, que promessa faz e como a cumpre. Fica com a estrutura, deita fora as palavras.</p></div></div>
+    <div class="step"><span class="n">3</span><div><h3>Enche com o que é teu</h3><p>Aqui nasce a novidade: a tua opinião (mesmo contra a corrente), um erro que cometeste, um caso real de um cliente, a especificidade do teu nicho. É isto que a IA e o copy/paste não conseguem imitar.</p></div></div>
+    <div class="step"><span class="n">4</span><div><h3>Modela e fecha</h3><p>Monta na estrutura provada (gancho → ideias → retenção → CTA), escreve a legenda em PAS e pede o guardado. Publica, mede, repete o que funcionou.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">04</span><h2>O gancho: os primeiros 3 segundos</h2></div>
+  <p>É onde a batalha se ganha ou se perde. Um gancho é a promessa implícita de que o que vem a seguir vale o tempo de quem vê. Genérico = scroll. Específico = paragem.</p>
+  <div class="grid2">
+    <div class="card"><span class="k">Quebra de expectativa</span><p>Contradiz o senso comum do nicho. “Publicar todos os dias está a queimar o teu perfil.”</p></div>
+    <div class="card"><span class="k">Dor silenciosa</span><p>Nomeia algo que a pessoa sente mas nunca viu dito. “Publicas e parece que falas para a parede?”</p></div>
+    <div class="card"><span class="k">Promessa / recompensa</span><p>Um resultado ou um alívio concreto. “O erro que faz os teus primeiros stories terem poucas views.”</p></div>
+    <div class="card"><span class="k">Bastidor / atualidade</span><p>Ancora numa mudança recente ou num acontecimento. Autoridade aplicada ao momento, não teoria.</p></div>
+  </div>
+  <div class="compare">
+    <div class="bad">
+      <div class="lab">✗ Amador</div>
+      <ul>
+        <li>“Hoje trago dicas de marketing.”</li>
+        <li>“Dicas para crescer no Instagram.”</li>
+        <li>“Oi gente, eu sou a…”</li>
+      </ul>
+    </div>
+    <div class="good">
+      <div class="lab">✓ Especialista</div>
+      <ul>
+        <li>“O motivo invisível que faz os teus posts floparem.”</li>
+        <li>“Se publicas todos os dias e não cresces, o problema não é o algoritmo.”</li>
+        <li>“Se controlas a alimentação o dia todo e perdes o controlo à noite, presta atenção.”</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">05</span><h2>A legenda: método PAS</h2></div>
+  <p>A legenda não é acessório da imagem — é o fecho do raciocínio. As duas primeiras linhas são tudo: aparecem antes do “ver mais” e decidem se o resto é lido. Vende o clique para a segunda linha, não o produto.</p>
+  <div class="steps">
+    <div class="step"><span class="n">P</span><div><h3>Problema</h3><p>Espelha a realidade de quem te lê. Descreve o sintoma tão bem que ela pensa “esta pessoa sabe o que eu passo”.</p></div></div>
+    <div class="step"><span class="n">A</span><div><h3>Agitação</h3><p>O custo de não resolver — com lógica e clareza, não medo. Torna o problema urgente sem drama.</p></div></div>
+    <div class="step"><span class="n">S</span><div><h3>Solução</h3><p>A tua ótica sobre como se resolve. Não “compra de mim”, mas “é assim que isto se faz”. Educa e prepara o próximo passo.</p></div></div>
+    <div class="step"><span class="n">→</span><div><h3>CTA consultivo</h3><p>Guia para a ação: guardar, comentar uma palavra, ou levar a conversa para o direct — onde a venda acontece de verdade.</p></div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">06</span><h2>A matriz: o que rodar durante a semana</h2></div>
+  <p>Nunca ficas sem ideias quando tens objetivos, não temas. Cada peça serve um propósito no funil. Roda os quatro ao longo da semana em vez de repetir o mesmo tipo.</p>
+  <div class="matrix-wrap">
+    <table class="matrix">
+      <thead><tr><th>Objetivo</th><th>O que faz</th><th>Formatos & exemplos</th></tr></thead>
+      <tbody>
+        <tr><th class="obj">Atrair</th><td>Traz quem ainda não te conhece</td><td>Reel com gancho forte; opinião contra a corrente; tendência adaptada ao teu ângulo</td></tr>
+        <tr><th class="obj">Autoridade</th><td>Prova que sabes, gera guardados</td><td>Carrossel-checklist; passo a passo; “nunca faças isto”; análise de uma novidade</td></tr>
+        <tr><th class="obj">Conexão</th><td>Aproxima quem já te segue</td><td>Stories de bastidor; rotina real; enquete; frase com botão de reação</td></tr>
+        <tr><th class="obj">Venda</th><td>Transforma confiança em cliente</td><td>Prova social; antes/depois; sequência de stories; posts fixados (quem sou · prova · oferta)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="margin-top:16px">Exemplo de semana: <strong>seg</strong> atrair · <strong>ter</strong> autoridade · <strong>qua</strong> atrair · <strong>qui</strong> autoridade · <strong>sex</strong> venda · <strong>sáb</strong> conexão · <strong>dom</strong> bastidor/prova. Ajusta ao momento da tua marca.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">07</span><h2>As métricas que mandam</h2></div>
+  <p>O gosto é reação de segundo. O que faz um post <em>durar</em> e chegar a gente nova é ser guardado e partilhado — sinais de que o conteúdo tem valor de consulta e de identificação. Desenha para estes, não para o coração fácil.</p>
+  <div class="metrics">
+    <div class="metric"><span class="name">Guardados</span><div class="bar"><div class="fill" style="width:100%;background:var(--accent)"></div></div></div>
+    <div class="metric"><span class="name">Partilhas</span><div class="bar"><div class="fill" style="width:88%;background:var(--accent)"></div></div></div>
+    <div class="metric"><span class="name">Comentários</span><div class="bar"><div class="fill" style="width:60%;background:var(--teal)"></div></div></div>
+    <div class="metric"><span class="name">Gostos</span><div class="bar"><div class="fill" style="width:30%;background:var(--line-strong)"></div></div></div>
+  </div>
+  <p style="margin-top:14px"><strong>Guardado</strong> = “vou voltar a isto”: torna o post consultável (checklist, passo a passo, um recurso). <strong>Partilha</strong> = “isto é a minha cara”: nasce da identificação e de dizeres em voz alta o que a pessoa sente mas não sabe pôr em palavras.</p>
+</section>
+
+<section>
+  <div class="sec-head"><span class="sec-num">08</span><h2>Checklist antes de publicar</h2></div>
+  <ul class="check">
+    <li><span class="box"></span><span>O gancho trava o scroll em 3 segundos e é específico, não genérico.</span></li>
+    <li><span class="box"></span><span>Uma ideia por slide, no máximo 3 linhas cada.</span></li>
+    <li><span class="box"></span><span>Há um card de retenção a meio, depois de uma frase forte.</span></li>
+    <li><span class="box"></span><span>O conteúdo tem algo que só eu podia ter escrito (opinião, história, exemplo real).</span></li>
+    <li><span class="box"></span><span>É guardável: a pessoa vai querer voltar a isto?</span></li>
+    <li><span class="box"></span><span>Legenda em PAS, com as 2 primeiras linhas a vender o clique.</span></li>
+    <li><span class="box"></span><span>Um CTA claro (seguir · guardar · comentar palavra · direct).</span></li>
+    <li><span class="box"></span><span>Palavras-chave do nicho na legenda (SEO), sem hashtags a mais.</span></li>
+    <li><span class="box"></span><span>Não é cópia de ninguém — usei a estrutura, não o texto.</span></li>
+  </ul>
+</section>
+
+<div class="closer">
+  <div class="eyebrow">Para levar contigo</div>
+  <h2>Estrutura repete-se. Substância, nunca.</h2>
+  <p>Usa a engenharia à vontade — ela é de todos e é o que faz o conteúdo funcionar. Guarda a tua energia para o que ninguém copia: o teu ponto de vista, a tua história, os teus casos reais. É essa a diferença entre parecer mais uma e tornares-te a referência. E lembra-te: bem modelado sobe as probabilidades; é a consistência que fecha a conta.</p>
+</div>
+
+<footer>Método Cat.IA · manual de conteúdo · @catiacreator</footer>
+
+</div>
+</body>
+</html>

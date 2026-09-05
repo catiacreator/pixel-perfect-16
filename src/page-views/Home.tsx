@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
-import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, X, Users, Package, Rocket } from "lucide-react";
+import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, X, Users, Package, Rocket, BookOpen } from "lucide-react";
 
 const WHATSAPP_CATIA = "https://wa.link/jwr3yp";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
@@ -54,6 +54,20 @@ const PRODUTOS = [
     icon: GraduationCap,
     estruturaId: "academia",
     sombraTitulo: true,
+  },
+  {
+    key: "metodo-catia",
+    tag: "Método",
+    titulo: "Método Europeu de Conteúdo",
+    assinatura: "método Cat.IA",
+    desc: "O mecanismo por trás do conteúdo que cresce — estrutura, gancho, legenda e métricas, do princípio ao post.",
+    to: "/metodo-catia",
+    cta: "Abrir o manual",
+    img: "",
+    pos: "center",
+    cor: "#C81E63",
+    icon: BookOpen,
+    soAdmin: true,
   },
   {
     key: "encontros",

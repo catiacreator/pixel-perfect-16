@@ -17,6 +17,7 @@ import { Route as ProtocoloRouteImport } from './routes/protocolo'
 import { Route as PendingRouteImport } from './routes/pending'
 import { Route as MinhaBaseRouteImport } from './routes/minha-base'
 import { Route as MeusProjetosRouteImport } from './routes/meus-projetos'
+import { Route as MetodoCatiaRouteImport } from './routes/metodo-catia'
 import { Route as MetodoRouteImport } from './routes/metodo'
 import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as MaquinaAnalisesRouteImport } from './routes/maquina-analises'
@@ -152,6 +153,11 @@ const MinhaBaseRoute = MinhaBaseRouteImport.update({
 const MeusProjetosRoute = MeusProjetosRouteImport.update({
   id: '/meus-projetos',
   path: '/meus-projetos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MetodoCatiaRoute = MetodoCatiaRouteImport.update({
+  id: '/metodo-catia',
+  path: '/metodo-catia',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MetodoRoute = MetodoRouteImport.update({
@@ -695,6 +701,7 @@ export interface FileRoutesByFullPath {
   '/maquina-analises': typeof MaquinaAnalisesRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
+  '/metodo-catia': typeof MetodoCatiaRoute
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
   '/pending': typeof PendingRoute
@@ -799,6 +806,7 @@ export interface FileRoutesByTo {
   '/glossario': typeof GlossarioRoute
   '/maquina-analises': typeof MaquinaAnalisesRoute
   '/mensagens': typeof MensagensRoute
+  '/metodo-catia': typeof MetodoCatiaRoute
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
   '/pending': typeof PendingRoute
@@ -896,6 +904,7 @@ export interface FileRoutesById {
   '/maquina-analises': typeof MaquinaAnalisesRoute
   '/mensagens': typeof MensagensRoute
   '/metodo': typeof MetodoRouteWithChildren
+  '/metodo-catia': typeof MetodoCatiaRoute
   '/meus-projetos': typeof MeusProjetosRoute
   '/minha-base': typeof MinhaBaseRoute
   '/pending': typeof PendingRoute
@@ -1003,6 +1012,7 @@ export interface FileRouteTypes {
     | '/maquina-analises'
     | '/mensagens'
     | '/metodo'
+    | '/metodo-catia'
     | '/meus-projetos'
     | '/minha-base'
     | '/pending'
@@ -1107,6 +1117,7 @@ export interface FileRouteTypes {
     | '/glossario'
     | '/maquina-analises'
     | '/mensagens'
+    | '/metodo-catia'
     | '/meus-projetos'
     | '/minha-base'
     | '/pending'
@@ -1203,6 +1214,7 @@ export interface FileRouteTypes {
     | '/maquina-analises'
     | '/mensagens'
     | '/metodo'
+    | '/metodo-catia'
     | '/meus-projetos'
     | '/minha-base'
     | '/pending'
@@ -1310,6 +1322,7 @@ export interface RootRouteChildren {
   MaquinaAnalisesRoute: typeof MaquinaAnalisesRoute
   MensagensRoute: typeof MensagensRoute
   MetodoRoute: typeof MetodoRouteWithChildren
+  MetodoCatiaRoute: typeof MetodoCatiaRoute
   MeusProjetosRoute: typeof MeusProjetosRoute
   MinhaBaseRoute: typeof MinhaBaseRoute
   PendingRoute: typeof PendingRoute
@@ -1379,6 +1392,13 @@ declare module '@tanstack/react-router' {
       path: '/meus-projetos'
       fullPath: '/meus-projetos'
       preLoaderRoute: typeof MeusProjetosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/metodo-catia': {
+      id: '/metodo-catia'
+      path: '/metodo-catia'
+      fullPath: '/metodo-catia'
+      preLoaderRoute: typeof MetodoCatiaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/metodo': {
@@ -2369,6 +2389,7 @@ const rootRouteChildren: RootRouteChildren = {
   MaquinaAnalisesRoute: MaquinaAnalisesRoute,
   MensagensRoute: MensagensRoute,
   MetodoRoute: MetodoRouteWithChildren,
+  MetodoCatiaRoute: MetodoCatiaRoute,
   MeusProjetosRoute: MeusProjetosRoute,
   MinhaBaseRoute: MinhaBaseRoute,
   PendingRoute: PendingRoute,
