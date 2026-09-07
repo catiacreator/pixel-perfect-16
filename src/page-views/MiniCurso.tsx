@@ -4,7 +4,7 @@ import PromptBox from "../components/curso/PromptBox";
 import VideoArea from "../components/curso/VideoArea";
 import { Link, useSearchParams } from "@/lib/router-compat";
 import { useState, useEffect } from "react";
-import { Sparkles, ArrowRight, ArrowLeft, Check, ExternalLink, Download, Instagram, GraduationCap, MessageCircle, ChevronLeft, ChevronRight, ChevronDown, Expand, X } from "lucide-react";
+import { Sparkles, ArrowRight, ArrowLeft, Check, ExternalLink, Download, Instagram, GraduationCap, MessageCircle, ChevronLeft, ChevronRight, ChevronDown, Expand, X, Lock } from "lucide-react";
 import { WHATSAPP_CATIA } from "@/lib/turmas";
 import TarefaCompleta from "../components/TarefaCompleta";
 import EmManutencao from "../components/EmManutencao";
@@ -23,6 +23,61 @@ function Bold({ texto }: { texto: string }) {
         /^\*\*[^*]+\*\*$/.test(p) ? <b key={i} className="text-ink">{p.slice(2, -2)}</b> : <span key={i}>{p}</span>,
       )}
     </>
+  );
+}
+
+// Contagem decrescente até uma data (ISO local, ex.: "2026-09-14T02:19:00").
+function faltaMs(iso: string) {
+  return new Date(iso).getTime() - Date.now();
+}
+function dataLabel(iso: string) {
+  const dt = new Date(iso);
+  const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+  const hh = String(dt.getHours()).padStart(2, "0");
+  const mm = String(dt.getMinutes()).padStart(2, "0");
+  return `${dt.getDate()} de ${meses[dt.getMonth()]} às ${hh}h${mm}`;
+}
+function Countdown({ ate, className = "" }: { ate: string; className?: string }) {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setTick((v) => v + 1), 1000);
+    return () => clearInterval(t);
+  }, []);
+  const ms = Math.max(0, faltaMs(ate));
+  const s = Math.floor(ms / 1000);
+  const d = Math.floor(s / 86400);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return (
+    <span className={className}>
+      {d > 0 && <>{d}d </>}
+      {pad(Math.floor((s % 86400) / 3600))}:{pad(Math.floor((s % 3600) / 60))}:{pad(s % 60)}
+    </span>
+  );
+}
+
+// Aula ainda por lançar: ecrã trancado com contagem decrescente até à data.
+function AulaTrancada({ aula }: { aula: Aula }) {
+  const pai = aula.id.replace(/[a-z]$/, "");
+  return (
+    <section className="px-5 md:px-10 pt-8 md:pt-10 pb-14 max-w-3xl mx-auto">
+      <Link to={`/conteudo-ia?aula=${pai}`} className="inline-flex items-center gap-1.5 text-sm text-ink/55 hover:text-terracotta transition-colors mb-5">
+        <ArrowLeft size={15} /> Voltar ao módulo
+      </Link>
+      <div className="rounded-3xl border border-terracotta/25 bg-terracotta/5 px-6 py-12 text-center">
+        <span className="w-14 h-14 rounded-2xl bg-terracotta/15 text-terracotta flex items-center justify-center mx-auto mb-5">
+          <Lock size={26} />
+        </span>
+        <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">{aula.numero}</p>
+        <h1 className="font-serif text-3xl md:text-4xl text-ink mb-3">{aula.titulo}</h1>
+        {aula.objetivo && <p className="text-[15px] text-ink/70 leading-relaxed max-w-md mx-auto mb-2">{aula.objetivo}</p>}
+        <p className="text-[15px] text-ink/70 leading-relaxed max-w-md mx-auto mb-7">
+          Esta aula abre a <b className="text-ink">{dataLabel(aula.disponivelEm!)}</b>.
+        </p>
+        <div className="inline-block rounded-2xl bg-white border border-border px-7 py-4">
+          <Countdown ate={aula.disponivelEm!} className="font-serif text-3xl md:text-4xl text-ink tabular-nums" />
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -147,19 +202,32 @@ function BlocoView({ b }: { b: Bloco }) {
     case "aulas":
       return (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 my-4">
-          {b.itens.map((a) => (
-            <Link
-              key={a.aula}
-              to={`/conteudo-ia?aula=${a.aula}`}
-              className="rounded-2xl border border-border bg-white p-4 hover:border-terracotta transition-colors group flex flex-col"
-            >
-              <p className="text-sm font-semibold text-ink group-hover:text-terracotta transition-colors mb-1">{a.titulo}</p>
-              <p className="text-[12.5px] text-ink/60 leading-snug flex-1">{a.desc}</p>
-              <span className="inline-flex items-center gap-1.5 text-[12px] text-terracotta font-semibold mt-2.5">
-                Abrir aula <ArrowRight size={13} />
-              </span>
-            </Link>
-          ))}
+          {b.itens.map((a) => {
+            const sub = SUBAULAS.find((s) => s.id === a.aula);
+            const trancada = !!sub?.disponivelEm && faltaMs(sub.disponivelEm) > 0;
+            return (
+              <Link
+                key={a.aula}
+                to={`/conteudo-ia?aula=${a.aula}`}
+                className={`rounded-2xl border p-4 transition-colors group flex flex-col ${trancada ? "border-terracotta/30 bg-terracotta/5" : "border-border bg-white hover:border-terracotta"}`}
+              >
+                <p className="text-sm font-semibold text-ink group-hover:text-terracotta transition-colors mb-1 inline-flex items-center gap-1.5">
+                  {trancada && <Lock size={13} className="text-terracotta shrink-0" />}
+                  {a.titulo}
+                </p>
+                <p className="text-[12.5px] text-ink/60 leading-snug flex-1">{a.desc}</p>
+                {trancada ? (
+                  <span className="inline-flex items-center gap-1.5 text-[12px] text-terracotta font-semibold mt-2.5 tabular-nums">
+                    Sai em <Countdown ate={sub!.disponivelEm!} />
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1.5 text-[12px] text-terracotta font-semibold mt-2.5">
+                    Abrir aula <ArrowRight size={13} />
+                  </span>
+                )}
+              </Link>
+            );
+          })}
         </div>
       );
     case "downloads":
@@ -531,6 +599,9 @@ export default function MiniCurso() {
     conteudo = (
       <Modulo aula={aulaSel} prev={idx > 0 ? AULAS[idx - 1] : null} next={idx < AULAS.length - 1 ? AULAS[idx + 1] : null} />
     );
+  } else if (subSel && subSel.disponivelEm && faltaMs(subSel.disponivelEm) > 0 && bloqueadoParaAlunos) {
+    // Aula por lançar: trancada com contagem até à data (admin em vista normal vê o conteúdo).
+    conteudo = <AulaTrancada aula={subSel} />;
   } else if (subSel) {
     // sub-aula (ex.: m4b) — navega em cadeia entre irmãs do mesmo módulo:
     // pai (m4) → aula 1 (m4b) → aula 2 (m4c) → … → módulo seguinte (m5)

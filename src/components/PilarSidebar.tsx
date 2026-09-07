@@ -66,6 +66,7 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   "1 · Criar conteúdo no Claude": AlignLeft,
   "2 · Carrosséis visuais": LayoutGrid,
   "3 · Criar artefactos": Monitor,
+  "4 · Modelar Conteúdo Viral": Sparkle,
 };
 
 type SubItem = { label: string; to: string; badge?: string; id?: string };
@@ -110,6 +111,7 @@ const PILARES: Record<string | number, PilarDef> = {
           { label: "1 · Criar conteúdo no Claude", to: "/conteudo-ia?aula=m3b" },
           { label: "2 · Carrosséis visuais", to: "/conteudo-ia?aula=m3c" },
           { label: "3 · Criar artefactos", to: "/conteudo-ia?aula=m3d" },
+          { label: "4 · Modelar Conteúdo Viral", to: "/conteudo-ia?aula=m3e", badge: "14 set" },
         ],
       },
       {

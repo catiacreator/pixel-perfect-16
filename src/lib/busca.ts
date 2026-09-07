@@ -50,7 +50,7 @@ const SINONIMOS: Record<string, string> = {
   "criar-produto": "esteira produto low ticket medio alto infoproduto",
   "maquina-analises": "analise perfil plano 30 dias diagnostico",
   "vendas-apps": "landing page site aplicacao programar",
-  "conteudo-ia": "mini curso primeiro mes posts",
+  "conteudo-ia": "curso primeiro mes posts rouba como um creator",
   "academia": "aulas ferramentas ia",
   "encontros": "sessoes direto duvidas feedback",
   "saude": "saude bem estar",

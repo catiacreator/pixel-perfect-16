@@ -26,13 +26,14 @@ export type Aula = {
   objetivo?: string;
   videoUrl?: string;
   links?: { nome: string; url: string }[]; // botões para abrir a(s) ferramenta(s)
+  disponivelEm?: string; // ISO local (ex.: "2026-09-14T02:19:00") — trancada com contagem até esta data
   secoes: Secao[];
 };
 
 export const CURSO_INTRO = {
   // URL do vídeo de boas-vindas: aceita embed (YouTube/Vimeo/Tella) ou ficheiro .mp4 direto
   videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/intro.mp4?v=3",
-  titulo: "Criação de Conteúdo com Inteligência Artificial",
+  titulo: "Rouba como um Creator",
   subtitulo: "A tua equipa de 4 IAs para viralizar e vender no Instagram. Cada ferramenta faz uma parte do trabalho pesado — tu ficas com a direção criativa e a tua voz.",
   ferramentas: "NotebookLM · pesquisa · Grok · tendências · Claude · roteiros · ChatGPT · arte",
   nivel: "Nível: Iniciante · 6 módulos + projeto final",
@@ -302,14 +303,15 @@ Com base nisso:
         ],
       },
       {
-        titulo: "3.2 As três aulas deste capítulo",
+        titulo: "3.2 As aulas deste capítulo",
         blocos: [
           { t: "aulas", itens: [
             { titulo: "1 · Criar conteúdo no Claude", desc: "A voz da marca, ganchos, roteiros de Reels, carrosséis e legendas — o fluxo completo de escrita.", aula: "m3b" },
             { titulo: "2 · Carrosséis visuais no Claude", desc: "O Claude desenha os slides prontos a exportar (1080x1350), com a tua marca — sem gerador de imagens.", aula: "m3c" },
             { titulo: "3 · Criar artefactos no Claude", desc: "Quizzes, checklists e mini-páginas interativas — criadas na conversa e partilhadas por link.", aula: "m3d" },
+            { titulo: "4 · Modelar Conteúdo Viral", desc: "Desmonta o que já viralizou e recria o mecanismo na tua voz — sem copiar. Rouba como um creator.", aula: "m3e" },
           ] },
-          { t: "nota", v: "info", texto: "**Qual escolher?** Queres escrever posts → Aula 1. Queres o carrossel já desenhado, slide a slide → Aula 2. Queres uma peça interativa (quiz, checklist, página) → Aula 3." },
+          { t: "nota", v: "info", texto: "**Qual escolher?** Queres escrever posts → Aula 1. Queres o carrossel já desenhado, slide a slide → Aula 2. Queres uma peça interativa (quiz, checklist, página) → Aula 3. Queres partir de algo que já bombou → Aula 4." },
         ],
       },
     ],
@@ -1422,6 +1424,68 @@ a minha marca [NOME · @USUÁRIO].
           ] },
           { t: "nota", v: "info", texto: "**Ajustes:** pede uma alteração de cada vez (“muda a cor para…”, “acrescenta uma pergunta”). O artefacto atualiza-se à tua frente." },
           { t: "nota", v: "warn", texto: "**Exercício:** cria uma checklist interativa sobre a maior dor do teu público, publica e testa o link no telemóvel. Depois marca a tarefa como completa." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "m3e",
+    numero: "Claude · Aula 4",
+    titulo: "Modelar Conteúdo Viral",
+    objetivo: "Desmontar um conteúdo que já viralizou, perceber PORQUÊ funcionou, e recriar o mesmo mecanismo na tua voz e no teu nicho — sem copiar.",
+    disponivelEm: "2026-09-14T02:19:00",
+    links: [{ nome: "Abrir Claude", url: "https://claude.ai" }],
+    secoes: [
+      {
+        titulo: "1. Modelar não é copiar",
+        blocos: [
+          { t: "p", texto: "Rouba como um creator: não levas o post, levas o **mecanismo**. Copiar é pegar na frase, no template, no formato exato — e afogar-te no meio de mil perfis iguais. Modelar é perceber **porque** aquilo prendeu (o gancho, a tensão, a estrutura) e recriar esse motor com a **tua** história, o **teu** exemplo, a **tua** voz." },
+          { t: "nota", v: "info", texto: "**A regra:** copia o mecanismo, nunca o artefacto. A fôrma que já provou funcionar é tua para usar; o recheio tem de ser inconfundivelmente teu." },
+        ],
+      },
+      {
+        titulo: "2. Escolhe o que vais modelar",
+        blocos: [
+          { t: "ul", itens: [
+            "Um Reel, carrossel ou legenda do teu nicho que **bombou mesmo** (muitos salvamentos e partilhas, não só gostos).",
+            "De preferência com semanas/meses — já provou que não foi sorte de um dia.",
+            "Que caiba na tua verdade: só modelas bem o que consegues sustentar com a tua experiência.",
+          ] },
+          { t: "nota", v: "warn", texto: "**Salvamentos e partilhas** dizem mais do que gostos. Um post com muitos salvamentos tem um mecanismo forte — é esse que vale a pena desmontar." },
+        ],
+      },
+      {
+        titulo: "3. Desmonta o viral com o Claude",
+        blocos: [
+          { t: "p", texto: "Cola a transcrição (ou o texto) do conteúdo e deixa o Claude fazer a engenharia inversa por ti:" },
+          { t: "prompt", agente: "Claude", nome: "Engenharia inversa de um viral", texto: `És analista de conteúdo viral. Vou colar um [REEL/CARROSSEL/
+LEGENDA] que viralizou no meu nicho de [O TEU NICHO].
+
+Desmonta o mecanismo, não o texto:
+1. O gancho: que tensão/curiosidade/dor abre nos 3 primeiros segundos?
+2. A estrutura: que sequência de passos leva a pessoa até ao fim?
+3. A emoção dominante (curiosidade, medo, alívio, pertença…).
+4. Porque gera SALVAMENTO e PARTILHA (o que a pessoa "leva")?
+5. Resume o mecanismo numa fórmula reutilizável (sem o conteúdo original).
+
+[COLA AQUI O CONTEÚDO]` },
+          { t: "nota", v: "info", texto: "Repara: pedes-lhe a **fórmula**, não o texto reescrito. É a fórmula que vais reutilizar." },
+        ],
+      },
+      {
+        titulo: "4. Recria na tua voz",
+        blocos: [
+          { t: "p", texto: "Agora pega na fórmula e enche-a com o que só tu tens: o teu caso, o teu erro, o teu cliente, o teu ângulo." },
+          { t: "prompt", agente: "Claude", nome: "Recriar o mecanismo na minha voz", texto: `Usa a fórmula que acabaste de extrair para criar um novo
+[REEL/CARROSSEL] meu sobre [O MEU TEMA].
+
+Regras:
+- Mesmo mecanismo (gancho + estrutura + emoção), conteúdo 100% novo.
+- Na minha voz: [descreve o teu tom — ex.: conversa de café,
+  sóbria e específica]. Nada de "fórmula mágica" nem "segredo".
+- Usa este exemplo real meu: [O TEU CASO/HISTÓRIA/DADO].
+- Entrega: gancho, corpo passo a passo e CTA.` },
+          { t: "nota", v: "warn", texto: "**Exercício:** modela 1 viral do teu nicho e publica a tua versão esta semana. Depois compara os salvamentos com os teus posts normais — e marca a tarefa como completa." },
         ],
       },
     ],

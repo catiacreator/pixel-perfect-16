@@ -12,12 +12,12 @@ import { useAccess } from "@/lib/use-access";
 const PRODUTOS = [
   {
     key: "conteudo-ia",
-    tag: "Mini-curso",
+    tag: "Curso",
     titulo: "Conteúdo com IA",
     assinatura: "Primeiro Mês de Posts",
     desc: "Aprende a criar conteúdo com IA e a publicar com consistência. A porta de entrada para o método completo.",
     to: "/conteudo-ia",
-    cta: "Começar o mini-curso",
+    cta: "Começar o curso",
     img: "/conteudo-com-ia.png?v=1",
     pos: "center 28%",
     cor: "#7C56C9",
