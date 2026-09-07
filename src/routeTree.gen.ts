@@ -23,6 +23,7 @@ import { Route as MensagensRouteImport } from './routes/mensagens'
 import { Route as MaquinaAnalisesRouteImport } from './routes/maquina-analises'
 import { Route as GlossarioRouteImport } from './routes/glossario'
 import { Route as FerramentasRouteImport } from './routes/ferramentas'
+import { Route as EstudioCreatorRouteImport } from './routes/estudio-creator'
 import { Route as EncontrosRouteImport } from './routes/encontros'
 import { Route as DocMestreRouteImport } from './routes/doc-mestre'
 import { Route as CriarProdutoRouteImport } from './routes/criar-produto'
@@ -183,6 +184,11 @@ const GlossarioRoute = GlossarioRouteImport.update({
 const FerramentasRoute = FerramentasRouteImport.update({
   id: '/ferramentas',
   path: '/ferramentas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EstudioCreatorRoute = EstudioCreatorRouteImport.update({
+  id: '/estudio-creator',
+  path: '/estudio-creator',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EncontrosRoute = EncontrosRouteImport.update({
@@ -696,6 +702,7 @@ export interface FileRoutesByFullPath {
   '/criar-produto': typeof CriarProdutoRoute
   '/doc-mestre': typeof DocMestreRoute
   '/encontros': typeof EncontrosRoute
+  '/estudio-creator': typeof EstudioCreatorRoute
   '/ferramentas': typeof FerramentasRoute
   '/glossario': typeof GlossarioRoute
   '/maquina-analises': typeof MaquinaAnalisesRoute
@@ -802,6 +809,7 @@ export interface FileRoutesByTo {
   '/criar-produto': typeof CriarProdutoRoute
   '/doc-mestre': typeof DocMestreRoute
   '/encontros': typeof EncontrosRoute
+  '/estudio-creator': typeof EstudioCreatorRoute
   '/ferramentas': typeof FerramentasRoute
   '/glossario': typeof GlossarioRoute
   '/maquina-analises': typeof MaquinaAnalisesRoute
@@ -899,6 +907,7 @@ export interface FileRoutesById {
   '/criar-produto': typeof CriarProdutoRoute
   '/doc-mestre': typeof DocMestreRoute
   '/encontros': typeof EncontrosRoute
+  '/estudio-creator': typeof EstudioCreatorRoute
   '/ferramentas': typeof FerramentasRoute
   '/glossario': typeof GlossarioRoute
   '/maquina-analises': typeof MaquinaAnalisesRoute
@@ -1007,6 +1016,7 @@ export interface FileRouteTypes {
     | '/criar-produto'
     | '/doc-mestre'
     | '/encontros'
+    | '/estudio-creator'
     | '/ferramentas'
     | '/glossario'
     | '/maquina-analises'
@@ -1113,6 +1123,7 @@ export interface FileRouteTypes {
     | '/criar-produto'
     | '/doc-mestre'
     | '/encontros'
+    | '/estudio-creator'
     | '/ferramentas'
     | '/glossario'
     | '/maquina-analises'
@@ -1209,6 +1220,7 @@ export interface FileRouteTypes {
     | '/criar-produto'
     | '/doc-mestre'
     | '/encontros'
+    | '/estudio-creator'
     | '/ferramentas'
     | '/glossario'
     | '/maquina-analises'
@@ -1317,6 +1329,7 @@ export interface RootRouteChildren {
   CriarProdutoRoute: typeof CriarProdutoRoute
   DocMestreRoute: typeof DocMestreRoute
   EncontrosRoute: typeof EncontrosRoute
+  EstudioCreatorRoute: typeof EstudioCreatorRoute
   FerramentasRoute: typeof FerramentasRoute
   GlossarioRoute: typeof GlossarioRoute
   MaquinaAnalisesRoute: typeof MaquinaAnalisesRoute
@@ -1434,6 +1447,13 @@ declare module '@tanstack/react-router' {
       path: '/ferramentas'
       fullPath: '/ferramentas'
       preLoaderRoute: typeof FerramentasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/estudio-creator': {
+      id: '/estudio-creator'
+      path: '/estudio-creator'
+      fullPath: '/estudio-creator'
+      preLoaderRoute: typeof EstudioCreatorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/encontros': {
@@ -2384,6 +2404,7 @@ const rootRouteChildren: RootRouteChildren = {
   CriarProdutoRoute: CriarProdutoRoute,
   DocMestreRoute: DocMestreRoute,
   EncontrosRoute: EncontrosRoute,
+  EstudioCreatorRoute: EstudioCreatorRoute,
   FerramentasRoute: FerramentasRoute,
   GlossarioRoute: GlossarioRoute,
   MaquinaAnalisesRoute: MaquinaAnalisesRoute,

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@/lib/router-compat";
 import Layout from "../components/Layout";
-import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, X, Users, Package, Rocket, BookOpen } from "lucide-react";
+import { ArrowUpRight, Instagram, GraduationCap, Sparkles, Lock, MessageCircle, X, Users, Package, Rocket, BookOpen, Camera } from "lucide-react";
 
 const WHATSAPP_CATIA = "https://wa.link/jwr3yp";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
@@ -10,20 +10,6 @@ import { useAccess } from "@/lib/use-access";
 
 // Porta de entrada: dois produtos independentes.
 const PRODUTOS = [
-  {
-    key: "conteudo-ia",
-    tag: "Curso",
-    titulo: "Conteúdo com IA",
-    assinatura: "Primeiro Mês de Posts",
-    desc: "Aprende a criar conteúdo com IA e a publicar com consistência. A porta de entrada para o método completo.",
-    to: "/conteudo-ia",
-    cta: "Começar o curso",
-    img: "/conteudo-com-ia.png?v=1",
-    pos: "center 28%",
-    cor: "#7C56C9",
-    icon: Sparkles,
-    estruturaId: "conteudo-ia",
-  },
   {
     key: "protocolo",
     tag: "Mentoria · Instagram",
@@ -40,6 +26,20 @@ const PRODUTOS = [
     sombraTitulo: true,
   },
   {
+    key: "conteudo-ia",
+    tag: "Curso",
+    titulo: "Conteúdo com IA",
+    assinatura: "Primeiro Mês de Posts",
+    desc: "Aprende a criar conteúdo com IA e a publicar com consistência. A porta de entrada para o método completo.",
+    to: "/conteudo-ia",
+    cta: "Começar o curso",
+    img: "/conteudo-com-ia.png?v=1",
+    pos: "center 28%",
+    cor: "#7C56C9",
+    icon: Sparkles,
+    estruturaId: "conteudo-ia",
+  },
+  {
     key: "academia",
     tag: "Ferramentas",
     titulo: "Academia de IA",
@@ -54,6 +54,7 @@ const PRODUTOS = [
     icon: GraduationCap,
     estruturaId: "academia",
     sombraTitulo: true,
+    escondido: true, // oculto da Home para todos (inclui admin) — reversível: pôr false
   },
   {
     key: "metodo-catia",
@@ -67,6 +68,20 @@ const PRODUTOS = [
     pos: "center",
     cor: "#C81E63",
     icon: BookOpen,
+    soAdmin: true,
+  },
+  {
+    key: "estudio-creator",
+    tag: "Sistema",
+    titulo: "Estúdio Creator",
+    assinatura: "do prompt avulso ao sistema",
+    desc: "Biblioteca de prompts e construtor de combinações: estúdio virtual de fotografias, motor de substância e laboratório de análise.",
+    to: "/estudio-creator",
+    cta: "Abrir o estúdio",
+    img: "",
+    pos: "center",
+    cor: "#833AB4",
+    icon: Camera,
     soAdmin: true,
   },
   {
@@ -115,7 +130,7 @@ const PRODUTOS = [
 ];
 
 // Cada secção agrupa os cards pela sua chave; o resto vai para os cursos principais.
-const MINI_CURSOS = ["conteudo-ia", "criar-produto", "vendas-apps"];
+const MINI_CURSOS = ["criar-produto", "vendas-apps"];
 const MENTORIA = ["encontros"];
 
 export default function Home() {
@@ -123,7 +138,10 @@ export default function Home() {
   const { isBloqueado, modoBloqueio } = useBloqueios();
   const { signedIn, loading: authLoading } = useAccess();
   // Cards "soAdmin" só aparecem para o admin (em vista de admin) — invisíveis para todos os outros.
-  const visivel = (p: (typeof PRODUTOS)[number]) => !(p as { soAdmin?: boolean }).soAdmin || !bloqueado;
+  const visivel = (p: (typeof PRODUTOS)[number]) => {
+    if ((p as { escondido?: boolean }).escondido) return false; // oculto para todos
+    return !(p as { soAdmin?: boolean }).soAdmin || !bloqueado;
+  };
   const [desbloquearOpen, setDesbloquearOpen] = useState(false);
   const orbRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
