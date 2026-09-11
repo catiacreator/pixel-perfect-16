@@ -691,7 +691,7 @@ Mantém o tom [o teu tom], o público [o teu público] e a oferta [o que vendes]
           { t: "aulas", itens: [
             { titulo: "1 · Garimpar", desc: "Encontra o que já viralizou no teu nicho e monta a tua biblioteca de referências.", aula: "roubar-garimpar" },
             { titulo: "2 · Dissecar", desc: "Revela a estrutura escondida — gancho, promessa, ritmo e fecho. Extrai o formato.", aula: "roubar-dissecar" },
-            { titulo: "3 · Modular para a tua voz", desc: "Cria o teu Documento de Voz e ensina a IA a escrever como tu.", aula: "roubar-voz" },
+            { titulo: "3 · Modular para a tua voz", desc: "Cria o teu Documento de Contexto de Marca e ensina a IA a escrever como tu.", aula: "roubar-voz" },
             { titulo: "4 · Publicar e medir", desc: "Uma referência → vários conteúdos. Mede salvamentos e partilhas, não likes.", aula: "roubar-medir" },
           ] },
         ],
@@ -731,6 +731,7 @@ Para cada um devolve:
 
 Organiza numa tabela e guarda tudo num documento no Google Drive.` },
           { t: "sub", titulo: "Via manual — alternativa" },
+          { t: "videoslot", titulo: "Vídeo — Garimpar (via manual)", nota: "Espaço reservado. Cola aqui o vídeo da via manual quando estiver pronto." },
           { t: "ol", itens: [
             "Descarrega o Reel num site de download de Reels.",
             "Passa-o pelo **InstaScript AI** para teres a transcrição. [link a disponibilizar]",
@@ -780,7 +781,7 @@ eu possa encher com outro tema, sem copiar o texto original.
     pai: "roubar-criador",
     numero: "Roubar · Passo 03",
     titulo: "Modular para a tua voz",
-    objetivo: "Criar o teu Documento de Voz e ensinar a IA a escrever como tu — vocabulário, ritmo, opiniões e o que nunca dirias.",
+    objetivo: "Criar o teu Documento de Contexto de Marca e ensinar a IA a escrever como tu — vocabulário, ritmo, opiniões e o que nunca dirias.",
     links: [
       { nome: "Abrir ChatGPT", url: "https://chatgpt.com" },
       { nome: "Abrir Claude", url: "https://claude.ai" },
@@ -789,28 +790,86 @@ eu possa encher com outro tema, sem copiar o texto original.
       {
         blocos: [
           { t: "videoslot", titulo: "Vídeo — Passo 03 · Modular para a tua voz", nota: "Espaço reservado. Cola aqui o vídeo quando estiver pronto." },
-          { t: "p", texto: "Cria o teu **Documento de Voz** e ensina a IA a escrever **como tu** — vocabulário, ritmo, opiniões e aquilo que **nunca** dirias. Depois junta tudo: fórmula do Passo 02 + referência do Passo 01 + a tua voz." },
-          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Criar o teu Documento de Voz", texto: `Quero criar o meu DOCUMENTO DE VOZ para escreveres sempre
-como eu. Entrevista-me com uma pergunta de cada vez para
-descobrir:
-1. O meu vocabulário e as expressões que uso sempre;
-2. O meu ritmo (frases curtas? histórias? direto?);
-3. As minhas opiniões fortes sobre o nicho;
-4. O que eu NUNCA diria (palavras/tom a evitar);
-5. O meu público e a transformação que ofereço.
+          { t: "p", texto: "Cria o teu **Documento de Contexto de Marca** e ensina a IA a escrever **como tu** — vocabulário, ritmo, opiniões e aquilo que **nunca** dirias. Depois junta tudo: fórmula do Passo 02 + referência do Passo 01 + a tua voz." },
+          { t: "nota", v: "info", texto: "**Como usar:** cola o prompt abaixo todo numa conversa **nova** do ChatGPT ou do Claude e escreve **«começa»**. Ele faz-te 7 perguntas, uma de cada vez, e no fim entrega o teu **Documento de Contexto de Marca** — pronto a guardar e a colar sempre que pedires conteúdo a uma IA." },
+          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Entrevista de Contexto de Marca (7 perguntas)", texto: `Vais atuar como estratega de conteúdo para Instagram. Não me dás
+ideias nem escreves nada ainda — o teu trabalho é entrevistar-me.
 
-No fim, entrega um "Documento de Voz" que eu possa colar no
-início de qualquer conversa para saíres logo com a minha cara.` },
-          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Modelar a referência na minha voz", texto: `Usa o meu DOCUMENTO DE VOZ (colado acima) e a FÓRMULA que
+REGRAS:
+- Fazes UMA pergunta de cada vez e esperas pela minha resposta.
+  Nunca me mostras a lista toda.
+- Falas simples, sem jargão de marketing.
+- Se a minha resposta for vaga, fazes UMA pergunta de seguimento
+  (pedes um exemplo real ou um número). Só depois avanças.
+- Se eu disser "não sei", dás-me 3 opções para escolher.
+- São 7 perguntas. Dizes-me sempre em que número estou.
+
+
+AS 7 PERGUNTAS, POR ESTA ORDEM:
+
+1. Quem és e o que vendes (ou o que queres vender)?
+
+2. Que conteúdo publicas hoje e qual foi o que funcionou melhor
+   até agora?
+
+3. Quais são os 2 ou 3 temas sobre os quais nunca ficas sem assunto?
+
+4. Quem queres do outro lado do ecrã — e qual é o problema que essa
+   pessoa sente? Diz-me nas palavras dela, como se fosse um direct.
+
+5. Tratas por tu ou por você? Português de Portugal ou do Brasil?
+   Cola aqui 1 ou 2 textos teus para eu aprender a tua voz.
+
+6. O que queres que este perfil te traga nos próximos 90 dias —
+   e como é que alguém te compra hoje?
+
+7. Dá-me 3 perfis de Instagram do teu nicho que admiras (com o @) e
+   1 que faz exatamente o que tu NÃO queres fazer. Diz porquê em
+   cada caso.
+
+
+O QUE ME ENTREGAS NO FIM:
+
+Depois da resposta 7 não fazes mais perguntas. Escreves num único
+bloco, pronto a copiar:
+
+DOCUMENTO DE CONTEXTO DE MARCA — [o meu nome / @ do perfil]
+
+1. QUEM SOU — posicionamento numa frase, o que vendo, o que me
+   torna diferente.
+
+2. PARA QUEM FALO — retrato da pessoa em 4 linhas + 3 frases nas
+   palavras dela sobre o problema que sente.
+
+3. PILARES DE CONTEÚDO — os meus temas e, para cada um, que
+   transformação promete.
+
+4. A MINHA VOZ — tratamento e variante do português, 5 regras de
+   escrita tiradas dos textos que colei, palavras que uso sempre,
+   palavras proibidas, e um exemplo de 3 linhas na minha voz.
+
+5. OBJETIVO E CAMINHO DE VENDA — objetivo dos 90 dias e o percurso
+   exato de quem vê um conteúdo até comprar.
+
+6. REFERÊNCIAS — @ do perfil | o que aprendo com ele | o que nunca
+   copio. Termina com: "o espaço vazio que eu posso ocupar é ___".
+
+7. REGRAS PARA QUALQUER IA QUE ESCREVA POR MIM — 6 instruções
+   curtas, em imperativo, que resumem tudo o que está acima.
+
+Termina com esta frase: "Guarda este documento. Sempre que pedires
+conteúdo a uma IA, cola-o primeiro — é isso que faz a diferença
+entre conteúdo genérico e conteúdo teu."` },
+          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Modelar a referência na minha voz", texto: `Usa o meu DOCUMENTO DE CONTEXTO DE MARCA (colado acima) e a FÓRMULA que
 extraíste no passo anterior para criar um conteúdo novo meu
 sobre [O MEU TEMA].
 
 Regras:
 - Mesmo formato/mecanismo, conteúdo 100% novo e meu.
-- Na minha voz, segundo o Documento de Voz.
+- Na minha voz, segundo o Documento de Contexto de Marca.
 - Usa este caso/exemplo real meu: [O TEU CASO].
 - Entrega: gancho, corpo e CTA.` },
-          { t: "nota", v: "info", texto: "Guarda o Documento de Voz num sítio fixo (o teu Documento Mestre). É o que faz a IA soar a ti e não a \"IA genérica\"." },
+          { t: "nota", v: "info", texto: "Guarda o Documento de Contexto de Marca num sítio fixo (o teu Documento Mestre). É o que faz a IA soar a ti e não a \"IA genérica\"." },
         ],
       },
     ],
@@ -830,7 +889,7 @@ Regras:
         blocos: [
           { t: "videoslot", titulo: "Vídeo — Passo 04 · Publicar e medir", nota: "Espaço reservado. Cola aqui o vídeo quando estiver pronto." },
           { t: "p", texto: "Transforma **uma** referência em **vários** conteúdos e cria a tua rotina semanal. Depois olha para os números certos — **salvamentos e partilhas**, não likes — e melhora com eles." },
-          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Uma referência → vários conteúdos", texto: `Usa a fórmula + o meu Documento de Voz para transformar esta
+          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Uma referência → vários conteúdos", texto: `Usa a fórmula + o meu Documento de Contexto de Marca para transformar esta
 referência num pequeno ecossistema, tudo na minha voz:
 1. REEL — atrair;
 2. CARROSSEL — educar/guardar;
