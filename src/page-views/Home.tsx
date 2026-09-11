@@ -69,6 +69,7 @@ const PRODUTOS = [
     cor: "#C81E63",
     icon: BookOpen,
     soAdmin: true,
+    escondido: true, // oculto da Home (reversível: pôr false)
   },
   {
     key: "estudio-creator",
@@ -83,6 +84,7 @@ const PRODUTOS = [
     cor: "#833AB4",
     icon: Camera,
     soAdmin: true,
+    escondido: true, // oculto da Home (reversível: pôr false)
   },
   {
     key: "encontros",
@@ -98,6 +100,7 @@ const PRODUTOS = [
     icon: Users,
     estruturaId: "encontros",
     soCapa: true,
+    escondido: true, // oculto da Home (reversível: pôr false)
   },
   {
     key: "criar-produto",
@@ -112,6 +115,7 @@ const PRODUTOS = [
     cor: "#2F9E6E",
     icon: Package,
     estruturaId: "criar-produto",
+    escondido: true, // oculto da Home (reversível: pôr false)
   },
   {
     key: "vendas-apps",
@@ -126,6 +130,7 @@ const PRODUTOS = [
     cor: "#2E6F9E",
     icon: Rocket,
     estruturaId: "vendas-apps",
+    escondido: true, // oculto da Home (reversível: pôr false)
   },
 ];
 
@@ -331,25 +336,31 @@ export default function Home() {
             {PRODUTOS.filter((p) => !MINI_CURSOS.includes(p.key) && !MENTORIA.includes(p.key) && visivel(p)).map((p, i) => renderCard(p, i))}
           </div>
 
-          {/* Mini-cursos */}
-          <div className="mt-14 mb-6">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-ink/50">Mini-cursos</p>
-            <div className="h-px bg-[var(--color-border)] mt-2.5" />
-          </div>
+          {/* Mini-cursos — só mostra a secção se houver cards visíveis */}
+          {PRODUTOS.some((p) => MINI_CURSOS.includes(p.key) && visivel(p)) && (
+            <>
+              <div className="mt-14 mb-6">
+                <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-ink/50">Mini-cursos</p>
+                <div className="h-px bg-[var(--color-border)] mt-2.5" />
+              </div>
+              <div className="flex flex-col sm:flex-row flex-wrap justify-center sm:justify-start gap-4 md:gap-5">
+                {PRODUTOS.filter((p) => MINI_CURSOS.includes(p.key) && visivel(p)).map((p, i) => renderCard(p, i))}
+              </div>
+            </>
+          )}
 
-          <div className="flex flex-col sm:flex-row flex-wrap justify-center sm:justify-start gap-4 md:gap-5">
-            {PRODUTOS.filter((p) => MINI_CURSOS.includes(p.key) && visivel(p)).map((p, i) => renderCard(p, i))}
-          </div>
-
-          {/* Mentoria */}
-          <div className="mt-14 mb-6">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-ink/50">Mentoria</p>
-            <div className="h-px bg-[var(--color-border)] mt-2.5" />
-          </div>
-
-          <div className="flex flex-col sm:flex-row flex-wrap justify-center sm:justify-start gap-4 md:gap-5">
-            {PRODUTOS.filter((p) => MENTORIA.includes(p.key) && visivel(p)).map((p, i) => renderCard(p, i))}
-          </div>
+          {/* Mentoria — só mostra a secção se houver cards visíveis */}
+          {PRODUTOS.some((p) => MENTORIA.includes(p.key) && visivel(p)) && (
+            <>
+              <div className="mt-14 mb-6">
+                <p className="text-[12px] font-semibold uppercase tracking-[0.24em] text-ink/50">Mentoria</p>
+                <div className="h-px bg-[var(--color-border)] mt-2.5" />
+              </div>
+              <div className="flex flex-col sm:flex-row flex-wrap justify-center sm:justify-start gap-4 md:gap-5">
+                {PRODUTOS.filter((p) => MENTORIA.includes(p.key) && visivel(p)).map((p, i) => renderCard(p, i))}
+              </div>
+            </>
+          )}
         </div>
       </section>
 
