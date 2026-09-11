@@ -15,6 +15,7 @@ export type Bloco =
   | { t: "video"; url: string; titulo?: string } // vídeo inline (.mp4 direto ou embed)
   | { t: "slides"; base: string; count: number; alt?: string } // galeria de slides (base/slide-01.webp…)
   | { t: "wizard"; passos: { titulo: string; blocos: Bloco[] }[] } // passos navegáveis (prev/próximo)
+  | { t: "videoslot"; titulo?: string; nota?: string } // espaço reservado p/ vídeo (a gravar)
   | { t: "acordeao"; titulo: string; aberto?: boolean; blocos: Bloco[] }; // secção fechável
 
 export type Secao = { label?: string; titulo?: string; blocos: Bloco[] };
@@ -670,144 +671,119 @@ Mantém o tom [o teu tom], o público [o teu público] e a oferta [o que vendes]
     id: "roubar-criador",
     numero: "Super Bónus",
     titulo: "Roubar como um Criador",
-    subtitulo: "O mecanismo por trás do conteúdo que cresce — copia a engenharia, nunca a substância.",
-    objetivo: "Transformar o que já viralizou em conteúdo original teu: extrair o mecanismo e enchê-lo com a tua voz, história e exemplos — sem copiar.",
-    links: [{ nome: "Abrir Claude", url: "https://claude.ai" }],
+    subtitulo: "Do garimpo à publicação: encontra o que já viralizou, revela o formato, escreve na tua voz e mede o que interessa.",
+    objetivo: "Aprender o fluxo completo para transformar referências virais em conteúdo original teu — em 4 passos, com a IA a fazer o trabalho pesado e a tua voz a fazer a diferença.",
+    links: [
+      { nome: "Abrir Claude", url: "https://claude.ai" },
+      { nome: "Abrir ChatGPT", url: "https://chatgpt.com" },
+    ],
     secoes: [
       {
-        label: "O princípio",
-        titulo: "O que muda tudo em 2026",
         blocos: [
-          { t: "nota", v: "info", texto: "**Copia o mecanismo, nunca o artefacto.** A fôrma que já provou funcionar é tua para usar; o recheio tem de ser inconfundivelmente teu." },
-          { t: "p", texto: "O Instagram deixou de premiar o conteúdo modelado à pressa — a mesma frase, o mesmo template que mil perfis publicaram na mesma semana. O que ele lê como \"novo\" não é uma estrutura inédita; é a **tua opinião, a tua história e a tua especificidade** dentro de uma estrutura sólida. Separa sempre as duas coisas: a **engenharia** (que se repete) e a **substância** (que só tu tens)." },
-          { t: "tabela", cab: ["❌ Copiar igual", "✅ Roubar como criador"], linhas: [
-            ["Pegas no post viral e refazes igual.", "Pegas no post viral e extrais só o mecanismo."],
-            ["Mais um igual no meio de mil.", "Estrutura provada + o TEU ângulo e exemplos."],
-            ["O alcance afunda (penalização).", "Original que sobe."],
-          ] },
+          { t: "nota", v: "info", texto: "**O fluxo em 4 passos:** 1) Garimpar → 2) Dissecar → 3) Modular para a tua voz → 4) Publicar e medir. Cada passo tem o seu vídeo. Copia o mecanismo, nunca o artefacto: a estrutura repete-se; a tua voz é que não se copia." },
         ],
       },
       {
-        label: "O mapa",
-        titulo: "O ecossistema: cada formato tem uma função",
+        label: "Passo 01",
+        titulo: "Garimpar",
         blocos: [
-          { t: "p", texto: "Antes de qualquer post, percebe onde ele encaixa. Publicar \"à toa\" não cresce porque cada formato faz um trabalho diferente no percurso de quem te descobre até quem te compra. Trata o conteúdo como um **sistema**, não como peças soltas." },
-          { t: "funil", niveis: [
-            { titulo: "Reels", desc: "atrai · topo — traz quem não te conhece" },
-            { titulo: "Carrossel", desc: "educa · autoridade · meio — prova o teu valor" },
-            { titulo: "Stories", desc: "conecta · vende · fundo — aquece e vende" },
-            { titulo: "Direct", desc: "fecha · conversa — o diagnóstico antes da venda" },
-          ] },
-          { t: "nota", v: "info", texto: "**O ciclo:** os guardados e partilhas do carrossel devolvem alcance ao topo. É isso que sustenta o crescimento." },
-        ],
-      },
-      {
-        label: "A engenharia",
-        titulo: "A anatomia de um post que segura a atenção",
-        blocos: [
-          { t: "p", texto: "Este é o esqueleto que podes (e deves) reutilizar sempre, porque é **estrutura, não plágio**. O que muda de post para post é o conteúdo dentro de cada peça." },
-          { t: "tabela", cab: ["Peça", "Função"], linhas: [
-            ["Slide 1 · Gancho", "Trava o scroll. Sem promessa ou dor nos primeiros 3 segundos, o resto não é lido."],
-            ["Meio · 1 ideia/slide", "Máximo 3 linhas por card. Uma ideia de cada vez desliza fácil e sobe a retenção."],
-            ["A meio · Retenção", "Um card que pede uma micro-ação (\"dá 2 toques\"), depois de uma frase forte."],
-            ["Fim · CTA", "Um pedido claro: seguir, guardar ou comentar uma palavra. Sem CTA, o algoritmo não recebe sinais."],
-          ] },
-          { t: "sub", titulo: "A legenda corre em paralelo — método P·A·S" },
+          { t: "videoslot", titulo: "Vídeo — Passo 01 · Garimpar", nota: "Espaço reservado. Cola aqui o vídeo quando estiver pronto." },
+          { t: "p", texto: "Encontra em minutos o conteúdo que **já viralizou** no teu nicho e monta a tua **biblioteca de referências** — em vez de andares a fazer scroll ao acaso." },
+          { t: "sub", titulo: "Via rápida — Claude no Chrome" },
+          { t: "p", texto: "Com a extensão do **Claude no Chrome** aberta no Instagram, pedes-lhe para ir buscar os Reels/conteúdos dos concorrentes com mais engajamento — e ele entrega tudo organizado num documento no Google Drive." },
+          { t: "prompt", agente: "Claude (Chrome)", nome: "Garimpar os virais do nicho", texto: `Estou no Instagram. Vai buscar os 10 Reels com mais
+engajamento (comentários + partilhas + guardados) dos
+últimos 10 dias destes perfis do meu nicho:
+[@concorrente1, @concorrente2, @concorrente3].
+
+Para cada um devolve:
+- link
+- o gancho (primeiros 3 segundos)
+- tema
+- formato (lista, história, opinião, tutorial…)
+- métricas visíveis
+
+Organiza numa tabela e guarda tudo num documento no Google Drive.` },
+          { t: "sub", titulo: "Via manual — alternativa" },
           { t: "ol", itens: [
-            "**Problema** — espelha a realidade de quem te lê.",
-            "**Agitação** — o custo de não resolver, com lógica, não drama.",
-            "**Solução** — a tua ótica sobre como se resolve.",
-            "**CTA** — guarda, comenta uma palavra ou leva para o Direct.",
+            "Descarrega o Reel num site de download de Reels.",
+            "Passa-o pelo **InstaScript AI** para teres a transcrição. [link a disponibilizar]",
+            "Leva essa transcrição para o passo seguinte (Dissecar).",
           ] },
+          { t: "nota", v: "info", texto: "**Guarda tudo:** cria a tua biblioteca de referências no Notion ou no Drive — uma linha por referência (link, gancho, formato). É daqui que vais buscar matéria-prima sempre que precisares." },
         ],
       },
       {
-        label: "O método",
-        titulo: "Da ideia ao post, em 4 passos",
+        label: "Passo 02",
+        titulo: "Dissecar",
         blocos: [
-          { t: "p", texto: "É este o percurso que transforma a estrutura de outra pessoa em conteúdo original teu. Repete-o para cada peça." },
-          { t: "ol", itens: [
-            "**Escuta e estuda** — as dores que os clientes repetem, as perguntas no Direct, os comentários nos maiores do nicho e o que já viralizou. A matéria-prima não sai da tua cabeça, sai de quem te ouve.",
-            "**Extrai o mecanismo** — de um conteúdo que funcionou, tira só o esqueleto: que dor abre o gancho, que emoção segura, que promessa faz e como a cumpre. Fica com a estrutura, deita fora as palavras.",
-            "**Enche com o que é teu** — a tua opinião (mesmo contra a corrente), um erro que cometeste, um caso real, a especificidade do teu nicho. É isto que a IA e o copy/paste não imitam.",
-            "**Modela e fecha** — monta na estrutura provada (gancho → ideias → retenção → CTA), escreve a legenda em PAS e pede o guardado. Publica, mede, repete o que funcionou.",
-          ] },
-          { t: "prompt", agente: "Claude", nome: "Roubar na prática: engenharia inversa", texto: `És analista de conteúdo viral. Vou colar um [REEL/CARROSSEL/
-LEGENDA] que viralizou no meu nicho de [O TEU NICHO].
+          { t: "videoslot", titulo: "Vídeo — Passo 02 · Dissecar", nota: "É este que falta gravar — vê o guião de gravação." },
+          { t: "p", texto: "Deixa de **ver conteúdo** e passa a **ver padrão**. Usa a IA para revelar a estrutura escondida de uma referência: **gancho, promessa, ritmo e fecho**." },
+          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Extrair o formato de um viral", texto: `Vou colar um [REEL / CARROSSEL / LEGENDA] que viralizou no
+meu nicho. Não quero que o reescrevas — quero o FORMATO.
 
-Desmonta o MECANISMO, não o texto:
-1. O gancho: que tensão/dor abre nos 3 primeiros segundos?
-2. A estrutura: que sequência leva a pessoa até ao fim?
-3. A emoção dominante.
-4. Porque gera SALVAMENTO e PARTILHA?
-5. Resume o mecanismo numa fórmula reutilizável.
+Revela a estrutura escondida:
+1. GANCHO — o que trava o scroll nos 3 primeiros segundos?
+2. PROMESSA — o que promete a quem fica?
+3. RITMO — como está construído por dentro (sequência de
+   passos, mudanças de ideia, o que segura até ao fim)?
+4. FECHO — como termina e que ação pede (CTA)?
 
-Depois, cria uma versão 100% minha com essa fórmula, na minha
-voz [descreve o tom], usando este caso real meu: [O TEU CASO].
+No fim, resume tudo numa FÓRMULA reutilizável — um molde que
+eu possa encher com outro tema, sem copiar o texto original.
 
-[COLA AQUI O CONTEÚDO]` },
+[COLA AQUI A REFERÊNCIA / TRANSCRIÇÃO]` },
+          { t: "nota", v: "info", texto: "O objetivo não é o texto reescrito — é a **fórmula**. É a fórmula que reutilizas semana após semana." },
         ],
       },
       {
-        label: "O gancho",
-        titulo: "Os primeiros 3 segundos",
+        label: "Passo 03",
+        titulo: "Modular para a tua voz",
         blocos: [
-          { t: "p", texto: "É onde a batalha se ganha ou se perde. Um gancho é a promessa implícita de que o que vem a seguir vale o tempo de quem vê. Genérico = scroll. Específico = paragem." },
-          { t: "tabela", cab: ["Tipo de gancho", "Exemplo"], linhas: [
-            ["Quebra de expectativa — contradiz o senso comum", "\"Publicar todos os dias está a queimar o teu perfil.\""],
-            ["Dor silenciosa — nomeia o que se sente mas não se diz", "\"Publicas e parece que falas para a parede?\""],
-            ["Promessa / recompensa — um resultado ou alívio", "\"O erro que faz os teus primeiros stories terem poucas views.\""],
-            ["Bastidor / atualidade — ancora numa mudança recente", "Autoridade aplicada ao momento, não teoria."],
-          ] },
-          { t: "tabela", cab: ["✗ Amador", "✓ Especialista"], linhas: [
-            ["\"Hoje trago dicas de marketing.\"", "\"O motivo invisível que faz os teus posts floparem.\""],
-            ["\"Dicas para crescer no Instagram.\"", "\"Se publicas todos os dias e não cresces, o problema não é o algoritmo.\""],
-          ] },
+          { t: "videoslot", titulo: "Vídeo — Passo 03 · Modular para a tua voz", nota: "Espaço reservado. Cola aqui o vídeo quando estiver pronto." },
+          { t: "p", texto: "Cria o teu **Documento de Voz** e ensina a IA a escrever **como tu** — vocabulário, ritmo, opiniões e aquilo que **nunca** dirias. Depois junta tudo: fórmula do Passo 02 + referência do Passo 01 + a tua voz." },
+          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Criar o teu Documento de Voz", texto: `Quero criar o meu DOCUMENTO DE VOZ para escreveres sempre
+como eu. Entrevista-me com uma pergunta de cada vez para
+descobrir:
+1. O meu vocabulário e as expressões que uso sempre;
+2. O meu ritmo (frases curtas? histórias? direto?);
+3. As minhas opiniões fortes sobre o nicho;
+4. O que eu NUNCA diria (palavras/tom a evitar);
+5. O meu público e a transformação que ofereço.
+
+No fim, entrega um "Documento de Voz" que eu possa colar no
+início de qualquer conversa para saíres logo com a minha cara.` },
+          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Modelar a referência na minha voz", texto: `Usa o meu DOCUMENTO DE VOZ (colado acima) e a FÓRMULA que
+extraíste no passo anterior para criar um conteúdo novo meu
+sobre [O MEU TEMA].
+
+Regras:
+- Mesmo formato/mecanismo, conteúdo 100% novo e meu.
+- Na minha voz, segundo o Documento de Voz.
+- Usa este caso/exemplo real meu: [O TEU CASO].
+- Entrega: gancho, corpo e CTA.` },
+          { t: "nota", v: "info", texto: "Guarda o Documento de Voz num sítio fixo (o teu Documento Mestre). É o que faz a IA soar a ti e não a \"IA genérica\"." },
         ],
       },
       {
-        label: "A semana",
-        titulo: "A matriz: o que rodar durante a semana",
+        label: "Passo 04",
+        titulo: "Publicar e medir",
         blocos: [
-          { t: "p", texto: "Nunca ficas sem ideias quando tens objetivos, não temas. Cada peça serve um propósito no funil. Roda os quatro ao longo da semana em vez de repetir o mesmo tipo." },
-          { t: "tabela", cab: ["Objetivo", "O que faz", "Formatos & exemplos"], linhas: [
-            ["Atrair", "Traz quem ainda não te conhece", "Reel com gancho forte; opinião contra a corrente; tendência adaptada ao teu ângulo"],
-            ["Autoridade", "Prova que sabes, gera guardados", "Carrossel-checklist; passo a passo; \"nunca faças isto\"; análise de uma novidade"],
-            ["Conexão", "Aproxima quem já te segue", "Stories de bastidor; rotina real; enquete; frase com botão de reação"],
-            ["Venda", "Transforma confiança em cliente", "Prova social; antes/depois; sequência de stories; posts fixados"],
+          { t: "videoslot", titulo: "Vídeo — Passo 04 · Publicar e medir", nota: "Espaço reservado. Cola aqui o vídeo quando estiver pronto." },
+          { t: "p", texto: "Transforma **uma** referência em **vários** conteúdos e cria a tua rotina semanal. Depois olha para os números certos — **salvamentos e partilhas**, não likes — e melhora com eles." },
+          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Uma referência → vários conteúdos", texto: `Usa a fórmula + o meu Documento de Voz para transformar esta
+referência num pequeno ecossistema, tudo na minha voz:
+1. REEL — atrair;
+2. CARROSSEL — educar/guardar;
+3. STORIES — conectar;
+4. LEGENDA em PAS.
+Não repitas o mesmo texto entre formatos.` },
+          { t: "tabela", cab: ["Mede isto", "Porquê"], linhas: [
+            ["Guardados", "“Vou voltar a isto” — autoridade máxima."],
+            ["Partilhas", "“Isto é a minha cara” — alcance novo."],
+            ["Likes", "Reação de segundo — o sinal mais fraco."],
           ] },
-          { t: "nota", v: "info", texto: "**Exemplo de semana:** seg atrair · ter autoridade · qua atrair · qui autoridade · sex venda · sáb conexão · dom bastidor/prova. Ajusta ao momento da tua marca." },
-        ],
-      },
-      {
-        label: "Medir",
-        titulo: "As métricas que mandam",
-        blocos: [
-          { t: "p", texto: "O gosto é reação de segundo. O que faz um post durar e chegar a gente nova é ser **guardado** e **partilhado**. Desenha para estes, não para o coração fácil." },
-          { t: "tabela", cab: ["Sinal", "Peso"], linhas: [
-            ["Guardados", "PESO MÁXIMO — \"vou voltar a isto\". Torna o post consultável (checklist, passo a passo)."],
-            ["Partilhas", "ALCANCE NOVO — \"isto é a minha cara\". Nasce da identificação."],
-            ["Comentários", "CONVERSA — abre porta ao Direct."],
-            ["Gostos", "REAÇÃO DE SEGUNDO — o mais fraco dos quatro."],
-          ] },
-        ],
-      },
-      {
-        label: "Antes de publicar",
-        titulo: "Checklist",
-        blocos: [
-          { t: "ul", itens: [
-            "O gancho trava o scroll em 3 segundos e é específico, não genérico.",
-            "Uma ideia por slide, no máximo 3 linhas cada.",
-            "Há um card de retenção a meio, depois de uma frase forte.",
-            "O conteúdo tem algo que só eu podia ter escrito (opinião, história, exemplo real).",
-            "É guardável: a pessoa vai querer voltar a isto?",
-            "Legenda em PAS, com as 2 primeiras linhas a vender o clique.",
-            "Um CTA claro (seguir · guardar · comentar palavra · direct).",
-            "Palavras-chave do nicho na legenda (SEO), sem hashtags a mais.",
-            "Não é cópia de ninguém — usei a estrutura, não o texto.",
-          ] },
-          { t: "nota", v: "warn", texto: "**Para levar contigo:** a estrutura repete-se; a substância, nunca. Usa a engenharia à vontade — guarda a tua energia para o que ninguém copia: o teu ponto de vista, a tua história, os teus casos reais. Bem modelado sobe as probabilidades; é a **consistência** que fecha a conta." },
+          { t: "nota", v: "warn", texto: "**Rotina semanal:** garimpa 3–5 referências, dissecca-as, modela na tua voz e agenda a semana. No fim, vê os salvamentos e partilhas e repete só o que funcionou." },
         ],
       },
     ],

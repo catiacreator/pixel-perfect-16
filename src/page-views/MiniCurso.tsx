@@ -4,7 +4,7 @@ import PromptBox from "../components/curso/PromptBox";
 import VideoArea from "../components/curso/VideoArea";
 import { Link, useSearchParams } from "@/lib/router-compat";
 import { useState, useEffect } from "react";
-import { Sparkles, ArrowRight, ArrowLeft, Check, ExternalLink, Download, Instagram, GraduationCap, MessageCircle, ChevronLeft, ChevronRight, ChevronDown, Expand, X, Lock } from "lucide-react";
+import { Sparkles, ArrowRight, ArrowLeft, Check, ExternalLink, Download, Instagram, GraduationCap, MessageCircle, ChevronLeft, ChevronRight, ChevronDown, Expand, X, Lock, PlayCircle } from "lucide-react";
 import { WHATSAPP_CATIA } from "@/lib/turmas";
 import TarefaCompleta from "../components/TarefaCompleta";
 import EmManutencao from "../components/EmManutencao";
@@ -174,6 +174,16 @@ function BlocoView({ b }: { b: Bloco }) {
       return <AcordeaoBloco titulo={b.titulo} aberto={b.aberto} blocos={b.blocos} />;
     case "video":
       return <div className="my-4"><VideoArea videoUrl={b.url} titulo={b.titulo ?? "Vídeo"} /></div>;
+    case "videoslot":
+      return (
+        <div className="my-4 rounded-2xl border-2 border-dashed border-terracotta/30 bg-terracotta/[0.04] aspect-video flex flex-col items-center justify-center text-center px-6">
+          <span className="w-12 h-12 rounded-full bg-terracotta/12 text-terracotta flex items-center justify-center mb-3">
+            <PlayCircle size={24} />
+          </span>
+          <p className="text-sm font-semibold text-ink/75">{b.titulo ?? "Vídeo em breve"}</p>
+          {b.nota && <p className="text-[12.5px] text-ink/50 mt-1 max-w-sm">{b.nota}</p>}
+        </div>
+      );
     case "slides":
       return <Slideshow base={b.base} count={b.count} alt={b.alt} />;
     case "nota":
