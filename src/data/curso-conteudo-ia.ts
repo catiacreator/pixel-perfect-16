@@ -860,7 +860,7 @@ DOCUMENTO DE CONTEXTO DE MARCA — [o meu nome / @ do perfil]
 Termina com esta frase: "Guarda este documento. Sempre que pedires
 conteúdo a uma IA, cola-o primeiro — é isso que faz a diferença
 entre conteúdo genérico e conteúdo teu."` },
-          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Modelar a referência na minha voz", texto: `Usa o meu DOCUMENTO DE CONTEXTO DE MARCA (colado acima) e a FÓRMULA que
+          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Gerar ideias novas", texto: `Usa o meu DOCUMENTO DE CONTEXTO DE MARCA (colado acima) e a FÓRMULA que
 extraíste no passo anterior para criar um conteúdo novo meu
 sobre [O MEU TEMA].
 
