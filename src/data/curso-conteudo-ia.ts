@@ -719,17 +719,11 @@ export const SUBAULAS: Aula[] = [
           { t: "p", texto: "Com a extensão do **Claude no Chrome** aberta no Instagram, pedes-lhe para ir buscar os Reels/conteúdos dos concorrentes com mais engajamento — e ele entrega tudo organizado num documento no Google Drive." },
           { t: "prompt", agente: "Claude (Chrome)", nome: "Garimpar os virais do nicho", texto: `Estou no Instagram. Vai buscar os 10 Reels com mais
 engajamento (comentários + partilhas + guardados) dos
-últimos 10 dias destes perfis do meu nicho:
-[@concorrente1, @concorrente2, @concorrente3].
+últimos 10 dias deste perfil.
+Cria um documento com os reels organizados por engajamento, gancho e legenda.
+Cria um documento com todos os carrosseis, slide a slide e legenda.
 
-Para cada um devolve:
-- link
-- o gancho (primeiros 3 segundos)
-- tema
-- formato (lista, história, opinião, tutorial…)
-- métricas visíveis
-
-Organiza numa tabela e guarda tudo num documento no Google Drive.` },
+Organiza numa pasta no Google Drive.` },
           { t: "sub", titulo: "Via manual — alternativa" },
           { t: "videoslot", titulo: "Vídeo — Garimpar (via manual)", nota: "Espaço reservado. Cola aqui o vídeo da via manual quando estiver pronto." },
           { t: "ol", itens: [
