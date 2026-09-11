@@ -28,6 +28,7 @@ export type Aula = {
   videoUrl?: string;
   links?: { nome: string; url: string }[]; // botões para abrir a(s) ferramenta(s)
   disponivelEm?: string; // ISO local (ex.: "2026-09-14T02:19:00") — trancada com contagem até esta data
+  pai?: string; // id do módulo-pai (para sub-aulas com id livre, ex.: "roubar-criador")
   secoes: Secao[];
 };
 
@@ -672,7 +673,7 @@ Mantém o tom [o teu tom], o público [o teu público] e a oferta [o que vendes]
     numero: "Super Bónus",
     titulo: "Roubar como um Criador",
     subtitulo: "Do garimpo à publicação: encontra o que já viralizou, revela o formato, escreve na tua voz e mede o que interessa.",
-    objetivo: "Aprender o fluxo completo para transformar referências virais em conteúdo original teu — em 4 passos, com a IA a fazer o trabalho pesado e a tua voz a fazer a diferença.",
+    objetivo: "O fluxo completo para transformar referências virais em conteúdo original teu — em 4 sub-módulos, cada um com o seu vídeo.",
     links: [
       { nome: "Abrir Claude", url: "https://claude.ai" },
       { nome: "Abrir ChatGPT", url: "https://chatgpt.com" },
@@ -680,12 +681,37 @@ Mantém o tom [o teu tom], o público [o teu público] e a oferta [o que vendes]
     secoes: [
       {
         blocos: [
-          { t: "nota", v: "info", texto: "**O fluxo em 4 passos:** 1) Garimpar → 2) Dissecar → 3) Modular para a tua voz → 4) Publicar e medir. Cada passo tem o seu vídeo. Copia o mecanismo, nunca o artefacto: a estrutura repete-se; a tua voz é que não se copia." },
+          { t: "nota", v: "info", texto: "**O fluxo em 4 passos:** 1) Garimpar → 2) Dissecar → 3) Modular para a tua voz → 4) Publicar e medir. Cada passo é um sub-módulo com o seu vídeo. Copia o mecanismo, nunca o artefacto: a estrutura repete-se; a tua voz é que não se copia." },
         ],
       },
       {
-        label: "Passo 01",
-        titulo: "Garimpar",
+        label: "O percurso",
+        titulo: "Os 4 passos deste módulo",
+        blocos: [
+          { t: "aulas", itens: [
+            { titulo: "1 · Garimpar", desc: "Encontra o que já viralizou no teu nicho e monta a tua biblioteca de referências.", aula: "roubar-garimpar" },
+            { titulo: "2 · Dissecar", desc: "Revela a estrutura escondida — gancho, promessa, ritmo e fecho. Extrai o formato.", aula: "roubar-dissecar" },
+            { titulo: "3 · Modular para a tua voz", desc: "Cria o teu Documento de Voz e ensina a IA a escrever como tu.", aula: "roubar-voz" },
+            { titulo: "4 · Publicar e medir", desc: "Uma referência → vários conteúdos. Mede salvamentos e partilhas, não likes.", aula: "roubar-medir" },
+          ] },
+        ],
+      },
+    ],
+  },
+];
+
+// Sub-aulas (páginas Bónus penduradas num módulo, via ?aula=id) — não entram
+// na grelha de módulos nem no prev/next principal.
+export const SUBAULAS: Aula[] = [
+  {
+    id: "roubar-garimpar",
+    pai: "roubar-criador",
+    numero: "Roubar · Passo 01",
+    titulo: "Garimpar",
+    objetivo: "Encontrar em minutos o conteúdo que já viralizou no teu nicho e montar a tua biblioteca de referências.",
+    links: [{ nome: "Abrir Claude", url: "https://claude.ai" }],
+    secoes: [
+      {
         blocos: [
           { t: "videoslot", titulo: "Vídeo — Passo 01 · Garimpar", nota: "Espaço reservado. Cola aqui o vídeo quando estiver pronto." },
           { t: "p", texto: "Encontra em minutos o conteúdo que **já viralizou** no teu nicho e monta a tua **biblioteca de referências** — em vez de andares a fazer scroll ao acaso." },
@@ -713,9 +739,20 @@ Organiza numa tabela e guarda tudo num documento no Google Drive.` },
           { t: "nota", v: "info", texto: "**Guarda tudo:** cria a tua biblioteca de referências no Notion ou no Drive — uma linha por referência (link, gancho, formato). É daqui que vais buscar matéria-prima sempre que precisares." },
         ],
       },
+    ],
+  },
+  {
+    id: "roubar-dissecar",
+    pai: "roubar-criador",
+    numero: "Roubar · Passo 02",
+    titulo: "Dissecar",
+    objetivo: "Revelar a estrutura escondida de uma referência — gancho, promessa, ritmo e fecho — e transformá-la numa fórmula reutilizável.",
+    links: [
+      { nome: "Abrir ChatGPT", url: "https://chatgpt.com" },
+      { nome: "Abrir Claude", url: "https://claude.ai" },
+    ],
+    secoes: [
       {
-        label: "Passo 02",
-        titulo: "Dissecar",
         blocos: [
           { t: "videoslot", titulo: "Vídeo — Passo 02 · Dissecar", nota: "É este que falta gravar — vê o guião de gravação." },
           { t: "p", texto: "Deixa de **ver conteúdo** e passa a **ver padrão**. Usa a IA para revelar a estrutura escondida de uma referência: **gancho, promessa, ritmo e fecho**." },
@@ -736,9 +773,20 @@ eu possa encher com outro tema, sem copiar o texto original.
           { t: "nota", v: "info", texto: "O objetivo não é o texto reescrito — é a **fórmula**. É a fórmula que reutilizas semana após semana." },
         ],
       },
+    ],
+  },
+  {
+    id: "roubar-voz",
+    pai: "roubar-criador",
+    numero: "Roubar · Passo 03",
+    titulo: "Modular para a tua voz",
+    objetivo: "Criar o teu Documento de Voz e ensinar a IA a escrever como tu — vocabulário, ritmo, opiniões e o que nunca dirias.",
+    links: [
+      { nome: "Abrir ChatGPT", url: "https://chatgpt.com" },
+      { nome: "Abrir Claude", url: "https://claude.ai" },
+    ],
+    secoes: [
       {
-        label: "Passo 03",
-        titulo: "Modular para a tua voz",
         blocos: [
           { t: "videoslot", titulo: "Vídeo — Passo 03 · Modular para a tua voz", nota: "Espaço reservado. Cola aqui o vídeo quando estiver pronto." },
           { t: "p", texto: "Cria o teu **Documento de Voz** e ensina a IA a escrever **como tu** — vocabulário, ritmo, opiniões e aquilo que **nunca** dirias. Depois junta tudo: fórmula do Passo 02 + referência do Passo 01 + a tua voz." },
@@ -765,9 +813,20 @@ Regras:
           { t: "nota", v: "info", texto: "Guarda o Documento de Voz num sítio fixo (o teu Documento Mestre). É o que faz a IA soar a ti e não a \"IA genérica\"." },
         ],
       },
+    ],
+  },
+  {
+    id: "roubar-medir",
+    pai: "roubar-criador",
+    numero: "Roubar · Passo 04",
+    titulo: "Publicar e medir",
+    objetivo: "Transformar uma referência em vários conteúdos, criar a rotina semanal e melhorar a partir dos números certos.",
+    links: [
+      { nome: "Abrir ChatGPT", url: "https://chatgpt.com" },
+      { nome: "Abrir Claude", url: "https://claude.ai" },
+    ],
+    secoes: [
       {
-        label: "Passo 04",
-        titulo: "Publicar e medir",
         blocos: [
           { t: "videoslot", titulo: "Vídeo — Passo 04 · Publicar e medir", nota: "Espaço reservado. Cola aqui o vídeo quando estiver pronto." },
           { t: "p", texto: "Transforma **uma** referência em **vários** conteúdos e cria a tua rotina semanal. Depois olha para os números certos — **salvamentos e partilhas**, não likes — e melhora com eles." },
@@ -788,11 +847,6 @@ Não repitas o mesmo texto entre formatos.` },
       },
     ],
   },
-];
-
-// Sub-aulas (páginas Bónus penduradas num módulo, via ?aula=id) — não entram
-// na grelha de módulos nem no prev/next principal.
-export const SUBAULAS: Aula[] = [
   {
     id: "m1b",
     numero: "NotebookLM · Apresentações",

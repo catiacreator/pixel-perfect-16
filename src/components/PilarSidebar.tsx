@@ -67,6 +67,10 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   "2 · Carrosséis visuais": LayoutGrid,
   "3 · Criar artefactos": Monitor,
   "4 · Modelar Conteúdo Viral": Sparkle,
+  "1 · Garimpar": Search,
+  "2 · Dissecar": LayoutGrid,
+  "3 · Modular para a voz": Mic,
+  "4 · Publicar e medir": Zap,
 };
 
 type SubItem = { label: string; to: string; badge?: string; id?: string };
@@ -126,7 +130,15 @@ const PILARES: Record<string | number, PilarDef> = {
       { num: 5, id: "conteudo-ia.m5", label: "Fluxo + projeto final", to: "/conteudo-ia?aula=m5", icon: Wrench },
       { num: 6, id: "conteudo-ia.m6", label: "Automações que geram ideias", to: "/conteudo-ia?aula=m6", icon: CalendarClock, badge: "Bónus" },
       { num: 7, id: "conteudo-ia.reels-serie", label: "Reels em Série", to: "/conteudo-ia?aula=reels-serie", icon: Video, badge: "Novo Bónus" },
-      { num: 8, id: "conteudo-ia.roubar-criador", label: "Roubar como um Criador", to: "/conteudo-ia?aula=roubar-criador", icon: Sparkle, badge: "Super Bónus" },
+      {
+        num: 8, id: "conteudo-ia.roubar-criador", label: "Roubar como um Criador", to: "/conteudo-ia?aula=roubar-criador", icon: Sparkle, badge: "Super Bónus",
+        children: [
+          { label: "1 · Garimpar", to: "/conteudo-ia?aula=roubar-garimpar" },
+          { label: "2 · Dissecar", to: "/conteudo-ia?aula=roubar-dissecar" },
+          { label: "3 · Modular para a voz", to: "/conteudo-ia?aula=roubar-voz" },
+          { label: "4 · Publicar e medir", to: "/conteudo-ia?aula=roubar-medir" },
+        ],
+      },
       { num: 9, id: "conteudo-ia.bonus", label: "Banco de prompts", to: "/conteudo-ia?aula=bonus", icon: Book },
       { num: 10, id: "conteudo-ia.final", label: "O teu próximo passo", to: "/conteudo-ia?aula=final", icon: Sparkles },
     ],

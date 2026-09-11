@@ -615,9 +615,9 @@ export default function MiniCurso() {
   } else if (subSel) {
     // sub-aula (ex.: m4b) — navega em cadeia entre irmãs do mesmo módulo:
     // pai (m4) → aula 1 (m4b) → aula 2 (m4c) → … → módulo seguinte (m5)
-    const paiBase = subSel.id.replace(/[a-z]$/, "");
+    const paiBase = subSel.pai ?? subSel.id.replace(/[a-z]$/, "");
     const pIdx = AULAS.findIndex((a) => a.id === paiBase);
-    const irmas = SUBAULAS.filter((s) => s.id.replace(/[a-z]$/, "") === paiBase);
+    const irmas = SUBAULAS.filter((s) => (s.pai ?? s.id.replace(/[a-z]$/, "")) === paiBase);
     const sIdx = irmas.findIndex((s) => s.id === subSel.id);
     conteudo = (
       <Modulo

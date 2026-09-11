@@ -190,7 +190,15 @@ export const ESTRUTURA: Nodo[] = [
       { id: "conteudo-ia.m5", label: "Módulo 5 · Fluxo + projeto final", tipo: "pagina", to: "/conteudo-ia?aula=m5" },
       { id: "conteudo-ia.m6", label: "Automações que geram ideias (Bónus)", tipo: "pagina", to: "/conteudo-ia?aula=m6" },
       { id: "conteudo-ia.reels-serie", label: "Reels em Série", tipo: "pagina", to: "/conteudo-ia?aula=reels-serie" },
-      { id: "conteudo-ia.roubar-criador", label: "Roubar como um Criador (Super Bónus)", tipo: "pagina", to: "/conteudo-ia?aula=roubar-criador" },
+      {
+        id: "conteudo-ia.roubar-criador", label: "Roubar como um Criador (Super Bónus)", tipo: "pagina", to: "/conteudo-ia?aula=roubar-criador",
+        filhos: [
+          { id: "conteudo-ia.roubar-garimpar", label: "Passo 01 · Garimpar", tipo: "subpagina", to: "/conteudo-ia?aula=roubar-garimpar" },
+          { id: "conteudo-ia.roubar-dissecar", label: "Passo 02 · Dissecar", tipo: "subpagina", to: "/conteudo-ia?aula=roubar-dissecar" },
+          { id: "conteudo-ia.roubar-voz", label: "Passo 03 · Modular para a voz", tipo: "subpagina", to: "/conteudo-ia?aula=roubar-voz" },
+          { id: "conteudo-ia.roubar-medir", label: "Passo 04 · Publicar e medir", tipo: "subpagina", to: "/conteudo-ia?aula=roubar-medir" },
+        ],
+      },
       { id: "conteudo-ia.bonus", label: "Banco de prompts", tipo: "pagina", to: "/conteudo-ia?aula=bonus" },
       { id: "conteudo-ia.final", label: "O teu próximo passo", tipo: "pagina", to: "/conteudo-ia?aula=final" },
     ],
