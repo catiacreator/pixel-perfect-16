@@ -690,8 +690,8 @@ Mantém o tom [o teu tom], o público [o teu público] e a oferta [o que vendes]
         blocos: [
           { t: "aulas", itens: [
             { titulo: "1 · Garimpar", desc: "Encontra o que já viralizou no teu nicho e monta a tua biblioteca de referências.", aula: "roubar-garimpar" },
-            { titulo: "2 · Dissecar", desc: "Revela a estrutura escondida — gancho, promessa, ritmo e fecho. Extrai o formato.", aula: "roubar-dissecar" },
-            { titulo: "3 · Modular para a tua voz", desc: "Cria o teu Documento de Contexto de Marca e ensina a IA a escrever como tu.", aula: "roubar-voz" },
+            { titulo: "2 · Modular para a tua voz", desc: "Cria o teu Documento de Contexto de Marca e ensina a IA a escrever como tu.", aula: "roubar-voz" },
+            { titulo: "3 · Dissecar", desc: "Revela a estrutura escondida — gancho, promessa, ritmo e fecho. Extrai o formato.", aula: "roubar-dissecar" },
             { titulo: "4 · Publicar e medir", desc: "Uma referência → vários conteúdos. Mede salvamentos e partilhas, não likes.", aula: "roubar-medir" },
           ] },
         ],
@@ -737,43 +737,9 @@ Organiza numa pasta no Google Drive.` },
     ],
   },
   {
-    id: "roubar-dissecar",
-    pai: "roubar-criador",
-    numero: "Roubar · Passo 02",
-    titulo: "Dissecar",
-    objetivo: "Revelar a estrutura escondida de uma referência — gancho, promessa, ritmo e fecho — e transformá-la numa fórmula reutilizável.",
-    links: [
-      { nome: "Abrir ChatGPT", url: "https://chatgpt.com" },
-      { nome: "Abrir Claude", url: "https://claude.ai" },
-    ],
-    secoes: [
-      {
-        blocos: [
-          { t: "videoslot", titulo: "Vídeo — Passo 02 · Dissecar", nota: "É este que falta gravar — vê o guião de gravação." },
-          { t: "p", texto: "Deixa de **ver conteúdo** e passa a **ver padrão**. Usa a IA para revelar a estrutura escondida de uma referência: **gancho, promessa, ritmo e fecho**." },
-          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Extrair o formato de um viral", texto: `Vou colar um [REEL / CARROSSEL / LEGENDA] que viralizou no
-meu nicho. Não quero que o reescrevas — quero o FORMATO.
-
-Revela a estrutura escondida:
-1. GANCHO — o que trava o scroll nos 3 primeiros segundos?
-2. PROMESSA — o que promete a quem fica?
-3. RITMO — como está construído por dentro (sequência de
-   passos, mudanças de ideia, o que segura até ao fim)?
-4. FECHO — como termina e que ação pede (CTA)?
-
-No fim, resume tudo numa FÓRMULA reutilizável — um molde que
-eu possa encher com outro tema, sem copiar o texto original.
-
-[COLA AQUI A REFERÊNCIA / TRANSCRIÇÃO]` },
-          { t: "nota", v: "info", texto: "O objetivo não é o texto reescrito — é a **fórmula**. É a fórmula que reutilizas semana após semana." },
-        ],
-      },
-    ],
-  },
-  {
     id: "roubar-voz",
     pai: "roubar-criador",
-    numero: "Roubar · Passo 03",
+    numero: "Roubar · Passo 02",
     titulo: "Modular para a tua voz",
     objetivo: "Criar o teu Documento de Contexto de Marca e ensinar a IA a escrever como tu — vocabulário, ritmo, opiniões e o que nunca dirias.",
     links: [
@@ -783,7 +749,7 @@ eu possa encher com outro tema, sem copiar o texto original.
     secoes: [
       {
         blocos: [
-          { t: "videoslot", titulo: "Vídeo — Passo 03 · Modular para a tua voz", nota: "Espaço reservado. Cola aqui o vídeo quando estiver pronto." },
+          { t: "videoslot", titulo: "Vídeo — Passo 02 · Modular para a tua voz", nota: "Espaço reservado. Cola aqui o vídeo quando estiver pronto." },
           { t: "p", texto: "Cria o teu **Documento de Contexto de Marca** e ensina a IA a escrever **como tu** — vocabulário, ritmo, opiniões e aquilo que **nunca** dirias. Depois junta tudo: fórmula do Passo 02 + referência do Passo 01 + a tua voz." },
           { t: "nota", v: "info", texto: "**Como usar:** cola o prompt abaixo todo numa conversa **nova** do ChatGPT ou do Claude e escreve **«começa»**. Ele faz-te 7 perguntas, uma de cada vez, e no fim entrega o teu **Documento de Contexto de Marca** — pronto a guardar e a colar sempre que pedires conteúdo a uma IA." },
           { t: "prompt", agente: "ChatGPT ou Claude", nome: "Entrevista de Contexto de Marca (7 perguntas)", texto: `Vais atuar como estratega de conteúdo para Instagram. Não me dás
@@ -864,6 +830,26 @@ Regras:
 - Usa este caso/exemplo real meu: [O TEU CASO].
 - Entrega: gancho, corpo e CTA.` },
           { t: "nota", v: "info", texto: "Guarda o Documento de Contexto de Marca num sítio fixo (o teu Documento Mestre). É o que faz a IA soar a ti e não a \"IA genérica\"." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "roubar-dissecar",
+    pai: "roubar-criador",
+    numero: "Roubar · Passo 03",
+    titulo: "Dissecar",
+    objetivo: "Revelar a estrutura escondida de uma referência — gancho, promessa, ritmo e fecho — e transformá-la numa fórmula reutilizável.",
+    links: [
+      { nome: "Abrir ChatGPT", url: "https://chatgpt.com" },
+      { nome: "Abrir Claude", url: "https://claude.ai" },
+    ],
+    secoes: [
+      {
+        blocos: [
+          { t: "videoslot", titulo: "Vídeo — Passo 03 · Dissecar", nota: "É este que falta gravar — vê o guião de gravação." },
+          { t: "p", texto: "Deixa de **ver conteúdo** e passa a **ver padrão**. Usa a IA para revelar a estrutura escondida de uma referência: **gancho, promessa, ritmo e fecho**." },
+          { t: "nota", v: "info", texto: "O objetivo não é o texto reescrito — é a **fórmula**: o molde (gancho · promessa · ritmo · fecho) que reutilizas semana após semana." },
         ],
       },
     ],

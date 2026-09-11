@@ -68,8 +68,8 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   "3 · Criar artefactos": Monitor,
   "4 · Modelar Conteúdo Viral": Sparkle,
   "1 · Garimpar": Search,
-  "2 · Dissecar": LayoutGrid,
-  "3 · Modular para a voz": Mic,
+  "2 · Modular para a voz": Mic,
+  "3 · Dissecar": LayoutGrid,
   "4 · Publicar e medir": Zap,
 };
 
@@ -134,8 +134,8 @@ const PILARES: Record<string | number, PilarDef> = {
         num: 8, id: "conteudo-ia.roubar-criador", label: "Roubar como um Criador", to: "/conteudo-ia?aula=roubar-criador", icon: Sparkle, badge: "Super Bónus",
         children: [
           { label: "1 · Garimpar", to: "/conteudo-ia?aula=roubar-garimpar" },
-          { label: "2 · Dissecar", to: "/conteudo-ia?aula=roubar-dissecar" },
-          { label: "3 · Modular para a voz", to: "/conteudo-ia?aula=roubar-voz" },
+          { label: "2 · Modular para a voz", to: "/conteudo-ia?aula=roubar-voz" },
+          { label: "3 · Dissecar", to: "/conteudo-ia?aula=roubar-dissecar" },
           { label: "4 · Publicar e medir", to: "/conteudo-ia?aula=roubar-medir" },
         ],
       },
