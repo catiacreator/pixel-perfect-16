@@ -28,7 +28,7 @@ const PRODUTOS = [
   {
     key: "conteudo-ia",
     tag: "Curso",
-    titulo: "Conteúdo com IA",
+    titulo: "Ideias Infinitas de Conteúdo",
     assinatura: "Primeiro Mês de Posts",
     desc: "Aprende a criar conteúdo com IA e a publicar com consistência. A porta de entrada para o método completo.",
     to: "/conteudo-ia",

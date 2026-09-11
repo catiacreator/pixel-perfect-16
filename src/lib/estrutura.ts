@@ -159,7 +159,7 @@ export const ESTRUTURA: Nodo[] = [
   },
   {
     id: "conteudo-ia",
-    label: "Primeiro Mês de Posts (Curso)",
+    label: "Ideias Infinitas de Conteúdo (Curso)",
     tipo: "modulo",
     to: "/conteudo-ia",
     filhos: [

@@ -94,7 +94,7 @@ type PilarDef = {
 const PILARES: Record<string | number, PilarDef> = {
   "conteudo-ia": {
     pilar: "conteudo-ia",
-    title: "Curso · Primeiro Mês de Posts",
+    title: "Curso · Ideias Infinitas de Conteúdo",
     enabled: true,
     items: [
       { num: 0, id: "conteudo-ia.intro", label: "Introdução", to: "/conteudo-ia", icon: Compass },

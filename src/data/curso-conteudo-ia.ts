@@ -33,7 +33,7 @@ export type Aula = {
 export const CURSO_INTRO = {
   // URL do vídeo de boas-vindas: aceita embed (YouTube/Vimeo/Tella) ou ficheiro .mp4 direto
   videoUrl: "https://dlyzjirpovfqgchfwnrh.supabase.co/storage/v1/object/public/videos/curso-conteudo-ia/intro.mp4?v=3",
-  titulo: "Rouba como um Creator",
+  titulo: "Ideias Infinitas de Conteúdo",
   subtitulo: "A tua equipa de 4 IAs para viralizar e vender no Instagram. Cada ferramenta faz uma parte do trabalho pesado — tu ficas com a direção criativa e a tua voz.",
   ferramentas: "NotebookLM · pesquisa · Grok · tendências · Claude · roteiros · ChatGPT · arte",
   nivel: "Nível: Iniciante · 6 módulos + projeto final",

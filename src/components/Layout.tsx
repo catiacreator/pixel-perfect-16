@@ -42,7 +42,7 @@ const GRUPOS_CURSOS: {
   {
     titulo: "Mini-cursos & Ferramentas",
     itens: [
-      { id: "conteudo-ia", to: "/conteudo-ia", label: "Primeiro Mês de Posts", sub: "Curso", cor: "#7C56C9", icon: Sparkles },
+      { id: "conteudo-ia", to: "/conteudo-ia", label: "Ideias Infinitas de Conteúdo", sub: "Curso", cor: "#7C56C9", icon: Sparkles },
       { id: "criar-produto", to: "/criar-produto", label: "Criar Produto", sub: "A tua esteira", cor: "#2F9E6E", icon: Package },
       { id: "vendas-apps", to: "/vendas-apps", label: "Páginas de vendas e apps", sub: "Sem programar", cor: "#2E6F9E", icon: Rocket },
       { id: "maquina-analises", to: "/maquina-analises", label: "Máquina de Análises", sub: "Plano de 30 dias", cor: "#C13584", icon: LineChart },
