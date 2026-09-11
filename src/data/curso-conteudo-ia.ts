@@ -889,13 +889,6 @@ Regras:
         blocos: [
           { t: "videoslot", titulo: "Vídeo — Passo 04 · Publicar e medir", nota: "Espaço reservado. Cola aqui o vídeo quando estiver pronto." },
           { t: "p", texto: "Transforma **uma** referência em **vários** conteúdos e cria a tua rotina semanal. Depois olha para os números certos — **salvamentos e partilhas**, não likes — e melhora com eles." },
-          { t: "prompt", agente: "ChatGPT ou Claude", nome: "Uma referência → vários conteúdos", texto: `Usa a fórmula + o meu Documento de Contexto de Marca para transformar esta
-referência num pequeno ecossistema, tudo na minha voz:
-1. REEL — atrair;
-2. CARROSSEL — educar/guardar;
-3. STORIES — conectar;
-4. LEGENDA em PAS.
-Não repitas o mesmo texto entre formatos.` },
           { t: "tabela", cab: ["Mede isto", "Porquê"], linhas: [
             ["Guardados", "“Vou voltar a isto” — autoridade máxima."],
             ["Partilhas", "“Isto é a minha cara” — alcance novo."],
