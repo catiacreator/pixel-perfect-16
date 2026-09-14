@@ -16,6 +16,7 @@ export type Bloco =
   | { t: "slides"; base: string; count: number; alt?: string } // galeria de slides (base/slide-01.webp…)
   | { t: "wizard"; passos: { titulo: string; blocos: Bloco[] }[] } // passos navegáveis (prev/próximo)
   | { t: "videoslot"; titulo?: string; nota?: string } // espaço reservado p/ vídeo (a gravar)
+  | { t: "pdf"; url: string; nome?: string; base?: string; paginas?: number } // páginas do PDF como imagens grandes (base/pag-01.png…) + botão de descarregar
   | { t: "acordeao"; titulo: string; aberto?: boolean; blocos: Bloco[] }; // secção fechável
 
 export type Secao = { label?: string; titulo?: string; blocos: Bloco[] };
@@ -640,7 +641,8 @@ Mantém o tom [o teu tom], o público [o teu público] e a oferta [o que vendes]
             { titulo: "1 · Bisbilhotar Conteúdo", desc: "Encontra o que já viralizou no teu nicho e monta a tua biblioteca de referências.", aula: "roubar-garimpar" },
             { titulo: "2 · Modular para a tua voz", desc: "Cria o teu Documento de Contexto de Marca e ensina a IA a escrever como tu.", aula: "roubar-voz" },
             { titulo: "3 · A IA pesquisa por ti", desc: "Uma automação no Claude que te traz o conteúdo dos concorrentes todos os dias, sozinha.", aula: "roubar-dissecar" },
-            { titulo: "4 · Publicar e medir", desc: "Uma referência → vários conteúdos. Mede salvamentos e partilhas, não likes.", aula: "roubar-medir" },
+            { titulo: "4 · Modela o Formato", desc: "O Método Europeu de Conteúdo completo, para leres na página ou descarregares.", aula: "roubar-formato" },
+            { titulo: "5 · Publicar e medir", desc: "Uma referência → vários conteúdos. Mede salvamentos e partilhas, não likes.", aula: "roubar-medir" },
           ] },
         ],
       },
@@ -657,7 +659,6 @@ export const SUBAULAS: Aula[] = [
     numero: "Roubar · Passo 01",
     titulo: "Bisbilhotar Conteúdo",
     objetivo: "Encontrar em minutos o conteúdo que já viralizou no teu nicho e montar a tua biblioteca de referências.",
-    links: [{ nome: "Abrir Claude", url: "https://claude.ai" }],
     secoes: [
       {
         blocos: [
@@ -807,15 +808,26 @@ Regras:
     ],
   },
   {
-    id: "roubar-medir",
+    id: "roubar-formato",
     pai: "roubar-criador",
     numero: "Roubar · Passo 04",
+    titulo: "Modela o Formato",
+    objetivo: "Perceber a engenharia por trás do conteúdo que cresce e modelar o formato — o Método Europeu de Conteúdo, do princípio ao post.",
+    secoes: [
+      {
+        blocos: [
+          { t: "p", texto: "Aqui tens o **Método Europeu de Conteúdo** completo: a engenharia por trás do conteúdo que cresce — princípio, ecossistema, anatomia do post, gancho, legenda em PAS, matriz semanal, métricas e checklist. Lê aqui na página ou descarrega para teres sempre à mão." },
+          { t: "pdf", url: "/pdf/metodo-europeu-de-conteudo.pdf", nome: "Método Europeu de Conteúdo", base: "/metodo-europeu/", paginas: 7 },
+        ],
+      },
+    ],
+  },
+  {
+    id: "roubar-medir",
+    pai: "roubar-criador",
+    numero: "Roubar · Passo 05",
     titulo: "Publicar e medir",
     objetivo: "Transformar uma referência em vários conteúdos, criar a rotina semanal e melhorar a partir dos números certos.",
-    links: [
-      { nome: "Abrir ChatGPT", url: "https://chatgpt.com" },
-      { nome: "Abrir Claude", url: "https://claude.ai" },
-    ],
     secoes: [
       {
         blocos: [

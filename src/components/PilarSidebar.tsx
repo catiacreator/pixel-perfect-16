@@ -70,7 +70,8 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   "1 · Bisbilhotar Conteúdo": Search,
   "2 · Modular para a voz": Mic,
   "3 · A IA pesquisa por ti": Search,
-  "4 · Publicar e medir": Zap,
+  "4 · Modela o Formato": FileText,
+  "5 · Publicar e medir": Zap,
 };
 
 type SubItem = { label: string; to: string; badge?: string; id?: string };
@@ -135,7 +136,8 @@ const PILARES: Record<string | number, PilarDef> = {
           { label: "1 · Bisbilhotar Conteúdo", to: "/conteudo-ia?aula=roubar-garimpar" },
           { label: "2 · Modular para a voz", to: "/conteudo-ia?aula=roubar-voz" },
           { label: "3 · A IA pesquisa por ti", to: "/conteudo-ia?aula=roubar-dissecar" },
-          { label: "4 · Publicar e medir", to: "/conteudo-ia?aula=roubar-medir" },
+          { label: "4 · Modela o Formato", to: "/conteudo-ia?aula=roubar-formato" },
+          { label: "5 · Publicar e medir", to: "/conteudo-ia?aula=roubar-medir" },
         ],
       },
       { num: 8, id: "conteudo-ia.bonus", label: "Banco de prompts", to: "/conteudo-ia?aula=bonus", icon: Book },

@@ -184,6 +184,35 @@ function BlocoView({ b }: { b: Bloco }) {
           {b.nota && <p className="text-[12.5px] text-ink/50 mt-1 max-w-sm">{b.nota}</p>}
         </div>
       );
+    case "pdf":
+      return (
+        <div className="my-5">
+          {b.base && b.paginas ? (
+            <div className="flex flex-col gap-4">
+              {Array.from({ length: b.paginas }).map((_, i) => (
+                <img
+                  key={i}
+                  src={`${b.base}pag-${String(i + 1).padStart(2, "0")}.png`}
+                  alt={`${b.nome ?? "Página"} — página ${i + 1}`}
+                  loading="lazy"
+                  className="w-full rounded-2xl border border-border shadow-sm"
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-2xl overflow-hidden border border-border bg-white">
+              <iframe src={`${b.url}#view=FitH`} title={b.nome ?? "Documento"} className="w-full h-[72vh] min-h-[440px] border-0" />
+            </div>
+          )}
+          <a
+            href={b.url}
+            download
+            className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-terracotta text-cream text-sm font-semibold hover:bg-terracotta-dark transition-colors"
+          >
+            <Download size={15} /> Descarregar {b.nome ?? "PDF"} (PDF)
+          </a>
+        </div>
+      );
     case "slides":
       return <Slideshow base={b.base} count={b.count} alt={b.alt} />;
     case "nota":
