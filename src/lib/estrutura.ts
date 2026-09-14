@@ -188,7 +188,6 @@ export const ESTRUTURA: Nodo[] = [
           { id: "conteudo-ia.m4e", label: "Criar conteúdo com notícias", tipo: "subpagina", to: "/conteudo-ia?aula=m4e" },
         ],
       },
-      { id: "conteudo-ia.m5", label: "Módulo 5 · Fluxo + projeto final", tipo: "pagina", to: "/conteudo-ia?aula=m5" },
       { id: "conteudo-ia.m6", label: "Automações que geram ideias (Bónus)", tipo: "pagina", to: "/conteudo-ia?aula=m6" },
       { id: "conteudo-ia.reels-serie", label: "Reels em Série", tipo: "pagina", to: "/conteudo-ia?aula=reels-serie" },
       {

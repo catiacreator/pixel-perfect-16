@@ -38,7 +38,7 @@ export const CURSO_INTRO = {
   titulo: "Ideias Infinitas de Conteúdo",
   subtitulo: "A tua equipa de 4 IAs para viralizar e vender no Instagram. Cada ferramenta faz uma parte do trabalho pesado — tu ficas com a direção criativa e a tua voz.",
   ferramentas: "NotebookLM · pesquisa · Grok · tendências · Claude · roteiros · ChatGPT · arte",
-  nivel: "Nível: Iniciante · 6 módulos + projeto final",
+  nivel: "Nível: Iniciante · 5 módulos + bónus",
   secoes: [
     {
       label: "Como funciona o método",
@@ -341,58 +341,6 @@ Com base nisso:
           ] },
           { t: "nota", v: "info", texto: "**Qual escolher?** Tens só um tema na cabeça → Aula 1. Queres outro formato (infográfico, e-book, imagem) → Aula 2. Já tens matéria-prima (texto, documento, pesquisa do M1/M2 ou estrutura do M3) → Aula 3." },
           { t: "nota", v: "info", texto: "**Bónus do capítulo:** os **Agentes Creator** (no menu lateral) são GPTs prontos que fazem parte deste trabalho por ti." },
-        ],
-      },
-    ],
-  },
-  {
-    id: "m5",
-    numero: "Módulo 5",
-    titulo: "O fluxo completo e o teu projeto final",
-    objetivo: "Juntar as 4 ferramentas num único fluxo que repetes toda a semana, e produzir uma semana inteira de conteúdo do zero.",
-    secoes: [
-      {
-        titulo: "5.1 A linha de produção completa",
-        blocos: [
-          { t: "tabela", cab: ["Passo", "Ferramenta", "O que fazes"], linhas: [
-            ["1. Inteligência", "NotebookLM", "Analisa virais e gera banco de ideias."],
-            ["2. Tema quente", "Grok", "Descobre o assunto do momento e as dores reais."],
-            ["3. Roteiro/legenda", "Claude", "Escreve gancho, roteiro/carrossel e legenda na tua voz."],
-            ["4. Produção", "ChatGPT", "Produz o carrossel: texto final, design e imagens."],
-            ["5. Acabamento", "Tu / Canva", "Revês, adicionas identidade, agendas e publicas."],
-          ] },
-          { t: "nota", v: "info", texto: "**Regra de ouro:** as IAs fazem o trabalho pesado, mas a decisão é sempre tua. Tu és a diretora criativa. A IA acelera; tu dás alma." },
-        ],
-      },
-      {
-        titulo: "5.2 Rotina semanal sugerida",
-        blocos: [
-          { t: "ul", itens: [
-            "**Segunda (30 min) — Pesquisa:** NotebookLM + Grok. Sais com 5 temas e as dores do público.",
-            "**Terça (45 min) — Escrita:** no Claude, geras roteiros e legendas da semana de uma vez.",
-            "**Quarta (45 min) — Arte:** no ChatGPT, crias os carrosséis e finalizas no Canva.",
-            "**Quinta — Gravação:** gravas os Reels com os roteiros.",
-            "**Sexta — Agendamento:** agendas os posts da semana seguinte.",
-          ] },
-          { t: "nota", v: "info", texto: "**Equilibra o funil na semana:** não postes só um tipo. Uma semana saudável tem **Reels** (para atrair gente nova), pelo menos um **carrossel** (para educar e gerar salvamentos) e **stories** quase todos os dias (para aquecer e converter). Reels enchem o topo; stories fecham no Direct." },
-        ],
-      },
-      {
-        titulo: "5.3 Projeto final",
-        blocos: [
-          { t: "nota", v: "warn", texto: "**Desafio:** produz uma semana completa (3 posts) usando o fluxo inteiro — NotebookLM (3 ideias) → Grok (1 tendência + dores) → Claude (2 roteiros + 1 carrossel + 3 legendas) → ChatGPT (as artes) → finaliza e publica." },
-        ],
-      },
-      {
-        titulo: "5.4 Erros comuns de iniciante",
-        blocos: [
-          { t: "ul", itens: [
-            "Aceitar a primeira resposta da IA. Pede variações e edita.",
-            "Prompt vago. Quanto mais contexto (nicho, público, tom, objetivo), melhor.",
-            "Conteúdo genérico. Adiciona a tua história, opinião e exemplos.",
-            "Não confirmar informação. Especialmente com o Grok, verifica as fontes.",
-            "Querer automatizar cedo demais. Domina o fluxo manual primeiro.",
-          ] },
         ],
       },
     ],
