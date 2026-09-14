@@ -4,7 +4,7 @@ import PromptBox from "../components/curso/PromptBox";
 import VideoArea from "../components/curso/VideoArea";
 import { Link, useSearchParams } from "@/lib/router-compat";
 import { useState, useEffect } from "react";
-import { Sparkles, ArrowRight, ArrowLeft, Check, ExternalLink, Download, Instagram, GraduationCap, MessageCircle, ChevronLeft, ChevronRight, ChevronDown, Expand, X, Lock, PlayCircle } from "lucide-react";
+import { Sparkles, ArrowRight, ArrowLeft, Check, ExternalLink, Download, Instagram, MessageCircle, ChevronLeft, ChevronRight, ChevronDown, Expand, X, Lock, PlayCircle } from "lucide-react";
 import { WHATSAPP_CATIA } from "@/lib/turmas";
 import TarefaCompleta from "../components/TarefaCompleta";
 import EmManutencao from "../components/EmManutencao";
@@ -523,14 +523,6 @@ function FinalCTA() {
       icon: Instagram,
       cor: "#C8487E",
     },
-    {
-      titulo: "Academia de IA",
-      tag: "Ferramentas",
-      desc: "Aulas práticas, ferramenta a ferramenta, para te tornares especialista em Inteligência Artificial.",
-      to: "/metodo/pilar-1/aprenda-ia",
-      icon: GraduationCap,
-      cor: "#2E7CB8",
-    },
   ];
   return (
     <section className="px-5 md:px-10 pt-8 md:pt-10 pb-14 max-w-3xl mx-auto">
@@ -540,7 +532,7 @@ function FinalCTA() {
       <p className="text-[10px] tracking-[0.2em] uppercase text-terracotta font-semibold mb-1">O teu próximo passo</p>
       <h1 className="font-serif text-3xl md:text-4xl text-ink mb-3">Continua na Leveza no Digital</h1>
       <p className="text-[15px] text-ink/70 leading-relaxed mb-8 max-w-2xl">
-        Já tens a equipa de IAs a trabalhar por ti. O próximo passo é o <b className="text-ink">método completo</b> — dentro da Leveza no Digital tens dois caminhos para ires mais longe:
+        Já tens a equipa de IAs a trabalhar por ti. O próximo passo é o <b className="text-ink">método completo</b> — dentro da Leveza no Digital para ires mais longe:
       </p>
 
       <div className="grid sm:grid-cols-2 gap-4">

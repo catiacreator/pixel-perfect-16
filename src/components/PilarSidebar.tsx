@@ -127,8 +127,8 @@ const PILARES: Record<string | number, PilarDef> = {
           { label: "5 · Criar conteúdo com notícias", to: "/conteudo-ia?aula=m4e" },
         ],
       },
-      { num: 5, id: "conteudo-ia.m6", label: "Automações que geram ideias", to: "/conteudo-ia?aula=m6", icon: CalendarClock, badge: "Bónus" },
-      { num: 6, id: "conteudo-ia.reels-serie", label: "Reels em Série", to: "/conteudo-ia?aula=reels-serie", icon: Video, badge: "Novo Bónus" },
+      { num: 5, id: "conteudo-ia.m6", label: "Automações que geram ideias", to: "/conteudo-ia?aula=m6", icon: CalendarClock },
+      { num: 6, id: "conteudo-ia.reels-serie", label: "Reels em Série", to: "/conteudo-ia?aula=reels-serie", icon: Video },
       {
         num: 7, id: "conteudo-ia.roubar-criador", label: "Roubar como um Criador", to: "/conteudo-ia?aula=roubar-criador", icon: Sparkle, badge: "Super Bónus",
         children: [
