@@ -749,7 +749,8 @@ Organiza numa pasta no Google Drive.` },
     secoes: [
       {
         blocos: [
-          { t: "videoslot", titulo: "Vídeo — Passo 02 · Modular para a tua voz", nota: "Espaço reservado. Cola aqui o vídeo quando estiver pronto." },
+          { t: "video", url: "https://youtu.be/pORaO1LikEE", titulo: "Modular para a tua voz" },
+          { t: "nota", v: "info", texto: "Isto é válido tanto para **carrosséis** como para **Reels**." },
           { t: "p", texto: "Cria o teu **Documento de Contexto de Marca** e ensina a IA a escrever **como tu** — vocabulário, ritmo, opiniões e aquilo que **nunca** dirias. Depois junta tudo: fórmula do Passo 02 + referência do Passo 01 + a tua voz." },
           { t: "nota", v: "info", texto: "**Como usar:** cola o prompt abaixo todo numa conversa **nova** do ChatGPT ou do Claude e escreve **«começa»**. Ele faz-te 7 perguntas, uma de cada vez, e no fim entrega o teu **Documento de Contexto de Marca** — pronto a guardar e a colar sempre que pedires conteúdo a uma IA." },
           { t: "prompt", agente: "ChatGPT ou Claude", nome: "Entrevista de Contexto de Marca (7 perguntas)", texto: `Vais atuar como estratega de conteúdo para Instagram. Não me dás
