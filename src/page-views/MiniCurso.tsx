@@ -7,9 +7,7 @@ import { useState, useEffect } from "react";
 import { Sparkles, ArrowRight, ArrowLeft, Check, ExternalLink, Download, Instagram, MessageCircle, ChevronLeft, ChevronRight, ChevronDown, Expand, X, Lock, PlayCircle } from "lucide-react";
 import { WHATSAPP_CATIA } from "@/lib/turmas";
 import TarefaCompleta from "../components/TarefaCompleta";
-import EmManutencao from "../components/EmManutencao";
 import { useBloqueadoParaAlunos } from "@/lib/admin-view";
-import { useBloqueios } from "@/lib/bloqueios";
 import { CURSO_INTRO, AULAS, SUBAULAS, CURSO_BONUS, type Aula, type Bloco, type Secao } from "@/data/curso-conteudo-ia";
 
 // Curso "Conteúdo com IA" — cada módulo na sua página (via ?aula=mX).
@@ -629,23 +627,13 @@ export default function MiniCurso() {
   const aulaSel = idx >= 0 ? AULAS[idx] : null;
   const subSel = SUBAULAS.find((a) => a.id === aula) ?? null;
 
-  // Cada capítulo pode ser marcado "Em breve/Bloqueado" no painel (Estrutura).
-  // Segue diretamente a lista do painel (isBloqueadoRaw) para funcionar mesmo com
-  // o "Geral" desligado e sem depender das turmas. Admin (vista admin) vê tudo.
+  // Curso gratuito de entrada "Ideias Infinitas de Conteúdo": o conteúdo está
+  // SEMPRE disponível para qualquer aluno com sessão (curso e Leveza). Não é
+  // gated pela lista global "Em breve" nem por turma.
   const bloqueadoParaAlunos = useBloqueadoParaAlunos();
-  const { isBloqueadoRaw, modoBloqueio } = useBloqueios();
-  const cid = "conteudo-ia." + (aula || "intro");
-  const paiCid = aula && /[a-z]$/.test(aula) ? "conteudo-ia." + aula.replace(/[a-z]$/, "") : null; // m4b → conteudo-ia.m4
-  const capBloqueado = bloqueadoParaAlunos && (isBloqueadoRaw(cid) || (!!paiCid && isBloqueadoRaw(paiCid)));
 
   let conteudo: React.ReactNode;
-  if (capBloqueado) {
-    conteudo = (
-      <section className="px-5 md:px-10 pt-8 pb-14 max-w-3xl mx-auto">
-        <EmManutencao modo={modoBloqueio(cid) === "bloqueado" ? "bloqueado" : "em-breve"} />
-      </section>
-    );
-  } else if (aula === "final") conteudo = <FinalCTA />;
+  if (aula === "final") conteudo = <FinalCTA />;
   else if (aula === "bonus") conteudo = <Bonus />;
   else if (aulaSel) {
     conteudo = (

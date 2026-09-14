@@ -283,10 +283,10 @@ const PILAR_SHORT: Record<number, string> = {
 function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: () => void }) {
   const def = PILARES[pilar];
   const bloqueadoParaAlunos = useBloqueadoParaAlunos();
-  const { isBloqueado, isBloqueadoRaw, modoBloqueio } = useBloqueios();
-  // No mini-curso os capítulos seguem diretamente a lista do painel (isBloqueadoRaw),
-  // igual à página — funciona com o "Geral" desligado e sem depender de turmas.
-  const capituloBloqueado = (id?: string) => !!id && (def.pilar === "conteudo-ia" ? isBloqueadoRaw(id) : isBloqueado(id));
+  const { isBloqueado } = useBloqueios();
+  // Curso gratuito de entrada "Ideias Infinitas de Conteúdo": está SEMPRE aberto
+  // para qualquer aluno com sessão. Os restantes pilares seguem as turmas.
+  const capituloBloqueado = (id?: string) => !!id && def.pilar !== "conteudo-ia" && isBloqueado(id);
   const location = useLocation();
   const pathname = location.pathname;
   // location.search can be an object in TanStack Router
@@ -356,10 +356,6 @@ function SidebarBody({ pilar, onNavigate }: { pilar: SidebarKey; onNavigate?: ()
                 </p>
               </li>
             ) : null;
-            // "Oculto" no mini-curso → item nem aparece na sidebar (para os alunos).
-            if (bloqueadoParaAlunos && def.pilar === "conteudo-ia" && item.id && isBloqueadoRaw(item.id) && modoBloqueio(item.id) === "oculto") {
-              return null;
-            }
             const locked = capituloBloqueado(item.id) && bloqueadoParaAlunos;
 
             // Item bloqueado para alunos — mostra "Em breve", sem link nem submenu.
