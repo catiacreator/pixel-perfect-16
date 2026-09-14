@@ -847,9 +847,13 @@ Regras:
     secoes: [
       {
         blocos: [
+          { t: "sub", titulo: "Automação no Claude" },
           { t: "video", url: "https://youtu.be/QjWjOpSuF2I", titulo: "A IA pesquisa por ti" },
           { t: "p", texto: "Aqui criamos uma **automação no Claude** para a IA **pesquisar por ti**: todos os dias, sozinha, vai buscar o **conteúdo dos teus concorrentes** e entrega-to — sem teres de andar a fazer scroll. É a tua matéria-prima a chegar em piloto automático." },
           { t: "nota", v: "info", texto: "É uma **tarefa recorrente**: configuras uma vez e corre sozinha à hora que escolheres. Assim tens sempre referências frescas para os passos seguintes." },
+          { t: "sub", titulo: "Automação simples com o ChatGPT" },
+          { t: "video", url: "https://youtu.be/KDUU2dRL7Dg", titulo: "Automação simples com o ChatGPT" },
+          { t: "p", texto: "O **ChatGPT** entrega o conteúdo no café da manhã. Aqui, além de te trazer todas as **notícias** que lhe pedes, ainda te entrega o **conteúdo já feito** — pronto a virar **Reel** ou **carrossel**. Depois é só **postar**: a parte difícil, a IA faz por ti." },
         ],
       },
     ],
