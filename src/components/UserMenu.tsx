@@ -156,6 +156,18 @@ export default function UserMenu() {
             {email && <p className="text-xs text-ink/50 truncate">{email}</p>}
           </div>
 
+          {/* Em pré-visualização como aluno, a admin precisa sempre de uma saída
+              para voltar à vista de admin (o toggle do topo é só desktop). */}
+          {isAdmin && !emVistaAdmin && (
+            <button
+              onClick={() => { setView("admin"); setPreviewTurma(null); setOpen(false); }}
+              className="w-full flex items-center gap-3 px-3 py-2.5 mb-1 rounded-lg text-sm font-semibold text-terracotta hover:bg-terracotta/5 transition-colors border-b border-[var(--color-border)]"
+            >
+              <Shield size={16} strokeWidth={1.75} />
+              Voltar a ver como admin
+            </button>
+          )}
+
           {/* Só para admin E apenas na vista de admin — na pré-visualização como
               aluno o perfil fica igual ao de um aluno (sem vistas nem link admin). */}
           {isAdmin && emVistaAdmin && (
