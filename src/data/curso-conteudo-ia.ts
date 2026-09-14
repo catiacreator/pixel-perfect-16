@@ -712,7 +712,8 @@ export const SUBAULAS: Aula[] = [
     secoes: [
       {
         blocos: [
-          { t: "videoslot", titulo: "Vídeo — Passo 01 · Garimpar", nota: "Espaço reservado. Cola aqui o vídeo quando estiver pronto." },
+          { t: "sub", titulo: "Roubar Ideias com o Claude for Chrome" },
+          { t: "video", url: "https://youtu.be/Ky_LDq8aItU", titulo: "Roubar Ideias com o Claude for Chrome" },
           { t: "p", texto: "Encontra em minutos o conteúdo que **já viralizou** no teu nicho e monta a tua **biblioteca de referências** — em vez de andares a fazer scroll ao acaso." },
           { t: "sub", titulo: "Via rápida — Claude no Chrome" },
           { t: "p", texto: "Com a extensão do **Claude no Chrome** aberta no Instagram, pedes-lhe para ir buscar os Reels/conteúdos dos concorrentes com mais engajamento — e ele entrega tudo organizado num documento no Google Drive." },
