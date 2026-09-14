@@ -67,7 +67,7 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   "1 · Criar conteúdo no Claude": AlignLeft,
   "2 · Carrosséis visuais": LayoutGrid,
   "3 · Criar artefactos": Monitor,
-  "1 · Garimpar": Search,
+  "1 · Bisbilhotar Conteúdo": Search,
   "2 · Modular para a voz": Mic,
   "3 · A IA pesquisa por ti": Search,
   "4 · Publicar e medir": Zap,
@@ -133,7 +133,7 @@ const PILARES: Record<string | number, PilarDef> = {
       {
         num: 8, id: "conteudo-ia.roubar-criador", label: "Roubar como um Criador", to: "/conteudo-ia?aula=roubar-criador", icon: Sparkle, badge: "Super Bónus",
         children: [
-          { label: "1 · Garimpar", to: "/conteudo-ia?aula=roubar-garimpar" },
+          { label: "1 · Bisbilhotar Conteúdo", to: "/conteudo-ia?aula=roubar-garimpar" },
           { label: "2 · Modular para a voz", to: "/conteudo-ia?aula=roubar-voz" },
           { label: "3 · A IA pesquisa por ti", to: "/conteudo-ia?aula=roubar-dissecar" },
           { label: "4 · Publicar e medir", to: "/conteudo-ia?aula=roubar-medir" },

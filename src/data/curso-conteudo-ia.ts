@@ -681,7 +681,7 @@ Mantém o tom [o teu tom], o público [o teu público] e a oferta [o que vendes]
     secoes: [
       {
         blocos: [
-          { t: "nota", v: "info", texto: "**O fluxo em 4 passos:** 1) Garimpar → 2) Dissecar → 3) Modular para a tua voz → 4) Publicar e medir. Cada passo é um sub-módulo com o seu vídeo. Copia o mecanismo, nunca o artefacto: a estrutura repete-se; a tua voz é que não se copia." },
+          { t: "nota", v: "info", texto: "**O fluxo em 4 passos:** 1) Bisbilhotar Conteúdo → 2) Modular para a tua voz → 3) A IA pesquisa por ti → 4) Publicar e medir. Cada passo é um sub-módulo com o seu vídeo. Copia o mecanismo, nunca o artefacto: a estrutura repete-se; a tua voz é que não se copia." },
         ],
       },
       {
@@ -689,7 +689,7 @@ Mantém o tom [o teu tom], o público [o teu público] e a oferta [o que vendes]
         titulo: "Os 4 passos deste módulo",
         blocos: [
           { t: "aulas", itens: [
-            { titulo: "1 · Garimpar", desc: "Encontra o que já viralizou no teu nicho e monta a tua biblioteca de referências.", aula: "roubar-garimpar" },
+            { titulo: "1 · Bisbilhotar Conteúdo", desc: "Encontra o que já viralizou no teu nicho e monta a tua biblioteca de referências.", aula: "roubar-garimpar" },
             { titulo: "2 · Modular para a tua voz", desc: "Cria o teu Documento de Contexto de Marca e ensina a IA a escrever como tu.", aula: "roubar-voz" },
             { titulo: "3 · A IA pesquisa por ti", desc: "Uma automação no Claude que te traz o conteúdo dos concorrentes todos os dias, sozinha.", aula: "roubar-dissecar" },
             { titulo: "4 · Publicar e medir", desc: "Uma referência → vários conteúdos. Mede salvamentos e partilhas, não likes.", aula: "roubar-medir" },
@@ -707,7 +707,7 @@ export const SUBAULAS: Aula[] = [
     id: "roubar-garimpar",
     pai: "roubar-criador",
     numero: "Roubar · Passo 01",
-    titulo: "Garimpar",
+    titulo: "Bisbilhotar Conteúdo",
     objetivo: "Encontrar em minutos o conteúdo que já viralizou no teu nicho e montar a tua biblioteca de referências.",
     links: [{ nome: "Abrir Claude", url: "https://claude.ai" }],
     secoes: [
@@ -718,7 +718,7 @@ export const SUBAULAS: Aula[] = [
           { t: "p", texto: "Encontra em minutos o conteúdo que **já viralizou** no teu nicho e monta a tua **biblioteca de referências** — em vez de andares a fazer scroll ao acaso." },
           { t: "sub", titulo: "Via rápida — Claude no Chrome" },
           { t: "p", texto: "Com a extensão do **Claude no Chrome** aberta no Instagram, pedes-lhe para ir buscar os Reels/conteúdos dos concorrentes com mais engajamento — e ele entrega tudo organizado num documento no Google Drive." },
-          { t: "prompt", agente: "Claude (Chrome)", nome: "Garimpar os virais do nicho", texto: `Estou no Instagram. Vai buscar os 10 Reels com mais
+          { t: "prompt", agente: "Claude (Chrome)", nome: "Bisbilhotar os virais do nicho", texto: `Estou no Instagram. Vai buscar os 10 Reels com mais
 engajamento (comentários + partilhas + guardados) dos
 últimos 10 dias deste perfil.
 Cria um documento com os reels organizados por engajamento, gancho e legenda.
@@ -726,7 +726,7 @@ Cria um documento com todos os carrosseis, slide a slide e legenda.
 
 Organiza numa pasta no Google Drive.` },
           { t: "sub", titulo: "Via manual — alternativa" },
-          { t: "video", url: "https://youtu.be/Z5RD9ns91yQ", titulo: "Garimpar (via manual)" },
+          { t: "video", url: "https://youtu.be/Z5RD9ns91yQ", titulo: "Bisbilhotar Conteúdo (via manual)" },
           { t: "ol", itens: [
             "Descarrega o Reel num site de download de Reels.",
             "Passa-o pelo **InstaScript AI** para teres a transcrição. [link a disponibilizar]",
@@ -871,14 +871,29 @@ Regras:
     secoes: [
       {
         blocos: [
-          { t: "videoslot", titulo: "Vídeo — Passo 04 · Publicar e medir", nota: "Espaço reservado. Cola aqui o vídeo quando estiver pronto." },
-          { t: "p", texto: "Transforma **uma** referência em **vários** conteúdos e cria a tua rotina semanal. Depois olha para os números certos — **salvamentos e partilhas**, não likes — e melhora com eles." },
-          { t: "tabela", cab: ["Mede isto", "Porquê"], linhas: [
-            ["Guardados", "“Vou voltar a isto” — autoridade máxima."],
-            ["Partilhas", "“Isto é a minha cara” — alcance novo."],
-            ["Likes", "Reação de segundo — o sinal mais fraco."],
+          { t: "p", texto: "Este é o passo em que o trabalho vira resultado. Transforma **uma** referência em **vários** conteúdos, publica com consistência e deixa os **números certos** guiarem o próximo lote — não os likes." },
+          { t: "sub", titulo: "1. Publica com um plano" },
+          { t: "ol", itens: [
+            "Pega no conteúdo que criaste **na tua voz** (Passo 02), a partir das referências que a IA foi buscar (Passos 01 e 03).",
+            "Espalha a semana e alterna o objetivo: **Reel** (atrair), **carrossel** (autoridade), **stories** (conexão) e um post de **venda**.",
+            "**Agenda tudo de uma vez** — assim publicas mesmo nos dias sem tempo e mantens a consistência (é ela que fecha a conta).",
           ] },
-          { t: "nota", v: "warn", texto: "**Rotina semanal:** garimpa 3–5 referências, dissecca-as, modela na tua voz e agenda a semana. No fim, vê os salvamentos e partilhas e repete só o que funcionou." },
+          { t: "sub", titulo: "2. Mede o que importa" },
+          { t: "p", texto: "O gosto é reação de segundo. O que faz um post **durar** e chegar a gente nova é ser **guardado** e **partilhado**. Desenha para estes." },
+          { t: "tabela", cab: ["Sinal", "O que te diz"], linhas: [
+            ["Guardados", "“Vou voltar a isto” — autoridade máxima. Torna o post consultável (checklist, passo a passo)."],
+            ["Partilhas", "“Isto é a minha cara” — alcance novo, nasce da identificação."],
+            ["Comentários", "Conversa — abre a porta ao Direct, onde a venda acontece."],
+            ["Likes", "Reação de segundo — o sinal mais fraco dos quatro."],
+          ] },
+          { t: "sub", titulo: "3. Melhora com os teus números" },
+          { t: "ul", itens: [
+            "**Poucas visualizações?** O problema está no **gancho** (primeiros 3 segundos) ou no tema.",
+            "**Vêem mas não guardam?** Falta valor de consulta — torna-o mais **útil** (checklist, passo a passo, um recurso).",
+            "**Guardam mas não te seguem?** Reforça o **CTA** (seguir · guardar · comentar uma palavra).",
+            "**Funcionou?** Repete o mecanismo: mesmo **formato**, tema novo.",
+          ] },
+          { t: "nota", v: "warn", texto: "**Rotina semanal:** bisbilhota 3–5 referências, deixa a IA pesquisar por ti, modela na tua voz e agenda a semana. No fim, olha para os salvamentos e partilhas e repete só o que funcionou." },
         ],
       },
     ],
