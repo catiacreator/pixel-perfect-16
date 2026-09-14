@@ -331,6 +331,46 @@ export default function Home() {
       {/* Dois caminhos — mesmo contentor do hero (max-w-[1400px] + px-4/px-10) p/ alinhar à esquerda */}
       <section className="px-4 md:px-10 pt-8 md:pt-12 pb-20 md:pb-28">
         <div className="max-w-[1400px] mx-auto">
+          {/* Banner — Carousel Snap */}
+          <a
+            href="https://carouselsnap.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative block overflow-hidden rounded-[24px] mb-8 md:mb-10 border border-white/10"
+            style={{ background: "radial-gradient(120% 130% at 82% 25%, #8a3212 0%, #1c110b 46%, #0d0a09 100%)" }}
+          >
+            <div className="relative grid md:grid-cols-2 gap-6 p-7 md:p-10 items-center">
+              <div>
+                <p className="text-[11px] tracking-[0.24em] uppercase text-white/50 font-semibold mb-3">Carrosséis · Reels · Stories</p>
+                <h2 className="font-display text-3xl md:text-[2.6rem] leading-[1.03] tracking-[-0.02em] text-white mb-3">
+                  Publica todos os dias, <span style={{ color: "#EE4E23" }}>sem desenhar nada</span>
+                </h2>
+                <p className="text-white/70 text-[15px] leading-relaxed mb-6 max-w-md">Colas a tua ideia. Sais com os slides prontos a publicar.</p>
+                <span className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-white text-sm font-semibold shadow-[0_12px_30px_-10px_rgba(238,78,35,0.7)] transition-transform group-hover:translate-x-0.5" style={{ background: "#EE4E23" }}>
+                  Quero criar sem esforço <ArrowUpRight size={17} strokeWidth={2.25} />
+                </span>
+              </div>
+              <div className="hidden md:flex justify-end gap-3 pr-1">
+                {[
+                  { n: "1/3", t: "Small Changes Big Results", s: "Simple daily habits for a better you." },
+                  { n: "2/3", t: "Better Focus Brighter Days", s: "Clearer mind. A more productive you." },
+                  { n: "3/3", t: "A Healthier Happier You", s: "More energy. A brighter tomorrow." },
+                ].map((c, i) => (
+                  <div
+                    key={c.n}
+                    className="w-[132px] rounded-2xl bg-[#141311] border border-white/10 p-3.5 flex flex-col shadow-xl"
+                    style={{ transform: `translateY(${i * 12}px)` }}
+                  >
+                    <span className="text-[10px] text-white/40">{c.n}</span>
+                    <p className="text-white font-semibold text-[13px] leading-tight mt-2">{c.t}</p>
+                    <p className="text-white/45 text-[10px] mt-1.5 leading-snug">{c.s}</p>
+                    <span className="mt-3 block w-6 h-[3px] rounded-full" style={{ background: "#EE4E23" }} />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </a>
+
           {/* Cursos principais */}
           <div className="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-5">
             {PRODUTOS.filter((p) => !MINI_CURSOS.includes(p.key) && !MENTORIA.includes(p.key) && visivel(p)).map((p, i) => renderCard(p, i))}
