@@ -724,7 +724,7 @@ Cria um documento com todos os carrosseis, slide a slide e legenda.
 
 Organiza numa pasta no Google Drive.` },
           { t: "sub", titulo: "Via manual — alternativa" },
-          { t: "videoslot", titulo: "Vídeo — Garimpar (via manual)", nota: "Espaço reservado. Cola aqui o vídeo da via manual quando estiver pronto." },
+          { t: "video", url: "https://youtu.be/Z5RD9ns91yQ", titulo: "Garimpar (via manual)" },
           { t: "ol", itens: [
             "Descarrega o Reel num site de download de Reels.",
             "Passa-o pelo **InstaScript AI** para teres a transcrição. [link a disponibilizar]",
