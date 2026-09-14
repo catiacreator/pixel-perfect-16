@@ -331,12 +331,13 @@ Com base nisso:
         ],
       },
       {
-        titulo: "4.2 As três aulas deste capítulo",
+        titulo: "4.2 As aulas deste capítulo",
         blocos: [
           { t: "aulas", itens: [
             { titulo: "1 · Carrosséis no ChatGPT", desc: "Cria um carrossel completo do zero: estrutura, texto final, design, legenda e montagem.", aula: "m4b" },
             { titulo: "2 · Imagens e infográficos", desc: "Imagens fotográficas realistas, infográficos e slides de apresentação — cada um com o seu prompt.", aula: "m4c" },
             { titulo: "3 · Carrosséis com informação externa", desc: "Transforma um texto, documento, ideia ou os resultados do Grok/NotebookLM num carrossel.", aula: "m4d" },
+            { titulo: "4 · Criar conteúdo com notícias", desc: "Põe o ChatGPT a trazer-te as notícias do dia e a criar conteúdo por ti — acordas com o roteiro ou carrossel pronto.", aula: "m4e" },
           ] },
           { t: "nota", v: "info", texto: "**Qual escolher?** Tens só um tema na cabeça → Aula 1. Queres outro formato (infográfico, e-book, imagem) → Aula 2. Já tens matéria-prima (texto, documento, pesquisa do M1/M2 ou estrutura do M3) → Aula 3." },
           { t: "nota", v: "info", texto: "**Bónus do capítulo:** os **Agentes Creator** (no menu lateral) são GPTs prontos que fazem parte deste trabalho por ti." },
@@ -1227,6 +1228,22 @@ fáceis de ler no celular. Mantenha a coerência de tom.
 Depois continue com o design e a legenda (Aula 1, Passos 3 e 4).` },
           { t: "nota", v: "warn", texto: "**Material dos outros = inspiração, nunca cópia.** Quando a fonte não é tua (artigo, transcrição de concorrente), extrai a estrutura e recria com a tua voz e os teus exemplos — o prompt já obriga, garante tu que o resultado final é teu." },
           { t: "nota", v: "warn", texto: "**Exercício:** pega num artigo que gostes OU na tua análise do Módulo 1 e gera um carrossel completo. Publica e marca a tarefa como completa." },
+        ],
+      },
+    ],
+  },
+  {
+    id: "m4e",
+    numero: "ChatGPT · Aula 4",
+    titulo: "Criar conteúdo com notícias",
+    objetivo: "Pôr o ChatGPT a trazer-te as notícias do teu nicho todos os dias e a criar conteúdo por ti — acordas com o roteiro ou carrossel já feito.",
+    links: [{ nome: "Abrir ChatGPT", url: "https://chatgpt.com" }],
+    secoes: [
+      {
+        blocos: [
+          { t: "video", url: "https://youtu.be/KDUU2dRL7Dg", titulo: "Criar conteúdo com notícias" },
+          { t: "p", texto: "Dá para pôr o ChatGPT a trabalhar por ti **todos os dias, sozinho**: de manhã, ele vai buscar as **notícias do teu nicho** e — melhor ainda — usa-as logo para **criar conteúdo teu**, na tua voz. Acordas com o **roteiro de Reel** ou o **carrossel** já escrito, pronto a gravar ou desenhar." },
+          { t: "nota", v: "info", texto: "É uma **tarefa agendada**: configuras uma vez e ela corre sozinha, à hora que escolheres. Combina com o teu **Documento de Contexto de Marca** para o conteúdo sair sempre com a tua cara." },
         ],
       },
     ],

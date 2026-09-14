@@ -185,6 +185,7 @@ export const ESTRUTURA: Nodo[] = [
           { id: "conteudo-ia.m4b", label: "Carrosséis no ChatGPT", tipo: "subpagina", to: "/conteudo-ia?aula=m4b" },
           { id: "conteudo-ia.m4c", label: "Imagens e infográficos", tipo: "subpagina", to: "/conteudo-ia?aula=m4c" },
           { id: "conteudo-ia.m4d", label: "Carrosséis c/ info externa", tipo: "subpagina", to: "/conteudo-ia?aula=m4d" },
+          { id: "conteudo-ia.m4e", label: "Criar conteúdo com notícias", tipo: "subpagina", to: "/conteudo-ia?aula=m4e" },
         ],
       },
       { id: "conteudo-ia.m5", label: "Módulo 5 · Fluxo + projeto final", tipo: "pagina", to: "/conteudo-ia?aula=m5" },
