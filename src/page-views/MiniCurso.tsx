@@ -213,6 +213,27 @@ function BlocoView({ b }: { b: Bloco }) {
           </a>
         </div>
       );
+    case "botoes":
+      return (
+        <div className="flex flex-wrap gap-2.5 my-4">
+          {b.itens.map((x) => (
+            <a
+              key={x.url}
+              href={x.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 pl-5 pr-4 py-2.5 rounded-full bg-terracotta text-cream text-sm font-semibold hover:bg-terracotta-dark transition-colors"
+            >
+              <ExternalLink size={15} /> {x.nome}
+              {x.badge && (
+                <span className="ml-1 text-[9px] tracking-[0.12em] uppercase font-bold px-2 py-0.5 rounded-full bg-cream/25">
+                  {x.badge}
+                </span>
+              )}
+            </a>
+          ))}
+        </div>
+      );
     case "slides":
       return <Slideshow base={b.base} count={b.count} alt={b.alt} />;
     case "nota":

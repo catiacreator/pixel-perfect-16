@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { Lightbulb, X, Plus } from "lucide-react";
+import { Lightbulb, X, Plus, ChevronLeft, ChevronRight } from "lucide-react";
 import { notify } from "@/lib/toast";
+import { useColapsado, alternarColapso } from "@/lib/guia-colapso";
 
 const KEY = "leveza.ideias-rapidas.v1";
 type Ideia = { texto: string; ts: number };
@@ -15,6 +16,7 @@ function ler(): Ideia[] {
 }
 
 export default function QuickIdeas() {
+  const colapsado = useColapsado();
   const [open, setOpen] = useState(false);
   const [texto, setTexto] = useState("");
   const [ideias, setIdeias] = useState<Ideia[]>([]);
@@ -101,14 +103,24 @@ export default function QuickIdeas() {
         </div>
       )}
 
-      <button
-        onClick={() => setOpen((v) => !v)}
-        className="inline-flex items-center gap-2 h-12 pl-4 pr-5 rounded-full bg-amber-500 text-white shadow-[0_12px_30px_-10px_rgba(217,119,6,0.7)] hover:bg-amber-600 active:scale-[0.97] transition-all"
-        aria-label="Escreva as suas ideias"
-      >
-        <Lightbulb size={18} />
-        <span className="hidden sm:inline text-sm font-semibold">Escreva as suas ideias</span>
-      </button>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={alternarColapso}
+          aria-label={colapsado ? "Expandir botões" : "Colapsar botões para a direita"}
+          title={colapsado ? "Expandir" : "Colapsar"}
+          className="w-8 h-8 rounded-full bg-white border border-[var(--color-border)] shadow-[0_6px_16px_-8px_rgba(0,0,0,0.4)] flex items-center justify-center text-ink/55 hover:text-ink transition-colors shrink-0"
+        >
+          {colapsado ? <ChevronLeft size={16} /> : <ChevronRight size={16} />}
+        </button>
+        <button
+          onClick={() => setOpen((v) => !v)}
+          className={`inline-flex items-center gap-2 h-12 rounded-full bg-amber-500 text-white shadow-[0_12px_30px_-10px_rgba(217,119,6,0.7)] hover:bg-amber-600 active:scale-[0.97] transition-all ${colapsado ? "w-12 justify-center px-0" : "pl-4 pr-5"}`}
+          aria-label="Escreva as suas ideias"
+        >
+          <Lightbulb size={18} />
+          {!colapsado && <span className="hidden sm:inline text-sm font-semibold">Escreva as suas ideias</span>}
+        </button>
+      </div>
     </div>
   );
 }

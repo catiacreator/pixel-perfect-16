@@ -15,6 +15,7 @@ import EmManutencao from "@/components/EmManutencao";
 import MarcarEtapa from "@/components/MarcarEtapa";
 import { N_IA_URL } from "@/components/NIaTopButton";
 import PerfilBar from "@/components/PerfilBar";
+import CarouselSnapFab from "@/components/CarouselSnapFab";
 import ProximoPasso from "@/components/ProximoPasso";
 import { abrirBusca } from "@/components/BuscaGlobal";
 import { useAccess } from "@/lib/use-access";
@@ -425,7 +426,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       </header>
 
       {/* Segunda barra: perfil ativo + Documento Mestre (só com sessão). */}
-      {signedIn && <PerfilBar />}
+      {signedIn && !path.startsWith("/conteudo-ia") && <PerfilBar />}
 
       <main className="flex-1 w-full">
         {gateModule && accessLoading ? (
@@ -540,6 +541,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       {/* Com o painel dos cursos aberto, o botão flutuante ficaria por cima dele. */}
       {signedIn && !open && <QuickIdeas />}
       {signedIn && !open && <AgenteChat />}
+      {!open && <CarouselSnapFab />}
       {isAdmin && <PreviewTurmaModal />}
     </div>
   );

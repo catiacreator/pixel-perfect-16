@@ -6,6 +6,7 @@ import Markdown from "@/components/Markdown";
 import MicButton from "@/components/MicButton";
 import { supabase } from "@/integrations/supabase/client";
 import { usePilar2 } from "@/lib/pilar2-hooks";
+import { useColapsado } from "@/lib/guia-colapso";
 import { perfilContexto, readDocMestre, type DocMestre } from "@/lib/pilar4-prompts";
 
 // Agente lateral: uma janela de conversa (drawer) à direita, disponível em toda
@@ -85,6 +86,7 @@ const SUGESTOES = [
 ];
 
 export default function AgenteChat() {
+  const colapsado = useColapsado();
   const [open, setOpen] = useState(false);
 
   return (
@@ -92,11 +94,11 @@ export default function AgenteChat() {
       {!open && (
         <button
           onClick={() => setOpen(true)}
-          className="fixed right-6 z-50 bottom-[calc(1.5rem+64px+56px+env(safe-area-inset-bottom))] lg:bottom-[5.75rem] inline-flex items-center gap-2 h-12 pl-3.5 pr-5 rounded-full bg-forest text-cream shadow-[0_12px_30px_-10px_rgba(20,60,40,0.7)] hover:opacity-95 active:scale-[0.97] transition-all"
+          className={`fixed right-6 z-50 bottom-[calc(1.5rem+64px+56px+env(safe-area-inset-bottom))] lg:bottom-[5.75rem] inline-flex items-center gap-2 h-12 rounded-full bg-forest text-cream shadow-[0_12px_30px_-10px_rgba(20,60,40,0.7)] hover:opacity-95 active:scale-[0.97] transition-all ${colapsado ? "w-12 justify-center px-0" : "pl-3.5 pr-5"}`}
           aria-label="Abrir o teu guia"
         >
           <span className="w-7 h-7 rounded-full bg-cream/20 flex items-center justify-center"><Bot size={16} /></span>
-          <span className="hidden sm:inline text-sm font-semibold">O teu guia</span>
+          {!colapsado && <span className="hidden sm:inline text-sm font-semibold">O teu guia</span>}
         </button>
       )}
 

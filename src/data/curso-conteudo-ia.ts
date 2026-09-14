@@ -17,6 +17,7 @@ export type Bloco =
   | { t: "wizard"; passos: { titulo: string; blocos: Bloco[] }[] } // passos navegáveis (prev/próximo)
   | { t: "videoslot"; titulo?: string; nota?: string } // espaço reservado p/ vídeo (a gravar)
   | { t: "pdf"; url: string; nome?: string; base?: string; paginas?: number } // páginas do PDF como imagens grandes (base/pag-01.png…) + botão de descarregar
+  | { t: "botoes"; itens: { nome: string; url: string; badge?: string }[] } // botões-link (abrem noutro separador)
   | { t: "acordeao"; titulo: string; aberto?: boolean; blocos: Bloco[] }; // secção fechável
 
 export type Secao = { label?: string; titulo?: string; blocos: Bloco[] };
@@ -622,15 +623,11 @@ Mantém o tom [o teu tom], o público [o teu público] e a oferta [o que vendes]
     numero: "Super Bónus",
     titulo: "Roubar como um Criador",
     subtitulo: "Do garimpo à publicação: encontra o que já viralizou, revela o formato, escreve na tua voz e mede o que interessa.",
-    objetivo: "O fluxo completo para transformar referências virais em conteúdo original teu — em 4 sub-módulos, cada um com o seu vídeo.",
-    links: [
-      { nome: "Abrir Claude", url: "https://claude.ai" },
-      { nome: "Abrir ChatGPT", url: "https://chatgpt.com" },
-    ],
+    objetivo: "O fluxo completo para transformar referências virais em conteúdo original teu — em 5 sub-módulos, cada um com o seu vídeo.",
     secoes: [
       {
         blocos: [
-          { t: "nota", v: "info", texto: "**O fluxo em 4 passos:** 1) Bisbilhotar Conteúdo → 2) Modular para a tua voz → 3) A IA pesquisa por ti → 4) Publicar e medir. Cada passo é um sub-módulo com o seu vídeo. Copia o mecanismo, nunca o artefacto: a estrutura repete-se; a tua voz é que não se copia." },
+          { t: "nota", v: "info", texto: "**O fluxo em 5 passos:** 1) Bisbilhotar Conteúdo → 2) Modular para a tua voz → 3) A IA pesquisa por ti → 4) Modela o Formato → 5) Publicar e medir. Cada passo é um sub-módulo. Copia o mecanismo, nunca o artefacto: a estrutura repete-se; a tua voz é que não se copia." },
         ],
       },
       {
@@ -677,11 +674,19 @@ Organiza numa pasta no Google Drive.` },
           { t: "sub", titulo: "Via manual — alternativa" },
           { t: "video", url: "https://youtu.be/Z5RD9ns91yQ", titulo: "Bisbilhotar Conteúdo (via manual)" },
           { t: "ol", itens: [
-            "Descarrega o Reel num site de download de Reels.",
-            "Passa-o pelo **InstaScript AI** para teres a transcrição. [link a disponibilizar]",
-            "Leva essa transcrição para o passo seguinte (Dissecar).",
+            "Descarrega o Reel — usa o botão **Download de Reels** abaixo.",
+            "Passa-o pelo **Reel Transcript** (botão abaixo) para teres a transcrição.",
+            "Leva essa transcrição para os passos seguintes.",
+          ] },
+          { t: "botoes", itens: [
+            { nome: "Download de Reels", url: "https://sssinstagram.com/reels-downloader" },
+            { nome: "Reel Transcript", url: "https://instascript.metodoturbox.com.br/" },
           ] },
           { t: "nota", v: "info", texto: "**Guarda tudo:** cria a tua biblioteca de referências no Notion ou no Drive — uma linha por referência (link, gancho, formato). É daqui que vais buscar matéria-prima sempre que precisares." },
+          { t: "nota", v: "info", texto: "**Automação de mensagens:** antes pagava muito pelo ManyChat e esta ferramenta foi um achado que me permite vender mesmo quando durmo." },
+          { t: "botoes", itens: [
+            { nome: "Automação de mensagens", url: "https://youze.com.br?tag=YOUZUKF7U4", badge: "Aula Brevemente" },
+          ] },
         ],
       },
     ],
@@ -692,10 +697,6 @@ Organiza numa pasta no Google Drive.` },
     numero: "Roubar · Passo 02",
     titulo: "Modular para a tua voz",
     objetivo: "Criar o teu Documento de Contexto de Marca e ensinar a IA a escrever como tu — vocabulário, ritmo, opiniões e o que nunca dirias.",
-    links: [
-      { nome: "Abrir ChatGPT", url: "https://chatgpt.com" },
-      { nome: "Abrir Claude", url: "https://claude.ai" },
-    ],
     secoes: [
       {
         blocos: [
@@ -792,7 +793,6 @@ Regras:
     numero: "Roubar · Passo 03",
     titulo: "A IA pesquisa por ti",
     objetivo: "Pôr o Claude a pesquisar por ti — uma automação que te traz conteúdo dos concorrentes todos os dias, sozinha.",
-    links: [{ nome: "Abrir Claude", url: "https://claude.ai" }],
     secoes: [
       {
         blocos: [
