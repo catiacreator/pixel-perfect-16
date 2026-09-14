@@ -69,7 +69,7 @@ const TOOL_ICONS: Record<string, LucideIcon> = {
   "3 · Criar artefactos": Monitor,
   "1 · Garimpar": Search,
   "2 · Modular para a voz": Mic,
-  "3 · Dissecar": LayoutGrid,
+  "3 · A IA pesquisa por ti": Search,
   "4 · Publicar e medir": Zap,
 };
 
@@ -135,7 +135,7 @@ const PILARES: Record<string | number, PilarDef> = {
         children: [
           { label: "1 · Garimpar", to: "/conteudo-ia?aula=roubar-garimpar" },
           { label: "2 · Modular para a voz", to: "/conteudo-ia?aula=roubar-voz" },
-          { label: "3 · Dissecar", to: "/conteudo-ia?aula=roubar-dissecar" },
+          { label: "3 · A IA pesquisa por ti", to: "/conteudo-ia?aula=roubar-dissecar" },
           { label: "4 · Publicar e medir", to: "/conteudo-ia?aula=roubar-medir" },
         ],
       },

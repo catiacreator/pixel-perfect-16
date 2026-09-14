@@ -196,7 +196,7 @@ export const ESTRUTURA: Nodo[] = [
         filhos: [
           { id: "conteudo-ia.roubar-garimpar", label: "Passo 01 · Garimpar", tipo: "subpagina", to: "/conteudo-ia?aula=roubar-garimpar" },
           { id: "conteudo-ia.roubar-voz", label: "Passo 02 · Modular para a voz", tipo: "subpagina", to: "/conteudo-ia?aula=roubar-voz" },
-          { id: "conteudo-ia.roubar-dissecar", label: "Passo 03 · Dissecar", tipo: "subpagina", to: "/conteudo-ia?aula=roubar-dissecar" },
+          { id: "conteudo-ia.roubar-dissecar", label: "Passo 03 · A IA pesquisa por ti", tipo: "subpagina", to: "/conteudo-ia?aula=roubar-dissecar" },
           { id: "conteudo-ia.roubar-medir", label: "Passo 04 · Publicar e medir", tipo: "subpagina", to: "/conteudo-ia?aula=roubar-medir" },
         ],
       },

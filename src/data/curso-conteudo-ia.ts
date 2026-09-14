@@ -691,7 +691,7 @@ Mantém o tom [o teu tom], o público [o teu público] e a oferta [o que vendes]
           { t: "aulas", itens: [
             { titulo: "1 · Garimpar", desc: "Encontra o que já viralizou no teu nicho e monta a tua biblioteca de referências.", aula: "roubar-garimpar" },
             { titulo: "2 · Modular para a tua voz", desc: "Cria o teu Documento de Contexto de Marca e ensina a IA a escrever como tu.", aula: "roubar-voz" },
-            { titulo: "3 · Dissecar", desc: "Revela a estrutura escondida — gancho, promessa, ritmo e fecho. Extrai o formato.", aula: "roubar-dissecar" },
+            { titulo: "3 · A IA pesquisa por ti", desc: "Uma automação no Claude que te traz o conteúdo dos concorrentes todos os dias, sozinha.", aula: "roubar-dissecar" },
             { titulo: "4 · Publicar e medir", desc: "Uma referência → vários conteúdos. Mede salvamentos e partilhas, não likes.", aula: "roubar-medir" },
           ] },
         ],
@@ -841,18 +841,15 @@ Regras:
     id: "roubar-dissecar",
     pai: "roubar-criador",
     numero: "Roubar · Passo 03",
-    titulo: "Dissecar",
-    objetivo: "Revelar a estrutura escondida de uma referência — gancho, promessa, ritmo e fecho — e transformá-la numa fórmula reutilizável.",
-    links: [
-      { nome: "Abrir ChatGPT", url: "https://chatgpt.com" },
-      { nome: "Abrir Claude", url: "https://claude.ai" },
-    ],
+    titulo: "A IA pesquisa por ti",
+    objetivo: "Pôr o Claude a pesquisar por ti — uma automação que te traz conteúdo dos concorrentes todos os dias, sozinha.",
+    links: [{ nome: "Abrir Claude", url: "https://claude.ai" }],
     secoes: [
       {
         blocos: [
-          { t: "videoslot", titulo: "Vídeo — Passo 03 · Dissecar", nota: "É este que falta gravar — vê o guião de gravação." },
-          { t: "p", texto: "Deixa de **ver conteúdo** e passa a **ver padrão**. Usa a IA para revelar a estrutura escondida de uma referência: **gancho, promessa, ritmo e fecho**." },
-          { t: "nota", v: "info", texto: "O objetivo não é o texto reescrito — é a **fórmula**: o molde (gancho · promessa · ritmo · fecho) que reutilizas semana após semana." },
+          { t: "video", url: "https://youtu.be/QjWjOpSuF2I", titulo: "A IA pesquisa por ti" },
+          { t: "p", texto: "Aqui criamos uma **automação no Claude** para a IA **pesquisar por ti**: todos os dias, sozinha, vai buscar o **conteúdo dos teus concorrentes** e entrega-to — sem teres de andar a fazer scroll. É a tua matéria-prima a chegar em piloto automático." },
+          { t: "nota", v: "info", texto: "É uma **tarefa recorrente**: configuras uma vez e corre sozinha à hora que escolheres. Assim tens sempre referências frescas para os passos seguintes." },
         ],
       },
     ],
