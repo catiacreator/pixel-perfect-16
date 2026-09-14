@@ -32,10 +32,10 @@ export default function CarouselSnapFab() {
         onClick={() => setOpen(true)}
         aria-label="Carousel Snap"
         title="Carousel Snap"
-        className="fixed left-6 z-50 w-14 h-14 rounded-[20px] shadow-[0_12px_30px_-10px_rgba(238,78,35,0.75)] flex items-center justify-center hover:-translate-y-0.5 active:scale-95 transition-transform bottom-[calc(1.5rem+64px+env(safe-area-inset-bottom))] lg:bottom-6"
+        className="fixed right-6 z-50 w-12 h-12 rounded-[16px] shadow-[0_12px_30px_-10px_rgba(238,78,35,0.75)] flex items-center justify-center hover:-translate-y-0.5 active:scale-95 transition-transform bottom-[calc(1.5rem+64px+56px+56px+env(safe-area-inset-bottom))] lg:bottom-[9.5rem]"
         style={{ background: LARANJA }}
       >
-        <CarouselIcon />
+        <CarouselIcon size={26} />
       </button>
 
       {open && (
